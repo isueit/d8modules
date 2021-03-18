@@ -1,0 +1,11 @@
+langcode: en
+status: true
+id: bean_menu
+label: 'Bean Menu'
+revision: 0
+description: 'Add a list of hyperlinked titles with an icon'
+dependencies:
+  enforced:
+    module:
+      - bean_menu
+
