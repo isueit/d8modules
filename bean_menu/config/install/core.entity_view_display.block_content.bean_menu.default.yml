@@ -7,7 +7,7 @@ dependencies:
     - field.field.block_content.bean_menu.field_bean_menu_title
   module:
     - field_formatter_class
-      field_group
+    -  field_group
     - link
     - text
 third_party_settings:
