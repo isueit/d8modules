@@ -7,8 +7,30 @@ dependencies:
     - field.field.block_content.bean_menu.field_bean_menu_title
   module:
     - field_formatter_class
+      field_group
     - link
     - text
+third_party_settings:
+  field_group:
+    group_bean_menu_wrapper:
+      children:
+        - field_bean_menu_title
+        - field_bean_menu_link
+      parent_name: ''
+      weight: 20
+      format_type: html_element
+      region: content
+      format_settings:
+        id: bean_menu_wrapper
+        classes: bean_menu_wrapper
+        element: div
+        show_label: false
+        label_element: h3
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
+      label: bean_menu_wrapper
 id: block_content.bean_menu.default
 targetEntityType: block_content
 bundle: bean_menu

@@ -10,4 +10,5 @@ dependencies:
   - drupal:text
   - drupal:link
   - allowed_formats
+  - field_group
 
