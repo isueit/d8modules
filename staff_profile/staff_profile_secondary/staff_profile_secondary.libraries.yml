@@ -1,0 +1,4 @@
+staff_profile_secondary_tabledrag:
+  version: 1.x
+  js:
+    js/tabledrag.js: {}

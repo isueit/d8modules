@@ -63,7 +63,7 @@ class StaffProfileDragForm extends FormBase {
       // items near the end of the list would be set to highest possible, keeping as many as possible equal to zero where names are sorted alphabetically 
       '#attached' => [
         'library' => [
-          'tabledrag_test/tabledrag',
+          'staff_profile_secondary/staff_profile_secondary_tabledrag',
         ],
       ],
     ];
