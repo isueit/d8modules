@@ -683,12 +683,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 values.push(this.value);
               });
               var maxVal = values[values.length - 1];
-
+              
+              //Neworder 0->keep current value, 1->negative ascending, 2->positive ascending
+              var newWeight = [];
+              var newOrder = [];
+              var oldVals = [];
+              $(siblings).find(targetClass).each(function () {
+                newOrder.push(parseInt(this.name.match(/\d+/)[0]));
+                oldVals.push(this.value);
+              });
+              
+              
               $(siblings).find(targetClass).each(function () {
                 if (values.length > 0) {
                   this.value = values.shift();
                 } else {
-                  this.value = maxVal;
+                  //this.value = maxVal;
                 }
               });
             } else {
