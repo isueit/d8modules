@@ -685,14 +685,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               var maxVal = values[values.length - 1];
               
               //Neworder 0->keep current value, 1->negative ascending, 2->positive ascending
-              var newWeight = [];
               var newOrder = [];
               var oldVals = [];
-              $(siblings).find(targetClass).each(function () {
+              var changedPos = [];
+              $(siblings).find(targetClass).each(function () {               
                 newOrder.push(parseInt(this.name.match(/\d+/)[0]));
-                oldVals.push(this.value);
+                oldVals.push(parseInt(this.value));
+                
+                //Figure out which elements have been changed
+                //Last element changed will have drag class
+                //All other moved elements will have a childcount of two, a & abbr
+                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag')) {
+                  changedPos.push(1);
+                } else {
+                  changedPos.push(0);
+                }
+                
               });
-              
+              console.log(newOrder);
+              console.log(oldVals);
+              console.log(changedPos);
               
               $(siblings).find(targetClass).each(function () {
                 if (values.length > 0) {
