@@ -684,10 +684,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               });
               var maxVal = values[values.length - 1];
               
-              //Neworder 0->keep current value, 1->negative ascending, 2->positive ascending
+              //Neworder 0->keep current value, 1->changed
               var newOrder = [];
               var oldVals = [];
               var changedPos = [];
+              var zeroSections = [];
+              var zeroIndex = 0;
+              var lastZero = false;
               $(siblings).find(targetClass).each(function () {               
                 newOrder.push(parseInt(this.name.match(/\d+/)[0]));
                 oldVals.push(parseInt(this.value));
@@ -695,20 +698,57 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 //Figure out which elements have been changed
                 //Last element changed will have drag class
                 //All other moved elements will have a childcount of two, a & abbr
-                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag')) {
+                //Elements that had values previously should be ordered [this.value != 0]
+                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag') || this.value != 0) {
                   changedPos.push(1);
+                  if (lastZero) {
+                    //Section of zeros ended
+                    zeroSections[zeroSections.length-1][1] = zeroIndex-1;
+                  }
+                  lastZero = false;
                 } else {
                   changedPos.push(0);
+                  if (zeroSections.length !== 0 && zeroSections[zeroSections.length-1].length == 1) {
+                    //Continue zeros
+                    lastZero = true
+                  } else {
+                    //New section of zeros
+                    zeroSections.push([zeroIndex]);
+                    lastZero = true;
+                  }
                 }
-                
+                zeroIndex++;
               });
+              //Add ending index if the last value was zero
+              if (zeroSections[zeroSections.length-1].length == 1) {
+                zeroSections[zeroSections.length-1][1] = zeroIndex-1;
+              }
+              zeroSections.sort((first, second)=>{return (first[1]-first[0]+1) < (second[1]-second[0]+1)});
+              
               console.log(newOrder);
               console.log(oldVals);
               console.log(changedPos);
+              console.log(zeroSections);
+
+              
+              var fixedValues = [];
+              var beginValues = false;
+              var curWeight = -1;
+              for (var i = changedPos.length - 1; i >= 0; i--) {
+                if (beginValues || changedPos[i] == 1){
+                  fixedValues.unshift(curWeight);
+                  beginValues = true;
+                  curWeight--;
+                } else {
+                  fixedValues.unshift(0)
+                }
+                
+              }
               
               $(siblings).find(targetClass).each(function () {
                 if (values.length > 0) {
-                  this.value = values.shift();
+                  //this.value = values.shift();
+                  this.value = fixedValues.shift();
                 } else {
                   //this.value = maxVal;
                 }
