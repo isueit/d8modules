@@ -8,7 +8,7 @@ use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Drupal\node\Entity\Node;
 
-
+// Based on
 // https://api.drupal.org/api/drupal/core%21modules%21system%21tests%21modules%21tabledrag_test%21src%21Form%21TableDragTestForm.php/class/TableDragTestForm/9.2.x
 
 /**
@@ -48,8 +48,7 @@ class StaffProfileDragForm extends FormBase {
       '#type' => 'table',
       '#header' => [
         [
-          'data' => $this
-            ->t('Text'),
+          'data' => $this->t('Name'),
           'colspan' => 2,
         ],
         $this->t('Weight'),
@@ -58,9 +57,7 @@ class StaffProfileDragForm extends FormBase {
       '#attributes' => [
         'id' => $table_id,
       ],
-      // TODO Replace this version of tabledrag.js with version that priortizes keeping as many as posible equal to zero
-      // i.e. when an item is moved close to the beginning, all before it including the moved item are set to the maximum negative weight,
-      // items near the end of the list would be set to highest possible, keeping as many as possible equal to zero where names are sorted alphabetically 
+      // Custom version of tabledrag.js, keeps as many at zero as possible, moved items are given weights relative to position
       '#attached' => [
         'library' => [
           'staff_profile_secondary/staff_profile_secondary_tabledrag',
@@ -71,6 +68,9 @@ class StaffProfileDragForm extends FormBase {
     //Set rows to staff_profile nodes
     $nids = \Drupal::entityQuery('node')->condition('type', 'staff_profile')->execute();
     $rows =  Node::loadMultiple($nids);
+    //Sort by first name, last name, and sort order
+    usort($rows, fn($a, $b) => ($a->field_staff_profile_first_name->value <=> $b->field_staff_profile_first_name->value));
+    usort($rows, fn($a, $b) => ($a->field_staff_profile_last_name->value <=> $b->field_staff_profile_last_name->value));
     usort($rows, fn($a, $b) => ($a->field_staff_profile_sort_order->value <=> $b->field_staff_profile_sort_order->value));
     
     foreach ($rows as $id => $staff_profile) {
@@ -115,6 +115,7 @@ class StaffProfileDragForm extends FormBase {
       $table[$id]['weight'] = [
         '#type' => 'weight',
         '#default_value' => $row['weight'],
+        '#delta' => 20,
         '#parents' => [
           'table',
           $id,

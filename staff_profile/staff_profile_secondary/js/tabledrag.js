@@ -680,7 +680,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if ($(targetElement).is('select')) {
               var values = [];
               $(targetElement).find('option').each(function () {
-                values.push(this.value);
+                values.push(parseInt(this.value));
               });
               var maxVal = values[values.length - 1];
               
@@ -698,8 +698,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 //Figure out which elements have been changed
                 //Last element changed will have drag class
                 //All other moved elements will have a childcount of two, a & abbr
-                //Elements that had values previously should be ordered [this.value != 0]
-                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag') || this.value != 0) {
+                //Elements that had values previously should be ordered [this.value != 0]???
+                //  -Causes unset values to be set as elements are moved
+                //TODO: get the weights of elements when page was created;
+                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag') ){//|| this.value != 0) {
                   changedPos.push(1);
                   if (lastZero) {
                     //Section of zeros ended
@@ -724,25 +726,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 zeroSections[zeroSections.length-1][1] = zeroIndex-1;
               }
               zeroSections.sort((first, second)=>{return (first[1]-first[0]+1) < (second[1]-second[0]+1)});
-              
-              console.log(newOrder);
-              console.log(oldVals);
-              console.log(changedPos);
-              console.log(zeroSections);
 
-              
               var fixedValues = [];
-              var beginValues = false;
-              var curWeight = -1;
-              for (var i = changedPos.length - 1; i >= 0; i--) {
-                if (beginValues || changedPos[i] == 1){
-                  fixedValues.unshift(curWeight);
-                  beginValues = true;
-                  curWeight--;
+              var curWeight = Math.max(Math.min(...values), -(zeroSections[0][0]));
+              for (var i = 0; i <= changedPos.length; i++) {
+                //Weights floating to top
+                if (i < zeroSections[0][0]) {
+                  // Order of first elements most important
+                  if (curWeight < -1) {
+                    fixedValues.push(curWeight);
+                    curWeight++;
+                  } else {
+                    // If out of floating weights, set value to slightly above neutral to keep above new items
+                    fixedValues.push(-1);
+                  }
+                } else if (i >= zeroSections[0][0] && i <= zeroSections[0][1]) {
+                  //Neutral weight
+                  fixedValues.push(0);
                 } else {
-                  fixedValues.unshift(0)
+                  //Sinking Weights
+                  if (curWeight == -1) {
+                    curWeight = 1;
+                  }
+                  fixedValues.push(curWeight);
+                  if (curWeight < Math.max(...values)) {
+                    curWeight++;
+                  }
                 }
-                
               }
               
               $(siblings).find(targetClass).each(function () {
@@ -750,15 +760,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                   //this.value = values.shift();
                   this.value = fixedValues.shift();
                 } else {
-                  //this.value = maxVal;
+                  this.value = maxVal;
                 }
               });
             } else {
-              // var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
-              // $(siblings).find(targetClass).each(function () {
-              //   this.value = weight;
-              //   weight++;
-              // });
+              var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
+              $(siblings).find(targetClass).each(function () {
+                this.value = weight;
+                weight++;
+              });
             }
             break;
           }
