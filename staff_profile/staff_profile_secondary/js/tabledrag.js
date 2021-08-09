@@ -10,10 +10,11 @@
 * Results in values being promoted when moved to the front or otherwise sorted automatically
 **/
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var hasSavedValue = [];
 
 (function ($, Drupal, drupalSettings) {
   var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
-
+  
   Drupal.behaviors.tableDrag = {
     attach: function attach(context, settings) {
       function initTableDrag(table, base) {
@@ -695,13 +696,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 newOrder.push(parseInt(this.name.match(/\d+/)[0]));
                 oldVals.push(parseInt(this.value));
                 
+                if (newOrder.length > hasSavedValue.length) {
+                  hasSavedValue.unshift(((this.value != 0) ? 1 : 0));
+                }
                 //Figure out which elements have been changed
                 //Last element changed will have drag class
                 //All other moved elements will have a childcount of two, a & abbr
                 //Elements that had values previously should be ordered [this.value != 0]???
                 //  -Causes unset values to be set as elements are moved
-                //TODO: get the weights of elements when page was created;
-                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag') ){//|| this.value != 0) {
+                var item = hasSavedValue.shift()
+                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag') || item){//|| this.value != 0) {
                   changedPos.push(1);
                   if (lastZero) {
                     //Section of zeros ended
@@ -719,19 +723,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     lastZero = true;
                   }
                 }
+                hasSavedValue.push(item);
                 zeroIndex++;
               });
               //Add ending index if the last value was zero
-              if (zeroSections[zeroSections.length-1].length == 1) {
+              console.log(zeroSections);
+              if (zeroSections.length > 0 && zeroSections[zeroSections.length-1].length == 1) {
                 zeroSections[zeroSections.length-1][1] = zeroIndex-1;
               }
               zeroSections.sort((first, second)=>{return (first[1]-first[0]+1) < (second[1]-second[0]+1)});
 
               var fixedValues = [];
-              var curWeight = Math.max(Math.min(...values), -(zeroSections[0][0]));
+              var curWeight = Math.max(Math.min(...values), ((zeroSections.length > 0) ? -zeroSections[0][0] : Math.min(...values)));
               for (var i = 0; i <= changedPos.length; i++) {
                 //Weights floating to top
-                if (i < zeroSections[0][0]) {
+                if ((zeroSections.length > 0 && i < zeroSections[0][0]) || zeroSections.length == 0) {
                   // Order of first elements most important
                   if (curWeight < -1) {
                     fixedValues.push(curWeight);
@@ -740,7 +746,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     // If out of floating weights, set value to slightly above neutral to keep above new items
                     fixedValues.push(-1);
                   }
-                } else if (i >= zeroSections[0][0] && i <= zeroSections[0][1]) {
+                } else if (zeroSections.length > 0 && i >= zeroSections[0][0] && i <= zeroSections[0][1]) {
                   //Neutral weight
                   fixedValues.push(0);
                 } else {

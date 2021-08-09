@@ -153,7 +153,14 @@ class StaffProfileDragForm extends FormBase {
       default:
         $table = [];
         foreach ($form_state->getValue('table') as $row) {
+          \Drupal::logger(serialize($row['id']));
+          \Drupal::logger(serialize($row));
           $table[$row['id']] = $row;
+          \Drupal::logger(serialize($row));
+
+
+
+          //$rows =  Node::load($row['id'])
         }
         $this->state->set('tabledrag-staff-profile-table', $table);
         break;
