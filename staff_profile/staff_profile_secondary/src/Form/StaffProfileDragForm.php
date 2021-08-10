@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use \Drupal\node\Entity\Node;
-
+use \Drupal\Core\Url;
 // Based on
 // https://api.drupal.org/api/drupal/core%21modules%21system%21tests%21modules%21tabledrag_test%21src%21Form%21TableDragTestForm.php/class/TableDragTestForm/9.2.x
 
@@ -66,12 +66,15 @@ class StaffProfileDragForm extends FormBase {
     ];
 
     //Set rows to staff_profile nodes
-    $nids = \Drupal::entityQuery('node')->condition('type', 'staff_profile')->execute();
-    $rows =  Node::loadMultiple($nids);
-    //Sort by first name, last name, and sort order
-    usort($rows, fn($a, $b) => ($a->field_staff_profile_first_name->value <=> $b->field_staff_profile_first_name->value));
-    usort($rows, fn($a, $b) => ($a->field_staff_profile_last_name->value <=> $b->field_staff_profile_last_name->value));
-    usort($rows, fn($a, $b) => ($a->field_staff_profile_sort_order->value <=> $b->field_staff_profile_sort_order->value));
+    $query = \Drupal::entityTypeManager()->getListBuilder('node')->getStorage()->getQuery();
+    $query->condition('type', 'staff_profile');
+    $query->condition('status', 1);
+    $query->sort('field_staff_profile_sort_order', 'ASC');
+    $query->sort('field_staff_profile_last_name', 'ASC');
+    $query->sort('field_staff_profile_first_name', 'ASC');
+
+    $nids = $query->execute();
+    $rows = Node::loadMultiple($nids);
     
     foreach ($rows as $id => $staff_profile) {
       
@@ -92,11 +95,14 @@ class StaffProfileDragForm extends FormBase {
             '#theme' => 'indentation',
             '#size' => 0,
           ],
-          '#plain_text' => $staff_profile->label(),
+          //'#plain_text' => $staff_profile->label(),
+          '#type' => 'link',
+          '#title' => $staff_profile->label(),
+          '#url' => Url::fromRoute('entity.node.canonical', ['node' => $id])
         ],
         'id' => [
           '#type' => 'hidden',
-          '#value' => $staff_profile->field_staff_profile_sort_order->value,
+          '#value' => $id,
           '#parents' => [
             'table',
             $id,
@@ -136,7 +142,6 @@ class StaffProfileDragForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['table'] = $this->buildStaffTable();
-    \Drupal::logger('staff_profile_secondary')->notice(serialize($form['table']));
     $form['actions'] = $this->buildFormActions();
     return $form;
   }
@@ -153,14 +158,11 @@ class StaffProfileDragForm extends FormBase {
       default:
         $table = [];
         foreach ($form_state->getValue('table') as $row) {
-          \Drupal::logger(serialize($row['id']));
-          \Drupal::logger(serialize($row));
           $table[$row['id']] = $row;
-          \Drupal::logger(serialize($row));
-
-
-
-          //$rows =  Node::load($row['id'])
+          
+          $staff_profile =  Node::load($row['id']);
+          $staff_profile->field_staff_profile_sort_order->value = $row['weight'];
+          $staff_profile->save();
         }
         $this->state->set('tabledrag-staff-profile-table', $table);
         break;
@@ -172,6 +174,7 @@ class StaffProfileDragForm extends FormBase {
        '#type' => 'actions',
        'save' => [
          '#type' => 'submit',
+         '#op' => 'save',
          '#value' => $this->t('Save'),
        ],
        'reset' => [
