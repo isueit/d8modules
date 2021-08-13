@@ -704,8 +704,8 @@ var hasSavedValue = [];
                 //All other moved elements will have a childcount of two, a & abbr
                 //Elements that had values previously should be ordered [this.value != 0]???
                 //  -Causes unset values to be set as elements are moved
-                var item = hasSavedValue.shift()
-                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 2 || this.parentElement.parentElement.parentElement.classList.contains('drag') || item){//|| this.value != 0) {
+                var item = hasSavedValue.shift();
+                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 3 || this.parentElement.parentElement.parentElement.classList.contains('drag') || item){//|| this.value != 0) {
                   changedPos.push(1);
                   if (lastZero) {
                     //Section of zeros ended
@@ -727,7 +727,6 @@ var hasSavedValue = [];
                 zeroIndex++;
               });
               //Add ending index if the last value was zero
-              console.log(zeroSections);
               if (zeroSections.length > 0 && zeroSections[zeroSections.length-1].length == 1) {
                 zeroSections[zeroSections.length-1][1] = zeroIndex-1;
               }
