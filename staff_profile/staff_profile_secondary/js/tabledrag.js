@@ -705,7 +705,7 @@ var hasSavedValue = [];
                 //Elements that had values previously should be ordered [this.value != 0]???
                 //  -Causes unset values to be set as elements are moved
                 var item = hasSavedValue.shift();
-                if (this.parentElement.parentElement.parentElement.children[0].childElementCount == 3 || this.parentElement.parentElement.parentElement.classList.contains('drag') || item){//|| this.value != 0) {
+                if (this.parentElement.parentElement.parentElement.children[0].getElementsByTagName('abbr').length == 1 || this.parentElement.parentElement.parentElement.classList.contains('drag') || item){//|| this.value != 0) {
                   changedPos.push(1);
                   if (lastZero) {
                     //Section of zeros ended
