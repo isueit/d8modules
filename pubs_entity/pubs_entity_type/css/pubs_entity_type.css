@@ -1,8 +1,8 @@
 .views-field-field-publication-date {
-background-color: #eeeeee;
-padding: 10px;
-font-size: 12px;
-border-left: 6px solid #f1be48;
+	font-size: 14px;
+	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
+	padding: 0.75rem 1.25rem;
+	background-color: rgba(0,0,0,.03);
 }
 
 .views-field-field-image-url {
@@ -32,11 +32,8 @@ a.publication-title {
 }
 
 nav.slick__arrow {
-	position: absolute;
-	top: 50%;
-	width: 100%;
-	transform: translateY(-50%);
-	display: block;
+	position: sticky;
+	transform: translateY(-704%);
 }
 
 button.slick-next.slick-arrow {
@@ -58,6 +55,7 @@ button.slick-next, button.slick-prev {
 .slick .slick-prev::before {
 	content: '\f053';
 	font-family: 'FontAwesome';
+	font-size: 18px;
 }
 
 .slick .slick-next::before {

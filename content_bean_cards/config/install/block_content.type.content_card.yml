@@ -7,5 +7,5 @@ dependencies:
 id: content_card
 label: 'Content Card'
 revision: 0
-description: 'The replacement functionality for Bean Cards, exculsively for text'
+description: 'Used to create content based blocks with customizable headings'
 

@@ -2,6 +2,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
+use function Drupal\Core\Session\user_role_permissions;
 
 /**
  * Implements hook_install().
@@ -28,5 +29,11 @@ function links_block_install() {
     ],
   ]);
   $block->save();
+
+// Set up permissions for content editors
+  user_role_grant_permissions('content_editor', [
+    'create links_block block content',
+    'delete any links_block block content',
+  ]);
 }
 

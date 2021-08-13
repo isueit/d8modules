@@ -10,15 +10,15 @@ id: block_content.social_media_red_bar.field_twitter_red
 field_name: field_twitter_red
 entity_type: block_content
 bundle: social_media_red_bar
-label: 'Twitter Red'
+label: 'Twitter (multiple links allowed)'
 description: ''
 required: false
 translatable: false
 default_value:
   -
     attributes: {  }
-    uri: 'http://twitter.com/isuextension'
-    title: Twitter
+    uri: 'https://twitter.com/isuextension'
+    title: 'Twitter (multiple links allowed)'
     options: {  }
 default_value_callback: ''
 settings:

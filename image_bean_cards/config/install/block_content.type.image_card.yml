@@ -7,4 +7,4 @@ dependencies:
 id: image_card
 label: 'Image Card'
 revision: 0
-description: 'The replacement functionality for Bean Cards, exclusively for images'
+description: 'Used to create image based cards with customizable labels'

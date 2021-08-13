@@ -7,12 +7,21 @@ use \Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use function Drupal\Core\Session\user_role_permissions;
 
 // ADD NEW UPDATES HERE
 // function section_lib_importer_update_8001() {
 // }
 
 function section_lib_importer_install() {
+  // Set up permissions for content editors
+   user_role_grant_permissions('content_editor', [
+    'import template from section_library',
+    'create basic_content block content',
+    'delete any basic_content block content',
+    'Update any basic_content block content',
+  ]);
+
   //Prepare for images
   $uri_file = 'public://section_library/';
   \Drupal::service('file_system')->prepareDirectory($uri_file, FileSystemInterface::CREATE_DIRECTORY);
@@ -371,7 +380,7 @@ function section_lib_importer_install() {
     $contentBlockType = BlockContentType::create([
       'id' => 'basic_content',
       'label' => 'Basic Content',
-      'description' => "Basic Content",
+      'description' => "Use for normal body content such as text, images, videos, etc",
     ]);
     $contentBlockType->save();
     

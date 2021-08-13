@@ -37,14 +37,18 @@ class EducationalProgramsFieldDefaultWidget extends WidgetBase {
   $options = array();
   $units = array();
   foreach ($all_terms as $term) {
-    if ($term->parent->target_id == 0) {
+	// If we would compare to the numeric value of
+    // zero (0) PHP would cast both arguments to numbers. In the case of
+    // string IDs the ID would always be casted to a 0 causing the
+    // condition to always be TRUE.
+    if ($term->parent->target_id == '0') {
       $units[$term->id()] = $term->getName();
       $options[$term->getName()] = array();
       //\Drupal::logger('blah')->info($term->id().' - '.$term->getName() . ' - ' . count($term->parent) . ': ' . $term->parent->target_id);
     }
   }
   foreach ($all_terms as $term) {
-    if ($term->parent->target_id != 0) {
+    if ($term->parent->target_id != '0') {
       $options[$units[$term->parent->target_id]][$term->id()] = $term->getName();
     }
   }

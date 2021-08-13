@@ -4,8 +4,8 @@ dependencies:
   module:
     - block_content
     - link
-id: block_content.field_pinterest_red
-field_name: field_pinterest_red
+id: block_content.field_youtube_red
+field_name: field_youtube_red
 entity_type: block_content
 type: link
 settings: {  }
@@ -16,3 +16,4 @@ translatable: true
 indexes: {  }
 persist_with_no_fields: false
 custom_storage: false
+

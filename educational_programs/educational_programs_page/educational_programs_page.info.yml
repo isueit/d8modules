@@ -1,0 +1,17 @@
+name: Educational Programs Page
+description: Creates a layout builder content type that uses the Educational Programs field
+package: ISUEO
+type: module
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:node
+  - drupal:path
+  - drupal:text
+  - drupal:ds
+  - drupal:layout_builder
+  - drupal:layout_builder_base
+  - drupal:layout_builder_base_library
+  - drupal:layout_builder_restrictions
+  - educational_programs_field
+# - layout_builder_perms
+

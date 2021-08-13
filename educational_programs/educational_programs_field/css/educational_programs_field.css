@@ -1,6 +1,20 @@
-div.educational_program div.educational_program_link {margin:10px 0;}
+div.educational_program {
+  border-bottom: solid 1px #ccc;
+  margin-bottom: 10px;
+  padding-bottom: 20px;
+}
 
-div.educational_program {border-bottom: solid 1px #ccc; margin-bottom: 10px;}
+div.educational_program div.educational_program_link {
+  margin:10px 0;
+}
 
-img.educational_program_image {max-width: 200px; float:left; margin: 0 8px 5px 0;}
-div.clearer {clear:both;}
+img.educational_program_image {
+  max-width: 200px;
+  float:left;
+  margin: 0 8px 5px 0;
+}
+
+div.clearer {
+  clear:both;
+ 
+

@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    config:
+      - field.storage.node.layout_builder__layout
+  config:
+    - node.type.educational_programs_page
+  module:
+    - layout_builder
+id: node.educational_programs_page.layout_builder__layout
+field_name: layout_builder__layout
+entity_type: node
+bundle: educational_programs_page
+label: Layout
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: layout_section
+

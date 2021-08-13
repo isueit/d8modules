@@ -1,0 +1,118 @@
+<?php
+
+use Drupal\taxonomy\Entity\Term;
+use Drupal\menu_link_content\Entity\MenuLinkContent as E_MenuLinkContent;
+use Drupal\menu_link_content\Plugin\Menu\MenuLinkContent;
+use Drupal\Core\Menu\MenuLinkTree;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\NodeForm.
+ *
+ * Make menu option mandatory based on configuration.
+function educational_programs_page_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) { } */
+
+function educational_programs_page_node_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  foreach ($entity->getFields() as $field) {
+	$field_name = $field->getName();
+	// TODO: Maybe rename 'field_name' to something more exclusive
+	if ($field->getFieldDefinition()->getType() == 'educational_programs_field' && $field_name == 'field_educational_program') {
+	  if (!empty($entity->get($field_name)[0])) {
+		$child_term = Term::load($entity->get($field_name)[0]->get('term_id')->getValue());
+
+		// NOTE: educational_programs_page setTitle is currently being handled by educational_programs_field
+		// if this needs to be changed it also could be done here
+
+		if (!empty($child_term)) {
+		  $child_term_id = $child_term->id();
+		  $child_term_name = $child_term->getName();
+
+		  $storage = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+		  // Get parent term, then grabs first parent term of child (in our case should only be one)
+		  $parent_terms = $storage->loadParents($child_term_id);
+		  $parent_term_name = reset($parent_terms)->getName();
+
+		  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+		  $menu_link_result = $menu_link_manager->loadLinksByRoute('entity.node.canonical', array('node' => $entity->id()));
+		  if (!empty($menu_link_result))
+			reset($menu_link_result)->deleteLink();
+		  // print($menu_link->getParent());
+
+		  // Load main menu to check existing menu items
+		  $main_menu_tree = \Drupal::menuTree()->load('main', \Drupal::menuTree()->getCurrentRouteMenuTreeParameters('main'));
+
+		  // Populate array with current parent menu items (titles and uuid)
+		  $menu_links = array();
+		  foreach ($main_menu_tree as $menu_item)
+		    $menu_links[$menu_item->link->getTitle()] = 'menu_link_content:' . $menu_item->link->getDerivativeId();
+
+		  // Get parent menu name from term name
+		  // this variable will become the name for the menu dropdown
+		  switch ($parent_term_name) {
+		    case '4-H Youth Development':
+		      $parent_term_name = '4-H & Youth';
+		      break;
+		    case 'Agriculture and Natural Resources':
+		      $parent_term_name = 'Agriculture & Environment';
+		      break;
+		    case 'Community and Economic Development':
+		      $parent_term_name = 'Community Development';
+		      break;
+		    case 'Human Sciences':
+		      $parent_term_name = 'Family & Food';
+		      break;
+		    default:
+		  }
+
+		  // Check to see if parent already has a menu item
+		  // If there isn't one create one
+		  if (!in_array($parent_term_name, array_keys($menu_links))) {
+		    $parent_menu_link = E_MenuLinkContent::create([
+   	      	  'title' => $parent_term_name,
+		  	  'link' => ['uri' => 'route:<nolink>'],
+   	      	  'menu_name' => 'main',
+   	      	  'expanded' => TRUE,
+   	      	]);
+		  	$parent_menu_link->save();
+		  }
+
+		  // Create link for child term
+		  $child_menu_link = E_MenuLinkContent::create([
+   	        'title' => $child_term_name,
+		    'link' => ['uri' => 'internal:/' . \Drupal::service('pathauto.alias_cleaner')->cleanString($child_term_name)],
+   	        'menu_name' => 'main',
+   	        'expanded' => TRUE,
+		    'node' => $entity->uuid(),
+		    'parent' => !empty($parent_menu_link) ? $parent_menu_link->getPluginId() : $menu_links[$parent_term_name],
+		  ])->save();
+
+		  break;
+		}
+	  }
+	}
+  }
+}
+
+/* function educational_programs_page_node_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->bundle() == 'educational_programs_page') {
+	$child_term = Term::load($entity->get($field_name)[0]->get('term_id')->getValue());
+	$child_term_id = $child_term_id->id();
+
+	$storage = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term');
+	// Get parent term
+	$parent_terms = $storage->loadParents($child_term_id);
+	// Grabs first parent term of child (in our case should only be one)
+	$parent_term_name = reset($parent_terms)->getName();
+
+	$tree = \Drupal::menuTree()->load('main', \Drupal::menuTree()->getCurrentRouteMenuTreeParameters('main'));
+
+	foreach ($tree as $menu_item) {
+	  if ($menu_item->link->getTitle() == $parent_term_name) {
+		if ($menu_item->count <= 1 )
+
+		break;
+	  }
+	}
+
+  }
+} */
+

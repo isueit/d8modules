@@ -2,6 +2,6 @@ langcode: en
 status: true
 dependencies: {  }
 id: social_media_red_bar
-label: 'Social Media Red Bar'
+label: 'Social Media (icons only)'
 revision: 0
-description: ''
+description: 'Used for site specific social media links and icons. Can only be used in the red bar.'

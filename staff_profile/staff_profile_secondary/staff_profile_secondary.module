@@ -205,6 +205,7 @@ function staff_profile_secondary_form_node_form_alter(&$form, &$form_state, $for
     $form['field_staff_profile_pref_name']['widget'][0]['value']['#disabled'] = TRUE;
     $form['field_staff_profile_pref_phone']['widget'][0]['value']['#disabled'] = TRUE;
     $form['field_staff_profile_smugmug']['widget'][0]['value']['#disabled'] = TRUE;
+    $form['field_staff_profile_teams_groups']['widget']['#disabled'] = TRUE;
 
     $form['body']['widget']['#disabled'] = TRUE;
   }

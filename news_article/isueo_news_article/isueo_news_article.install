@@ -1,0 +1,20 @@
+<?php
+
+use function Drupal\Core\Session\user_role_permissions;
+
+/**
+ * Implements hook_install to set default variables
+ */
+
+function isueo_news_article_install() {
+  // Set up permissions for content editors
+  user_role_grant_permissions('content_editor', [
+    'create news_article content',
+    'delete any news_article content',
+    'edit any news_article content',
+    'override news_article authored on option',
+    'override news_article published option',
+    'override news_article sticky option',
+  ]);
+}
+

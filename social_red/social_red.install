@@ -2,6 +2,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
+use function Drupal\Core\Session\user_role_permissions;
 
 
 /**
@@ -30,5 +31,10 @@ use Drupal\block_content\Entity\BlockContent;
     ],
   ]);
   $block->save();
+
+// Set up permissions for content editors
+  user_role_grant_permissions('content_editor', [
+    'Update any social_media_red_bar block content',
+  ]);
  }
 

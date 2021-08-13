@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - educational_programs_page
+  module:
+    - educational_programs_field
+    - node
+id: node.field_educational_program
+field_name: field_educational_program
+entity_type: node
+type: educational_programs_field
+settings: {  }
+module: educational_programs_field
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
+

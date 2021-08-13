@@ -156,7 +156,7 @@ class ProgramOfferingBlocks extends BlockBase
     }
 
     if (!empty($config['show_more_page']) && !empty($config['show_more_text']) && $count > $max_events) {
-      $results .= '<a class="events_show_more btn-outline-danger" href="' . $base_url . '/' . $config['show_more_page'] . '?filter=' . urlencode($string_of_search_terms) . '">' . $config['show_more_text'] . '</a><br />';
+      $results .= '<a class="events_show_more btn-outline-white" href="' . $base_url . '/' . $config['show_more_page'] . '?filter=' . urlencode($string_of_search_terms) . '">' . $config['show_more_text'] . '</a><br />';
     }
 
     return [
@@ -262,7 +262,7 @@ class ProgramOfferingBlocks extends BlockBase
     );
 
     // Get the list of Iowa Counties
-    $taxonomy_terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => 'counties-in-iowa']);
+    $taxonomy_terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => 'counties_in_iowa']);
     if (sizeof($taxonomy_terms) > 0) {
       $counties = array('' => 'Include All');
       foreach ($taxonomy_terms as $taxonomy_term) {

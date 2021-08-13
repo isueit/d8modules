@@ -8,6 +8,8 @@ dependencies:
     - field.field.block_content.social_media_red_bar.field_linked_in_red
     - field.field.block_content.social_media_red_bar.field_pinterest_red
     - field.field.block_content.social_media_red_bar.field_twitter_red
+    - field.field.block_content.social_media_red_bar.field_vimeo_red
+    - field.field.block_content.social_media_red_bar.field_youtube_red
   module:
     - link
 id: block_content.social_media_red_bar.default
@@ -75,4 +77,29 @@ content:
     third_party_settings: {  }
     type: link
     region: content
+  field_vimeo_red:
+    weight: 5
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_youtube_red:
+    weight: 6
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
 hidden: {  }
+
