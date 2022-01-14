@@ -38,10 +38,16 @@ class ExportLibTemplateForm extends FormBase {
             'provider' => $component->get('configuration')['provider'],
             'label_display' => $component->get('configuration')['label_display'],
             'view_mode' => $component->get('configuration')['view_mode'],
-
-            'info' => unserialize($component->get('configuration')['block_serialized'])->label(),
-            'body' => unserialize($component->get('configuration')['block_serialized'])->body->value
           ];
+          // Info and body from serialized block
+          // Blocks created and saved in block library not stored with layout
+          if (array_key_exists('block_serialized', $component->get('configuration'))) {
+            $index = count($section['blocks'])-1;
+            $section['blocks'][$index]['info'] = unserialize($component->get('configuration')['block_serialized'])->label();
+            $section['blocks'][$index]['body'] = unserialize($component->get('configuration')['block_serialized'])->body->value;
+          }
+          \Drupal::logger('section_lib_importer')->notice(serialize(array_keys($component->get('configuration'))));
+          \Drupal::logger('section_lib_importer')->notice(serialize($component->get('configuration')));
         }
         $temp['sections'][] = $section;
       }
