@@ -2,7 +2,7 @@
 ## Imports section library templates
 
 ## Note
-This module currently creates empty sections, blocks need to be added per page, per section ('Add Block' button). The CSS styling modifications made to a given section are kept imported.
+This module is able to copy block library blocks that exist on both the site that was exported from and on the destination site. Inline blocks created in the layout builder only have their titles, the body is not copied to the new site.
 
 ## Adding new Templates
 Navigate to the admin/config/content/layout_library_exporter page
