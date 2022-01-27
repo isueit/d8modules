@@ -1,9 +1,6 @@
 # Section Library Importer
 ### Imports section library templates
 
-## Note
-This module is able to copy block library blocks that exist on both the site that was exported from and on the destination site. Inline blocks created in the layout builder only have their titles, the body is not copied to the new site.
-
 ## Adding new Templates
 Navigate to the admin/config/content/layout_library_exporter page
 
@@ -24,8 +21,6 @@ This update adds 'One Column Layout' and 'Two Column Layout' that are provided w
 
 New layouts must use unique labels, duplicated labels will be ignored.
 
-As blocks do not yet load their body, commenting them out will prevent them from being added when setting up the site. This can be found in `$templates['sections'][#]['blocks']`
-
 [section_lib_importer.install](section_lib_importer.install)
 ```
 function section_lib_importer_update_8201() {
@@ -43,72 +38,71 @@ function section_lib_importer_update_8201() {
         'type' => 'section',
         'section_id' => 'layout_base_onecol',
         'section' => 
+      array (
+        'label' => '1 Column Layout',
+        'column_widths' => NULL,
+        'column_gap' => '',
+        'row_gap' => '',
+      'column_width' => '',
+        'column_breakpoint' => '',
+        'align_items' => '',
+        'background' => 'layout--background--none',
+        'background_image' => '',
+        'background_image_style' => '',
+        'background_attachment' => 'layout--background-attachment--default',
+        'background_position' => 'layout--background-position--center',
+        'background_size' => 'layout--background-size--cover',
+        'background_overlay' => 'layout--background-overlay--none',
+        'equal_top_bottom_margins' => '',
+        'equal_left_right_margins' => '',
+        'top_margin' => '',
+        'right_margin' => '',
+        'bottom_margin' => '',
+        'left_margin' => '',
+        'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+        'equal_left_right_paddings' => 'layout--left-right-padding--small',
+        'top_padding' => '',
+        'right_padding' => '',
+        'bottom_padding' => '',
+        'left_padding' => '',
+        'container' => 'layout--container--none',
+        'content_container' => 'layout--content-container--default',
+        'height' => 'layout--height--default',
+        'color' => 'layout--color--default',
+        'alignment' => '',
+        'modifier' => '',
+        'customizable_columns' => '',
+        'modifiers' => '',
+      ),
+      'blocks' => 
+      array (
+        0 => 
         array (
-          'label' => '1 Column Layout',
-          'column_widths' => NULL,
-          'column_gap' => '',
-          'row_gap' => '',
-          'column_width' => '',
-          'column_breakpoint' => '',
-          'align_items' => '',
-          'background' => 'layout--background--none',
-          'background_image' => '',
-          'background_image_style' => '',
-          'background_attachment' => 'layout--background-attachment--default',
-          'background_position' => 'layout--background-position--center',
-          'background_size' => 'layout--background-size--cover',
-          'background_overlay' => 'layout--background-overlay--none',
-          'equal_top_bottom_margins' => '',
-          'equal_left_right_margins' => '',
-          'top_margin' => '',
-          'right_margin' => '',
-          'bottom_margin' => '',
-          'left_margin' => '',
-          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
-          'equal_left_right_paddings' => 'layout--left-right-padding--small',
-          'top_padding' => '',
-          'right_padding' => '',
-          'bottom_padding' => '',
-          'left_padding' => '',
-          'container' => 'layout--container--none',
-          'content_container' => 'layout--content-container--default',
-          'height' => 'layout--height--default',
-          'color' => 'layout--color--default',
-          'alignment' => '',
-          'modifier' => '',
-          'customizable_columns' => '',
-          'modifiers' => '',
-        ),
-        'blocks' => 
-        array (
-          0 => 
+          'uuid' => 'c84dfabd-2059-42b0-9f33-0f1b174b2dd8',
+          'region' => 'content',
+          'configuration' => 
           array (
-            'uuid' => 'c84dfabd-2059-42b0-9f33-0f1b174b2dd8',
-            'region' => 'content',
-            'configuration' => 
-            array (
-              'id' => 'inline_block:basic_content',
-              'label' => 'Placeholder Content',
-              'label_display' => 'visible',
-              'provider' => 'layout_builder',
-              'view_mode' => 'full',
-              'block_revision_id' => NULL,
-              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:18:{s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"248dd925-3cd2-49fb-a27e-f3a78562feda";}}}s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:10:"1643314613";}}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:16:"revision_default";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:1:"1";}}}s:17:"isDefaultRevision";a:1:{s:9:"x-default";s:1:"1";}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:1:"1";}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:10:"1643314613";}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:1:"1";}}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:1:"1";}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:1:"0";}}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:5:"value";s:454:"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-";s:7:"summary";s:0:"";s:6:"format";s:7:"wysiwyg";}}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:1;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:0;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";s:1:"1";s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:5:{s:5:"label";a:1:{s:9:"x-default";s:19:"Placeholder Content";}s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}s:9:"published";a:1:{s:9:"x-default";s:1:"1";}s:16:"default_langcode";a:1:{s:9:"x-default";s:1:"1";}s:29:"revision_translation_affected";a:1:{s:9:"x-default";s:1:"1";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:0;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
-              'context_mapping' => 
-              array (
-              ),
-              'block_uuid' => NULL,
-            ),
-            'weight' => 1,
-            'additional' => 
+            'id' => 'inline_block:basic_content',
+            'label' => 'Placeholder Content',
+            'label_display' => 'visible',
+            'provider' => 'layout_builder',
+            'view_mode' => 'full',
+            'block_revision_id' => NULL,
+            'block_serialized' => 'Tzo0MDoiRHJ1cGFsXGJsb2NrX2NvbnRlbnRcRW50aXR5XEJsb2NrQ29udGVudCI6MzA6e3M6ODoiACoAdGhlbWUiO047czo5OiIAKgB2YWx1ZXMiO2E6MTc6e3M6ODoibGFuZ2NvZGUiO2E6MTp7czo5OiJ4LWRlZmF1bHQiO2E6MTp7aTowO2E6MTp7czo1OiJ2YWx1ZSI7czoyOiJlbiI7fX19czoxMToicmV2aXNpb25faWQiO2E6MTp7czo5OiJ4LWRlZmF1bHQiO2E6MTp7aTowO2E6MTp7czo1OiJ2YWx1ZSI7Tjt9fX1zOjI6ImlkIjthOjE6e3M6OToieC1kZWZhdWx0IjthOjE6e2k6MDthOjE6e3M6NToidmFsdWUiO047fX19czo0OiJ1dWlkIjthOjE6e3M6OToieC1kZWZhdWx0IjthOjE6e2k6MDthOjE6e3M6NToidmFsdWUiO3M6MzY6ImNjM2U3NjE4LTBjOTAtNGY0OC04ZmQzLWFmMGFiN2U3ZjY1MyI7fX19czo0OiJ0eXBlIjthOjE6e3M6OToieC1kZWZhdWx0IjthOjE6e2k6MDthOjE6e3M6OToidGFyZ2V0X2lkIjtzOjEzOiJiYXNpY19jb250ZW50Ijt9fX1zOjE2OiJyZXZpc2lvbl9jcmVhdGVkIjthOjE6e3M6OToieC1kZWZhdWx0IjthOjE6e2k6MDthOjE6e3M6NToidmFsdWUiO2k6MTY0MzMxODEyOTt9fX1zOjEzOiJyZXZpc2lvbl91c2VyIjthOjE6e3M6OToieC1kZWZhdWx0IjthOjA6e319czoxMjoicmV2aXNpb25fbG9nIjthOjE6e3M6OToieC1kZWZhdWx0IjthOjA6e319czo2OiJzdGF0dXMiO2E6MTp7czo5OiJ4LWRlZmF1bHQiO2E6MTp7aTowO2E6MTp7czo1OiJ2YWx1ZSI7YjoxO319fXM6NDoiaW5mbyI7YToxOntzOjk6IngtZGVmYXVsdCI7YToxOntpOjA7YToxOntzOjU6InZhbHVlIjtzOjE5OiJQbGFjZWhvbGRlciBDb250ZW50Ijt9fX1zOjc6ImNoYW5nZWQiO2E6MTp7czo5OiJ4LWRlZmF1bHQiO2E6MTp7aTowO2E6MTp7czo1OiJ2YWx1ZSI7aToxNjQzMzE4MTI5O319fXM6ODoicmV1c2FibGUiO2E6MTp7czo5OiJ4LWRlZmF1bHQiO2E6MTp7aTowO2E6MTp7czo1OiJ2YWx1ZSI7YjowO319fXM6MTY6ImRlZmF1bHRfbGFuZ2NvZGUiO2E6MTp7czo5OiJ4LWRlZmF1bHQiO2E6MTp7aTowO2E6MTp7czo1OiJ2YWx1ZSI7YjoxO319fXM6MTY6InJldmlzaW9uX2RlZmF1bHQiO2E6MTp7czo5OiJ4LWRlZmF1bHQiO2E6MDp7fX1zOjI5OiJyZXZpc2lvbl90cmFuc2xhdGlvbl9hZmZlY3RlZCI7YToxOntzOjk6IngtZGVmYXVsdCI7YTowOnt9fXM6NzoibWV0YXRhZyI7YToxOntzOjk6IngtZGVmYXVsdCI7YTowOnt9fXM6NDoiYm9keSI7YToxOntzOjk6IngtZGVmYXVsdCI7YToxOntpOjA7YTozOntzOjc6InN1bW1hcnkiO3M6MDoiIjtzOjU6InZhbHVlIjtzOjQ1NDoiPHA+TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuIFV0IGVuaW0gYWQgbWluaW0gdmVuaWFtLCBxdWlzIG5vc3RydWQgZXhlcmNpdGF0aW9uIHVsbGFtY28gbGFib3JpcyBuaXNpIHV0IGFsaXF1aXAgZXggZWEgY29tbW9kbyBjb25zZXF1YXQuIER1aXMgYXV0ZSBpcnVyZSBkb2xvciBpbiByZXByZWhlbmRlcml0IGluIHZvbHVwdGF0ZSB2ZWxpdCBlc3NlIGNpbGx1bSBkb2xvcmUgZXUgZnVnaWF0IG51bGxhIHBhcmlhdHVyLiBFeGNlcHRldXIgc2ludCBvY2NhZWNhdCBjdXBpZGF0YXQgbm9uIHByb2lkZW50LCBzdW50IGluIGN1bHBhIHF1aSBvZmZpY2lhIGRlc2VydW50IG1vbGxpdCBhbmltIGlkIGVzdCBsYWJvcnVtLjwvcD4NCiI7czo2OiJmb3JtYXQiO3M6Nzoid3lzaXd5ZyI7fX19fXM6OToiACoAZmllbGRzIjthOjA6e31zOjE5OiIAKgBmaWVsZERlZmluaXRpb25zIjtOO3M6MTI6IgAqAGxhbmd1YWdlcyI7TjtzOjE0OiIAKgBsYW5nY29kZUtleSI7czo4OiJsYW5nY29kZSI7czoyMToiACoAZGVmYXVsdExhbmdjb2RlS2V5IjtzOjE2OiJkZWZhdWx0X2xhbmdjb2RlIjtzOjE3OiIAKgBhY3RpdmVMYW5nY29kZSI7czo5OiJ4LWRlZmF1bHQiO3M6MTg6IgAqAGRlZmF1bHRMYW5nY29kZSI7czoyOiJlbiI7czoxNToiACoAdHJhbnNsYXRpb25zIjthOjE6e3M6OToieC1kZWZhdWx0IjthOjE6e3M6Njoic3RhdHVzIjtpOjI7fX1zOjI0OiIAKgB0cmFuc2xhdGlvbkluaXRpYWxpemUiO2I6MDtzOjE0OiIAKgBuZXdSZXZpc2lvbiI7YjoxO3M6MjA6IgAqAGlzRGVmYXVsdFJldmlzaW9uIjtiOjE7czoxMzoiACoAZW50aXR5S2V5cyI7YToyOntzOjY6ImJ1bmRsZSI7czoxMzoiYmFzaWNfY29udGVudCI7czo4OiJyZXZpc2lvbiI7Tjt9czoyNToiACoAdHJhbnNsYXRhYmxlRW50aXR5S2V5cyI7YToxOntzOjg6Imxhbmdjb2RlIjthOjE6e3M6OToieC1kZWZhdWx0IjtzOjI6ImVuIjt9fXM6MTI6IgAqAHZhbGlkYXRlZCI7YjoxO3M6MjE6IgAqAHZhbGlkYXRpb25SZXF1aXJlZCI7YjowO3M6MTk6IgAqAGxvYWRlZFJldmlzaW9uSWQiO047czozMzoiACoAcmV2aXNpb25UcmFuc2xhdGlvbkFmZmVjdGVkS2V5IjtzOjI5OiJyZXZpc2lvbl90cmFuc2xhdGlvbl9hZmZlY3RlZCI7czozNzoiACoAZW5mb3JjZVJldmlzaW9uVHJhbnNsYXRpb25BZmZlY3RlZCI7YTowOnt9czoxNToiACoAZW50aXR5VHlwZUlkIjtzOjEzOiJibG9ja19jb250ZW50IjtzOjE1OiIAKgBlbmZvcmNlSXNOZXciO2I6MTtzOjEyOiIAKgB0eXBlZERhdGEiO047czoxNjoiACoAY2FjaGVDb250ZXh0cyI7YTowOnt9czoxMjoiACoAY2FjaGVUYWdzIjthOjA6e31zOjE0OiIAKgBjYWNoZU1heEFnZSI7aTotMTtzOjE0OiIAKgBfc2VydmljZUlkcyI7YTowOnt9czoxODoiACoAX2VudGl0eVN0b3JhZ2VzIjthOjA6e31zOjEyOiIAKgBpc1N5bmNpbmciO2I6MDtzOjE5OiIAKgBhY2Nlc3NEZXBlbmRlbmN5IjtOO30=',
+            'context_mapping' => 
             array (
             ),
+            'block_uuid' => NULL,
+          ),
+          'weight' => 1,
+          'additional' => 
+          array (
           ),
         ),
       ),
     ),
-  )
+  ),
+),
   ];
   addSectionTemplates($templates);
 }

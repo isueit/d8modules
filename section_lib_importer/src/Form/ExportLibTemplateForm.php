@@ -36,26 +36,12 @@ class ExportLibTemplateForm extends FormBase {
             $raw_section['configuration']['id'] = explode(':', $raw_section['configuration']['id'])[0];
           }
           
-          //Include serialized blocks, currently removed while importing, may find fix later.
+          //Include serialized blocks by base64 encoding them, prevents reading while in module, but can be converted using and base64 decoder, decoded when importing
+          if (array_key_exists('block_serialized', $raw_section['configuration'])) {
+            $raw_section['configuration']['block_serialized'] = base64_encode($raw_section['configuration']['block_serialized']);
+          }
           
           $section['blocks'][] = $raw_section;
-
-          // $section['blocks'][] = [
-          //   'region' => $component->getRegion(),
-          // 
-          //   'id' => $component->get('configuration')['id'],
-          //   'label' => $component->get('configuration')['label'],
-          //   'provider' => $component->get('configuration')['provider'],
-          //   'label_display' => $component->get('configuration')['label_display'],
-          //   'view_mode' => $component->get('configuration')['view_mode'],
-          // ];
-          // // Info and body from serialized block
-          // // Blocks created and saved in block library not stored with layout
-          // if (array_key_exists('block_serialized', $component->get('configuration'))) {
-          //   $index = count($section['blocks'])-1;
-          //   $section['blocks'][$index]['info'] = unserialize($component->get('configuration')['block_serialized'])->label();
-          //   $section['blocks'][$index]['body'] = unserialize($component->get('configuration')['block_serialized'])->body->value;
-          // }
         }
         $temp['sections'][] = $section;
       }
