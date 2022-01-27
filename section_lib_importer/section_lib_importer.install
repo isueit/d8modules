@@ -107,517 +107,442 @@ function section_lib_importer_install() {
       ),
     ),
   ),
-    // [
-    //   'label' => 'One Column Layout',
-    //   'type' => 'section',
-    //   'filename' => 'oneColumn.png',
-    //   'sections' => [[
-    //     'label' => 'One Column Layout',
-    //     'section_id' => 'layout_base_onecol',
-    //     'section' => [
-    //       'label' => '1 Column Layout',
-    //       'column_widths' => null,
-    //       'column_gap' => '',
-    //       'row_gap' => '',
-    //       'column_width' => '',
-    //       'column_breakpoint' => '',
-    //       'align_items' => '',
-    //       'background' => 'layout--background--none',
-    //       'background_image' => '',
-    //       'background_image_style' => '',
-    //       'background_attachment' => 'layout--background-attachment--default',
-    //       'background_position' => 'layout--background-position--center',
-    //       'background_size' => 'layout--background-size--cover',
-    //       'background_overlay' => 'layout--background-overlay--none',
-    //       'equal_top_bottom_margins' => '',
-    //       'equal_left_right_margins' => '',
-    //       'top_margin' => '',
-    //       'right_margin' => '',
-    //       'bottom_margin' => '',
-    //       'left_margin' => '',
-    //       'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
-    //       'equal_left_right_paddings' => 'layout--left-right-padding--small',
-    //       'top_padding' => '',
-    //       'right_padding' => '',
-    //       'bottom_padding' => '',
-    //       'left_padding' => '',
-    //       'container' => 'layout--container--none',
-    //       'content_container' => 'layout--content-container--default',
-    //       'height' => 'layout--height--default',
-    //       'color' => 'layout--color--default',
-    //       'alignment' => '',
-    //       'modifier' => '',
-    //       'customizable_columns' => '',
-    //       'modifiers' => '',
-    //     ],
-    //     'blocks' => [
-    //       [
-    //         'region' => 'content',
-    // 
-    //         'id' => 'inline_block:basic_content',
-    //         'label' => 'Placeholder Content',
-    //         'provider' => 'layout_builder',
-    //         'label_display' => 0,
-    //         'view_mode' => 'full',
-    // 
-    //         'info' => 'Placeholder Content',
-    //         'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
-    //       ]
-    //     ]
-    //   ]]
-    // ],
-    [
-      'label' => 'Two Column Layout',
-      'type' => 'section',
-      'filename' => 'twoColumn.png',
-      'sections' => [[
-        'label' => 'Two Column Layout',
-        'section_id' => 'layout_base_twocol',
-        'section' => [
-          'label' => '2 Column Layout',
-          'column_widths' => null,
-          'column_gap' => 'layout--column-gap--default',
-          'row_gap' => 'layout--row-gap--none',
-          'column_width' => 'layout--column-width--default',
-          'column_breakpoint' => 'layout--column-breakpoint--medium',
-          'align_items' => 'layout--align-items--normal',
-          'background' => 'layout--background--none',
-          'background_image' => '',
-          'background_image_style' => '',
-          'background_attachment' => 'layout--background-attachment--default',
-          'background_position' => 'layout--background-position--center',
-          'background_size' => 'layout--background-size--cover',
-          'background_overlay' => 'layout--background-overlay--none',
-          'equal_top_bottom_margins' => '',
-          'equal_left_right_margins' => '',
-          'top_margin' => '',
-          'right_margin' => '',
-          'bottom_margin' => '',
-          'left_margin' => '',
-          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
-          'equal_left_right_paddings' => 'layout--left-right-padding--small',
-          'top_padding' => '',
-          'right_padding' => '',
-          'bottom_padding' => '',
-          'left_padding' => '',
-          'container' => 'layout--container--none',
-          'content_container' => 'layout--content-container--default',
-          'height' => 'layout--height--default',
-          'color' => 'layout--color--default',
-          'alignment' => '',
-          'modifier' => '',
-          'customizable_columns' => '',
-          'modifiers' => ''
-        ],
-        'blocks' => [
-          [
-            'region' => 'first',
-
-            'id' => 'inline_block:basic_content',
-            'label' => 'What is Lorem Ipsum',
-            'provider' => 'layout_builder',
-            'label_display' => 'visible',
-            'view_mode' => 'full',
-
-            'info' => 'What is Lorem Ipsum',
-            'body' => '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>'
-          ],[
-            'region' => 'second',
-
-            'id' => 'inline_block:basic_content',
-            'label' => 'Where does it come from?',
-            'provider' => 'layout_builder',
-            'label_display' => 'visible',
-            'view_mode' => 'full',
-
-            'info' => 'Where does it come from?',
-            'body' => '<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>'
-          ]
-        ]
-      ]]
-    ],
-    [
-      'label' => 'Three Column Layout',
-      'type' => 'section',
-      'filename' => 'threeColumn.png',
-      'sections' => [[
-        'label' => 'Three Column Layout',
-        'section_id' => 'layout_base_threecol',
-        'section' => [
-          'label' => '3 Column Layout',
-          'column_widths' => null,
-          'column_gap' => 'layout--column-gap--default',
-          'row_gap' => 'layout--row-gap--none',
-          'column_width' => 'layout--column-width--default',
-          'column_breakpoint' => 'layout--column-breakpoint--medium',
-          'align_items' => 'layout--align-items--normal',
-          'background' => 'layout--background--none',
-          'background_image' => '',
-          'background_image_style' => '',
-          'background_attachment' => 'layout--background-attachment--default',
-          'background_position' => 'layout--background-position--center',
-          'background_size' => 'layout--background-size--cover',
-          'background_overlay' => 'layout--background-overlay--none',
-          'equal_top_bottom_margins' => '',
-          'equal_left_right_margins' => '',
-          'top_margin' => '',
-          'right_margin' => '',
-          'bottom_margin' => '',
-          'left_margin' => '',
-          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
-          'equal_left_right_paddings' => 'layout--left-right-padding--small',
-          'top_padding' => '',
-          'right_padding' => '',
-          'bottom_padding' => '',
-          'left_padding' => '',
-          'container' => 'layout--container--none',
-          'content_container' => 'layout--content-container--default',
-          'height' => 'layout--height--default',
-          'color' => 'layout--color--default',
-          'alignment' => '',
-          'modifier' => '',
-          'customizable_columns' => '',
-          'modifiers' => ''
-        ],
-        'blocks' => [
-          [
-            'region' => 'first',
-
-            'id' => 'inline_block:basic_content',
-            'label' => 'Placeholder Content',
-            'provider' => 'layout_builder',
-            'label_display' => 0,
-            'view_mode' => 'full',
-
-            'info' => 'Placeholder Content',
-            'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
-          ],[
-            'region' => 'second',
-
-            'id' => 'inline_block:basic_content',
-            'label' => 'Placeholder Content',
-            'provider' => 'layout_builder',
-            'label_display' => 0,
-            'view_mode' => 'full',
-
-            'info' => 'Placeholder Content',
-            'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
-          ],[
-            'region' => 'third',
-
-            'id' => 'inline_block:basic_content',
-            'label' => 'Placeholder Content',
-            'provider' => 'layout_builder',
-            'label_display' => 0,
-            'view_mode' => 'full',
-
-            'info' => 'Placeholder Content',
-            'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
-          ]
-        ]
-      ]]
-  ],
-
-[
-	'label' => 'Left Column Template',
-	'type' => 'section',
-	'filename' => 'leftColumn.png',
-	'sections' => [[
-		'label' => 'Left Column Template',
-		'type' => 'section',
-		'section_id' => 'layout_base_twocol',
-		'section' => [
-			'label' => '',
-			'column_widths' => null,
-			'column_gap' => 'layout--column-gap--small',
-			'row_gap' => 'layout--row-gap--none',
-			'column_width' => 'layout--column-width--25-75',
-			'column_breakpoint' => 'layout--column-breakpoint--medium',
-			'align_items' => 'layout--align-items--normal',
-			'background' => 'layout--background--none',
-			'background_image' => '','background_image_style' => '',
-			'background_attachment' => 'layout--background-attachment--default',
-			'background_position' => 'layout--background-position--center',
-			'background_size' => 'layout--background-size--cover',
-			'background_overlay' => 'layout--background-overlay--none',
-			'equal_top_bottom_margins' => '',
-			'equal_left_right_margins' => '',
-			'top_margin' => '',
-			'right_margin' => '',
-			'bottom_margin' => '',
-			'left_margin' => '',
-			'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
-			'equal_left_right_paddings' => 'layout--left-right-padding--small',
-			'top_padding' => '',
-			'right_padding' => '',
-			'bottom_padding' => '',
-			'left_padding' => '',
-			'container' => 'layout--container--none',
-			'content_container' => 'layout--content-container--default',
-			'height' => 'layout--height--default',
-			'color' => 'layout--color--default',
-			'alignment' => '',
-			'modifier' => '',
-			'customizable_columns' => '',
-			'modifiers' => ''
-		],
-		'blocks' => [
-			[
-				'region' => 'first',
-				'id' => 'inline_block:basic_content',
-				'label' => 'Placeholder Content',
-				'provider' => 'layout_builder',
-				'label_display' => 0,
-				'view_mode' => 'full',
-				'info' => 'Float Left',
-				'body' => '<p><This is the left column template. Remove the placeholder text and replace with your own text and/or image.</p><p>This is a helpful way to insert image and text with appropriate padding and alignment properties. If you wish to have two columns of equal width, try using the two column template provided instead.</p>'
-				],[
-				'region' => 'second',
-				'id' => 'inline_block:basic_content',
-				'label' => 'Placeholder Content',
-				'provider' => 'layout_builder',
-				'label_display' => 'visible',
-				'view_mode' => 'full',
-				'info' => 'Placeholder Content',
-				'body' => '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>'
-			]
-		]
-	]]
-],
-
-[
-	"label" => "Right Column Template",
-	"type" => "section",
-	"filename" => "rightColumn.png",
-	"sections" => [[
-		"label" => "Right Column Template",
-		"type" => "section",
-		"section_id" => "layout_base_twocol",
-		"section" => [
-			"label" => "Right Column Template",
-			"column_widths" => null,
-			"column_gap" => "layout--column-gap--small",
-			"row_gap" => "layout--row-gap--none",
-			"column_width" => "layout--column-width--75-25",
-			"column_breakpoint" => "layout--column-breakpoint--medium",
-			"align_items" => "layout--align-items--normal",
-			"background" => "layout--background--none",
-			"background_image" => "",
-			"background_image_style" => "",
-			"background_attachment" => "layout--background-attachment--default",
-			"background_position" => "layout--background-position--center",
-			"background_size" => "layout--background-size--cover",
-			"background_overlay" => "layout--background-overlay--none",
-			"equal_top_bottom_margins" => "",
-			"equal_left_right_margins" => "",
-			"top_margin" => "",
-			"right_margin" => "",
-			"bottom_margin" => "",
-			"left_margin" => "",
-			"equal_top_bottom_paddings" => "layout--top-bottom-padding--big",
-			"equal_left_right_paddings" => "layout--left-right-padding--small",
-			"top_padding" => "",
-			"right_padding" => "",
-			"bottom_padding" => "",
-			"left_padding" => "",
-			"container" => "layout--container--none",
-			"content_container" => "layout--content-container--default",
-			"height" => "layout--height--default",
-			"color" => "layout--color--default",
-			"alignment" => "",
-			"modifier" => "",
-			"customizable_columns" => "",
-			"modifiers" => ""
-		],
-		"blocks" => [
-			[
-			"region" => "first",
-			"id" => "inline_block:basic_content",
-			"label" => "Placeholder Content",
-			"provider" => "layout_builder",
-			"label_display" => "visible",
-			"view_mode" => "full",
-			"info" => "Placeholder Content",
-			"body" => "<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>"
-			],[
-			"region" => "second",
-			"id" => "inline_block:basic_content",
-			"label" => "Placeholder Content",
-			"provider" => "layout_builder",
-			"label_display" => 0,
-			"view_mode" => "full",
-			"info" => "Placeholder Content",
-			"body" => "<p>This is the Right column template. Remove the placeholder text and replace with your own text and/or image.</p><p>This is a helpful way to insert image and text with appropriate padding and alignment properties. If you wish to have two columns of equal width, try using the two column template provided instead.</p>"
-			]
-		]
-	]]
-],
-array (
-  'label' => 'Library and Custom Blocks test',
-  'type' => 'section',
-  'filename' => 'INSERT FILENAME',
-  'sections' => 
   array (
-    0 => 
+    'label' => 'Two Column Layout',
+    'type' => 'section',
+    'filename' => 'twoColumn.png',
+    'sections' => 
     array (
-      'label' => 'Library and Custom Blocks test',
-      'type' => 'section',
-      'section_id' => 'layout_base_onecol',
-      'section' => 
+      0 => 
       array (
-        'label' => '1 Column Layout',
-        'column_widths' => NULL,
-        'column_gap' => '',
-        'row_gap' => '',
-        'column_width' => '',
-        'column_breakpoint' => '',
-        'align_items' => '',
-        'background' => 'layout--background--none',
-        'background_image' => '',
-        'background_image_style' => '',
-        'background_attachment' => 'layout--background-attachment--default',
-        'background_position' => 'layout--background-position--center',
-        'background_size' => 'layout--background-size--cover',
-        'background_overlay' => 'layout--background-overlay--none',
-        'equal_top_bottom_margins' => '',
-        'equal_left_right_margins' => '',
-        'top_margin' => '',
-        'right_margin' => '',
-        'bottom_margin' => '',
-        'left_margin' => '',
-        'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
-        'equal_left_right_paddings' => 'layout--left-right-padding--small',
-        'top_padding' => '',
-        'right_padding' => '',
-        'bottom_padding' => '',
-        'left_padding' => '',
-        'container' => 'layout--container--none',
-        'content_container' => 'layout--content-container--default',
-        'height' => 'layout--height--default',
-        'color' => 'layout--color--default',
-        'alignment' => '',
-        'modifier' => '',
-        'customizable_columns' => '',
-        'modifiers' => '',
-      ),
-      'blocks' => 
-      array (
-        0 => 
+        'label' => 'Two Column Layout',
+        'type' => 'section',
+        'section_id' => 'layout_base_twocol',
+        'section' => 
         array (
-          'uuid' => '9a5b3643-5b24-454e-a463-409509146886',
-          'region' => 'content',
-          'configuration' => 
-          array (
-            'id' => 'block_content',
-            'label' => 'contact_us',
-            'label_display' => 'visible',
-            'provider' => 'block_content',
-            'status' => true,
-            'info' => '',
-            'view_mode' => 'full',
-            'context_mapping' => 
-            array (
-            ),
-          ),
-          'weight' => 2,
-          'additional' => 
-          array (
-          ),
+          'label' => '2 Column Layout',
+          'column_widths' => NULL,
+          'column_gap' => 'layout--column-gap--default',
+          'row_gap' => 'layout--row-gap--none',
+          'column_width' => 'layout--column-width--default',
+          'column_breakpoint' => 'layout--column-breakpoint--medium',
+          'align_items' => 'layout--align-items--normal',
+          'background' => 'layout--background--none',
+          'background_image' => '',
+          'background_image_style' => '',
+          'background_attachment' => 'layout--background-attachment--default',
+          'background_position' => 'layout--background-position--center',
+          'background_size' => 'layout--background-size--cover',
+          'background_overlay' => 'layout--background-overlay--none',
+          'equal_top_bottom_margins' => '',
+          'equal_left_right_margins' => '',
+          'top_margin' => '',
+          'right_margin' => '',
+          'bottom_margin' => '',
+          'left_margin' => '',
+          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+          'equal_left_right_paddings' => 'layout--left-right-padding--small',
+          'top_padding' => '',
+          'right_padding' => '',
+          'bottom_padding' => '',
+          'left_padding' => '',
+          'container' => 'layout--container--none',
+          'content_container' => 'layout--content-container--default',
+          'height' => 'layout--height--default',
+          'color' => 'layout--color--default',
+          'alignment' => '',
+          'modifier' => '',
+          'customizable_columns' => '',
+          'modifiers' => '',
         ),
-        1 => 
+        'blocks' => 
         array (
-          'uuid' => '08702438-d018-489c-83ec-36cca06ad94a',
-          'region' => 'content',
-          'configuration' => 
+          0 => 
           array (
-            'id' => 'block_content',
-            'label' => 'staff_links',
-            'label_display' => 'visible',
-            'provider' => 'block_content',
-            'status' => true,
-            'info' => '',
-            'view_mode' => 'full',
-            'context_mapping' => 
+            'uuid' => 'db205324-8fca-487d-b509-4e97824ad2d8',
+            'region' => 'first',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'What is Lorem Ipsum',
+              'label_display' => 'visible',
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"ffebb466-d513-45d8-a675-f1ef2209e1e4";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643140785;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"What is Lorem Ipsum";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643140785;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:600:"<p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+  ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
             array (
             ),
           ),
-          'weight' => 4,
-          'additional' => 
+          1 => 
           array (
-          ),
-        ),
-        2 => 
-        array (
-          'uuid' => '8bd9e1ac-1e96-4796-8fd3-62aec0f4a585',
-          'region' => 'content',
-          'configuration' => 
-          array (
-            'id' => 'block_content',
-            'label' => 'linksblock',
-            'label_display' => 'visible',
-            'provider' => 'block_content',
-            'status' => true,
-            'info' => '',
-            'view_mode' => 'full',
-            'context_mapping' => 
+            'uuid' => 'bb41868d-10c9-41a9-8f5c-965357416b69',
+            'region' => 'second',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Where does it come from?',
+              'label_display' => 'visible',
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"c015341a-4c13-4a3c-81e8-0b9029e4c653";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643140826;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:24:"Where does it come from?";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643140826;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:772:"<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
+  ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
             array (
             ),
-          ),
-          'weight' => 6,
-          'additional' => 
-          array (
-          ),
-        ),
-        3 => 
-        array (
-          'uuid' => '064b6191-86d9-490d-ab12-adec45d46063',
-          'region' => 'content',
-          'configuration' => 
-          array (
-            'id' => 'block_content',
-            'label' => 'socialmediared',
-            'label_display' => 'visible',
-            'provider' => 'block_content',
-            'status' => true,
-            'info' => '',
-            'view_mode' => 'full',
-            'context_mapping' => 
-            array (
-            ),
-          ),
-          'weight' => 8,
-          'additional' => 
-          array (
-          ),
-        ),
-        4 => 
-        array (
-          'uuid' => 'aa26a18c-b73c-40b1-a2be-af5b78374aa4',
-          'region' => 'content',
-          'configuration' => 
-          array (
-            'id' => 'inline_block:another_basic_content',
-            'label' => 'Lorem Ipsum',
-            'label_display' => 'visible',
-            'provider' => 'layout_builder',
-            'view_mode' => 'full',
-            'block_revision_id' => NULL,
-            'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"26f1e35c-d5d3-4775-adea-75d6a7ebd04d";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:21:"another_basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1642195735;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:11:"Lorem Ipsum";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1642195735;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:47:"<p>This is a basic lorum ipsum test block</p>
-";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:21:"another_basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
-            'context_mapping' => 
-            array (
-            ),
-            'block_uuid' => NULL,
-          ),
-          'weight' => 10,
-          'additional' => 
-          array (
           ),
         ),
       ),
     ),
   ),
-)
+  array (
+    'label' => 'Three Column Layout',
+    'type' => 'section',
+    'filename' => 'threeColumn.png',
+    'sections' => 
+    array (
+      0 => 
+      array (
+        'label' => 'Three Column Layout',
+        'type' => 'section',
+        'section_id' => 'layout_base_threecol',
+        'section' => 
+        array (
+          'label' => '3 Column Layout',
+          'column_widths' => NULL,
+          'column_gap' => 'layout--column-gap--default',
+          'row_gap' => 'layout--row-gap--none',
+          'column_width' => 'layout--column-width--default',
+          'column_breakpoint' => 'layout--column-breakpoint--medium',
+          'align_items' => 'layout--align-items--normal',
+          'background' => 'layout--background--none',
+          'background_image' => '',
+          'background_image_style' => '',
+          'background_attachment' => 'layout--background-attachment--default',
+          'background_position' => 'layout--background-position--center',
+          'background_size' => 'layout--background-size--cover',
+          'background_overlay' => 'layout--background-overlay--none',
+          'equal_top_bottom_margins' => '',
+          'equal_left_right_margins' => '',
+          'top_margin' => '',
+          'right_margin' => '',
+          'bottom_margin' => '',
+          'left_margin' => '',
+          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+          'equal_left_right_paddings' => 'layout--left-right-padding--small',
+          'top_padding' => '',
+          'right_padding' => '',
+          'bottom_padding' => '',
+          'left_padding' => '',
+          'container' => 'layout--container--none',
+          'content_container' => 'layout--content-container--default',
+          'height' => 'layout--height--default',
+          'color' => 'layout--color--default',
+          'alignment' => '',
+          'modifier' => '',
+          'customizable_columns' => '',
+          'modifiers' => '',
+        ),
+        'blocks' => 
+        array (
+          0 => 
+          array (
+            'uuid' => '72248280-076f-46e5-9789-35af1bea6460',
+            'region' => 'first',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Placeholder Content',
+              'label_display' => 0,
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"fbffc933-4474-4905-9577-860b241beaa0";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141199;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141199;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:454:"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
+            array (
+            ),
+          ),
+          1 => 
+          array (
+            'uuid' => '01d7bb2f-75d7-4caf-84fc-89266ccd4de1',
+            'region' => 'second',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Placeholder Content',
+              'label_display' => 0,
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"d0e8d40c-0a87-4150-ac91-f8e18109a195";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141222;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141222;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:454:"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:3:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;s:2:"id";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
+            array (
+            ),
+          ),
+          2 => 
+          array (
+            'uuid' => 'c1d2e7a0-451b-4975-9d2e-e56ad4e62225',
+            'region' => 'third',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Placeholder Content',
+              'label_display' => 0,
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"00fc8381-877d-4794-8e64-318c97cfec04";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141249;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141249;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:454:"<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  array (
+    'label' => 'Left Column Template',
+    'type' => 'section',
+    'filename' => 'leftColumn.png',
+    'sections' => 
+    array (
+      0 => 
+      array (
+        'label' => 'Left Column Template',
+        'type' => 'section',
+        'section_id' => 'layout_base_twocol',
+        'section' => 
+        array (
+          'label' => '',
+          'column_widths' => NULL,
+          'column_gap' => 'layout--column-gap--small',
+          'row_gap' => 'layout--row-gap--none',
+          'column_width' => 'layout--column-width--25-75',
+          'column_breakpoint' => 'layout--column-breakpoint--medium',
+          'align_items' => 'layout--align-items--normal',
+          'background' => 'layout--background--none',
+          'background_image' => '',
+          'background_image_style' => '',
+          'background_attachment' => 'layout--background-attachment--default',
+          'background_position' => 'layout--background-position--center',
+          'background_size' => 'layout--background-size--cover',
+          'background_overlay' => 'layout--background-overlay--none',
+          'equal_top_bottom_margins' => '',
+          'equal_left_right_margins' => '',
+          'top_margin' => '',
+          'right_margin' => '',
+          'bottom_margin' => '',
+          'left_margin' => '',
+          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+          'equal_left_right_paddings' => 'layout--left-right-padding--small',
+          'top_padding' => '',
+          'right_padding' => '',
+          'bottom_padding' => '',
+          'left_padding' => '',
+          'container' => 'layout--container--none',
+          'content_container' => 'layout--content-container--default',
+          'height' => 'layout--height--default',
+          'color' => 'layout--color--default',
+          'alignment' => '',
+          'modifier' => '',
+          'customizable_columns' => '',
+          'modifiers' => '',
+        ),
+        'blocks' => 
+        array (
+          0 => 
+          array (
+            'uuid' => '6dbb2da8-dd29-4a06-80dd-f98d582ae377',
+            'region' => 'first',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Placeholder Content',
+              'label_display' => 0,
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"f169154c-2419-4752-8932-5b4ad97654f1";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141626;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141626;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:323:"<p>This is the left column template. Remove the placeholder text and replace with your own text and/or image.</p>
+
+    <p>This is a helpful way to insert image and text with appropriate padding and alignment properties. If you wish to have two columns of equal width, try using the two column template provided instead.</p>
+    ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
+            array (
+            ),
+          ),
+          1 => 
+          array (
+            'uuid' => '12df8d01-23c5-4b78-839f-6fcd7ba88400',
+            'region' => 'second',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Placeholder Content',
+              'label_display' => 'visible',
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"577eff50-3f95-4021-bb4a-3dcb373c3c67";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141691;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141691;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:600:"<p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+    ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  array (
+    'label' => 'Right Column Template',
+    'type' => 'section',
+    'filename' => 'rightColumn.png',
+    'sections' => 
+    array (
+      0 => 
+      array (
+        'label' => 'Right Column Template',
+        'type' => 'section',
+        'section_id' => 'layout_base_twocol',
+        'section' => 
+        array (
+          'label' => 'Right Column Template',
+          'column_widths' => NULL,
+          'column_gap' => 'layout--column-gap--small',
+          'row_gap' => 'layout--row-gap--none',
+          'column_width' => 'layout--column-width--75-25',
+          'column_breakpoint' => 'layout--column-breakpoint--medium',
+          'align_items' => 'layout--align-items--normal',
+          'background' => 'layout--background--none',
+          'background_image' => '',
+          'background_image_style' => '',
+          'background_attachment' => 'layout--background-attachment--default',
+          'background_position' => 'layout--background-position--center',
+          'background_size' => 'layout--background-size--cover',
+          'background_overlay' => 'layout--background-overlay--none',
+          'equal_top_bottom_margins' => '',
+          'equal_left_right_margins' => '',
+          'top_margin' => '',
+          'right_margin' => '',
+          'bottom_margin' => '',
+          'left_margin' => '',
+          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+          'equal_left_right_paddings' => 'layout--left-right-padding--small',
+          'top_padding' => '',
+          'right_padding' => '',
+          'bottom_padding' => '',
+          'left_padding' => '',
+          'container' => 'layout--container--none',
+          'content_container' => 'layout--content-container--default',
+          'height' => 'layout--height--default',
+          'color' => 'layout--color--default',
+          'alignment' => '',
+          'modifier' => '',
+          'customizable_columns' => '',
+          'modifiers' => '',
+        ),
+        'blocks' => 
+        array (
+          0 => 
+          array (
+            'uuid' => '4f14ad17-2453-4483-ac33-a7a89784d03d',
+            'region' => 'first',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Placeholder Content',
+              'label_display' => 'visible',
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"6cdf1065-e7e5-43d7-af1e-bd9280c2133e";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141930;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141930;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:600:"<p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+  ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
+            array (
+            ),
+          ),
+          1 => 
+          array (
+            'uuid' => '1f4851c7-e48a-4c26-8fa3-5931404dc9eb',
+            'region' => 'second',
+            'configuration' => 
+            array (
+              'id' => 'inline_block:basic_content',
+              'label' => 'Placeholder Content',
+              'label_display' => 0,
+              'provider' => 'layout_builder',
+              'view_mode' => 'full',
+              'block_revision_id' => NULL,
+              'block_serialized' => 'O:40:"Drupal\\block_content\\Entity\\BlockContent":30:{s:8:"' . "\0" . '*' . "\0" . 'theme";N;s:9:"' . "\0" . '*' . "\0" . 'values";a:17:{s:8:"langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:2:"en";}}}s:11:"revision_id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:2:"id";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";N;}}}s:4:"uuid";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:36:"c1897c7e-27e8-4adf-af3d-a4f4a918ba13";}}}s:4:"type";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:9:"target_id";s:13:"basic_content";}}}s:16:"revision_created";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141972;}}}s:13:"revision_user";a:1:{s:9:"x-default";a:0:{}}s:12:"revision_log";a:1:{s:9:"x-default";a:0:{}}s:6:"status";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:4:"info";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";s:19:"Placeholder Content";}}}s:7:"changed";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";i:1643141972;}}}s:8:"reusable";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:0;}}}s:16:"default_langcode";a:1:{s:9:"x-default";a:1:{i:0;a:1:{s:5:"value";b:1;}}}s:16:"revision_default";a:1:{s:9:"x-default";a:0:{}}s:29:"revision_translation_affected";a:1:{s:9:"x-default";a:0:{}}s:7:"metatag";a:1:{s:9:"x-default";a:0:{}}s:4:"body";a:1:{s:9:"x-default";a:1:{i:0;a:3:{s:7:"summary";s:0:"";s:5:"value";s:324:"<p>This is the Right column template. Remove the placeholder text and replace with your own text and/or image.</p>
+
+  <p>This is a helpful way to insert image and text with appropriate padding and alignment properties. If you wish to have two columns of equal width, try using the two column template provided instead.</p>
+  ";s:6:"format";s:7:"wysiwyg";}}}}s:9:"' . "\0" . '*' . "\0" . 'fields";a:0:{}s:19:"' . "\0" . '*' . "\0" . 'fieldDefinitions";N;s:12:"' . "\0" . '*' . "\0" . 'languages";N;s:14:"' . "\0" . '*' . "\0" . 'langcodeKey";s:8:"langcode";s:21:"' . "\0" . '*' . "\0" . 'defaultLangcodeKey";s:16:"default_langcode";s:17:"' . "\0" . '*' . "\0" . 'activeLangcode";s:9:"x-default";s:18:"' . "\0" . '*' . "\0" . 'defaultLangcode";s:2:"en";s:15:"' . "\0" . '*' . "\0" . 'translations";a:1:{s:9:"x-default";a:1:{s:6:"status";i:2;}}s:24:"' . "\0" . '*' . "\0" . 'translationInitialize";b:0;s:14:"' . "\0" . '*' . "\0" . 'newRevision";b:1;s:20:"' . "\0" . '*' . "\0" . 'isDefaultRevision";b:1;s:13:"' . "\0" . '*' . "\0" . 'entityKeys";a:2:{s:6:"bundle";s:13:"basic_content";s:8:"revision";N;}s:25:"' . "\0" . '*' . "\0" . 'translatableEntityKeys";a:1:{s:8:"langcode";a:1:{s:9:"x-default";s:2:"en";}}s:12:"' . "\0" . '*' . "\0" . 'validated";b:1;s:21:"' . "\0" . '*' . "\0" . 'validationRequired";b:0;s:19:"' . "\0" . '*' . "\0" . 'loadedRevisionId";N;s:33:"' . "\0" . '*' . "\0" . 'revisionTranslationAffectedKey";s:29:"revision_translation_affected";s:37:"' . "\0" . '*' . "\0" . 'enforceRevisionTranslationAffected";a:0:{}s:15:"' . "\0" . '*' . "\0" . 'entityTypeId";s:13:"block_content";s:15:"' . "\0" . '*' . "\0" . 'enforceIsNew";b:1;s:12:"' . "\0" . '*' . "\0" . 'typedData";N;s:16:"' . "\0" . '*' . "\0" . 'cacheContexts";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'cacheTags";a:0:{}s:14:"' . "\0" . '*' . "\0" . 'cacheMaxAge";i:-1;s:14:"' . "\0" . '*' . "\0" . '_serviceIds";a:0:{}s:18:"' . "\0" . '*' . "\0" . '_entityStorages";a:0:{}s:12:"' . "\0" . '*' . "\0" . 'isSyncing";b:0;s:19:"' . "\0" . '*' . "\0" . 'accessDependency";N;}',
+              'context_mapping' => 
+              array (
+              ),
+              'block_uuid' => NULL,
+            ),
+            'weight' => 1,
+            'additional' => 
+            array (
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
 ];
 
   $blocks = \Drupal::entityTypeManager()->getStorage('block_content_type')->loadMultiple(null);
