@@ -325,7 +325,7 @@ class ProgramOfferingBlocks extends BlockBase
       'title_search' => '',
       'show_more_page' => '',
       'show_more_text' => 'More',
-      'announement_text' => '',
+      'announcement_text' => '',
       'only_planned_programs' => FALSE,
       'program_area' => '',
       'county' => '',

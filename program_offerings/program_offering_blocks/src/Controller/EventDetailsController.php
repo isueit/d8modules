@@ -52,7 +52,6 @@ class EventDetailsController extends ControllerBase
         }
         $results .= '  <div class="event_address">' . $event_address . '  </div>' . PHP_EOL;
 
-
         if (!empty($event['Planned_Program__r.Web_Description__c'])) {
           $description = str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . PHP_EOL;
         } else {
@@ -61,7 +60,9 @@ class EventDetailsController extends ControllerBase
         if (!empty($event['Planned_Program__r.Smugmug_ID__c'])) {
           $description = '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $event['Planned_Program__r.Smugmug_ID__c'] . '/0/XL/' . $event['Planned_Program__r.Smugmug_ID__c'] . '-XL.jpg" alt="" />' . $description . '<div class="clearer"></div>';
         }
-        $results .= '  <div class="event_description">' . $description . PHP_EOL;
+        if isset($description) {
+          $results .= '  <div class="event_description">' . $description . PHP_EOL;
+        }
 
 
         $results .= '  <div class="event_contact_label">Contact Info:</div>' . PHP_EOL;
