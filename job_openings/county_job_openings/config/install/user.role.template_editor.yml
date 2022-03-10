@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.county_job_template
+  module:
+    - node
+    - override_node_options
+id: template_editor
+label: 'Template Editor'
+weight: 3
+is_admin: null
+permissions:
+  - 'create county_job_template content'
+  - 'delete any county_job_template content'
+  - 'delete county_job_template revisions'
+  - 'delete own county_job_template content'
+  - 'edit any county_job_template content'
+  - 'edit own county_job_template content'
+  - 'override county_job_template revision option'
+  - 'revert county_job_template revisions'
+  - 'view county_job_template revisions'

@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.template_editor
+  module:
+    - user
+id: user_remove_role_action.template_editor
+label: 'Remove the Template Editor role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: template_editor

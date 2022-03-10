@@ -10,7 +10,6 @@ function validatePubsEntity($validateID, $curEntity) {
   }
 
   $url = \Drupal::config('pubs_entity_type.settings')->get('pubs_details_url');
-  $url_host = parse_url($url, PHP_URL_HOST);
 
   try {
     if (0 === substr_compare($url, "/", -1) && explode(' ', get_headers($url . $validateID, 1)[0])[1] == 200) {
@@ -76,7 +75,7 @@ function validatePubsEntity($validateID, $curEntity) {
  * Only updates published publications created outside of feeds, as they may not exist in the provided feed
  */
 function pubs_entity_type_rebuild() {
-  $entities = \Drupal::entityTypeManager()->getStorage('pubs_entity')->loadByProperties(['field_from_feed' => FALSE]);
+  $entities = \Drupal::entityTypeManager()->getStorage('pubs_entity')->loadByProperties(['field_from_feed' => FALSE, 'status' => TRUE]);
   $unpublished = [];
   foreach ($entities as $entity) {
     $passed = validatePubsEntity($entity->field_product_id->value, $entity);
@@ -87,7 +86,7 @@ function pubs_entity_type_rebuild() {
       $entity->set('field_publication_date', $pub_date[1] . '-' . $pub_date[0] . '-01');
       $entity->save();
     } else {
-      $unpublished[] = "<" . $entity->field_product_id->value . "> " . $entity->name->value;
+      $unpublished[] = "<" . $entity->field_product_id->value . "> " . $entity->name->value . " - " . (is_string($passed) ? $passed  : "not an object");
       $entity->setUnpublished();
       $entity->save();
     }

@@ -1,0 +1,8 @@
+name: County Job Openings
+description: Module to Create County Job Opening listings
+package: ISUEO
+type: module
+core_version_requirement: ^8 || ^9
+dependencies:
+  - taxonomy_import:taxonomy_import
+  - drupal:rest

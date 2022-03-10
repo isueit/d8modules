@@ -74,13 +74,12 @@ class ProgramOfferingBlocks extends BlockBase
     $string_of_search_terms = $this->build_search_string($string_of_search_terms, $querystring_filter);
     $search_terms_array = explode('|', $string_of_search_terms);
 
-    // Get the events from the JSON feed
+    // Set the timeout to 2 seconds, Get the events from the JSON feed, then reset timeout to previous value
+    $default_socket_timeout = ini_get('default_socket_timeout');
+    ini_set('default_socket_timeout', 2);
     $buffer = file_get_contents($module_config->get('url'));
-    //$buffer = ""; //Helpers::read_ungerboeck_file();
+    ini_set('default_socket_timeout', $default_socket_timeout);
     $json_events = json_decode($buffer, TRUE);
-    //$json_events = array_reverse($json_events);
-    //\Drupal::logger('program_offering_blocks')->info(sizeof($json_events));
-    //$json_events = array();
 
     $results .= PHP_EOL . '<ul class="program_offering_blocks program_offering_blocks_' . $id . '">' . PHP_EOL;
 
@@ -114,7 +113,7 @@ class ProgramOfferingBlocks extends BlockBase
 
       if ($display_event) {
         if ($count < $max_events) {
-          $start_date = strtotime($event['Start_Time_and_Date__c']);
+          $start_date = strtotime($event['Next_Start_Date__c']);
           $results .= '  <li class="event">' . PHP_EOL;
           $results .= '    <div class="event_date"><span class="event_day">' . date('d', $start_date) . '</span>
 <span class="event_month">' . date('M', $start_date) . '</span>
@@ -125,7 +124,7 @@ class ProgramOfferingBlocks extends BlockBase
           $results .= $event['Event_Location__c'] == 'Online' ? 'Online' : $event['Event_Location__c'] . ', ' . $event['Program_State__c'];
           $results .= '</div>' . PHP_EOL;
 
-          $startDate = date($config['format_with_time'], strtotime($event['Start_Time_and_Date__c']));
+          $startDate = date($config['format_with_time'], strtotime($event['Next_Start_Date__c']));
           $results .= '    <div class="event_startdate">' . $startDate . '</div>' . PHP_EOL;
 
           //$results .= '    ' . $title . PHP_EOL;

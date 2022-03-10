@@ -1,0 +1,82 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ * Add tab with custom title and link only to pages of a selected content type
+ */
+/*
+function homepage_content_menu_local_tasks_alter(&$data, $route_name) {
+  if (is_array($data['tabs'][0]['field_ui.fields:display_overview_node']['#link'])) {
+	$thing = $data['tabs'][0]['field_ui.fields:display_overview_node']['#link']['url']->getRouteParameters();
+
+	if ($thing['node_type'] == 'homepage_ct') {
+	  $data['tabs'][0]['homepage_content.manage_layout'] = array(
+		'#theme' => 'menu_local_task',
+		'#link' => array(
+		  'title' => 'Manage Layout',
+		  'url' => \Drupal\Core\Url::fromUri('/admin/structure/types/manage/homepage_ct/display/full/layout'),
+		  'localized_options' => array(),
+		),
+		'#weight' => 4,
+	  );
+
+	  $data['tabs'][0]['field_ui.fields:display_overview_node']['#access'] = FALSE;
+	}
+  }
+
+}
+*/
+
+/*
+function homepage_content_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  $type = null;
+
+  foreach ($router_item["map"] as $map) {
+	if (!isset($map->type)) continue;
+	if ($map->type == "homepage_ct") {
+	  $type = $map->type;
+	  break;
+	}
+  }
+
+  if ($type == null) {
+	print("<pre>" . print_r("Did not find it", TRUE) . "</pre>");
+    return;
+  } else {
+	  print("<pre>" . print_r("Did find it", TRUE) . "</pre>");
+  }
+
+  foreach ($data['tabs'][0]['output'] as $key => $value) {
+	if ($value['#link']['path'] == 'node/%/manage-display') {
+	  unset($data['tabs'][0]['output'][$key]);
+	}
+  }
+
+}
+*/
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ * Modifies existing 'Manage display' to now host layout_builder
+ */
+/*
+function homepage_content_menu_links_discovered_alter(&$links) {
+  $links['admin_toolbar_tools.extra_links:entity.entity_view_display.node.full.homepage_ct']['title'] = 'Manage layout';
+  $links['admin_toolbar_tools.extra_links:entity.entity_view_display.node.full.homepage_ct']['url'] = "internal:/admin/structure/types/manage/homepage_ct/display/full/layout";
+}
+*/
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ * Hides permissions layout_restriction and layout_builder options to users
+ */
+/*
+function homepage_content_form_entity_view_display_edit_form_alter(&$form, &$form_state, $form_id) {
+  hide($form['modes']);
+  hide($form['layout']);
+  hide($form['actions']);
+}
+*/

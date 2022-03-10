@@ -37,7 +37,7 @@ function educational_programs_page_node_presave(Drupal\Core\Entity\EntityInterfa
 	// TODO: Maybe rename 'field_name' to something more exclusive
 	if ($field->getFieldDefinition()->getType() == 'educational_programs_field' && $field_name == 'field_educational_program') {
 	  if (!empty($entity->get($field_name)[0])) {
-		$child_term = Term::load($entity->get($field_name)[0]->get('term_id')->getValue());	
+		$child_term = Term::load($entity->get($field_name)[0]->get('term_id')->getValue());
 
 		// NOTE: educational_programs_page setTitle is currently being handled by educational_programs_field
 		// if this needs to be changed it also could be done here
@@ -134,11 +134,12 @@ function educational_programs_page_cron() {
  */
 function educational_programs_page_check_published_nodes() {
 	// Get all taxonomy terms, store in array
-	$terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadMultiple($terms);
+	$terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadTree('educational_programs');
 	// Create array and store all taxonomy term names, these should be what our edu_page content is called
 	$term_names = array();
-	foreach ($terms as $term)
-		array_push($term_names, $term->getName());
+	foreach ($terms as $term) {
+		array_push($term_names, $term->name);
+	}
 
 	// Get all published nodes of edu_page type
 	$nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(array('type' => 'educational_programs_page', 'status' => '1'));

@@ -1,0 +1,5 @@
+county_job_opening_edit:
+  version: 1.x
+  css:
+    layout:
+      css/county_job_opening_edit.css: {}

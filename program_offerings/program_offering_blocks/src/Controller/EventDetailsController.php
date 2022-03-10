@@ -106,22 +106,31 @@ class EventDetailsController extends ControllerBase
 
     // If start time isn't midnight, then display the start time also
     if (date('Gi', $startdate) <> '0000') {
-      $output .= date(' h:i A', $startdate);
+      $output .= date(' g:i A', $startdate);
     }
 
     $output .= ' - ';
 
     // If date part of start and end dates are different, then include the end date
     if (date('z', $startdate) <> date('z', $enddate)) {
-      $output .= date(' m/d/y', $enddate);
+      $output .= date('l, m/d/y', $enddate);
     }
 
     // If the end time isn't midnight, then display the end time
     if (date('Gi', $enddate) <> '0000') {
-      $output .= date(' h:i A', $enddate);
+      $output .= date(' g:i A', $enddate);
     }
 
-    $output = '  <div class="event_details_dates">' . $output . '</div>';
+    $output = '  <div class="event_details_dates">' . $output . '</div>' . PHP_EOL;
+    if ($event['Start_Time_and_Date__c'] != $event['Next_Start_Date__c']) {
+      $tmpdate = strtotime($event['Next_Start_Date__c']);
+      $tmpstr = date('l, m/d/y', $tmpdate);
+      // If start time isn't midnight, then display the start time also
+      if (date('Gi', $tmpdate) <> '0000') {
+        $tmpstr .= date(' h:i A', $tmpdate);
+      }
+      $output .= '  <p>Next Session: <span class="event_details_dates">' . $tmpstr . '</span></p>' . PHP_EOL;
+    }
 
     return $output;
   }
@@ -149,7 +158,11 @@ class EventDetailsController extends ControllerBase
     foreach ($session_names as $session_name) {
       if (!empty($event[$session_name])) {
         $multiple_sessions = true;
-        $event_sessions .= '<li>' . date('l, m/d/Y h:i A', strtoTime($event[$session_name])) . '</li>' . PHP_EOL;
+        $tmpstr = date('l, m/d/Y g:i A', strtoTime($event[$session_name]));
+        if ($event[$session_name] == $event['Next_Start_Date__c']) {
+          $tmpstr = '<span class="next_session">' . $tmpstr . '</span>';
+        }
+        $event_sessions .= '<li>' . $tmpstr . '</li>' . PHP_EOL;
         $count++;
       }
     }

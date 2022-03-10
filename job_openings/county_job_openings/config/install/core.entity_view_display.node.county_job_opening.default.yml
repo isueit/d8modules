@@ -1,0 +1,177 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.county_job_opening.body
+    - field.field.node.county_job_opening.field_application_deadline_date
+    - field.field.node.county_job_opening.field_base_county
+    - field.field.node.county_job_opening.field_benefits
+    - field.field.node.county_job_opening.field_counties_served
+    - field.field.node.county_job_opening.field_hours
+    - field.field.node.county_job_opening.field_job_type
+    - field.field.node.county_job_opening.field_objective
+    - field.field.node.county_job_opening.field_open_until_filled
+    - field.field.node.county_job_opening.field_preferred_qualifications
+    - field.field.node.county_job_opening.field_qualifications
+    - field.field.node.county_job_opening.field_requirements
+    - field.field.node.county_job_opening.field_responsibilities
+    - field.field.node.county_job_opening.field_wages
+    - field.field.node.county_job_opening.field_wages_status
+    - field.field.node.county_job_opening.field_wages_type
+    - node.type.county_job_opening
+  module:
+    - datetime
+    - ds
+    - field_delimiter
+    - field_formatter_class
+    - options
+    - text
+    - user
+id: node.county_job_opening.default
+targetEntityType: node
+bundle: county_job_opening
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_application_deadline_date:
+    type: datetime_default
+    label: inline
+    settings:
+      timezone_override: ''
+      format_type: m_d_y
+    third_party_settings:
+      field_formatter_class:
+        class: job-field
+    weight: 12
+    region: content
+  field_base_county:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 14
+    region: content
+  field_benefits:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_counties_served:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings:
+      field_delimiter:
+        delimiter: ','
+      field_formatter_class:
+        class: ''
+      ds:
+        ds_limit: ''
+    weight: 15
+    region: content
+  field_hours:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      field_formatter_class:
+        class: job-field
+    weight: 7
+    region: content
+  field_job_type:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: job-field
+    weight: 6
+    region: content
+  field_objective:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_open_until_filled:
+    type: boolean
+    label: hidden
+    settings:
+      format: custom
+      format_custom_false: ''
+      format_custom_true: 'This position will remain open until filled'
+    third_party_settings:
+      field_formatter_class:
+        class: job-field
+    weight: 13
+    region: content
+  field_preferred_qualifications:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_qualifications:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_responsibilities:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_wages:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      field_formatter_class:
+        class: job-field
+    weight: 10
+    region: content
+  field_wages_status:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: job-field
+    weight: 9
+    region: content
+  field_wages_type:
+    type: list_default
+    label: inline
+    settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: job-field
+    weight: 8
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_requirements: true

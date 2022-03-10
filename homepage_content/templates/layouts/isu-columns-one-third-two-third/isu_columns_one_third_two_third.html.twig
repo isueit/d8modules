@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * One Column Layout Builder Layout
+ * At this time, this layout is optimized for Layout Builder
+ *
+ * Available variables:
+ * - col_1
+ * - col_2
+ *
+ */
+#}
+
+{%
+  set classes = [
+    not node.isPublished() and node ? 'node--unpublished'
+  ]
+%}
+
+{% if col_1|render or col_2|render %}
+
+  <{{ outer_wrapper }}{{ attributes.addClass(classes) }}>
+    <div class="container isu-landingpage_row isu-columns_one_third_two_thirds">
+      <div class="row">
+
+        {% set col_1_classes = [
+          col_2|render ? 'col-md-4' : 'col-md', 
+          ] 
+        %}
+
+        {% set col_2_classes = [
+          col_1|render ? 'col-md-8' : 'col-md', 
+          ] 
+        %}
+
+        {% if content.col_1|render %}
+          <{{ col_1_wrapper }}{{ col_1_attributes.addClass(col_1_classes) }}>
+            <div{{ region_attributes.col_1 }}>
+              {{ content.col_1 }}
+            </div>
+          </{{ col_1_wrapper }}>
+        {% endif %}
+
+        {% if content.col_2|render %}
+          <{{ col_2_wrapper }}{{ col_2_attributes.addClass(col_2_classes) }}>
+            <div{{ region_attributes.col_2 }}>
+              {{ content.col_2 }}
+            </div>
+          </{{ col_2_wrapper }}>
+        {% endif %}
+
+      </div>
+    </div>
+  </{{ outer_wrapper }}>
+
+{% endif %}

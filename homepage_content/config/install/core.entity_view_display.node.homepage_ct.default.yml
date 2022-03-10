@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.homepage_ct.body
+    - field.field.node.homepage_ct.field_announcement
+    - field.field.node.homepage_ct.layout_builder__layout
+    - node.type.homepage_ct
+  module:
+    - user
+id: node.homepage_ct.default
+targetEntityType: node
+bundle: homepage_ct
+mode: default
+content:
+  field_announcement:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  body: true
+  layout_builder__layout: true

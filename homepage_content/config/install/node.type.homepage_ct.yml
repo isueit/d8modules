@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - layout_content_type
+      - layout_builder_base
+      - layout_builder_base_library
+      - layout_builder_restrictions
+name: Homepage
+type: homepage_ct
+description: 'To be used for homepages on county websites only.'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false

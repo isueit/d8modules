@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.homepage_ct
+  module:
+    - text
+  enforced:
+    module:
+      - homepage_content
+id: node.homepage_ct.body
+field_name: body
+entity_type: node
+bundle: homepage_ct
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary
