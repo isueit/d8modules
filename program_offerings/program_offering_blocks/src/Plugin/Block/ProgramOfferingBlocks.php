@@ -82,6 +82,7 @@ class ProgramOfferingBlocks extends BlockBase
     $json_events = json_decode($buffer, TRUE);
 
     $results .= PHP_EOL . '<ul class="program_offering_blocks program_offering_blocks_' . $id . '">' . PHP_EOL;
+    $found_events = [];
 
     foreach ($json_events as $event) {
       $display_event = TRUE;
@@ -112,6 +113,19 @@ class ProgramOfferingBlocks extends BlockBase
       }
 
       if ($display_event) {
+        $found_events[] = [
+          'Id' => $event['Id'],
+          'Next_Start_Date__c' => $event['Next_Start_Date__c'],
+          'Event_Location__c' => $event['Event_Location__c'],
+          'Program_State__c' => empty($event['Program_State__c']) ? "" : $event['Program_State__c'],
+          //'Program_Title__c' => strip_tags($this->format_title($event, $config)),
+          'Program_Title__c' => $event['Name_Placeholder__c'],
+          'Registration_Opens__c' => empty($event['Registration_Opens__c']) ? "" : $event['Registration_Opens__c'],
+          'Registration_Deadline__c' => empty($event['Registration_Deadline__c']) ? "" : $event['Registration_Deadline__c'],
+          'Registration_Link__c' => empty($event['Registration_Link__c']) ? "" : $event['Registration_Link__c'],
+          'Planned_Program_Website__c' => empty($event['Planned_Program_Website__c']) ? "" : $event['Planned_Program_Website__c'],
+          'Delivery_Language__c' => empty($event['Delivery_Language__c']) ? "" : $event['Delivery_Language__c'],
+        ];
         if ($count < $max_events) {
           $start_date = strtotime($event['Next_Start_Date__c']);
           $results .= '  <li class="event">' . PHP_EOL;
@@ -149,6 +163,38 @@ class ProgramOfferingBlocks extends BlockBase
 
     $results .= '</ul>' . PHP_EOL;
 
+    $results .= '<hr/>' . PHP_EOL;
+
+    $reactConfig = [];
+    $reactConfig['show_more_page'] = $config['show_more_page'];
+    $reactConfig['show_more_text'] = $config['show_more_text'];
+    $reactConfig['base_url'] = $base_url;
+    $reactConfig['filter_terms'] = urlencode($string_of_search_terms);
+    $reactConfig['block_name'] = 'program_offering_blocks_' . $id;
+    $reactConfig['max_events'] = $max_events;
+    $reactConfig['event_details_page'] = $config['event_details_page'];
+
+    $results .= sprintf('<div id="eventviewer"' . PHP_EOL . 'data-config="%1$s"' . PHP_EOL . 'data-events="%2$s"></div>',
+      str_replace('"', '&quot;', json_encode($reactConfig)),
+      str_replace('"', '&quot;', json_encode($found_events)),
+    ) . PHP_EOL;
+
+    //$morelink = '';
+    //if (!empty($config['show_more_page']) && !empty($config['show_more_text'])) {
+      //$morelink = '<a class="events_show_more btn-outline-white" href="' . $base_url . '/' . $config['show_more_page'] . '?filter=' . urlencode($string_of_search_terms) . '">' . $config['show_more_text'] . '</a>';
+    //}
+
+    //$results .= sprintf('<div id="eventviewer" data-blockName="program_offering_blocks_%1$d" data-number="%2$d" data-eventurl="%3$s" data-morelink="%4$s"' . PHP_EOL . 'data-events="%5$s"></div>',
+      //$id,
+      //$max_events,
+      //!empty($config['event_details_page']) ? base_path() . 'event_details/' : '',
+      //str_replace('"', '&quot;', $morelink),
+      //str_replace('"', '&quot;', json_encode($found_events)),
+    //) . PHP_EOL;
+    $results .= '<script src="http://local.test/eventviewer/dist/bundle.js"></script>' . PHP_EOL;
+    $results .= '<hr/>' . PHP_EOL;
+    //$results .= str_replace('"', '&quot;', json_encode($found_events)) . PHP_EOL;
+
     // Use Javascript to hide block if it's not showing any events (Should this be an option in config?)
     if (0 == $count) {
       $results .= '<script>document.getElementById("block-programofferingblock' . $id . '").style.display = "none";</script>';
@@ -157,6 +203,7 @@ class ProgramOfferingBlocks extends BlockBase
     if (!empty($config['show_more_page']) && !empty($config['show_more_text']) && $count > $max_events) {
       $results .= '<a class="events_show_more btn-outline-white" href="' . $base_url . '/' . $config['show_more_page'] . '?filter=' . urlencode($string_of_search_terms) . '">' . $config['show_more_text'] . '</a><br />';
     }
+
 
     return [
       '#markup' => $this->t($results),
