@@ -25,44 +25,46 @@ class RelatedStoreProducts extends BlockBase
   public function build()
   {
     $ids = $this->getIds();
-    $first = true;
     $results = '';
+    $count = 0;
+    $related_products = [];
+    $displayed_products = [];
+    $max_to_display = 5;
+    $results .= '<ul class="product_related_list">' . PHP_EOL;
 
     foreach ($ids as $key => $value) {
       $pub_details = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/' . $value));
 
       if (!empty($pub_details->Title)) {
-        if ($first) {
-          $results .= '<div class="products_header">Related Store Products</div>' . PHP_EOL;
-          $first = false;
-        } else {
-          $results .= '<hr class="product_separator" />' . PHP_EOL;
-        }
+        $results .= '<li><a href="https://store.extension.iastate.edu/product/' . $pub_details->ProductID . '">' . $pub_details->Title . '</a></li>'. PHP_EOL;
+        $displayed_products[] = $pub_details->ProductID;
+        $count++;
 
-        $results .= '<a href="https://store.extension.iastate.edu/product/' . $pub_details->ProductID . '">' . PHP_EOL;
-        //$results .= '  <img alt="Thumbnail of ' . $pub_details->Title . '" src="' . $pub_details->ThumbnailURI . '" />' . PHP_EOL;
-        $results .= '  <img src="' . $pub_details->ThumbnailURI . '" alt="" />' . PHP_EOL;
-        $results .= '  <div class="product_title">' . $pub_details->Title . '</div>' . PHP_EOL;
-        $results .= '</a>' . PHP_EOL;
-
-        $results .= '<ul class="product_related_list">' . PHP_EOL;
-        $count = 0;
         foreach ($pub_details->RelatedProductIds as $relatedId) {
-          $related_details = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/' . $relatedId));
-          if (!empty($related_details->Title)) {
-            $results .= '<li><a href="https://store.extension.iastate.edu/product/' . $related_details->ProductID . '">' . PHP_EOL;
-            //$results .= '  <img alt="Thumbnail of ' . $related_details->Title . '" src="' . $related_details->ThumbnailURI . '" />' . PHP_EOL;
-            $results .= '  ' . $related_details->Title . PHP_EOL;
-            $results .= '</a></li>' . PHP_EOL;
-
-            if (++$count >= 5) {
-              break;
-            }
-          }
+          $related_products[] = $relatedId;
         }
-        $results .= '</ul>' . PHP_EOL;
+
+        if ($count >= $max_to_display) {
+          break;
+        }
       }
     }
+
+    foreach ($related_products as $product) {
+      if ($count >= $max_to_display) {
+        break;
+      }
+      $pub_details = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/' . $product));
+
+      if (!empty($pub_details->Title) && !in_array($pub_details->ProductID, $displayed_products)) {
+      $results .= '<li><a href="https://store.extension.iastate.edu/product/' . $pub_details->ProductID . '">' . $pub_details->Title . '</a></li>'. PHP_EOL;
+      $displayed_products[] = $pub_details->ProductID;
+      $count++;
+      }
+    }
+
+    $results .= '</ul>' . PHP_EOL;
+
 
     return [
       '#markup' => $results,
