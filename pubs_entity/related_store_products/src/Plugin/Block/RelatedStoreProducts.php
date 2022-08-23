@@ -12,7 +12,7 @@ use Drupal\node\Entity\Node;
  *
  * @Block(
  *   id = "related_store_products",
- *   admin_label = @Translation("Related Store Products"),
+ *   admin_label = @Translation("Store Products"),
  *   category = @Translation("Store Products"),
  * )
  */
@@ -24,24 +24,26 @@ class RelatedStoreProducts extends BlockBase
    */
   public function build()
   {
+    $max_to_display = 5;
     $ids = $this->getIds();
     $results = '';
     $count = 0;
     $related_products = [];
     $displayed_products = [];
-    $max_to_display = 5;
     $results .= '<ul class="product_related_list">' . PHP_EOL;
 
     foreach ($ids as $key => $value) {
       $pub_details = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/' . $value));
 
       if (!empty($pub_details->Title)) {
-        $results .= '<li><a href="https://store.extension.iastate.edu/product/' . $pub_details->ProductID . '">' . $pub_details->Title . '</a></li>'. PHP_EOL;
+        $results .= '<li><a href="https://store.extension.iastate.edu/product/' . $pub_details->ProductID . '">' . $pub_details->Title . '</a></li>' . PHP_EOL;
         $displayed_products[] = $pub_details->ProductID;
         $count++;
 
-        foreach ($pub_details->RelatedProductIds as $relatedId) {
-          $related_products[] = $relatedId;
+        if ($pub_details->RelatedProductIds) {
+          foreach ($pub_details->RelatedProductIds as $relatedId) {
+            $related_products[] = $relatedId;
+          }
         }
 
         if ($count >= $max_to_display) {
@@ -57,9 +59,9 @@ class RelatedStoreProducts extends BlockBase
       $pub_details = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/' . $product));
 
       if (!empty($pub_details->Title) && !in_array($pub_details->ProductID, $displayed_products)) {
-      $results .= '<li><a href="https://store.extension.iastate.edu/product/' . $pub_details->ProductID . '">' . $pub_details->Title . '</a></li>'. PHP_EOL;
-      $displayed_products[] = $pub_details->ProductID;
-      $count++;
+        $results .= '<li><a href="https://store.extension.iastate.edu/product/' . $pub_details->ProductID . '">' . $pub_details->Title . '</a></li>' . PHP_EOL;
+        $displayed_products[] = $pub_details->ProductID;
+        $count++;
       }
     }
 
@@ -86,12 +88,23 @@ class RelatedStoreProducts extends BlockBase
     // Get the current node
     $node = \Drupal::routeMatch()->getParameter('node');
 
+    // For nodes, include the field_related_store_products values, assumes only one
     if ($node) {
       if (!empty($node->field_related_store_products->value)) {
         $stripped = preg_replace('/\s+/', '', $node->field_related_store_products->value);
         $ids = array_merge($ids, explode(';', $stripped));
       }
+    }
 
+    // Should add something here to try to pull related products from MyData when looking at Educational Programs
+
+    // If we don't have products yet, include products from the new/updated list
+    if (empty($ids)) {
+      $pubs_top = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/top'));
+
+      foreach ($pubs_top as $pub) {
+        $ids[] = $pub->ProductID;
+      }
     }
 
     return array_unique($ids);
