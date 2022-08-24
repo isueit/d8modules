@@ -1,0 +1,5 @@
+related_store_products:
+  version: 1.x
+  css:
+    layout:
+      css/related_store_products.css: {}

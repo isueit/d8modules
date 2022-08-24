@@ -30,7 +30,7 @@ class RelatedStoreProducts extends BlockBase
     $count = 0;
     $related_products = [];
     $displayed_products = [];
-    $results .= '<ul class="product_related_list">' . PHP_EOL;
+    $results .= '<ul class="related_products_list">' . PHP_EOL;
 
     foreach ($ids as $key => $value) {
       $pub_details = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/' . $value));

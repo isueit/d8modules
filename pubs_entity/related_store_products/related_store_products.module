@@ -1,0 +1,15 @@
+<?php
+
+/**
+* Implements hook_preprocess_HOOK().
+*/
+
+function related_store_products_preprocess_block(&$variables) {
+  // Include the related_store_products css file for the block
+  if (substr($variables['plugin_id'], 0, 23) == 'related_store_products') {
+  \Drupal::logger('blah')->info('Type: ' . $variables['plugin_id']);
+    $variables['#attached']['library'][] = 'related_store_products/related_store_products';
+    $variables['attributes']['class'][] = 'related_store_products';
+  }
+
+}

@@ -1,0 +1,6 @@
+ul.related_products_list {list-style: none; margin: 0; padding: 0; }
+ul.related_products_list li {list-style: none; margin: 0; padding: 0; }
+ul.related_products_list li a {display:block; margin-bottom: 0.5rem; padding-bottom: 0.5rem; text-decoration: none; border-bottom: solid 1px #ddd; }
+ul.related_products_list li a:hover {text-decoration: underline; }
+ul.related_products_list li a::before {content:'\f02d'; font-family: 'FontAwesome'; display: block; margin-right: 0.5em; color: #676767; float: left; }
+ul.related_products_list li a::after {content:'\f08e'; font-family: 'FontAwesome'; font-size: 0.75em; display: inline-block; margin-left: 4px; vertical-align: text-top; }
