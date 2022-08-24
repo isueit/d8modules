@@ -2,7 +2,7 @@
 	font-size: 14px;
 	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
 	padding: 0.75rem 1.25rem;
-	background-color: rgba(0,0,0,.03);
+	background-color: #003D4C;
 }
 
 /* Fix for just homepage */
@@ -26,8 +26,9 @@ a.publication-title {
 	display: block;
 	min-height: 70px;
 	color: #ffffff;
-	border-bottom: 2px solid #f1be48
+	border-bottom: 2px solid #f1be48;
 	text-align: center;
+	text-decoration: none;
 }
 
 a.publication-title:hover {
