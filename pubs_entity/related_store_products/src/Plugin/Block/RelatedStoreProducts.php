@@ -73,6 +73,48 @@ class RelatedStoreProducts extends BlockBase
     ];
   }
 
+  public function blockForm($form, FormStateInterface $form_state)
+  {
+    $config = $this->getConfiguration();
+    $max_pubs = isset($config['default_max_pubs']) ? $config['default_max_pubs'] : 5;
+
+    $form['default_max_pubs'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Default Maximum Number of Products to Display'),
+      '#description' => t('Zero (0) means display all products. Used whe a specific number for a content type isn\'t found') . '<br/><br/>',
+      '#size' => 15,
+      '#default_value' => $max_pubs,
+    );
+
+    $types = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
+    foreach ($types as $type) {
+      $form['max_pubs_' . $type->id()] = array(
+        '#type' => 'textfield',
+        '#title' => t('Maximum Number of products for ' . $type->label() . ' content type'),
+        '#description' => t('Zero (0) means display all products'),
+        '#size' => 15,
+        '#default_value' => isset($config['max_pubs_' . $type->id()]) ? $config['max_pubs_' . $type->id()] : $max_pubs,
+      );
+    }
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state)
+  {
+    $values = $form_state->getValues();
+
+    $this->configuration['default_max_pubs'] = $values['default_max_pubs'];
+
+    $types = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
+    foreach ($types as $type) {
+      $this->configuration['max_pubs_' . $type->id()] = isset($values['max_pubs_' . $type->id()]) ? $values['max_pubs_' . $type->id()] : $values['default_max_pubs'];
+    }
+  }
+
   /**
    * @return int
    */
