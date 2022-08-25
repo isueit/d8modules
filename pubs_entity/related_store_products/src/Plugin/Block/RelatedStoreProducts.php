@@ -24,7 +24,7 @@ class RelatedStoreProducts extends BlockBase
    */
   public function build()
   {
-    $max_to_display = 5;
+    $max_to_display = $this->getMaxToDisplay();
     $ids = $this->getIds();
     $results = '';
     $count = 0;
@@ -159,5 +159,20 @@ class RelatedStoreProducts extends BlockBase
     }
 
     return array_unique($ids);
+  }
+
+  private function getMaxToDisplay()
+  {
+    $config = $this->getConfiguration();
+    $max_to_display = isset($config['default_max_pubs']) ? $config['default_max_pubs'] : 5;
+
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node instanceof \Drupal\node\NodeInterface) {
+      if (isset($config['max_pubs_' . $node->getType()])) {
+        $max_to_display = $config['max_pubs_' . $node->getType()];
+      }
+    }
+
+    return $max_to_display;
   }
 }
