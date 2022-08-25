@@ -98,6 +98,15 @@ class RelatedStoreProducts extends BlockBase
 
     // Should add something here to try to pull related products from MyData when looking at Educational Programs
 
+    // If we don't have a product list yet, try getting products from Pubs Entity Type
+    if (empty($ids)) {
+      $entityIds = \Drupal::entityQuery('pubs_entity')->sort('weight', 'DESC')->execute();
+      $entities = \Drupal::entityTypeManager()->getStorage('pubs_entity')->loadMultiple($entityIds);
+      foreach ($entities as $entity) {
+        $ids[] = $entity->field_product_id->value;
+      }
+    }
+
     // If we don't have products yet, include products from the new/updated list
     if (empty($ids)) {
       $pubs_top = json_decode(file_get_contents('https://store.extension.iastate.edu/api/products/top'));
