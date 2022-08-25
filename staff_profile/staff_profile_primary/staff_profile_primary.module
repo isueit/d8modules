@@ -318,7 +318,7 @@ function staff_profile_primary_web_editor_training() {
         $course = 112;
         break;
       default:
-        \Drupal::logger('blah')->info('Course is unknown, not sure why');
+        \Drupal::logger('staff_profile_primary')->info('Course is unknown, not sure why');
         $course = 0;
     }
     if ($course == 0) continue;

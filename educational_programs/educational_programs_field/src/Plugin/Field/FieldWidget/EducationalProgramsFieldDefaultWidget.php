@@ -44,7 +44,6 @@ class EducationalProgramsFieldDefaultWidget extends WidgetBase {
     if ($term->parent->target_id == '0') {
       $units[$term->id()] = $term->getName();
       $options[$term->getName()] = array();
-      //\Drupal::logger('blah')->info($term->id().' - '.$term->getName() . ' - ' . count($term->parent) . ': ' . $term->parent->target_id);
     }
   }
   foreach ($all_terms as $term) {
