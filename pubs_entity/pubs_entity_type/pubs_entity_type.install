@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\pubs_entity_type\Entity\PubsEntity;
 /**
 * Implements hook_install().
 */

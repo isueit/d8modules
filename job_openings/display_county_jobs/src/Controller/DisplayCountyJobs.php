@@ -48,7 +48,7 @@ class DisplayCountyJobs extends ControllerBase
           //$results .= '    <em>Counties Served:</em> ' . $opening['field_counties_served'] . '<br >' . PHP_EOL;
         //}
         $results .= '    <em>Application Deadline:</em> ' . $opening['field_application_deadline_date'] .
-          ($opening['field_open_until_filled']  === 'True' ? ' This position will remail open until filled' : '') .
+          ($opening['field_open_until_filled']  === 'True' ? ' This position will remain open until filled' : '') .
           '<br />' . PHP_EOL;
         $results .= '  </li>' . PHP_EOL;
       }

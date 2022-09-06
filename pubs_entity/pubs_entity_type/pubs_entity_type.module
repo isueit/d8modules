@@ -81,7 +81,7 @@ function pubs_entity_type_rebuild() {
     $passed = validatePubsEntity($entity->field_product_id->value, $entity);
     if (!is_string($passed) && is_object($passed)) {
       $entity->name->value = $passed->Title;
-      $entity->field_image_url->value = $passed->ThumbnailURI;
+      $entity->field_image_url->value = str_replace('_T', '_F', $passed->ThumbnailURI);
       $pub_date = explode('/', $passed->PubDate);
       $entity->set('field_publication_date', $pub_date[1] . '-' . $pub_date[0] . '-01');
       $entity->save();
