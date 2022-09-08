@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.county_job_opening.field_qualifications
     - field.field.node.county_job_opening.field_requirements
     - field.field.node.county_job_opening.field_responsibilities
+    - field.field.node.county_job_opening.field_town_city
     - field.field.node.county_job_opening.field_wages
     - field.field.node.county_job_opening.field_wages_status
     - field.field.node.county_job_opening.field_wages_type
@@ -54,6 +55,7 @@ hidden:
   field_qualifications: true
   field_requirements: true
   field_responsibilities: true
+  field_town_city: true
   field_wages: true
   field_wages_status: true
   field_wages_type: true

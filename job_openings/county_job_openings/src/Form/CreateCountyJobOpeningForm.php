@@ -44,7 +44,7 @@ class CreateCountyJobOpeningForm extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $nids = \Drupal::entityQuery('node')->condition('type','county_job_template')->condition('status', 1)->execute();
+    $nids = \Drupal::entityQuery('node')->condition('type','county_job_template')->condition('status', 1)->sort('field_weight')->sort('title')->execute();
     $nodes =  Node::loadMultiple($nids);
     $jobs_templates = [];
     foreach ($nodes as $id => $node) {
@@ -55,13 +55,14 @@ class CreateCountyJobOpeningForm extends FormBase {
       '#type' => 'radios',
       '#title' => t('County Template'),
       '#required' => TRUE,
-      '#options' => $jobs_templates
+      '#options' => $jobs_templates,
     );
 
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
     );
+
     return $form;
   }
 

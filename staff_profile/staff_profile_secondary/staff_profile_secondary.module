@@ -15,7 +15,6 @@ function staff_profile_secondary_rebuild() {
  */
 function staff_profile_secondary_cron() {
   staff_profile_secondary_handle_feeds();
-
 }
 
 /**

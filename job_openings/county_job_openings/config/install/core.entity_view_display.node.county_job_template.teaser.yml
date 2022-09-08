@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.county_job_template.field_preferred_qualifications
     - field.field.node.county_job_template.field_qualifications
     - field.field.node.county_job_template.field_responsibilities
+    - field.field.node.county_job_template.field_weight
     - node.type.county_job_template
   module:
     - text
@@ -35,3 +36,4 @@ hidden:
   field_preferred_qualifications: true
   field_qualifications: true
   field_responsibilities: true
+  field_weight: true

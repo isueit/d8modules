@@ -1,0 +1,22 @@
+<?php
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Add the auto_redirect fields to the database
+ */
+function educational_programs_field_update_9001() {
+  $spec = [
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Whether to redirect automatically to program page',
+  ];
+
+  $schema = Database::getConnection()->schema();
+  if (!$schema->fieldExists('node__field_educational_program', 'field_educational_program_auto_redirect')) {
+    $schema->addField('node__field_educational_program', 'field_educational_program_auto_redirect', $spec);
+  }
+  if (!$schema->fieldExists('node_revision__field_educational_program', 'field_educational_program_auto_redirect')) {
+    $schema->addField('node_revision__field_educational_program', 'field_educational_program_auto_redirect', $spec);
+  }
+}

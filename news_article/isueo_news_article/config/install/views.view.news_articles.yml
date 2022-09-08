@@ -865,7 +865,7 @@ display:
       header: {  }
       display_extenders: {  }
       block_description: 'News (Homepage)'
-      block_hide_empty: true
+      block_hide_empty: false
     cache_metadata:
       max-age: -1
       contexts:

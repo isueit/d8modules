@@ -16,6 +16,7 @@
     "drupal/encrypt": "^3.0@RC",
     "drupal/field_delimiter": "^1.0",
     "drupal/field_formatter_class": "^1.1",
+    "drupal/linkicon": "^1.7",
     "drupal/section_library": "^1.0",
     "drupal/views_filters_populate": "^2.0",
     "drupal/weight": "^3.1",

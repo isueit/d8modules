@@ -3,103 +3,40 @@ status: true
 dependencies:
   config:
     - block_content.type.social_media_red_bar
-    - field.field.block_content.social_media_red_bar.field_facebook_red
-    - field.field.block_content.social_media_red_bar.field_instagram_red
-    - field.field.block_content.social_media_red_bar.field_linked_in_red
-    - field.field.block_content.social_media_red_bar.field_pinterest_red
-    - field.field.block_content.social_media_red_bar.field_twitter_red
-    - field.field.block_content.social_media_red_bar.field_vimeo_red
-    - field.field.block_content.social_media_red_bar.field_youtube_red
+    - field.field.block_content.social_media_red_bar.field_social_media_links
   module:
-    - link
+    - linkicon
 id: block_content.social_media_red_bar.default
 targetEntityType: block_content
 bundle: social_media_red_bar
 mode: default
 content:
-  field_facebook_red:
-    weight: 0
-    label: hidden
+  field_social_media_links:
+    type: linkicon
+    label: inline
     settings:
       trim_length: 80
       url_only: false
       url_plain: false
       rel: ''
       target: ''
+      linkicon_prefix: icon
+      linkicon_wrapper_class: ''
+      linkicon_icon_class: ''
+      linkicon_label_class: ''
+      linkicon_load: false
+      linkicon_vertical: false
+      linkicon_style: ''
+      linkicon_color: ''
+      linkicon_tooltip: false
+      linkicon_no_text: false
+      linkicon_maxlength: 60
+      linkicon_position: ''
+      linkicon_link: false
+      linkicon_global_title: ''
+      linkicon_size: ''
+      linkicon_bundle: ''
     third_party_settings: {  }
-    type: link
-    region: content
-  field_instagram_red:
-    weight: 1
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_linked_in_red:
-    weight: 2
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_pinterest_red:
-    weight: 3
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_twitter_red:
     weight: 4
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_vimeo_red:
-    weight: 5
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_youtube_red:
-    weight: 6
-    label: hidden
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
     region: content
 hidden: {  }
-

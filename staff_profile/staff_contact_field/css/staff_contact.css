@@ -1,0 +1,34 @@
+div.contact_photo {
+  max-width: 150px;
+  width: 33%;
+  float: left;
+  margin-right: 25px;
+  min-height: 100px;
+}
+
+div.contact_group hr {
+  clear: both;
+  width: 75%;
+  float: left;
+}
+
+div.contact_group ul {
+  list-style: none;
+}
+
+div.contact_group li {
+  clear: both;
+}
+
+div.contact_group {
+  clear: both;
+}
+
+div.contact_name {
+  font-size: 1.4em;
+  margin-bottom: 5px;
+}
+
+div.staff_contact_header {
+  font-size: 1.6em;
+}

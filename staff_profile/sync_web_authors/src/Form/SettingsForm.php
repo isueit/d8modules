@@ -33,7 +33,7 @@ class SettingsForm extends ConfigFormBase {
       $form['sync_url'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('URL of JSON Feed'),
-        '#description' => $this->t('URL of JSON feeds for sync. Use %20 instead of spaces. Example: https://www.extension.iastate.edu/staffdir/feeds/cty-authors/dallas'),
+        '#description' => $this->t('URL of JSON feeds for sync. Use %20 instead of spaces. Examples: https://www.extension.iastate.edu/staffdir/feeds/cty-authors/dallas or https://www.extension.iastate.edu/staffdir/feeds/site-authors/4H'),
         '#size' => 64,
         '#default_value' => !empty($config->get('sync_url')) ? preg_replace('/,/',"\r\n",$config->get('sync_url')) : '',
         '#required' => TRUE,

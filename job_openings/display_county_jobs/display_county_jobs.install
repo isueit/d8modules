@@ -1,0 +1,105 @@
+<?php
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+
+/**
+* Implements hook_install().
+*/
+
+function display_county_jobs_install() {
+  $county_name = display_county_jobs_get_county_name();
+
+  $config = \Drupal::service('config.factory')->getEditable('display_county_jobs.settings');
+  $config->set('feed_url', 'https://www.extension.iastate.edu/jobs/feeds/county_jobs/' . $county_name);
+  $config->save();
+
+  // Parse through the main menu, and add a Jobs link if it doesn't already exist
+  $site_name = \Drupal::config("system.site")->get('name');
+  $tree = \Drupal::menuTree()->load('main', new \Drupal\Core\Menu\MenuTreeParameters());
+  foreach ($tree as $item) {
+    if ('About Us' === $item->link->getTitle() && $item->hasChildren) {
+      $addMenuItem = true;
+      foreach ($item->subtree as $subitem) {
+        if ($site_name . ' Jobs' === $subitem->link->getTitle()) {
+          $addMenuItem = false;
+        }
+      }
+      if($addMenuItem && ($menu_link = MenuLinkContent::create(["title" => $site_name . " Jobs", "link" => ["uri" => "internal:/jobs"], "menu_name" => "main", "parent" => $item->link->getPluginId(), "weight" => "-40",]))) {
+       $menu_link->save();
+      }
+    }
+  }
+
+  // Parse through admin menu, add link to Manage County Jobs if it doesn't already exist
+  $tree = \Drupal::menuTree()->load('admin', new \Drupal\Core\Menu\MenuTreeParameters());
+  foreach ($tree as $item) {
+    if ('Administration' === $item->link->getTitle() && $item->hasChildren) {
+      foreach ($item->subtree as $i2) {
+        if ('Content' === $i2->link->getTitle() && $i2->hasChildren) {
+          $addMenuItem = true;
+          foreach ($i2->subtree as $i3) {
+            if ('Manage County Jobs' === $i3->link->getTitle()) {
+              $addMenuItem = false;
+            }
+          }
+          if ($addMenuItem && ($menu_link = MenuLinkContent::create(["title" => "Manage County Jobs", "link" => ["uri" => "https://www.extension.iastate.edu/jobs/login"], "menu_name" => "admin", "parent" => $i2->link->getPluginId(), "weight" => "0",]))) {
+            $menu_link->save();
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+* Implements hook_uninstall().
+*/
+
+function display_county_jobs_uninstall() {
+  $config = \Drupal::service('config.factory')->getEditable('display_county_jobs.settings')->delete();
+}
+
+
+// Local function: gets the county name
+function display_county_jobs_get_county_name() {
+  // Get the county from the root path of the Drupal install
+  $folders = explode('/', \Drupal::root());
+  $site = 'Unknown';
+  if (count($folders) >= 2) {
+    $site = ucfirst($folders[count($folders) -2]);
+  }
+
+  // Fix special cases of county names
+  switch ($site) {
+    case "Blackhawk":
+      $site = "Black Hawk";
+      break;
+    case "Buenavista":
+      $site = "Buena Vista";
+      break;
+    case "Cerrogordo":
+      $site = "Cerro Gordo";
+      break;
+    case "Desmoines":
+      $site = "Des Moines";
+      break;
+    case "Eastpottawattamie":
+      $site = "Pottawattamie - East";
+      break;
+    case "Paloalto":
+      $site = "Palo Alto";
+      break;
+    case "Vanburen":
+      $site = "Van Buren";
+      break;
+    case "Westpottawattamie":
+      $site = "Pottawattamie - West";
+      break;
+    case "Obrien":
+      $site = "O'Brien";
+      break;
+    default:
+      break;
+  }
+  return $site;
+}
+

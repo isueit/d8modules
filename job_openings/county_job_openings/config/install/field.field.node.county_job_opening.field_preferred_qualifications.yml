@@ -17,7 +17,7 @@ entity_type: node
 bundle: county_job_opening
 label: 'Preferred Qualifications'
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

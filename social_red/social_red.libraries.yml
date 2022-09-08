@@ -1,0 +1,5 @@
+social_red:
+  version: 1.x
+  css:
+    layout:
+      css/social_red.css: {}

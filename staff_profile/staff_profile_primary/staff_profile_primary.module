@@ -38,8 +38,8 @@ function staff_profile_primary_rebuild() {
  * Implements hook_cron().
  */
 function staff_profile_primary_cron() {
-  staff_profile_primary_profile_from_database();
-  staff_profile_primary_web_editor_training();
+  //staff_profile_primary_profile_from_database();
+  //staff_profile_primary_web_editor_training();
 }
 
 function staff_profile_primary_profile_from_database () {
@@ -212,7 +212,7 @@ function staff_profile_primary_profile_from_database () {
 
   foreach ($nodes as $node) {
     if ($node->get('field_staff_profile_stale')->value) {
-      $mynode->field_staff_profile_stale->value = FALSE;
+      $node->field_staff_profile_stale->value = FALSE;
       $node->setUnpublished();
       $node->save();
     }

@@ -38,6 +38,8 @@ function educational_programs_taxonomy_handle_feeds()
   $fromFeed = str_replace('\u0026#039;', '\'', $fromFeed);
   $programs = json_decode($fromFeed, TRUE);
 
+  $types = ['012460000012EiaAAE', '0124p000000S43XAAS'];
+
   // Make sure we have some programs to work with
   if (count($programs) < 10) {
     \Drupal::logger('educational_programs_taxonomy')->alert('Unable to read Educational Programs List from MyData, exiting ...');
@@ -47,6 +49,7 @@ function educational_programs_taxonomy_handle_feeds()
   foreach ($programs as $program) {
     // Skip programs that are not tagged public
     if ($program['Public_Access__c'] == '0') continue;
+    if (!in_array($program['RecordTypeId'], $types)) continue;
 
     // Parent is the Program Area, need to get the ID
     $query = $taxonomyStorage->loadByProperties([

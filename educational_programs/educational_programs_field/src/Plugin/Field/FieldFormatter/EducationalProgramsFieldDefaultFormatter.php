@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use DOMDocument;
 use Drupal\taxonomy\Entity\Term;
-
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Plugin implementation of the 'educational_programs_field_default' formatter.
@@ -87,9 +87,25 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase {
         }
       }
 
+      // Redirect if user is anonymous, we have a web site, and auto_redirect is enabled
+      if (\Drupal::currentUser()->isAnonymous() && !empty($website) && !empty($item->auto_redirect)) {
+        $response = new RedirectResponse($website);
+        $response->send();
+        continue;
+      }
+
       // Render output
       $output = PHP_EOL;
       $output .= '<div class="educational_program">' . PHP_EOL;
+
+      // Add a note if page is being redirected
+      if (!empty($website) && !empty($item->auto_redirect)) {
+        $output .= '<div class="educational_program_redirected">' . PHP_EOL;
+        $output .= '<h4>Note: Page Redirected</h4>' . PHP_EOL;
+        $output .= '<p>Public users will automatically be redirected to <a href="' . $website . '">' . $website . '</a></p>' . PHP_EOL;
+        $output .= '</div>' . PHP_EOL;
+      }
+
       $output .= '<div class="educational_program_description">' . PHP_EOL;
       $output .= $description . PHP_EOL;
       $output .= '</div>' . PHP_EOL;

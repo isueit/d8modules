@@ -239,7 +239,54 @@ function section_lib_importer_install() {
         ]
       ]]
   ],
-
+[
+  'label' => 'Four Column Layout',
+  'type' => 'section',
+  'filename' => 'fourColumn.png',
+  'sections' => [[
+      'label' => 'Four Column Layout',
+      'type' => 'section',
+      'section_id' => 'layout_base_fourcol',
+      'section' =>[
+        'label' => 'Four Column Layout',
+        'column_widths' => NULL,
+        'column_gap' => 'layout--column-gap--none',
+        'row_gap' => 'layout--row-gap--none',
+        'column_width' => '',
+        'column_breakpoint' => 'layout--column-breakpoint--medium',
+        'align_items' => 'layout--align-items--normal',
+        'background' => 'layout--background--none',
+        'background_image' => '',
+        'background_image_style' => '',
+        'background_attachment' => 'layout--background-attachment--default',
+        'background_position' => 'layout--background-position--center',
+        'background_size' => 'layout--background-size--cover',
+        'background_overlay' => 'layout--background-overlay--none',
+        'equal_top_bottom_margins' => '',
+        'equal_left_right_margins' => '',
+        'top_margin' => '',
+        'right_margin' => '',
+        'bottom_margin' => '',
+        'left_margin' => '',
+        'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+        'equal_left_right_paddings' => 'layout--left-right-padding--small',
+        'top_padding' => '',
+        'right_padding' => '',
+        'bottom_padding' => '',
+        'left_padding' => '',
+        'container' => 'layout--container--none',
+        'content_container' => 'layout--content-container--default',
+        'height' => 'layout--height--default',
+        'color' => 'layout--color--default',
+        'alignment' => '',
+        'modifier' => '',
+        'customizable_columns' => '',
+        'modifiers' => '',
+      ],
+	'blocks' => []
+      ]
+  ]
+],
 [
 	'label' => 'Left Column Template',
 	'type' => 'section',
@@ -413,7 +460,7 @@ function section_lib_importer_install() {
  * Basic Content etc will be added when block is in layout
  * Blocks from custom block library can be added in the future using their uuid, only block type instances have duplication issue, look into deepcloningtrait from section library
  */
-function addSectionTemplates($templates) {  
+function addSectionTemplates($templates) {
   foreach ($templates as $sectlibtemplate) {
     $sections_for_data = [];
     foreach ($sectlibtemplate['sections'] as $template) {
