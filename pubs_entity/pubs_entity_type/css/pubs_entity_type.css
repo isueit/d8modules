@@ -1,12 +1,11 @@
 .views-field-field-publication-date {
-background-color: #eeeeee;
-padding: 10px;
-font-size: 12px;
-border-left: 6px solid #f1be48;
-}
-
-.views-field-field-image-url {
-	padding-bottom: 10px;
+	font-size: 14px;
+	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
+	padding: 1.75rem 1rem 0.25rem 1rem;
+	background-color: #003D4C;
+	position:absolute;
+	bottom:0;
+	width:100%;
 }
 
 /* Fix for just homepage */
@@ -15,30 +14,50 @@ border-left: 6px solid #f1be48;
 }
 
 .slick__slide {
-	padding-left: 10px;
-	padding-right: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
 	width: 250px;
 	float: left;
+	position:relative;
 }
 
 .slick__slide img {
 	margin-left: auto;
 	margin-right: auto;
+	border:solid 2px #003d4c;
+}
+
+.slick-list {
+	margin-top:10px;
 }
 
 a.publication-title {
 	display: block;
-	min-height: 70px;
+	min-height: 58px;
+	color: #ffffff;
+	border-bottom: 2px solid #f1be48;
+	text-align: center;
+	text-decoration: none;
+	margin-bottom: 10%;
+}
+
+a.publication-title:hover {
+	color: #f1be48;
+	text-decoration: none;
 }
 
 nav.slick__arrow {
-	position: absolute;
-	top: 34%;
-	width: 100%;
+	position: sticky;
+	transform: translateY(-472%);
 }
 
-button.slick-next.slick__arrow {
+button.slick-next.slick-arrow {
 	float: right;
+	margin-right: -3%;
+}
+
+button.slick-prev.slick-arrow {
+	margin-left: -3%;
 }
 
 .slick__arrow {
@@ -50,15 +69,17 @@ button.slick-next.slick__arrow {
 button.slick-next, button.slick-prev {
 	background: transparent;
 	border: 0;
-	color: #d3d3d3;
+	color: #003D4C;
 }
 
 .slick .slick-prev::before {
 	content: '\f053';
 	font-family: 'FontAwesome';
+	font-size: 22px;
 }
 
 .slick .slick-next::before {
 	content: '\f054';
 	font-family: 'FontAwesome';
+	font-size: 22px;
 }

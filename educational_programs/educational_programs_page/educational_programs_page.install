@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Install file for educational_programs_page.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * @ingroup educational_programs_page
+ */
+function educational_programs_page_install() {
+
+  $locked = Drupal::state()->get('node.type.locked');
+  $locked['educational_programs_page'] = 'educational_programs_page';
+  Drupal::state()->set('node.type.locked', $locked);
+
+  user_role_grant_permissions('content_editor', array(
+	'create educational_programs_page content',
+	'delete any educational_programs_page content',
+	'edit any educational_programs_page content',
+	'override educational_programs_page authored on option',
+	'override educational_programs_page published option',
+	'configure editable educational_programs_page node layout overrides',
+  ));
+
+  drupal_flush_all_caches();
+
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Our content types will live on in the Drupal installation, even after this
+ * module is uninstalled. This is a good thing, since it allows the user to
+ * make decisions about their fate. Therefore we should give the user the
+ * option of deleting them.
+ *
+ * Since we told Drupal that our locked_content_type is locked, we now have
+ * to tell it to unlock.
+ *
+ * @ingroup educational_programs_page
+ */
+function educational_programs_page_uninstall() {
+  $locked = Drupal::state()->get('node.type.locked');
+  unset($locked['educational_programs_page']);
+  Drupal::state()->set('node.type.locked', $locked);
+  
+  $storage_handler = \Drupal::entityTypeManager()
+    ->getStorage('node');
+  $nodes = $storage_handler->loadByProperties(['type' => 'educational_programs_page']);
+  $storage_handler->delete($nodes);
+  // Delete content type.
+  $content_type = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->load('educational_programs_page');
+  $content_type->delete();
+}
+

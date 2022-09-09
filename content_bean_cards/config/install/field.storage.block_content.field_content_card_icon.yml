@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - content_bean_cards
+  module:
+    - block_content
+    - fontawesome
+id: block_content.field_content_card_icon
+field_name: field_content_card_icon
+entity_type: block_content
+type: fontawesome_icon
+settings: { }
+module: fontawesome
+locked: false
+cardinality: 1
+translatable: true
+indexes: { }
+persist_with_no_fields: false
+custom_storage: false
+

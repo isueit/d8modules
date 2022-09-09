@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.image_card
+    - field.storage.block_content.field_image_card_title
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    basic: '0'
+    wysiwyg: '0'
+    full_html: '0'
+id: block_content.image_card.field_image_card_title
+field_name: field_image_card_title
+entity_type: block_content
+bundle: image_card
+label: 'Image Card Title'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text
+

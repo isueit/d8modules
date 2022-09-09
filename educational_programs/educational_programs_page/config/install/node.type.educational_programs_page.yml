@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - educational_programs_page
+      - layout_builder_base
+      - layout_builder_base_library
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: false
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+name: 'Educational Program Page'
+type: educational_programs_page
+description: 'Used for educational program pages when information pulls from MyData'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false
+

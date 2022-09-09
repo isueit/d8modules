@@ -100,7 +100,7 @@ function pubs_entity_from_feed_rebuild() {
       $myentity->set('weight', $count);
     }
     $myentity->set('name', $product['Title']);
-    $myentity->set('field_image_url', $product['ThumbnailURI']);
+    $myentity->set('field_image_url', str_replace('_T', '_F', $product['ThumbnailURI']));
     $pub_date = explode('/', $product['PubDate']);
     $myentity->set('field_publication_date', $pub_date[1] . '-' . $pub_date[0] . '-01');
     $myentity->save();

@@ -1,0 +1,119 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.links_block
+    - field.field.block_content.links_block.field_lblock_icon01
+    - field.field.block_content.links_block.field_lblock_icon02
+    - field.field.block_content.links_block.field_lblock_icon03
+    - field.field.block_content.links_block.field_lblock_icon04
+    - field.field.block_content.links_block.field_lblock_icon05
+    - field.field.block_content.links_block.field_lblock_icon06
+    - field.field.block_content.links_block.field_lblock_link01
+    - field.field.block_content.links_block.field_lblock_link02
+    - field.field.block_content.links_block.field_lblock_link03
+    - field.field.block_content.links_block.field_lblock_link04
+    - field.field.block_content.links_block.field_lblock_link05
+    - field.field.block_content.links_block.field_lblock_link06
+  module:
+    - fontawesome
+    - link
+id: block_content.links_block.default
+targetEntityType: block_content
+bundle: links_block
+mode: default
+content:
+  field_lblock_icon01:
+    weight: 26
+    settings: { }
+    third_party_settings: { }
+    type: fontawesome_icon_widget
+    region: content
+  field_lblock_icon02:
+    weight: 28
+    settings: { }
+    third_party_settings: { }
+    type: fontawesome_icon_widget
+    region: content
+  field_lblock_icon03:
+    weight: 30
+    settings: { }
+    third_party_settings: { }
+    type: fontawesome_icon_widget
+    region: content
+  field_lblock_icon04:
+    weight: 32
+    settings: { }
+    third_party_settings: { }
+    type: fontawesome_icon_widget
+    region: content
+  field_lblock_icon05:
+    weight: 34
+    settings: { }
+    third_party_settings: { }
+    type: fontawesome_icon_widget
+    region: content
+  field_lblock_icon06:
+    weight: 36
+    settings: { }
+    third_party_settings: { }
+    type: fontawesome_icon_widget
+    region: content
+  field_lblock_link01:
+    weight: 27
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: { }
+    type: link_default
+    region: content
+  field_lblock_link02:
+    weight: 29
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: { }
+    type: link_default
+    region: content
+  field_lblock_link03:
+    weight: 31
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: { }
+    type: link_default
+    region: content
+  field_lblock_link04:
+    weight: 33
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: { }
+    type: link_default
+    region: content
+  field_lblock_link05:
+    weight: 35
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: { }
+    type: link_default
+    region: content
+  field_lblock_link06:
+    weight: 37
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: { }
+    type: link_default
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: { }
+hidden: { }
+

@@ -50,13 +50,20 @@ class EventDetailsController extends ControllerBase
           $event_address .= $event['Program_State__c'] . ' ';
           $event_address .= $event['Event_Location_Zip_Code__c'] . '<br/>' . PHP_EOL;
         }
-
         $results .= '  <div class="event_address">' . $event_address . '  </div>' . PHP_EOL;
+
         if (!empty($event['Planned_Program__r.Web_Description__c'])) {
-          $results .= '  <div class="event_description">' . str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . '</div>' . PHP_EOL;
+          $description = str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . PHP_EOL;
         } else {
-          $results .= '  <div class="event_description">' . $event['Program_Description__c'] . '</div>' . PHP_EOL;
+          $results .= $event['Program_Description__c'] . PHP_EOL;
         }
+        if (!empty($event['Planned_Program__r.Smugmug_ID__c'])) {
+          $description = '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $event['Planned_Program__r.Smugmug_ID__c'] . '/0/XL/' . $event['Planned_Program__r.Smugmug_ID__c'] . '-XL.jpg" alt="" />' . $description . '<div class="clearer"></div>';
+        }
+        if (isset($description)) {
+          $results .= '  <div class="event_description">' . $description . PHP_EOL;
+        }
+
 
         $results .= '  <div class="event_contact_label">Contact Info:</div>' . PHP_EOL;
         $results .= '  <div class="event_contact_name">' . $event['Contact_Information_Name__c'] . '</div>' . PHP_EOL;
@@ -100,22 +107,31 @@ class EventDetailsController extends ControllerBase
 
     // If start time isn't midnight, then display the start time also
     if (date('Gi', $startdate) <> '0000') {
-      $output .= date(' h:i A', $startdate);
+      $output .= date(' g:i A', $startdate);
     }
 
     $output .= ' - ';
 
     // If date part of start and end dates are different, then include the end date
     if (date('z', $startdate) <> date('z', $enddate)) {
-      $output .= date(' m/d/y', $enddate);
+      $output .= date('l, m/d/y', $enddate);
     }
 
     // If the end time isn't midnight, then display the end time
     if (date('Gi', $enddate) <> '0000') {
-      $output .= date(' h:i A', $enddate);
+      $output .= date(' g:i A', $enddate);
     }
 
-    $output = '  <div class="event_details_dates">' . $output . '</div>';
+    $output = '  <div class="event_details_dates">' . $output . '</div>' . PHP_EOL;
+    if ($event['Start_Time_and_Date__c'] != $event['Next_Start_Date__c']) {
+      $tmpdate = strtotime($event['Next_Start_Date__c']);
+      $tmpstr = date('l, m/d/y', $tmpdate);
+      // If start time isn't midnight, then display the start time also
+      if (date('Gi', $tmpdate) <> '0000') {
+        $tmpstr .= date(' h:i A', $tmpdate);
+      }
+      $output .= '  <p>Next Session: <span class="event_details_dates">' . $tmpstr . '</span></p>' . PHP_EOL;
+    }
 
     return $output;
   }
@@ -143,7 +159,11 @@ class EventDetailsController extends ControllerBase
     foreach ($session_names as $session_name) {
       if (!empty($event[$session_name])) {
         $multiple_sessions = true;
-        $event_sessions .= '<li>' . date('l, m/d/Y h:i A', strtoTime($event[$session_name])) . '</li>' . PHP_EOL;
+        $tmpstr = date('l, m/d/Y g:i A', strtoTime($event[$session_name]));
+        if ($event[$session_name] == $event['Next_Start_Date__c']) {
+          $tmpstr = '<span class="next_session">' . $tmpstr . '</span>';
+        }
+        $event_sessions .= '<li>' . $tmpstr . '</li>' . PHP_EOL;
         $count++;
       }
     }
@@ -168,8 +188,15 @@ class EventDetailsController extends ControllerBase
 
     $returnStr = '  <div class="event_details_links">' . PHP_EOL;
 
-    if (!empty($event['Registration_Link__c'])) {
+    // Add more information link(s)
+    if (!empty($event['Program_Offering_Website__c']) && $event['Registration_Link__c'] <> $event['Program_Offering_Website__c']) {
+      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Program_Offering_Website__c'] . '">More information this event</a></div>' . PHP_EOL;
+    }
+    if (!empty($event['Planned_Program_Website__c']) && $event['Registration_Link__c'] <> $event['Planned_Program_Website__c'] && $event['Program_Offering_Website__c'] <> $event['Planned_Program_Website__c']) {
+      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Planned_Program_Website__c'] . '">More information about this program</a></div>' . PHP_EOL;
+    }
 
+    if (!empty($event['Registration_Link__c'])) {
      if ($now >= $regstartdate && $now <= $regenddate) {
       $returnStr .= '    <div class="event_details_registration"><a href="' . $event['Registration_Link__c'] . '">Register Online</a></div>' . PHP_EOL;
      } elseif ($now > $regenddate) {
@@ -177,15 +204,6 @@ class EventDetailsController extends ControllerBase
      } else {
       $returnStr .= '    <div class="event_details_registration">Registration Opens ' . date('M d, Y', $regstartdate) . '</div>' . PHP_EOL;
      }
-    }
-
-    //if (!empty($event['Program_Offering_Website__c']) && $event['Registration_Link__c'] <> $event['Program_Offering_Website__c']) {
-    //  $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Program_Offering_Website__c'] . '">More information about event</a></div>' . PHP_EOL;
-    //} elseif (!empty($event['Planned_Program_Website__c']) && $event['Registration_Link__c'] <> $event['Planned_Program_Website__c']) {
-    //  $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Planned_Program_Website__c'] . '">More information about event</a></div>' . PHP_EOL;
-    //}
-    if (!empty($event['Planned_Program_Website__c']) && $event['Registration_Link__c'] <> $event['Planned_Program_Website__c']) {
-      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Planned_Program_Website__c'] . '">More information about event</a></div>' . PHP_EOL;
     }
 
     $returnStr .= '  </div>' . PHP_EOL;

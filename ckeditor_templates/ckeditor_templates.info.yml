@@ -1,4 +1,4 @@
-name: CKEditor Templates plugin
+name: CKEditor Templates
 type: module
 description: Adds Content Templates CKEditor plugin to Drupal.
 core_version_requirement: ^8 || ^9

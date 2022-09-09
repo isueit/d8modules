@@ -1,0 +1,101 @@
+<?php
+
+use \Drupal\node\Entity\Node;
+use \Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_rebuild().
+ */
+function educational_programs_taxonomy_rebuild()
+{
+  educational_programs_taxonomy_handle_feeds();
+}
+
+/**
+ * Implements hook_cron().
+ */
+function educational_programs_taxonomy_cron()
+{
+  educational_programs_taxonomy_handle_feeds();
+}
+
+/**
+ * Pull in the feeds
+ */
+function educational_programs_taxonomy_handle_feeds()
+{
+
+  // Initialize some variables
+  // $now is 10 seconds ago
+  $now = time() - 10;
+
+  $vid = 'educational_programs';
+  $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $all_terms = $taxonomyStorage->loadByProperties(['vid' => $vid]);
+
+  // Get the feed from MyData
+  $fromFeed = file_get_contents('https://datastore.exnet.iastate.edu/mydata/EducationalPrograms.json');
+  $fromFeed = str_replace('\u0026#039;', '\'', $fromFeed);
+  $programs = json_decode($fromFeed, TRUE);
+
+  $types = ['012460000012EiaAAE', '0124p000000S43XAAS'];
+
+  // Make sure we have some programs to work with
+  if (count($programs) < 10) {
+    \Drupal::logger('educational_programs_taxonomy')->alert('Unable to read Educational Programs List from MyData, exiting ...');
+    return;
+  }
+
+  foreach ($programs as $program) {
+    // Skip programs that are not tagged public
+    if ($program['Public_Access__c'] == '0') continue;
+    if (!in_array($program['RecordTypeId'], $types)) continue;
+
+    // Parent is the Program Area, need to get the ID
+    $query = $taxonomyStorage->loadByProperties([
+       'name' => $program['hed__Account__r.Name'],
+       'vid' => $vid,
+    ]);
+    // See if the Program Area Exists, if not, create it
+    if (empty($query)) {
+      $parent_id = Term::create(array('vid' => $vid, 'name' => $program['hed__Account__r.Name']))->save();
+    } else {
+      $parent_term = reset($query);
+      if ($parent_term->getChangedTime() < $now) {
+        $parent_term->setPublished(true);
+        $parent_term->setChangedTime($now);
+        $parent_term->save();
+      }
+      $parent_id = $parent_term->id();
+    }
+
+    // Check if this Program already exists
+    $exists = false;
+    foreach ($all_terms as $existing_term) {
+      if (strpos($existing_term->getDescription(), $program['Id']) !== false) {
+        $exists = true;
+        $existing_term->setName($program['Name']);
+        $existing_term->parent = [$parent_id];
+        $existing_term->setPublished(true);
+        $existing_term->setChangedTime($now);
+        $existing_term->save();
+        break;
+      }
+    }
+
+    // Create a new term if this one doesn't exist
+    if (!$exists) {
+      $term = Term::create(array('vid' => $vid, 'name' => $program['Name'], 'description' => $program['Id'], 'parent' => [$parent_id]))->save();
+    }
+  }
+
+  // Get all the terms again, step through the list, and unpublish unused terms
+  $all_terms = $taxonomyStorage->loadByProperties(['vid' => $vid]);
+  foreach ($all_terms as $term) {
+    if ($term->getChangedTime() < $now && $term->isPublished()) {
+      $term->setPublished(false);
+      $term->setChangedTime($now);
+      $term->save();
+    }
+  }
+}

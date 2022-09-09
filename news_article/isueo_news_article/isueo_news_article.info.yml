@@ -1,6 +1,6 @@
-name: ISUEO New Article
+name: ISUEO News Article
 type: module
-description: 'Create a News Artile content type'
+description: 'Create a News Article content type'
 package: ISUEO
 core_version_requirement: ^8 || ^9
 dependencies:
@@ -8,3 +8,4 @@ dependencies:
   - drupal:views
   - news_embed_field:news_embed_field
   - pathauto:pathauto
+  - blazy:blazy

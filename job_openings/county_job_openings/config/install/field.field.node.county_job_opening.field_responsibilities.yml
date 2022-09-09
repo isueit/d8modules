@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_responsibilities
+    - node.type.county_job_opening
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - wysiwyg
+id: node.county_job_opening.field_responsibilities
+field_name: field_responsibilities
+entity_type: node
+bundle: county_job_opening
+label: Responsibilities
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

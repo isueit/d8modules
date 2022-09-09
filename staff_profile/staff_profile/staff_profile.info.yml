@@ -16,4 +16,5 @@ dependencies:
   - field_group:field_group
   - field_delimiter:field_delimiter
   - field_formatter_class:field_formatter_class
+  - jquery_ui_accordion:jquery_ui_accordion
   - address:address

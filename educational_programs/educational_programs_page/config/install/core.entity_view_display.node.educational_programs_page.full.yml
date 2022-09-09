@@ -1,0 +1,129 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.educational_programs_page.body
+    - field.field.node.educational_programs_page.field_educational_program
+    - field.field.node.educational_programs_page.layout_builder__layout
+    - node.type.educational_programs_page
+  module:
+    - layout_builder
+    - layout_builder_base_library
+    - layout_builder_restrictions
+    - user
+third_party_settings:
+  layout_builder:
+    allow_custom: true
+    enabled: true
+    sections:
+      -
+        layout_id: layout_base_onecol
+        layout_settings:
+          label: edu_field_body_section
+          column_widths: null
+          column_gap: ''
+          row_gap: ''
+          column_width: ''
+          column_breakpoint: ''
+          align_items: ''
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout--height--default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+        components:
+          6e84f67a-2edb-4aa8-8df0-e8dbc134d70d:
+            uuid: 6e84f67a-2edb-4aa8-8df0-e8dbc134d70d
+            region: content
+            configuration:
+              id: 'field_block:node:educational_programs_page:field_educational_program'
+              label: 'Educational Program'
+              provider: layout_builder
+              label_display: '0'
+              formatter:
+                label: hidden
+                type: educational_programs_field_default
+                settings: {  }
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+            additional: {  }
+            weight: 0
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories:
+      - 'Chaos Tools'
+      - 'Content fields'
+      - 'Custom block types'
+      - 'Custom blocks'
+      - Forms
+      - Help
+      - 'Inline blocks'
+      - 'Lists (Views)'
+      - Menus
+      - Search
+      - System
+      - User
+      - core
+    entity_view_mode_restriction:
+      whitelisted_blocks: {  }
+      blacklisted_blocks:
+        'Inline blocks':
+          - 'inline_block:contact_creator'
+          - 'inline_block:editor_login_signoff'
+          - 'inline_block:social_media_red_bar'
+      restricted_categories:
+        - 'Chaos Tools'
+        - 'Content fields'
+        - 'Custom block types'
+        - 'Custom blocks'
+        - Forms
+        - Help
+        - 'Lists (Views)'
+        - Menus
+        - Search
+        - System
+        - User
+        - core
+      allowed_layouts: {  }
+id: node.educational_programs_page.full
+targetEntityType: node
+bundle: educational_programs_page
+mode: full
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  body: true
+  field_educational_program: true
+  layout_builder__layout: true
+

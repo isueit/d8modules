@@ -1,0 +1,11 @@
+langcode: en
+status: true
+id: editor_login_signoff
+label: 'Staff Links'
+revision: 0
+description: ''
+dependencies:
+  enforced:
+    module:
+      - editor_login_signoff
+

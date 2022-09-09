@@ -4,4 +4,4 @@ dependencies: {  }
 id: contact_creator
 label: 'Contact Information'
 revision: 0
-description: 'Site Specific contact information'
+description: 'Used for formatted contact information, such as an address, email and phone number.'

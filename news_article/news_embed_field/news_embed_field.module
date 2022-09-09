@@ -12,6 +12,9 @@ use Drupal\news_embed_field\Plugin\Field\FieldFormatter;
 /**
  * Implements hook_page_attachments
  * Works for general pages
+ *
+ * Sets the 'cononical' link to the url of the original page
+ * Helps so search engines (Google) sees the original page, and not duplicate content
  */
 function news_embed_field_page_attachments_alter(array &$attachments) {
   foreach ($attachments['#attached']['html_head'] as $key => $head) {

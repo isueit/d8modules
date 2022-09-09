@@ -1,0 +1,37 @@
+<?php
+
+use Drupal\Core\Access\AccessResult;
+
+/**
+ * Implements hook_node_access().
+ *
+ * Note: This function will only trigger if user is non-admin role
+ */
+function contentaccess_permissions_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account)
+{
+  // TODO: Grab node from front page
+  // $front_url = \Drupal::state()->get('site_frontpage', 'node');
+  // $front_url = trim($front_url, '/');
+  // $front = explode('/', $front_url);
+  // print_r($front);
+  // if($front[0] == 'node' && ctype_digit($front[1])) {
+  //   $front_nid = $front[1];
+  // }
+  // Another way
+  // \Drupal::service('path.matcher')->isFrontPage()
+
+  // Check if node is the Front Page
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    switch ($op) {
+      // case 'create': controls access to create content, doesn't make sense in this context
+      case 'update': // Controls access to edit content
+        return AccessResult::forbidden();
+      case 'delete': // controls access to delete content
+        return AccessResult::forbidden();
+      default:
+    }
+  }
+
+  // Shouldn't be called ever really
+  return AccessResult::neutral();
+}

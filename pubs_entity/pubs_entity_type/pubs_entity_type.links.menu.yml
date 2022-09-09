@@ -1,5 +1,5 @@
 pubs_entity.admin.config.content.list:
-  title: Products from Store
+  title: Resources from Store
   description: 'View Admin list of Pubs Entities'
   route_name: view.publication_entities_admin.admin_panel
   parent: system.admin_content

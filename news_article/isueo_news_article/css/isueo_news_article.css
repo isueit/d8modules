@@ -5,3 +5,26 @@
 .field-name-field-lug-blog-author img {margin-right:15px; padding:3px; float:left;}
 
 .field-name-field-lug-blog-author .field-label {font-weight:bold; margin-top:15px;}
+
+/* Style for embedded articles */
+.embedded_article img {
+	float: left;
+	padding: 10px;
+}
+
+.deck {
+	font-size: 1.25rem;
+}
+
+.authored-on {
+	font-size: .9rem;
+	color: #666;
+	padding-bottom: 15px;
+	font-style: oblique;
+}
+
+span.authored-on {
+	font-size: .9rem;
+	color: #666;
+	font-style: oblique;
+}

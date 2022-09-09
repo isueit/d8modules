@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: templates
+label: Templates
+type: 'canonical_entities:node'
+pattern: 'template/[node:title]'
+selection_criteria:
+  80fd251c-d084-42a4-a600-04919d3fbae1:
+    id: node_type
+    negate: false
+    uuid: 80fd251c-d084-42a4-a600-04919d3fbae1
+    context_mapping:
+      node: node
+    bundles:
+      county_job_template: county_job_template
+selection_logic: and
+weight: -5
+relationships: {  }

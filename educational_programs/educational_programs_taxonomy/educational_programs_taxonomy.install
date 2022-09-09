@@ -1,0 +1,20 @@
+<?php
+use \Drupal\taxonomy\Entity\Vocabulary;
+//use \Drupal\taxonomy\Entity\Term;
+
+function educational_programs_taxonomy_install() {
+
+  //Create taxonomy if it does not exist
+  $vocabs = Vocabulary::loadMultiple();
+  $vid = 'educational_programs';
+  if (!isset($vocabs[$vid])) {
+    $vocab = Vocabulary::create(array(
+      'vid' => $vid,
+      'description' => 'Educational Programs list from MyData',
+      'name' => 'Educational Programs',
+    ));
+    $vocab->save();
+  }
+
+  educational_programs_taxonomy_handle_feeds();
+}

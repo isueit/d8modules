@@ -15,7 +15,6 @@ function staff_profile_secondary_rebuild() {
  */
 function staff_profile_secondary_cron() {
   staff_profile_secondary_handle_feeds();
-
 }
 
 /**
@@ -59,11 +58,13 @@ function staff_profile_secondary_handle_feeds() {
 
       // Create node if one's not found
       if (empty($mynode)) {
-        $mynode = Node::create(array('type' => 'staff_profile', 'title' => $profile['title']));
+        $mynode = Node::create(array('type' => 'staff_profile', 'title' => html_entity_decode($profile['title'])));
+        // Weight defaults to zero on creation
+        $mynode->field_staff_profile_sort_order->value = 0;
       }
 
       // Handle the title and body
-      $mynode->setTitle($profile['title']);
+      $mynode->setTitle(html_entity_decode($profile['title']));
       $mynode->body->value = $profile['body'];
       $mynode->body->format = 'basic';
 
@@ -74,10 +75,10 @@ function staff_profile_secondary_handle_feeds() {
       $mynode->field_staff_profile_netid->value = $profile['field_staff_profile_netid'];
       $mynode->field_staff_profile_pref_name->value = $profile['field_staff_profile_pref_name'];
       $mynode->field_staff_profile_pref_phone->value = $profile['field_staff_profile_pref_phone'];
-      $mynode->field_staff_profile_pref_title->value = $profile['field_staff_profile_pref_title'];
+      $mynode->field_staff_profile_pref_title->value = html_entity_decode($profile['field_staff_profile_pref_title']);
       $mynode->field_staff_profile_staffid->value = $profile['field_staff_profile_staffid'];
       $mynode->field_staff_profile_departmentid->value = $profile['field_staff_profile_departmentid'];
-      $mynode->field_staff_profile_job_title->value = $profile['field_staff_profile_job_title'];
+      $mynode->field_staff_profile_job_title->value = html_entity_decode($profile['field_staff_profile_job_title']);
       $mynode->field_staff_profile_phone->value = $profile['field_staff_profile_phone'];
       $mynode->field_staff_profile_fax->value = $profile['field_staff_profile_fax'];
       $mynode->field_staff_profile_college->value = $profile['field_staff_profile_college'];
@@ -99,7 +100,7 @@ function staff_profile_secondary_handle_feeds() {
 
 
       // Handle the base county
-      $taxonomyStorage = \Drupal::service('entity.manager')->getStorage('taxonomy_term');
+      $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
       $taxonomy = array();
       if (!empty($profile['field_staff_profile_base_county'])) {
         $taxonomy = $taxonomyStorage->loadByProperties([
@@ -203,6 +204,7 @@ function staff_profile_secondary_form_node_form_alter(&$form, &$form_state, $for
     $form['field_staff_profile_pref_name']['widget'][0]['value']['#disabled'] = TRUE;
     $form['field_staff_profile_pref_phone']['widget'][0]['value']['#disabled'] = TRUE;
     $form['field_staff_profile_smugmug']['widget'][0]['value']['#disabled'] = TRUE;
+    $form['field_staff_profile_teams_groups']['widget']['#disabled'] = TRUE;
 
     $form['body']['widget']['#disabled'] = TRUE;
   }

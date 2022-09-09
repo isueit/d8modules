@@ -1,5 +1,5 @@
 staff_profile.add_form:
   route_name: entity.pubs_entity.add_form
-  title: 'Add Product From Store'
+  title: 'Add Resource From Store'
   appears_on:
     - entity.pubs_entity.collection

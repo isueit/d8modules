@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: social_media_footer
-label: 'Social Media Footer'
-revision: 0
-description: ''

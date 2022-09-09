@@ -40,3 +40,8 @@
 .event_sessions{padding-top:10px;}
 .event_contact_label{padding-top:10px;}
 .event_contact_name, .event_contact_email, .event_contact_phone {padding-left: 15px;}
+
+img.educational_program_image {max-width: 200px; float:left; margin: 0 8px 5px 0;}
+div.clearer {clear:both;}
+
+.next_session{font-weight: bold;}

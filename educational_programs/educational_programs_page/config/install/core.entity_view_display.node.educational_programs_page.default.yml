@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.educational_programs_page.body
+    - field.field.node.educational_programs_page.field_educational_program
+    - field.field.node.educational_programs_page.layout_builder__layout
+    - node.type.educational_programs_page
+  module:
+    - educational_programs_field
+    - user
+id: node.educational_programs_page.default
+targetEntityType: node
+bundle: educational_programs_page
+mode: default
+content:
+  field_educational_program:
+    weight: 101
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: educational_programs_field_default
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  body: true
+  layout_builder__layout: true
+

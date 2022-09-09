@@ -1,0 +1,57 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.content_card
+    - field.field.block_content.content_card.field_content_card_body
+    - field.field.block_content.content_card.field_content_card_color_style
+    - field.field.block_content.content_card.field_content_card_icon
+    - field.field.block_content.content_card.field_content_card_text_size
+    - field.field.block_content.content_card.field_content_card_title
+  module:
+    - fontawesome
+    - options
+    - text
+id: block_content.content_card.default
+targetEntityType: block_content
+bundle: content_card
+mode: default
+content:
+  field_content_card_body:
+    weight: 4
+    label: hidden
+    settings: { }
+    third_party_settings: { }
+    type: text_default
+    region: content
+  field_content_card_color_style:
+    weight: 2
+    label: hidden
+    settings: { }
+    third_party_settings: { }
+    type: list_default
+    region: content
+  field_content_card_icon:
+    weight: 1
+    label: hidden
+    settings:
+      layers: false
+    third_party_settings: { }
+    type: fontawesome_icon_formatter
+    region: content
+  field_content_card_text_size:
+    weight: 3
+    label: hidden
+    settings: { }
+    third_party_settings: { }
+    type: list_default
+    region: content
+  field_content_card_title:
+    weight: 0
+    label: hidden
+    settings: { }
+    third_party_settings: { }
+    type: text_default
+    region: content
+hidden: { }
+

@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.links_block
+    - field.storage.block_content.field_lblock_link05
+  module:
+    - link
+id: block_content.links_block.field_lblock_link05
+field_name: field_lblock_link05
+entity_type: block_content
+bundle: links_block
+label: Link05
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    attributes: { }
+    uri: 'https://blogs.extension.iastate.edu/'
+    title: Blogs
+    options: { }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link
+

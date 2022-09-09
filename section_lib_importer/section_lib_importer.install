@@ -1,0 +1,500 @@
+<?php
+use \Drupal\section_library\Entity\SectionLibraryTemplate;
+use \Drupal\Core\File\FileSystemInterface;
+use \Drupal\layout_builder\Section;
+use \Drupal\layout_builder\SectionComponent;
+use \Drupal\block_content\Entity\BlockContent;
+use Drupal\block_content\Entity\BlockContentType;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use function Drupal\Core\Session\user_role_permissions;
+
+// ADD NEW UPDATES HERE
+// function section_lib_importer_update_8001() {
+// }
+
+function section_lib_importer_install() {
+  // Set up permissions for content editors
+   user_role_grant_permissions('content_editor', [
+    'import template from section_library',
+    'view section_library templates',
+    'create basic_content block content',
+    'delete any basic_content block content',
+    'Update any basic_content block content',
+  ]);
+
+  //Prepare for images
+  $uri_file = 'public://section_library/';
+  \Drupal::service('file_system')->prepareDirectory($uri_file, FileSystemInterface::CREATE_DIRECTORY);
+
+  //Define templates
+  $templates = [
+    [
+      'label' => 'One Column Layout',
+      'type' => 'section',
+      'filename' => 'oneColumn.png',
+      'sections' => [[
+        'label' => 'One Column Layout',
+        'section_id' => 'layout_base_onecol',
+        'section' => [
+          'label' => '1 Column Layout',
+          'column_widths' => null,
+          'column_gap' => '',
+          'row_gap' => '',
+          'column_width' => '',
+          'column_breakpoint' => '',
+          'align_items' => '',
+          'background' => 'layout--background--none',
+          'background_image' => '',
+          'background_image_style' => '',
+          'background_attachment' => 'layout--background-attachment--default',
+          'background_position' => 'layout--background-position--center',
+          'background_size' => 'layout--background-size--cover',
+          'background_overlay' => 'layout--background-overlay--none',
+          'equal_top_bottom_margins' => '',
+          'equal_left_right_margins' => '',
+          'top_margin' => '',
+          'right_margin' => '',
+          'bottom_margin' => '',
+          'left_margin' => '',
+          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+          'equal_left_right_paddings' => 'layout--left-right-padding--small',
+          'top_padding' => '',
+          'right_padding' => '',
+          'bottom_padding' => '',
+          'left_padding' => '',
+          'container' => 'layout--container--none',
+          'content_container' => 'layout--content-container--default',
+          'height' => 'layout--height--default',
+          'color' => 'layout--color--default',
+          'alignment' => '',
+          'modifier' => '',
+          'customizable_columns' => '',
+          'modifiers' => '',
+        ],
+        'blocks' => [
+          [
+            'region' => 'content',
+
+            'id' => 'inline_block:basic_content',
+            'label' => 'Placeholder Content',
+            'provider' => 'layout_builder',
+            'label_display' => 0,
+            'view_mode' => 'full',
+
+            'info' => 'Placeholder Content',
+            'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
+          ]
+        ]
+      ]]
+    ],
+    [
+      'label' => 'Two Column Layout',
+      'type' => 'section',
+      'filename' => 'twoColumn.png',
+      'sections' => [[
+        'label' => 'Two Column Layout',
+        'section_id' => 'layout_base_twocol',
+        'section' => [
+          'label' => '2 Column Layout',
+          'column_widths' => null,
+          'column_gap' => 'layout--column-gap--default',
+          'row_gap' => 'layout--row-gap--none',
+          'column_width' => 'layout--column-width--default',
+          'column_breakpoint' => 'layout--column-breakpoint--medium',
+          'align_items' => 'layout--align-items--normal',
+          'background' => 'layout--background--none',
+          'background_image' => '',
+          'background_image_style' => '',
+          'background_attachment' => 'layout--background-attachment--default',
+          'background_position' => 'layout--background-position--center',
+          'background_size' => 'layout--background-size--cover',
+          'background_overlay' => 'layout--background-overlay--none',
+          'equal_top_bottom_margins' => '',
+          'equal_left_right_margins' => '',
+          'top_margin' => '',
+          'right_margin' => '',
+          'bottom_margin' => '',
+          'left_margin' => '',
+          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+          'equal_left_right_paddings' => 'layout--left-right-padding--small',
+          'top_padding' => '',
+          'right_padding' => '',
+          'bottom_padding' => '',
+          'left_padding' => '',
+          'container' => 'layout--container--none',
+          'content_container' => 'layout--content-container--default',
+          'height' => 'layout--height--default',
+          'color' => 'layout--color--default',
+          'alignment' => '',
+          'modifier' => '',
+          'customizable_columns' => '',
+          'modifiers' => ''
+        ],
+        'blocks' => [
+          [
+            'region' => 'first',
+
+            'id' => 'inline_block:basic_content',
+            'label' => 'What is Lorem Ipsum',
+            'provider' => 'layout_builder',
+            'label_display' => 'visible',
+            'view_mode' => 'full',
+
+            'info' => 'What is Lorem Ipsum',
+            'body' => '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>'
+          ],[
+            'region' => 'second',
+
+            'id' => 'inline_block:basic_content',
+            'label' => 'Where does it come from?',
+            'provider' => 'layout_builder',
+            'label_display' => 'visible',
+            'view_mode' => 'full',
+
+            'info' => 'Where does it come from?',
+            'body' => '<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>'
+          ]
+        ]
+      ]]
+    ],
+    [
+      'label' => 'Three Column Layout',
+      'type' => 'section',
+      'filename' => 'threeColumn.png',
+      'sections' => [[
+        'label' => 'Three Column Layout',
+        'section_id' => 'layout_base_threecol',
+        'section' => [
+          'label' => '3 Column Layout',
+          'column_widths' => null,
+          'column_gap' => 'layout--column-gap--default',
+          'row_gap' => 'layout--row-gap--none',
+          'column_width' => 'layout--column-width--default',
+          'column_breakpoint' => 'layout--column-breakpoint--medium',
+          'align_items' => 'layout--align-items--normal',
+          'background' => 'layout--background--none',
+          'background_image' => '',
+          'background_image_style' => '',
+          'background_attachment' => 'layout--background-attachment--default',
+          'background_position' => 'layout--background-position--center',
+          'background_size' => 'layout--background-size--cover',
+          'background_overlay' => 'layout--background-overlay--none',
+          'equal_top_bottom_margins' => '',
+          'equal_left_right_margins' => '',
+          'top_margin' => '',
+          'right_margin' => '',
+          'bottom_margin' => '',
+          'left_margin' => '',
+          'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+          'equal_left_right_paddings' => 'layout--left-right-padding--small',
+          'top_padding' => '',
+          'right_padding' => '',
+          'bottom_padding' => '',
+          'left_padding' => '',
+          'container' => 'layout--container--none',
+          'content_container' => 'layout--content-container--default',
+          'height' => 'layout--height--default',
+          'color' => 'layout--color--default',
+          'alignment' => '',
+          'modifier' => '',
+          'customizable_columns' => '',
+          'modifiers' => ''
+        ],
+        'blocks' => [
+          [
+            'region' => 'first',
+
+            'id' => 'inline_block:basic_content',
+            'label' => 'Placeholder Content',
+            'provider' => 'layout_builder',
+            'label_display' => 0,
+            'view_mode' => 'full',
+
+            'info' => 'Placeholder Content',
+            'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
+          ],[
+            'region' => 'second',
+
+            'id' => 'inline_block:basic_content',
+            'label' => 'Placeholder Content',
+            'provider' => 'layout_builder',
+            'label_display' => 0,
+            'view_mode' => 'full',
+
+            'info' => 'Placeholder Content',
+            'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
+          ],[
+            'region' => 'third',
+
+            'id' => 'inline_block:basic_content',
+            'label' => 'Placeholder Content',
+            'provider' => 'layout_builder',
+            'label_display' => 0,
+            'view_mode' => 'full',
+
+            'info' => 'Placeholder Content',
+            'body' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>'
+          ]
+        ]
+      ]]
+  ],
+[
+  'label' => 'Four Column Layout',
+  'type' => 'section',
+  'filename' => 'fourColumn.png',
+  'sections' => [[
+      'label' => 'Four Column Layout',
+      'type' => 'section',
+      'section_id' => 'layout_base_fourcol',
+      'section' =>[
+        'label' => 'Four Column Layout',
+        'column_widths' => NULL,
+        'column_gap' => 'layout--column-gap--none',
+        'row_gap' => 'layout--row-gap--none',
+        'column_width' => '',
+        'column_breakpoint' => 'layout--column-breakpoint--medium',
+        'align_items' => 'layout--align-items--normal',
+        'background' => 'layout--background--none',
+        'background_image' => '',
+        'background_image_style' => '',
+        'background_attachment' => 'layout--background-attachment--default',
+        'background_position' => 'layout--background-position--center',
+        'background_size' => 'layout--background-size--cover',
+        'background_overlay' => 'layout--background-overlay--none',
+        'equal_top_bottom_margins' => '',
+        'equal_left_right_margins' => '',
+        'top_margin' => '',
+        'right_margin' => '',
+        'bottom_margin' => '',
+        'left_margin' => '',
+        'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+        'equal_left_right_paddings' => 'layout--left-right-padding--small',
+        'top_padding' => '',
+        'right_padding' => '',
+        'bottom_padding' => '',
+        'left_padding' => '',
+        'container' => 'layout--container--none',
+        'content_container' => 'layout--content-container--default',
+        'height' => 'layout--height--default',
+        'color' => 'layout--color--default',
+        'alignment' => '',
+        'modifier' => '',
+        'customizable_columns' => '',
+        'modifiers' => '',
+      ],
+	'blocks' => []
+      ]
+  ]
+],
+[
+	'label' => 'Left Column Template',
+	'type' => 'section',
+	'filename' => 'leftColumn.png',
+	'sections' => [[
+		'label' => 'Left Column Template',
+		'type' => 'section',
+		'section_id' => 'layout_base_twocol',
+		'section' => [
+			'label' => '',
+			'column_widths' => null,
+			'column_gap' => 'layout--column-gap--small',
+			'row_gap' => 'layout--row-gap--none',
+			'column_width' => 'layout--column-width--25-75',
+			'column_breakpoint' => 'layout--column-breakpoint--medium',
+			'align_items' => 'layout--align-items--normal',
+			'background' => 'layout--background--none',
+			'background_image' => '','background_image_style' => '',
+			'background_attachment' => 'layout--background-attachment--default',
+			'background_position' => 'layout--background-position--center',
+			'background_size' => 'layout--background-size--cover',
+			'background_overlay' => 'layout--background-overlay--none',
+			'equal_top_bottom_margins' => '',
+			'equal_left_right_margins' => '',
+			'top_margin' => '',
+			'right_margin' => '',
+			'bottom_margin' => '',
+			'left_margin' => '',
+			'equal_top_bottom_paddings' => 'layout--top-bottom-padding--big',
+			'equal_left_right_paddings' => 'layout--left-right-padding--small',
+			'top_padding' => '',
+			'right_padding' => '',
+			'bottom_padding' => '',
+			'left_padding' => '',
+			'container' => 'layout--container--none',
+			'content_container' => 'layout--content-container--default',
+			'height' => 'layout--height--default',
+			'color' => 'layout--color--default',
+			'alignment' => '',
+			'modifier' => '',
+			'customizable_columns' => '',
+			'modifiers' => ''
+		],
+		'blocks' => [
+			[
+				'region' => 'first',
+				'id' => 'inline_block:basic_content',
+				'label' => 'Placeholder Content',
+				'provider' => 'layout_builder',
+				'label_display' => 0,
+				'view_mode' => 'full',
+				'info' => 'Float Left',
+				'body' => '<p><This is the left column template. Remove the placeholder text and replace with your own text and/or image.</p><p>This is a helpful way to insert image and text with appropriate padding and alignment properties. If you wish to have two columns of equal width, try using the two column template provided instead.</p>'
+				],[
+				'region' => 'second',
+				'id' => 'inline_block:basic_content',
+				'label' => 'Placeholder Content',
+				'provider' => 'layout_builder',
+				'label_display' => 'visible',
+				'view_mode' => 'full',
+				'info' => 'Placeholder Content',
+				'body' => '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>'
+			]
+		]
+	]]
+],
+
+[
+	"label" => "Right Column Template",
+	"type" => "section",
+	"filename" => "rightColumn.png",
+	"sections" => [[
+		"label" => "Right Column Template",
+		"type" => "section",
+		"section_id" => "layout_base_twocol",
+		"section" => [
+			"label" => "Right Column Template",
+			"column_widths" => null,
+			"column_gap" => "layout--column-gap--small",
+			"row_gap" => "layout--row-gap--none",
+			"column_width" => "layout--column-width--75-25",
+			"column_breakpoint" => "layout--column-breakpoint--medium",
+			"align_items" => "layout--align-items--normal",
+			"background" => "layout--background--none",
+			"background_image" => "",
+			"background_image_style" => "",
+			"background_attachment" => "layout--background-attachment--default",
+			"background_position" => "layout--background-position--center",
+			"background_size" => "layout--background-size--cover",
+			"background_overlay" => "layout--background-overlay--none",
+			"equal_top_bottom_margins" => "",
+			"equal_left_right_margins" => "",
+			"top_margin" => "",
+			"right_margin" => "",
+			"bottom_margin" => "",
+			"left_margin" => "",
+			"equal_top_bottom_paddings" => "layout--top-bottom-padding--big",
+			"equal_left_right_paddings" => "layout--left-right-padding--small",
+			"top_padding" => "",
+			"right_padding" => "",
+			"bottom_padding" => "",
+			"left_padding" => "",
+			"container" => "layout--container--none",
+			"content_container" => "layout--content-container--default",
+			"height" => "layout--height--default",
+			"color" => "layout--color--default",
+			"alignment" => "",
+			"modifier" => "",
+			"customizable_columns" => "",
+			"modifiers" => ""
+		],
+		"blocks" => [
+			[
+			"region" => "first",
+			"id" => "inline_block:basic_content",
+			"label" => "Placeholder Content",
+			"provider" => "layout_builder",
+			"label_display" => "visible",
+			"view_mode" => "full",
+			"info" => "Placeholder Content",
+			"body" => "<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>"
+			],[
+			"region" => "second",
+			"id" => "inline_block:basic_content",
+			"label" => "Placeholder Content",
+			"provider" => "layout_builder",
+			"label_display" => 0,
+			"view_mode" => "full",
+			"info" => "Placeholder Content",
+			"body" => "<p>This is the Right column template. Remove the placeholder text and replace with your own text and/or image.</p><p>This is a helpful way to insert image and text with appropriate padding and alignment properties. If you wish to have two columns of equal width, try using the two column template provided instead.</p>"
+			]
+		]
+	]]
+]];
+
+  $blocks = \Drupal::entityTypeManager()->getStorage('block_content_type')->loadMultiple(null);
+  if (array_search('basic_content', array_map(function ($o) { return $o->id(); }, $blocks)) === false) {
+    //Create block content type
+    $contentBlockType = BlockContentType::create([
+      'id' => 'basic_content',
+      'label' => 'Basic Content',
+      'description' => "Use for normal body content such as text, images, videos, etc",
+    ]);
+    $contentBlockType->save();
+
+    $blockId = $contentBlockType->id();
+    //Add body field
+    $field = FieldConfig::loadByName('block_content', $blockId, 'body');
+    if (empty($field)) {
+      $fieldStorage = FieldStorageConfig::loadByName('block_content', 'body');
+      $field = FieldConfig::create([
+        'field_storage' => $fieldStorage,
+        'bundle' => $blockId,
+        'label' => 'Body',
+        'settings' => ['display_summary' => FALSE],
+      ]);
+
+      $field->save();
+      $display_repository = \Drupal::service('entity_display.repository');
+
+      $display_repository->getFormDisplay('block_content', $blockId)->setComponent('body', ['type' => 'text_textarea_with_summary'])->save();
+      $display_repository->getViewDisplay('block_content', $blockId)->setComponent('body', ['label' => 'hidden','type' => 'text_default'])->save();
+    }
+  }
+  addSectionTemplates($templates);
+}
+
+/**
+ * Adds Sections for block layouts
+ * SectionComponent and Blocks removed to prevent duplicated items from being added to custom block library
+ * Basic Content etc will be added when block is in layout
+ * Blocks from custom block library can be added in the future using their uuid, only block type instances have duplication issue, look into deepcloningtrait from section library
+ */
+function addSectionTemplates($templates) {
+  foreach ($templates as $sectlibtemplate) {
+    $sections_for_data = [];
+    foreach ($sectlibtemplate['sections'] as $template) {
+      //Look for existing, if there are any with same label, skip
+      $lib_templates = \Drupal::entityTypeManager()->getStorage('section_library_template')->loadByProperties(['label' => $template['label']]);
+      if (count($lib_templates) == 0) {
+        //Removed Create SectionComponents and their respective BlockComponents to prevent duplicated blocks in custom block library
+        $components = [];
+        $section = new Section($template['section_id'], $template['section'], $components, []);
+        $section->setLayoutSettings($template['section']);
+
+        $sections_for_data[] = $section;
+      }
+    }
+    if (count($lib_templates) == 0) {
+      //Load images and set them to be used as thumbnails
+      $file_loc = \Drupal::service('file_system')->realpath(drupal_get_path('module', 'section_lib_importer')) . '/resources/' . $sectlibtemplate['filename'];
+      $file_data = file_get_contents($file_loc);
+      $file_saved = file_save_data($file_data, "public://section_library/" . $sectlibtemplate['filename'], FileSystemInterface::EXISTS_REPLACE);
+
+      $data = [
+        'type' => $sectlibtemplate['type'],
+        'entity_type' => 'node',
+        'label' => $sectlibtemplate['label'],
+        'image' => [
+          'target_id' => $file_saved->id(),
+          'display' => 1
+        ],
+        'layout_section' => $sections_for_data
+      ];
+      //Create library template from section and image
+      $template_ent = Drupal::entityTypeManager()->getStorage('section_library_template')->create($data);
+      $template_ent->setOwnerId(1);
+      $template_ent->save();
+    }
+  }
+}

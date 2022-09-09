@@ -73,7 +73,7 @@ class CSESearchForm extends FormBase {
     $form['submit']['search_submit'] =
     [
       '#type' => 'inline_template',
-      '#template' => '<button class="isu-search__search-btn button js-form-submit form-submit btn" data-drupal-selector="edit-submit" type="submit" id="search_edit-submit" value="' . (preg_match("/" . $cse_results_page_name . "/", \Drupal::service('path.current')->getPath()) != FALSE ? 'resubmit search' : 'submit search') . '"><span class="fa fa-search" aria-hidden="true"><span><span class="isu-search__search-btn-text">Submit Search<span></button>',
+      '#template' => '<button class="isu-search__search-btn button js-form-submit form-submit btn" data-drupal-selector="edit-submit" type="submit" id="search_edit-submit" value="' . (preg_match("/" . $cse_results_page_name . "/", \Drupal::service('path.current')->getPath()) != FALSE ? 'resubmit search' : 'submit search') . '"><span class="fas fa-search" aria-hidden="true"></span><span class="isu-search__search-btn-text">Submit Search</span></button>',
     ];
     return $form;
   }

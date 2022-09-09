@@ -1,0 +1,6 @@
+section_lib_importer.export_controller:
+  title: 'Export Section Library Template'
+  route_name: section_lib_importer.content
+  description: 'Export Section Library Template'
+  parent: system.admin_config_content
+  weight: 100

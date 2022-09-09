@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - content_bean_cards
+id: content_card
+label: 'Content Card'
+revision: 0
+description: 'Used to create content based blocks with customizable headings'
+

@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_counties_served
+    - node.type.county_job_opening
+id: node.county_job_opening.field_counties_served
+field_name: field_counties_served
+entity_type: node
+bundle: county_job_opening
+label: 'Counties Served'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      counties_in_iowa: counties_in_iowa
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

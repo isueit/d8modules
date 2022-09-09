@@ -1,0 +1,9 @@
+section_lib_importer.content:
+    path: '/admin/config/content/layout_library_exporter'
+    defaults:
+      _controller: '\Drupal\section_lib_importer\Controller\ExportLibTemplateController::content'
+      _title: "Export Section Library Template"
+    requirements:
+      _permission: 'administer section library importer'
+    options:
+      _admin-route: TRUE

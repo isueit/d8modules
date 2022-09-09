@@ -1,0 +1,67 @@
+<?php
+/**
+* Implements hook_install().
+*/
+
+function council_members_install() {
+  $county_name = council_members_get_county_name();
+
+  $config = \Drupal::service('config.factory')->getEditable('council_members.settings');
+  $config->set('county', $county_name);
+  $config->set('feed_url', 'https://datastore.exnet.iastate.edu/mydata/ExtensionCouncilMembers.json');
+  $config->save();
+}
+
+/**
+* Implements hook_uninstall().
+*/
+
+function council_members_uninstall() {
+  $config = \Drupal::service('config.factory')->getEditable('council_members.settings')->delete();
+}
+
+
+// Local function: gets the county name
+function council_members_get_county_name() {
+  // Get the county from the root path of the Drupal install
+  $folders = explode('/', \Drupal::root());
+  $site = 'Unknown';
+  if (count($folders) >= 2) {
+    $site = ucfirst($folders[count($folders) -2]);
+  }
+
+  // Fix special cases of county names
+  switch ($site) {
+    case "Blackhawk":
+      $site = "Black Hawk";
+      break;
+    case "Buenavista":
+      $site = "Buena Vista";
+      break;
+    case "Cerrogordo":
+      $site = "Cerro Gordo";
+      break;
+    case "Desmoines":
+      $site = "Des Moines";
+      break;
+    case "Eastpottawattamie":
+      $site = "East Pottawattamie";
+      break;
+    case "Paloalto":
+      $site = "Palo Alto";
+      break;
+    case "Vanburen":
+      $site = "Van Buren";
+      break;
+    case "Westpottawattamie":
+      $site = "West Pottawattamie";
+      break;
+    case "Obrien":
+      $site = "O'Brien";
+      break;
+    default:
+      break;
+  }
+  return $site;
+}
+

@@ -1,0 +1,17 @@
+county_job_opening_edit:
+  version: 1.x
+  css:
+    layout:
+      css/county_job_opening_edit.css: {}
+
+county_job_opening:
+  version: 1.x
+  css:
+    layout:
+      css/county_job_opening.css: {}
+
+addlink:
+  version: 1.x
+  footer: true
+  js:
+    js/AddLink.js: {}

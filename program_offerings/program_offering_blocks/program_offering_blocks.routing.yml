@@ -4,7 +4,6 @@ program_offering_blocks.admin_settings_form:
     _form: '\Drupal\program_offering_blocks\Form\SettingsForm'
     _title: 'Program Offering Blocks Main'
   requirements:
-    _permission: 'access administration pages'
     _permission: 'administer program offerings'
   options:
     _admin_route: TRUE

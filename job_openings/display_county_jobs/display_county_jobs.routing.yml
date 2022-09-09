@@ -1,0 +1,7 @@
+staff_profile_primary.view_my_profile:
+  path: '/jobs'
+  defaults:
+    _controller: '\Drupal\display_county_jobs\Controller\DisplayCountyJobs::jobs'
+    _title: 'Display County Jobs'
+  requirements:
+    _permission: 'access content'

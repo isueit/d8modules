@@ -1,0 +1,54 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - content_bean_cards
+  module:
+    - block_content
+    - options
+id: block_content.field_content_card_color_style
+field_name: field_content_card_color_style
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: bean-card_red
+      label: Red
+    -
+      value: bean-card_blue
+      label: Blue
+    -
+      value: bean-card_green
+      label: Green
+    -
+      value: bean-card_dark-red
+      label: 'Dark Red'
+    -
+      value: bean-card_dark-blue
+      label: 'Dark Blue'
+    -
+      value: bean-card_dark-green
+      label: 'Dark Green'
+    -
+      value: bean-card_brown
+      label: Brown
+    -
+      value: bean-card_grey
+      label: Grey
+    -
+      value: bean-card_dark-overlay_left
+      label: 'Dark Overlay Left'
+    -
+      value: bean-card_dark-overlay_bottom
+      label: 'Dark Overlay Bottom'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
+

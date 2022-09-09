@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: job_opening
+label: 'County Job Opening'
+type: 'canonical_entities:node'
+pattern: '[node:field_base_county]-[node:title]'
+selection_criteria:
+  2f4460d5-ff90-4ace-baa3-ca570455b100:
+    id: node_type
+    negate: false
+    uuid: 2f4460d5-ff90-4ace-baa3-ca570455b100
+    context_mapping:
+      node: node
+    bundles:
+      county_job_opening: county_job_opening
+selection_logic: and
+weight: -5
+relationships: {  }

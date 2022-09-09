@@ -1,0 +1,82 @@
+<?php
+use  Drupal\Core\Entity\EntityInterface;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+* Implements hook_preprocess_HOOK().
+*/
+
+function county_job_openings_preprocess_node(&$variables) {
+  $node = $variables['node'];
+
+  if ($node->getType() == 'county_job_opening') {
+    $variables['#attached']['library'][] = 'county_job_openings/county_job_opening';
+  }
+}
+
+/*
+ * Implements hook_preprocess_views_view()
+ */
+function county_job_openings_preprocess_views_view(&$variables) {
+  $variables['#cache']['contexts'][] = 'route';
+  if ($variables['view_array']['#name'] == 'county_jobs') {
+    $variables['#attached']['library'][] = 'county_job_openings/county_job_opening';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function county_job_openings_form_node_form_alter(&$form, &$form_state, $form_id) {
+  /* @var Drupal\Core\Entity\FieldableEntityInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+
+  if ($node->getType() == 'county_job_opening') {
+   /* var_dump($node);*/
+    $form['#attached']['library'][] = 'county_job_openings/county_job_opening_edit';
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function county_job_openings_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'create_county_job_opening_form') {
+    $form['#attached']['library'][] = 'county_job_openings/county_job_opening_edit';
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+
+function county_job_openings_node_presave(EntityInterface $node)
+{
+  // Ensure the base county is included in the Counties Served list
+  if ($node->bundle() == 'county_job_opening') {
+    if (($baseCountyTerm = Term::load($node->field_base_county->target_id)) !== null) {
+      $termID = $baseCountyTerm->id();
+      $found = false;
+
+      // Look for base county in counties served
+      foreach ($node->field_counties_served as $selected_term) {
+        if ($selected_term->get('target_id')->getValue() == $termID) {
+          $found = true;
+          break;
+        }
+      }
+
+      // Add it if not found
+      if (!$found) {
+        $node->field_counties_served[] = ['target_id' => $termID];
+      }
+    }
+  }
+}
+
+/**
+* Implements hook_preprocess_HOOK().
+*/
+function county_job_openings_preprocess_node_add_list(&$variables) {
+  $variables['#attached']['library'][] = 'county_job_openings/addlink';
+}

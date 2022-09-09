@@ -1,0 +1,5 @@
+{
+  "name": "isueit/image-bean-cards",
+  "type": "drupal-custom-module",
+  "description": "Module that recreates the functionality for bean cards, exclusively for images, in drupal 8"
+}

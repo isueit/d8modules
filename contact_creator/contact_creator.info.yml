@@ -1,5 +1,5 @@
-name: Contact Info Module
-description: Creates a page allowing users to create the Contact Info Block.
+name: Contact Module
+description: A custom block for site contact information, usually placed in the Third Footer Block.
 package: Custom
 type: module
 version: 1.0

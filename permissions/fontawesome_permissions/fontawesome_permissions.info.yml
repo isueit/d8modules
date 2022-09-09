@@ -1,5 +1,5 @@
 name: Font Awesome Permissions Module
-description: Hide/modify additonal settings in Font Awesome CKEditor widget.
+description: Modify default settings in Font Awesome CKEditor widget to restrict options.
 package: Custom
 type: module
 version: 1.0

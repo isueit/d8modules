@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.editor_login_signoff
+    - field.storage.block_content.field_login_link
+  module:
+    - link
+  enforced:
+    module:
+      - editor_login_signoff
+id: block_content.editor_login_signoff.field_login_link
+field_name: field_login_link
+entity_type: block_content
+bundle: editor_login_signoff
+label: 'Login Link'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    attributes: {  }
+    uri: 'internal:/login'
+    title: 'Editor Login'
+    options: {  }
+default_value_callback: ''
+settings:
+  link_type: 1
+  title: 2
+field_type: link
+

@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.content_card
+    - field.storage.block_content.field_content_card_color_style
+  module:
+    - options
+id: block_content.content_card.field_content_card_color_style
+field_name: field_content_card_color_style
+entity_type: block_content
+bundle: content_card
+label: 'Color Style'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: bean-card_red
+default_value_callback: ''
+settings: {  }
+field_type: list_string
+

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - image_bean_cards
+id: image_card
+label: 'Image Card'
+revision: 0
+description: 'Used to create image based cards with customizable labels'

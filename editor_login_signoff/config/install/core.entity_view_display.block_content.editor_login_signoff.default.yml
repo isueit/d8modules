@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.editor_login_signoff
+    - field.field.block_content.editor_login_signoff.field_login_link
+    - field.field.block_content.editor_login_signoff.field_myextension_link
+  module:
+    - field_formatter_class
+    - link
+id: block_content.editor_login_signoff.default
+targetEntityType: block_content
+bundle: editor_login_signoff
+mode: default
+content:
+  field_login_link:
+    weight: 0
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    type: link
+    region: content
+  field_myextension_link:
+    weight: 1
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+hidden: {  }
+

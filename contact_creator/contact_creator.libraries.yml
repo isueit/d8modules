@@ -1,0 +1,5 @@
+contact_creator:
+  version: 1.x
+  css:
+    layout:
+      css/contact_creator.css: {}

@@ -3,11 +3,7 @@ status: true
 dependencies:
   config:
     - block_content.type.social_media_red_bar
-    - field.field.block_content.social_media_red_bar.field_facebook_red
-    - field.field.block_content.social_media_red_bar.field_instagram_red
-    - field.field.block_content.social_media_red_bar.field_linked_in_red
-    - field.field.block_content.social_media_red_bar.field_pinterest_red
-    - field.field.block_content.social_media_red_bar.field_twitter_red
+    - field.field.block_content.social_media_red_bar.field_social_media_links
   module:
     - link
 id: block_content.social_media_red_bar.default
@@ -15,49 +11,17 @@ targetEntityType: block_content
 bundle: social_media_red_bar
 mode: default
 content:
-  field_facebook_red:
-    weight: 26
+  field_social_media_links:
+    type: link_default
+    weight: 32
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
-  field_instagram_red:
-    weight: 27
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
-  field_linked_in_red:
-    weight: 28
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
-  field_pinterest_red:
-    weight: 29
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
-  field_twitter_red:
-    weight: 30
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
   info:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60

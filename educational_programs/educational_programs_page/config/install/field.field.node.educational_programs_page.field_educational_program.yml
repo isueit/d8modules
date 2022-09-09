@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_educational_program
+    - node.type.educational_programs_page
+  module:
+    - educational_programs_field
+id: node.educational_programs_page.field_educational_program
+field_name: field_educational_program
+entity_type: node
+bundle: educational_programs_page
+label: 'Educational Program'
+description: t('If an educational program is not listed, please contact extensionweb@iastate.edu to request that it be available.  This request will be reviewed by Extension IT and the responsible program area.')
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: educational_programs_field
+

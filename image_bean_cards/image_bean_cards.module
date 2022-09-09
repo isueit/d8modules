@@ -1,0 +1,27 @@
+<?php
+
+/*
+ * Implements hook_ENTITY_TYPE_update()
+ */
+function image_bean_cards_block_content_update(Drupal\Core\Entity\EntityInterface $entity){
+	// Clear cache if BlockContent is of type 'content_card'
+  if ($entity->bundle() == 'image_card') {
+	\Drupal::service('cache.render')->invalidateAll();
+  }
+}
+
+function image_bean_cards_theme_suggestions_block_alter(&$suggestions, $variables) {
+  $content = $variables['elements']['content'];
+  if (isset($content['#block_content']) && $content['#block_content'] instanceof \Drupal\block_content\BlockContentInterface) {
+    $suggestions[] = 'block__' . $content['#block_content']->bundle();
+  }
+}
+
+function image_bean_cards_preprocess_block(&$variables)
+{
+  // Include the program_offering_blocks css file for the block
+  if (substr($variables['plugin_id'], 0, 23) == 'image_bean_cards') {
+    $variables['#attached']['library'][] = 'image_bean_cards/image_bean_cards';
+    $variables['attributes']['class'][] = 'image_bean_cards';
+  }
+}

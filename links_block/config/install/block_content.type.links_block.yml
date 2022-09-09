@@ -1,0 +1,11 @@
+langcode: en
+status: true
+id: links_block
+label: 'Links Block'
+revision: 0
+description: 'Create a list of links with icons'
+dependencies:
+  enforced:
+    module:
+      - links_block
+

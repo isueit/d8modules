@@ -1,0 +1,15 @@
+<?php
+
+use Drupal\pubs_entity_type\Entity\PubsEntity;
+/**
+* Implements hook_install().
+*/
+function pubs_entity_type_install() {
+  // Set up permissions, allow content editors to work with the pubs_entity content type
+  user_role_grant_permissions('content_editor', array(
+    'edit pubs_entity entity',
+    'add pubs_entity entity',
+    'delete pubs_entity entity',
+    'view pubs_entity entity',
+  ));
+}

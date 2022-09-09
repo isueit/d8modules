@@ -1,0 +1,147 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.links_block
+    - field.field.block_content.links_block.field_lblock_icon01
+    - field.field.block_content.links_block.field_lblock_icon02
+    - field.field.block_content.links_block.field_lblock_icon03
+    - field.field.block_content.links_block.field_lblock_icon04
+    - field.field.block_content.links_block.field_lblock_icon05
+    - field.field.block_content.links_block.field_lblock_icon06
+    - field.field.block_content.links_block.field_lblock_link01
+    - field.field.block_content.links_block.field_lblock_link02
+    - field.field.block_content.links_block.field_lblock_link03
+    - field.field.block_content.links_block.field_lblock_link04
+    - field.field.block_content.links_block.field_lblock_link05
+    - field.field.block_content.links_block.field_lblock_link06
+  module:
+    - fontawesome
+    - link
+id: block_content.links_block.default
+targetEntityType: block_content
+bundle: links_block
+mode: default
+content:
+  field_lblock_icon01:
+    weight: 0
+    label: hidden
+    settings:
+      layers: false
+    third_party_settings: { }
+    type: fontawesome_icon_formatter
+    region: content
+  field_lblock_icon02:
+    weight: 2
+    label: hidden
+    settings:
+      layers: false
+    third_party_settings: { }
+    type: fontawesome_icon_formatter
+    region: content
+  field_lblock_icon03:
+    weight: 4
+    label: hidden
+    settings:
+      layers: false
+    third_party_settings: { }
+    type: fontawesome_icon_formatter
+    region: content
+  field_lblock_icon04:
+    weight: 6
+    label: hidden
+    settings:
+      layers: false
+    third_party_settings: { }
+    type: fontawesome_icon_formatter
+    region: content
+  field_lblock_icon05:
+    weight: 8
+    label: hidden
+    settings:
+      layers: false
+    third_party_settings: { }
+    type: fontawesome_icon_formatter
+    region: content
+  field_lblock_icon06:
+    weight: 10
+    label: hidden
+    settings:
+      layers: false
+    third_party_settings: { }
+    type: fontawesome_icon_formatter
+    region: content
+  field_lblock_link01:
+    weight: 1
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: { }
+    type: link
+    region: content
+  field_lblock_link02:
+    weight: 3
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: { }
+    type: link
+    region: content
+  field_lblock_link03:
+    weight: 5
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: { }
+    type: link
+    region: content
+  field_lblock_link04:
+    weight: 7
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: { }
+    type: link
+    region: content
+  field_lblock_link05:
+    weight: 9
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: { }
+    type: link
+    region: content
+  field_lblock_link06:
+    weight: 11
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: { }
+    type: link
+    region: content
+hidden: { }
+

@@ -1,7 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: content_card
-label: 'Content Card'
-revision: 0
-description: 'The replacement functionality for Bean Cards'
