@@ -1,6 +1,8 @@
 # Section Library Importer
 ## Imports section library templates
 
+## Note
+This module currently creates empty sections, blocks need to be added per page, per section ('Add Block' button). The CSS styling modifications made to a given section are kept imported.
 
 ## Adding new Templates
 Navigate to the admin/config/content/layout_library_exporter page

@@ -31,7 +31,7 @@ class EducationalProgramsFieldDefaultWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     //$all_terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('category');
-  $taxonomyStorage = \Drupal::service('entity.manager')->getStorage('taxonomy_term');
+  $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $all_terms = $taxonomyStorage->loadByProperties(['vid' => 'educational_programs', 'status' => true]);
   ksort($all_terms);
   $options = array();
@@ -65,6 +65,14 @@ class EducationalProgramsFieldDefaultWidget extends WidgetBase {
       '#options' => $options,
       '#empty_option' => '-- Select a value --',
     );
+
+    $element['auto_redirect'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Auto Redirect Public Users to Educational Program Webpage'),
+      '#default_value' => isset($items[$delta]->auto_redirect) ? $items[$delta]->auto_redirect : 0,
+      //'#default_value' => 1,
+      //'#description' => $this->t('Select this if you want public users to be redirected to the program page automatically, thus bypassing this page'),
+    ];
 
     return $element;
   }

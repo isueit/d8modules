@@ -6,8 +6,8 @@ dependencies:
       - layout_content_type
       - layout_builder_base
       - layout_builder_base_library
+      - layout_builder_restrictions
 #     - layout_builder_perms
-#     - layout_builder_restrictions
 name: 'Landing Page'
 type: layout_ct
 description: 'Landing page using layout builder.'

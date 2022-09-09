@@ -74,13 +74,12 @@ class ProgramOfferingBlocks extends BlockBase
     $string_of_search_terms = $this->build_search_string($string_of_search_terms, $querystring_filter);
     $search_terms_array = explode('|', $string_of_search_terms);
 
-    // Get the events from the JSON feed
+    // Set the timeout to 2 seconds, Get the events from the JSON feed, then reset timeout to previous value
+    $default_socket_timeout = ini_get('default_socket_timeout');
+    ini_set('default_socket_timeout', 2);
     $buffer = file_get_contents($module_config->get('url'));
-    //$buffer = ""; //Helpers::read_ungerboeck_file();
+    ini_set('default_socket_timeout', $default_socket_timeout);
     $json_events = json_decode($buffer, TRUE);
-    //$json_events = array_reverse($json_events);
-    //\Drupal::logger('program_offering_blocks')->info(sizeof($json_events));
-    //$json_events = array();
 
     $results .= PHP_EOL . '<ul class="program_offering_blocks program_offering_blocks_' . $id . '">' . PHP_EOL;
 
@@ -96,6 +95,11 @@ class ProgramOfferingBlocks extends BlockBase
         $display_event = FALSE;
       }
 
+      // Skip nonpublic events unless "show_nonpublic_events" checkbox is selected in block config
+      if ($event['Public_Event__c'] == '0' && !$config['show_nonpublic_events']) {
+        $display_event = FALSE;
+      }
+
       if (!empty($string_of_search_terms)) {
         if (!$this->search_term_in_title(strtolower($event['Name_Placeholder__c']), $search_terms_array)) {
           $display_event = FALSE;
@@ -104,44 +108,36 @@ class ProgramOfferingBlocks extends BlockBase
 
       if (!empty($config['county'])) {
         $search_county = strtolower($config['county']) . ' county';
-        if ($search_county == 'pottawattamie - west county') { $search_county = 'west pottawattamie county'; }
-        if ($search_county == 'pottawattamie - east county') { $search_county = 'east pottawattamie county'; }
-        if (!(strpos(strtolower($event['Account__c.Name']), $search_county) !== FALSE)
-            && !(strpos(strtolower($event['Additional_Counties__c']), $search_county) !== FALSE)) {
+        if ($search_county == 'pottawattamie - west county') {
+          $search_county = 'west pottawattamie county';
+        }
+        if ($search_county == 'pottawattamie - east county') {
+          $search_county = 'east pottawattamie county';
+        }
+        if (
+          !(strpos(strtolower($event['Account__c.Name']), $search_county) !== FALSE)
+          && !(strpos(strtolower($event['Additional_Counties__c']), $search_county) !== FALSE)
+        ) {
           $display_event = FALSE;
         }
       }
 
       if ($display_event) {
         if ($count < $max_events) {
-          $start_date = strtotime($event['Start_Time_and_Date__c']);
+          $start_date = strtotime($event['Next_Start_Date__c']);
           $results .= '  <li class="event">' . PHP_EOL;
           $results .= '    <div class="event_date"><span class="event_day">' . date('d', $start_date) . '</span>
-<span class="event_month">' . date('M', $start_date) . '</span>
-<span class="event_time">'. date('g:i', $start_date) . '</span><span class="event_ampm">' . date('A', $start_date) . '</span></div>';
+            <span class="event_month">' . date('M', $start_date) . '</span>
+            <span class="event_time">' . date('g:i', $start_date) . '</span><span class="event_ampm">' . date('A', $start_date) . '</span></div>';
 
           $results .= $this->format_title($event, $config) . PHP_EOL;
           $results .= '    <div class="event_venue">';
           $results .= $event['Event_Location__c'] == 'Online' ? 'Online' : $event['Event_Location__c'] . ', ' . $event['Program_State__c'];
           $results .= '</div>' . PHP_EOL;
 
-          $startDate = date($config['format_with_time'], strtotime($event['Start_Time_and_Date__c']));
+          $startDate = date($config['format_with_time'], strtotime($event['Next_Start_Date__c']));
           $results .= '    <div class="event_startdate">' . $startDate . '</div>' . PHP_EOL;
 
-          //$results .= '    ' . $title . PHP_EOL;
-          //$results .= '    <div class="event_venue">' . $event['ANCHORVENUE'] . '</div>' . PHP_EOL;
-
-          //$results .= $event['Id'] . '<br/>' . PHP_EOL;
-          //$results .= $event['Event_Location__c'] . '<br/>' . PHP_EOL;
-          //$results .= $event['Id'] . '<br/>' . PHP_EOL;
-          //$results .= $event['Id'] . '<br/>' . PHP_EOL;
-          //$results .= $event['Id'] . '<br/>' . PHP_EOL;
-          //$results .= $event['Id'] . '<br/>' . PHP_EOL;
-          //$results .= 'Registraion Link: ' . $event['Registration_Link__c'] . '<br/>' . PHP_EOL;
-          //$results .= 'Planned Program Website: ' . $event['Planned_Program_Website__c'] . '<br/>' . PHP_EOL;
-          //$results .= 'Program Offering Website: ' . $event['Program_Offering_Website__c'] . '<br/>' . PHP_EOL;
-          //$results .= $event['Id'] . '<br/>' . PHP_EOL;
-//          $results .= PHP_EOL . $event['Ungerboeck_Event_ID__c'] . PHP_EOL;
           $results .= '  </li>' . PHP_EOL;
         }
         $count++;
@@ -237,6 +233,13 @@ class ProgramOfferingBlocks extends BlockBase
       '#default_value' => $config['announcement_text'],
     );
 
+    $form['show_nonpublic_events'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Include Non-public Events'),
+      '#description' => t('When checked, it will show all matching events, including events marked as not for the public'),
+      '#default_value' => $config['show_nonpublic_events'],
+    );
+
     $form['only_planned_programs'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show Only Planned Programs'),
@@ -253,11 +256,10 @@ class ProgramOfferingBlocks extends BlockBase
         'Community and Economic Development' => $this->t('Community and Economic Development'),
         'County Services' => $this->t('County Services'),
         'Human Sciences' => $this->t('Human Sciences'),
+        'Professional Development' => $this->t('Professional Development'),
       ],
       '#title' => t('Program Area'),
       '#description' => t('If something is selected, then only show events for that program area'),
-      //'#size' => 75,
-      //'#maxlength' => 300,
       '#default_value' => $config['program_area'],
     );
 
@@ -269,15 +271,13 @@ class ProgramOfferingBlocks extends BlockBase
         $counties[$taxonomy_term->label()] = $taxonomy_term->label();
       }
 
-    $form['county'] = array(
-      '#type' => 'select',
-      '#options' => $counties,
-      '#title' => t('Limit By county'),
-      '#description' => t('If something is selected, then only show events for that county'),
-      //'#size' => 75,
-      //'#maxlength' => 300,
-      '#default_value' => $config['county'],
-    );
+      $form['county'] = array(
+        '#type' => 'select',
+        '#options' => $counties,
+        '#title' => t('Limit By county'),
+        '#description' => t('If something is selected, then only show events for that county'),
+        '#default_value' => $config['county'],
+      );
     }
 
     $form['placement'] = array(
@@ -307,6 +307,7 @@ class ProgramOfferingBlocks extends BlockBase
     $this->configuration['show_more_page'] = $values['show_more_page'];
     $this->configuration['show_more_text'] = $values['show_more_text'];
     $this->configuration['announcement_text'] = $values['announcement_text'];
+    $this->configuration['show_nonpublic_events'] = $values['show_nonpublic_events'];
     $this->configuration['only_planned_programs'] = $values['only_planned_programs'];
     $this->configuration['program_area'] = $values['program_area'];
     $this->configuration['county'] = array_key_exists('county', $values) ? $values['county'] : '';
@@ -326,7 +327,8 @@ class ProgramOfferingBlocks extends BlockBase
       'title_search' => '',
       'show_more_page' => '',
       'show_more_text' => 'More',
-      'announement_text' => '',
+      'announcement_text' => '',
+      'show_nonpublic_events' => FALSE,
       'only_planned_programs' => FALSE,
       'program_area' => '',
       'county' => '',
@@ -371,12 +373,12 @@ class ProgramOfferingBlocks extends BlockBase
     }
 
     if ($config['event_details_page']) {
-      $title .= '<a href="' . base_path() . 'event_details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) .'">' . $title_text . '</a>';
+      $title .= '<a href="' . base_path() . 'event_details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) . '">' . $title_text . '</a>';
     } else {
       $now = strtotime('today midnight');
       $regstartdate = !empty($event['Registration_Opens__c']) ? strtotime($event['Registration_Opens__c']) : $now;
       $regenddate = !empty($event['Registration_Deadline__c']) ? strtotime($event['Registration_Deadline__c']) : $now;
-      $regenddate = date_add(new DateTime('@'.$regenddate), new DateInterval('P1D'))->getTimestamp();
+      $regenddate = date_add(new DateTime('@' . $regenddate), new DateInterval('P1D'))->getTimestamp();
 
       if (!empty($event['Registration_Link__c']) && ($now >= $regstartdate && $now <= $regenddate)) {
         $title .= '<a href="' . $event['Registration_Link__c'] . '">' . $title_text . '</a>';

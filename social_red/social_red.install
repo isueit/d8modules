@@ -22,7 +22,7 @@ use function Drupal\Core\Session\user_role_permissions;
     'plugin' => 'block_content:' . $block_content->uuid(),
     'region' => 'header_second',
     'provider' => 'block_content',
-    'weight' => -100,
+    'weight' => 1,
     'theme' => \Drupal::config('system.theme')->get('default'),
     'visibility' => [],
     'settings' => [

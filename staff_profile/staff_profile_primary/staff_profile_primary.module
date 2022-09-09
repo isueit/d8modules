@@ -11,6 +11,7 @@ use \Drupal\encrypt\Entity\EncryptionProfile;
 function staff_profile_primary_rebuild() {
   \Drupal::logger('staff_profile_primary')->info('Starting staff profile refresh from hook_rebuild page');
   staff_profile_primary_profile_from_database();
+  staff_profile_primary_web_editor_training();
 
   /*
   // Code to set SmugMug ID's from a file that contains: netID:SmugMugId
@@ -37,7 +38,8 @@ function staff_profile_primary_rebuild() {
  * Implements hook_cron().
  */
 function staff_profile_primary_cron() {
-  staff_profile_primary_profile_from_database();
+  //staff_profile_primary_profile_from_database();
+  //staff_profile_primary_web_editor_training();
 }
 
 function staff_profile_primary_profile_from_database () {
@@ -50,6 +52,14 @@ function staff_profile_primary_profile_from_database () {
   if (empty($primary_config->get('db_password'))) {
     \Drupal::logger('staff_profile_primary')->warning('Doesn\'t look like Staff Profile primary is configured properly in the settings form.');
     return;
+  }
+
+  // Build array of address fixes
+  $address_fixes = array();
+  $temp_fixes = explode("\r\n", $primary_config->get('address_fixes'));
+  foreach($temp_fixes as $temp_fix) {
+    list($k, $v) = explode('::', $temp_fix);
+    $address_fixes[strtolower($k)] = $v;
   }
 
   // Get the database login informatio out of config
@@ -134,8 +144,8 @@ function staff_profile_primary_profile_from_database () {
     $mynode->field_staff_profile_last_name->value = $profile->LastName;
     $mynode->field_staff_profile_addr = array(
       'country_code' => 'US',
-      'address_line1' => $profile->Address1,
-      'address_line2' => $profile->Address2,
+      'address_line1' => array_key_exists(strtolower($profile->Address1), $address_fixes)? $address_fixes[strtolower($profile->Address1)] : $profile->Address1,
+      'address_line2' => array_key_exists(strtolower($profile->Address2), $address_fixes)? $address_fixes[strtolower($profile->Address2)] : $profile->Address2,
       'locality' => $profile->City,
       'administrative_area' => $profile->State,
       'postal_code' => $profile->Zip,
@@ -153,7 +163,7 @@ function staff_profile_primary_profile_from_database () {
     $mynode->field_staff_profile_phone->value = $profile->Phone;
     $mynode->field_staff_profile_fax->value = $profile->Fax;
 
-    $taxonomyStorage = \Drupal::service('entity.manager')->getStorage('taxonomy_term');
+    $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     $taxonomy = array();
     if (!empty($profile->CountyName)) {
       $taxonomy = $taxonomyStorage->loadByProperties([
@@ -202,7 +212,7 @@ function staff_profile_primary_profile_from_database () {
 
   foreach ($nodes as $node) {
     if ($node->get('field_staff_profile_stale')->value) {
-      $mynode->field_staff_profile_stale->value = FALSE;
+      $node->field_staff_profile_stale->value = FALSE;
       $node->setUnpublished();
       $node->save();
     }
@@ -285,4 +295,64 @@ function staff_profile_primary_uninstall() {
   \Drupal::configFactory()->getEditable('views.view.county_feeds_json')->delete();
   \Drupal::configFactory()->getEditable('views.view.staff_directory')->delete();
   \Drupal::configFactory()->getEditable('views.view.web_author_feeds')->delete();
+}
+
+
+// This function helps take Web Editor Training functions from Moodle, and puts it into the staff directory
+function staff_profile_primary_web_editor_training() {
+  $buffer = file_get_contents('https://datastore.exnet.iastate.edu/StaffDir/WebEditorTraining.json');
+  $json_trainings = json_decode($buffer, TRUE);
+
+  foreach ($json_trainings as $training) {
+    //Skip the headers, also don't need Advanced (1048) or WordPress (3700)
+    if ($training['Email'] == 'Email') continue;
+    if ($training['coursemoduleid'] == '1048' || $training['coursemoduleid'] == '3700') continue;
+
+    // Get taxonomy term id, and skip record if it's not found
+    $course = 0;
+    switch ($training['coursemoduleid']) {
+      case '1041':  // Drupal 7
+        $course = 113;
+        break;
+      case '1044':  // Drupal 6
+        $course = 112;
+        break;
+      default:
+        \Drupal::logger('blah')->info('Course is unknown, not sure why');
+        $course = 0;
+    }
+    if ($course == 0) continue;
+
+    //Get the node for this user, if one exists
+    $usernodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['field_staff_profile_email' => $training['Email']]);
+    $usernode = reset($usernodes);
+    if ($usernode) {
+      // Get the existing qualifications
+      $existing_terms = array();
+      $qualifications = $usernode->get('field_staff_profile_quals');
+      foreach ($qualifications as $qualification) {
+        $existing_terms[] = intval($qualification->get('target_id')->getValue());
+      }
+
+      $changed = false;
+      // Check if we should add this qualification to the staff profile
+      if (!in_array($course, $existing_terms)) {
+        $usernode->field_staff_profile_quals[] = ['target_id' => $course];
+        \Drupal::logger('staff_profile_primary')->info('Adding ' . $course . ' to ' . $usernode->get('field_staff_profile_netid')->value);
+        $changed = true;
+      }
+
+      // See if we should add Web Editor qualification to the staff profile
+      if (!in_array(111, $existing_terms)) {
+        $usernode->field_staff_profile_quals[] = ['target_id' => 111];
+        \Drupal::logger('staff_profile_primary')->info('Adding "Web Editor" to ' . $usernode->get('field_staff_profile_netid')->value);
+        $changed = true;
+      }
+
+      // Save it if changed
+      if ($changed) {
+        $usernode->save();
+      }
+    }
+  }
 }

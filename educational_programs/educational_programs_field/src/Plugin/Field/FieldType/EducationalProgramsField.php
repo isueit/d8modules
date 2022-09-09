@@ -36,6 +36,12 @@ class EducationalProgramsField extends FieldItemBase {
         'length' => '255',
         'not null' => FALSE,
       ),
+      'auto_redirect' => array(
+        'description' => 'Whether to redirect automatically to program page',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => true,
+      ),
     );
 
     $schema = array(
@@ -50,6 +56,8 @@ class EducationalProgramsField extends FieldItemBase {
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties['term_id'] = DataDefinition::create('string')
+      ->setLabel(t('Snippet description'));
+    $properties['auto_redirect'] = DataDefinition::create('boolean')
       ->setLabel(t('Snippet description'));
 
     return $properties;

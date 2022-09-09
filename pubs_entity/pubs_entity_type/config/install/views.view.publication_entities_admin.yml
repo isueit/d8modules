@@ -169,6 +169,7 @@ display:
           group_type: group
           admin_label: ''
           label: 'Product ID'
+          description: 'To find the Product ID of a resource, go to the Extension Store website, find the product and copy the last 5 digits of the URL.'
           exclude: false
           alter:
             alter_text: false
@@ -1059,7 +1060,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<b> <a href="https://store.extension.iastate.edu/product/{{ field_product_id }}" class="publication-title">{{ name }} </a></b> Publication Date: {{ field_publication_date }} '
+            text: '<b> <a href="https://store.extension.iastate.edu/product/{{ field_product_id }}" class="publication-title">{{ name }} </a></b>'
             make_link: false
             path: ''
             absolute: false

@@ -8,3 +8,4 @@ dependencies:
   - drupal:views
   - news_embed_field:news_embed_field
   - pathauto:pathauto
+  - blazy:blazy

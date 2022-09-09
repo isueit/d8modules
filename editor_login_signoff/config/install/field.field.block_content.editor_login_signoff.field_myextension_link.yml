@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.editor_login_signoff
+    - field.storage.block_content.field_myextension_link
+  module:
+    - link
+  enforced:
+    module:
+      - editor_login_signoff
+id: block_content.editor_login_signoff.field_myextension_link
+field_name: field_myextension_link
+entity_type: block_content
+bundle: editor_login_signoff
+label: 'MyExtension Link'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    attributes: {  }
+    uri: 'https://my.extension.iastate.edu/'
+    title: MyExtension
+    options: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 2
+field_type: link
+

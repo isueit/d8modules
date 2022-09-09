@@ -96,6 +96,7 @@ third_party_settings:
       blacklisted_blocks:
         'Inline blocks':
           - 'inline_block:contact_creator'
+          - 'inline_block:editor_login_signoff'
           - 'inline_block:social_media_red_bar'
       restricted_categories:
         - 'Chaos Tools'

@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - admin
+    parent: 'admin:admin_toolbar_tools.extra_links:node.add'
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: false
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: false
+name: 'County Job Template'
+type: county_job_template
+description: 'Provides a templates for county job openings.'
+help: ''
+new_revision: false
+preview_mode: 1
+display_submitted: false

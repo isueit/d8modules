@@ -1,0 +1,5 @@
+display_county_jobs:
+  version: 1.x
+  css:
+    layout:
+      css/display_county_jobs.css: {}

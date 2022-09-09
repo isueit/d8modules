@@ -1,0 +1,5 @@
+content_bean_cards:
+  version: 1.x
+  css:
+    layout:
+      css/content_bean_cards.css: {}

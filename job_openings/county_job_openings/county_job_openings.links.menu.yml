@@ -1,0 +1,6 @@
+county_job_openings.create_opening:
+  title: 'Create County Job from Template'
+  description: 'Create County Job Opening from template'
+  parent: admin_toolbar_tools.extra_links:node.add
+  route_name: county_job_openings.create_county_job_opening_form
+  weight: -10

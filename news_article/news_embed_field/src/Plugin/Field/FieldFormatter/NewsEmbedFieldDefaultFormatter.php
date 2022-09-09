@@ -138,9 +138,11 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     }
 
     $results = str_replace('src="//', 'src="deleteme//', $results);
+    $results = str_replace('href="//', 'href="deleteme//', $results);
     $results = str_replace('src="/', 'src="' . $parsedURL['scheme'] . '://' . $parsedURL['host'] . '/', $results);
     $results = str_replace('href="/', 'href="' . $parsedURL['scheme'] . '://' . $parsedURL['host'] . '/', $results);
     $results = str_replace('src="deleteme//', 'src="//', $results);
+    $results = str_replace('href="deleteme//', 'href="//', $results);
 
     return $results;
   }

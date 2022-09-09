@@ -22,19 +22,19 @@ function layout_content_type_install() {
   Drupal::state()->set('node.type.locked', $locked);
 
   /*
-  user_role_change_permissions('content_editor', array(
-    'access layout builder page' => TRUE,
-	'config layout builder blocks' => TRUE,
-	'create layout builder blocks' => TRUE,
-	'create layout_ct content' => TRUE,
-	'delete any layout_ct content' => TRUE,
-	'delete own layout_ct content' => TRUE,
-	'edit any layout_ct content' => TRUE,
-	'edit own layout_ct content' => TRUE,
-	'remove layout builder blocks' => TRUE,
-	'reorder layout builder blocks'=> TRUE,
-	'view layout_ct revisions' => TRUE)
-  );
+  user_role_grant_permissions('content_editor', array(
+    'access layout builder page',
+	'config layout builder blocks',
+	'create layout builder blocks',
+	'create layout_ct content',
+	'delete any layout_ct content',
+	'edit any layout_ct content',
+	'remove layout builder blocks',
+	'reorder layout builder blocks',
+	'view layout_ct revisions',
+	'configure editable layout_ct node layout overrides',
+	'override layout_ct published option',
+  ));
   */
 }
 

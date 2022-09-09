@@ -1,0 +1,65 @@
+{#
+/**
+ * @file
+ * One Column Layout Builder Layout
+ * At this time, this layout is optimized for Layout Builder
+ *
+ * Available variables:
+ * - col_1
+ * - col_2
+ * - col_3
+ * - col_4
+ *
+ */
+#}
+
+{%
+  set classes = [
+    not node.isPublished() and node ? 'node--unpublished'
+  ]
+%}
+
+{% if col_1|render or col_2|render or col_3|render or col_4|render%}
+
+  {% set row_classes = [ 'col-md col-sm-6' ] %}
+
+  <{{ outer_wrapper }}{{ attributes.addClass(classes) }}>
+    <div class="container isu-landingpage_row isu-columns_four">
+      <div class="row">
+
+        {% if content.col_1|render %}
+          <{{ col_1_wrapper }}{{ col_1_attributes.addClass(row_classes) }}>
+            <div{{ region_attributes.col_1 }}>
+              {{ content.col_1 }}
+            </div>
+          </{{ col_1_wrapper }}>
+        {% endif %}
+
+        {% if content.col_2|render %}
+          <{{ col_2_wrapper }}{{ col_2_attributes.addClass(row_classes) }}>
+            <div{{ region_attributes.col_2 }}>
+              {{ content.col_2 }}
+            </div>
+          </{{ col_2_wrapper }}>
+        {% endif %}
+
+        {% if content.col_3|render %}
+          <{{ col_3_wrapper }}{{ col_3_attributes.addClass(row_classes) }}>
+            <div{{ region_attributes.col_3 }}>
+              {{ content.col_3 }}
+            </div>
+          </{{ col_3_wrapper }}>
+        {% endif %}
+
+        {% if content.col_4|render %}
+          <{{ col_4_wrapper }}{{ col_4_attributes.addClass(row_classes) }}>
+            <div{{ region_attributes.col_4 }}>
+              {{ content.col_4 }}
+            </div>
+          </{{ col_4_wrapper }}>
+        {% endif %}
+      </div>
+    </div>
+  </{{ outer_wrapper }}>
+
+{% endif %}

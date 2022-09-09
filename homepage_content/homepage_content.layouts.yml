@@ -1,0 +1,76 @@
+isu_columns_one:
+  label: One Column
+  category: IASTATE
+  class: '\Drupal\ds\Plugin\DsLayout'
+  type: partial
+  template: templates/layouts/isu-columns-one/isu_columns_one
+  icon: templates/layouts/isu-columns-one/isu-columns-one.png
+  regions:
+    col_1:
+      label: Column One
+isu_columns_two:
+  label: Two Columns
+  category: IASTATE
+  class: '\Drupal\ds\Plugin\DsLayout'
+  type: partial
+  template: templates/layouts/isu-columns-two/isu_columns_two
+  icon: templates/layouts/isu-columns-two/isu-columns-two.png
+  regions:
+    col_1:
+      label: Column One
+    col_2:
+      label: Column Two
+isu_columns_three:
+  label: Three Columns
+  category: IASTATE
+  class: '\Drupal\ds\Plugin\DsLayout'
+  type: partial
+  template: templates/layouts/isu-columns-three/isu_columns_three
+  icon: templates/layouts/isu-columns-three/isu-columns-three.png
+  regions:
+    col_1:
+      label: Column One
+    col_2:
+      label: Column Two
+    col_3:
+      label: Column Three
+isu_columns_four:
+  label: Four Columns
+  category: IASTATE
+  class: '\Drupal\ds\Plugin\DsLayout'
+  type: partial
+  template: templates/layouts/isu-columns-four/isu_columns_four
+  icon: templates/layouts/isu-columns-four/isu-columns-four.png
+  regions:
+    col_1:
+      label: Column One
+    col_2:
+      label: Column Two
+    col_3:
+      label: Column Three
+    col_4:
+      label: Column Four
+isu_columns_two_third_one_third:
+  label: Two Third One Third Columns
+  category: IASTATE
+  class: '\Drupal\ds\Plugin\DsLayout'
+  type: partial
+  template: templates/layouts/isu-columns-two-third-one-third/isu_columns_two-third_one_third
+  icon: templates/layouts/isu-columns-two-third-one-third/isu-columns-two-third-one-third.png
+  regions:
+    col_1:
+      label: Column One
+    col_2:
+      label: Column Two
+isu_columns_one_third_two_third:
+  label: One Third Two Third Columns
+  category: IASTATE
+  class: '\Drupal\ds\Plugin\DsLayout'
+  type: partial
+  template: templates/layouts/isu-columns-one-third-two-third/isu_columns_one_third_two_third
+  icon: templates/layouts/isu-columns-one-third-two-third/isu-columns-one-third-two-third.png
+  regions:
+    col_1:
+      label: Column One
+    col_2:
+      label: Column Two

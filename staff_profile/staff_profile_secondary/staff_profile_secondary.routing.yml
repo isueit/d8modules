@@ -4,7 +4,6 @@ staff_profile_secondary.secondary_settings_form:
     _form: '\Drupal\staff_profile_secondary\Form\SettingsForm'
     _title: 'Staff Profile secondary Settings'
   requirements:
-    _permission: 'access administration pages'
     _permission: 'administer staff profile sync'
   options:
     _admin-route: TRUE

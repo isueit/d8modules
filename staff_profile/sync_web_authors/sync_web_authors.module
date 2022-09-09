@@ -27,37 +27,63 @@ function sync_web_authors_users() {
     \Drupal::logger('sync_web_authors')->warning('Need to set a URL for the JSON feed to Sync Users');
     return;
   }
-  $nids = \Drupal::entityQuery('user')->execute();
-  $users =  User::loadMultiple($nids);
-  unset($users[1]); //Remove admin
 
+  // Get profiles from feed
   $feedurl = $config->get('sync_url');
-
   $fromFeed = file_get_contents($feedurl);
   $profiles = json_decode($fromFeed, TRUE);
-  $usersInFeed = array_column($profiles, 'field_staff_profile_netid');
 
-  foreach ($users as $user) {
-    $feed_user = array_search($user->getUsername(), $usersInFeed);
-    if ($feed_user === FALSE) {
-      $user->removeRole('content_editor');
-      $user->block()->save();
-    } else {
-      $user->addRole('content_editor');
-      $user->activate()->save();
-      unset($profiles[$feed_user]);
+  $handled = [];
+  $now = time();
+
+  foreach ($profiles as $profile) {
+    $profilename = $profile['field_staff_profile_netid'];
+
+    // Feed could have duplicates, only need to handle each feed profile once
+    if (!in_array($profilename, $handled)) {
+      $handled[] = $profilename;
+
+      // Check if user exists
+      //     if (in_array($profilename, $users)) {
+      if ($user = user_load_by_name($profilename)) {
+        // Update existing user
+        $user->changed->value = $now;
+        $user->addRole('content_editor');
+        $user->field_from_feed = 1;
+        $user->activate();
+        $user->save();
+      } else {
+        // Create new user
+        $user = User::create();
+        $user->setUsername($profilename);
+        $user->setPassword(pass_string(40));
+        $user->setEmail($profilename.'@iastate.edu');
+
+        $user->changed->value = $now;
+        $user->addRole('content_editor');
+        $user->field_from_feed = 1;
+        $user->activate();
+        $user->save();
+      }
     }
   }
-  foreach ($profiles as $feed_profile) {
-    //Need to add email to feed
-    $new_user = User::create();
-    $new_user->setUsername($feed_profile['field_staff_profile_netid']);
-    $new_user->setPassword(pass_string(40));
-    $new_user->setEmail($new_user->getUsername().'@iastate.edu');
-    $new_user->addRole('content_editor');
-    $new_user = $new_user->activate()->save();
-    \Drupal::logger('sync_web_authors')->notice(serialize($new_user));
+
+  // Get Stale Users
+  //$nids = \Drupal::entityQuery('user')->execute();
+  $nids = \Drupal::entityQuery('user')->condition('field_from_feed', 1)->condition('changed', $now, '<')->condition('status', 1)->execute();
+  $staleusers =  User::loadMultiple($nids);
+  foreach ($staleusers as $user) {
+    if ($user->id() == 1) continue;
+
+    // Block the user
+    $user->changed->value = $now;
+    $user->removeRole('content_editor');
+    $user->block();
+    $user->save();
+
+    Drupal::logger('sync_web_authors')->info('Blocked user: ' . $user->getAccountName());
   }
+
 }
 
 function pass_string($strength = 40) {

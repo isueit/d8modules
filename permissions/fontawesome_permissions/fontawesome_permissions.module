@@ -39,3 +39,35 @@ function fontawesome_permissions_form_fontawesome_icon_dialog_alter(&$form, \Dru
   $form['settings']['power_transforms']['#access'] = FALSE;
 
 }
+
+function fontawesome_permissions_field_widget_fontawesome_icon_widget_form_alter(&$element, &$form_state, $context) {
+  $element['settings']['style']['#access'] = FALSE;
+  $element['settings']['fixed-width']['#access'] = FALSE;
+  $element['settings']['border']['#access'] = FALSE;
+  $element['settings']['invert']['#access'] = FALSE;
+  $element['settings']['animation']['#access'] = FALSE;
+
+  // Remove and Rename Size options
+  unset($element['settings']['size']['#options']['']);   // Remove 'Default' option
+  unset($element['settings']['size']['#options']['fa-xs']);
+  unset($element['settings']['size']['#options']['fa-sm']);
+  unset($element['settings']['size']['#options']['fa-5x']);
+  unset($element['settings']['size']['#options']['fa-6x']);
+  unset($element['settings']['size']['#options']['fa-7x']);
+  unset($element['settings']['size']['#options']['fa-8x']);
+  unset($element['settings']['size']['#options']['fa-9x']);
+  unset($element['settings']['size']['#options']['fa-10x']);
+  $element['settings']['size']['#options']['fa-lg'] = 'Small';   // 'Large' becomes new Small
+  $element['settings']['size']['#options']['fa-2x'] = 'Medium';    // '2x' becomes new Medium
+  $element['settings']['size']['#options']['fa-3x'] = 'Large';   // '3x' becomes new Large
+  $element['settings']['size']['#options']['fa-4x'] = 'Extra Large';   // '4x' becomes new Extra Large
+
+  $element['settings']['additional_classes']['#access'] = FALSE;
+  // Remove "Power Transforms" options
+  $element['settings']['power_transforms']['#access'] = FALSE;
+  // Remove "Duotone" options
+  $element['settings']['duotone']['#access'] = FALSE;
+  // Remove "Icon Mask" options
+  $element['settings']['masking']['#access'] = FALSE;
+}
+

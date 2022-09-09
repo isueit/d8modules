@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_from_feed
+  module:
+    - user
+id: user.user.field_from_feed
+field_name: field_from_feed
+entity_type: user
+bundle: user
+label: 'From feed'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

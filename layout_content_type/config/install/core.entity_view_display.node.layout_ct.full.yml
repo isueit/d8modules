@@ -8,56 +8,57 @@ dependencies:
     - node.type.layout_ct
   module:
     - layout_builder
-    - layout_discovery
-    - layout_builder_base
-    - layout_builder_base_library
-#   - layout_builder_restrictions
+    - layout_builder_restrictions
     - user
 third_party_settings:
   layout_builder:
     allow_custom: true
     enabled: true
-#     sections:
-#       -
-#         layout_id: isu_columns_three
-#         layout_settings:
-#           label: ''
-#         components: {  }
-#         third_party_settings: {  }
-#           layout_builder_restrictions:
-#             allowed_block_categories:
-#               - 'Chaos Tools'
-#               - 'Content fields'
-#               - 'Custom block types'
-#               - 'Custom blocks'
-#               - Forms
-#               - Help
-#               - 'Inline blocks'
-#               - 'Lists (Views)'
-#               - Menus
-#               - Search
-#               - System
-#               - User
-#               - core
-#             entity_view_mode_restriction:
-#               whitelisted_blocks:
-#                 'Chaos Tools': {  }
-#                 'Content fields': {  }
-#                 'Custom blocks': {  }
-#                 Forms: {  }
-#                 Help: {  }
-#                 Search: {  }
-#                 System: {  }
-#                 User: {  }
-#                 core: {  }
-#               blacklisted_blocks: {  }
-#               allowed_layouts:
-#                 - isu_columns_one
-#                 - isu_columns_two
-#                 - isu_columns_three
-#                 - isu_columns_four
-#                 - isu_columns_two_third_one_third
-#                 - isu_columns_one_third_two_third
+  layout_builder_restrictions:
+    allowed_block_categories:
+      - 'Chaos Tools'
+      - 'Content fields'
+      - 'Council Members'
+      - 'Custom block types'
+      - 'Custom blocks'
+      - Devel
+      - Forms
+      - Help
+      - 'Inline blocks'
+      - 'Lists (Views)'
+      - Menus
+      - 'Program Offering Blocks'
+      - Search
+      - 'Staff Profile Map'
+      - System
+      - User
+      - core
+    entity_view_mode_restriction:
+      whitelisted_blocks: {  }
+      blacklisted_blocks:
+        'Inline blocks':
+          - 'inline_block:contact_creator'
+          - 'inline_block:links_block'
+          - 'inline_block:social_media_red_bar'
+          - 'inline_block:editor_login_signoff'
+      restricted_categories:
+        - 'Chaos Tools'
+        - 'Content fields'
+        - 'Council Members'
+        - 'Custom block types'
+        - 'Custom blocks'
+        - Devel
+        - Forms
+        - Help
+        - 'Lists (Views)'
+        - Menus
+        - 'Program Offering Blocks'
+        - Search
+        - 'Staff Profile Map'
+        - System
+        - User
+        - core
+      allowed_layouts: {  }
 id: node.layout_ct.full
 targetEntityType: node
 bundle: layout_ct
@@ -71,4 +72,87 @@ content:
 hidden:
   body: true
   layout_builder__layout: true
+# langcode: en
+# status: true
+# dependencies:
+#   config:
+#     - core.entity_view_mode.node.full
+#     - field.field.node.layout_ct.body
+#     - field.field.node.layout_ct.layout_builder__layout
+#     - node.type.layout_ct
+#   module:
+#     - layout_builder
+#     - layout_discovery
+#     - layout_builder_base
+#     - layout_builder_base_library
+#     - layout_builder_restrictions
+#     - user
+# third_party_settings:
+#   layout_builder:
+#     allow_custom: true
+#     enabled: true
+#       sections:
+#         -
+#           layout_id: ''
+#           layout_settings:
+#             label: ''
+#           components: {  }
+#           third_party_settings: {  }
+#   layout_builder_restrictions:
+#     allowed_block_categories:
+#       - 'Chaos Tools'
+#       - 'Content fields'
+#       - 'Council Members'
+#       - 'Custom block types'
+#       - 'Custom blocks'
+#       - Devel
+#       - Forms
+#       - Help
+#       - 'Inline blocks'
+#       - 'Lists (Views)'
+#       - Menus
+#       - 'Program Offering Blocks'
+#       - Search
+#       - 'Staff Profile Map'
+#       - System
+#       - User
+#       - core
+#     entity_view_mode_restriction:
+#       whitelisted_blocks: {  }
+#       blacklisted_blocks:
+#         'Inline blocks':
+#           - 'inline_block:contact_creator'
+#           - 'inline_block:links_block'
+#           - 'inline_block:social_media_red_bar'
+#       restricted_categories:
+#         - 'Chaos Tools'
+#         - 'Content fields'
+#         - 'Council Members'
+#         - 'Custom block types'
+#         - 'Custom blocks'
+#         - Devel
+#         - Forms
+#         - Help
+#         - 'Lists (Views)'
+#         - Menus
+#         - 'Program Offering Blocks'
+#         - Search
+#         - 'Staff Profile Map'
+#         - System
+#         - User
+#         - core
+#       allowed_layouts: {  }
+# id: node.layout_ct.full
+# targetEntityType: node
+# bundle: layout_ct
+# mode: full
+# content:
+#   links:
+#     weight: 100
+#     settings: {  }
+#     third_party_settings: {  }
+#     region: content
+# hidden:
+#   body: true
+#   layout_builder__layout: true
 

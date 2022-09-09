@@ -276,7 +276,7 @@ display:
       path: admin/config/people/staff-profile-weights
       menu:
         type: normal
-        title: 'Staff Profile Secondary Weights'
+        title: 'Change Staff Sort Order'
         description: ''
         expanded: false
         parent: system.admin_content

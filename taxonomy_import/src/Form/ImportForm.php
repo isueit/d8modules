@@ -78,8 +78,6 @@ class ImportForm extends FormBase {
           'exists',
         ),
         'source' => array('taxonomy_name'),
-        'replace_pattern' => '[^a-z0-9-]+',
-        'replace' => '-',
       ),
     );
     $form['description'] = array(

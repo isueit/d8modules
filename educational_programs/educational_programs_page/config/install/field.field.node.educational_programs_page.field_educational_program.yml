@@ -11,7 +11,7 @@ field_name: field_educational_program
 entity_type: node
 bundle: educational_programs_page
 label: 'Educational Program'
-description: ''
+description: t('If an educational program is not listed, please contact extensionweb@iastate.edu to request that it be available.  This request will be reviewed by Extension IT and the responsible program area.')
 required: true
 translatable: false
 default_value: {  }

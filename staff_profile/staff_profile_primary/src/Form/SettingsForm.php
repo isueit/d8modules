@@ -39,6 +39,14 @@ class SettingsForm extends ConfigFormBase {
         '#default_value' => !empty($config->get('minimum_staff')) ? $config->get('minimum_staff') : 800,
         '#required' => TRUE,
       );
+      $form['address_fixes'] = array(
+        '#type' => 'textarea',
+        '#title' => $this->t('Address Fixes'),
+        '#description' => $this->t('Some address are incomplete when they come in. This field allows text substitutions. Enter one substitution per line, with 2 colons between them. <br/>Old Address::New Address'),
+        '#rows' => 10,
+        '#cols' => 14,
+        '#default_value' => !empty($config->get('address_fixes')) ? $config->get('address_fixes') : '',
+      );
       $form['db_username'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Database Username'),
@@ -138,6 +146,7 @@ class SettingsForm extends ConfigFormBase {
       //If checked, run sync
       $this->config('staff_profile_primary.settings')
         ->set('minimum_staff', $form_state->getValue('minimum_staff'))
+        ->set('address_fixes', $form_state->getValue('address_fixes'))
         ->set('db_username', $form_state->getValue('db_username'))
         ->set('db_password', $form_state->getValue('db_password'))
         ->set('db_address', $form_state->getValue('db_server_url'))

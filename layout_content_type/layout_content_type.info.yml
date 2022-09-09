@@ -11,6 +11,6 @@ dependencies:
   - drupal:layout_builder
   - drupal:layout_builder_base
   - drupal:layout_builder_base_library
-# - layout_builder_restrictions
+  - layout_builder_restrictions
 # - layout_builder_perms
 

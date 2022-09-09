@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_open_until_filled
+    - node.type.county_job_opening
+id: node.county_job_opening.field_open_until_filled
+field_name: field_open_until_filled
+entity_type: node
+bundle: county_job_opening
+label: 'Open Until Filled'
+description: 'Use if the position does not have an application deadline, but will remain open until filled'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'This position will remain open until filled'
+  off_label: 'Off'
+field_type: boolean

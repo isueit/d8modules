@@ -16,7 +16,7 @@ entity.pubs_entity.canonical:
     _entity_view: 'pubs_entity'
     _title: 'Resource'
   requirements:
-    _entity_access: 'pubs_entity.view'
+    _permission: 'view pubs_entity entity'
 #Form to edit individual pubs entity
 entity.pubs_entity.edit_form:
   path: '/pubs_entity/{pubs_entity}/edit'
@@ -24,7 +24,7 @@ entity.pubs_entity.edit_form:
     _entity_form: 'pubs_entity.edit'
     _title: 'Edit Resource from Store'
   requirements:
-    _entity_access: 'pubs_entity.edit'
+    _permission: 'edit pubs_entity entity'
   options:
     _admin_route: TRUE
 #Form to add pubs entity
@@ -34,7 +34,7 @@ entity.pubs_entity.add_form:
     _entity_form: 'pubs_entity.add'
     _title: 'Add Resource from Store'
   requirements:
-    _entity_create_access: 'pubs_entity'
+    _permission: 'add pubs_entity entity'
   options:
     _admin_route: TRUE
 #Form to remove a profile
@@ -42,9 +42,9 @@ entity.pubs_entity.delete_form:
   path: '/pubs_entity/{pubs_entity}/delete'
   defaults:
     _entity_form: 'pubs_entity.delete'
-    _title: "Delete Profile"
+    _title: 'Delete Profile'
   requirements:
-    _entity_access: "pubs_entity.delete"
+    _permission: 'delete pubs_entity entity'
   options:
     _admin_route: TRUE
 #Settings form
@@ -54,6 +54,6 @@ pubs_entity_type.pubs_settings_form:
     _form: '\Drupal\pubs_entity_type\Form\PubsEntitySettingsForm'
     _title: 'Pubs entity settings form'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer pubs_entity_entity'
   options:
     _admin-route: TRUE

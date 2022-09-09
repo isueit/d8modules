@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_wages_status
+    - node.type.county_job_opening
+  module:
+    - options
+id: node.county_job_opening.field_wages_status
+field_name: field_wages_status
+entity_type: node
+bundle: county_job_opening
+label: 'Wages (status)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

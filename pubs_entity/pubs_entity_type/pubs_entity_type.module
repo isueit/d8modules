@@ -10,7 +10,6 @@ function validatePubsEntity($validateID, $curEntity) {
   }
 
   $url = \Drupal::config('pubs_entity_type.settings')->get('pubs_details_url');
-  $url_host = parse_url($url, PHP_URL_HOST);
 
   try {
     if (0 === substr_compare($url, "/", -1) && explode(' ', get_headers($url . $validateID, 1)[0])[1] == 200) {
@@ -22,7 +21,7 @@ function validatePubsEntity($validateID, $curEntity) {
     } else {
       $raw = "";
     }
-    $raw = file_get_contents($url);
+    //$raw = file_get_contents($url);
 
     $decoded = json_decode($raw);
     if (is_object($decoded) && get_class($decoded) == 'stdClass') {
@@ -35,7 +34,7 @@ function validatePubsEntity($validateID, $curEntity) {
     $found = null;
 
     foreach ($items as $item) {
-      if (array_key_exists('ProductID', $item) && $validateID == $item->ProductID) {
+      if (property_exists($item, 'ProductID') && $validateID == $item->ProductID) {
         $found = $item;
         break;
       }
@@ -76,26 +75,31 @@ function validatePubsEntity($validateID, $curEntity) {
  * Only updates published publications created outside of feeds, as they may not exist in the provided feed
  */
 function pubs_entity_type_rebuild() {
-  $entities = \Drupal::entityTypeManager()->getStorage('pubs_entity')->loadByProperties(['field_from_feed' => FALSE]);
+  $entities = \Drupal::entityTypeManager()->getStorage('pubs_entity')->loadByProperties(['field_from_feed' => FALSE, 'status' => TRUE]);
   $unpublished = [];
   foreach ($entities as $entity) {
     $passed = validatePubsEntity($entity->field_product_id->value, $entity);
     if (!is_string($passed) && is_object($passed)) {
       $entity->name->value = $passed->Title;
-      $entity->field_image_url->value = $passed->ThumbnailURI;
+      $entity->field_image_url->value = str_replace('_T', '_F', $passed->ThumbnailURI);
       $pub_date = explode('/', $passed->PubDate);
       $entity->set('field_publication_date', $pub_date[1] . '-' . $pub_date[0] . '-01');
       $entity->save();
+/*  Commenting out the lines that unpublish products if they aren't in the API, hoping it fixes an issue where products are unpublished automatically.
+ *  If this is the issue, and if we want old products to go away, then we'll need to do something like add a timer and/or counter, something to ensure
+ *  the pub is actually gone, and not just that we can't reach the api.
+ */
     } else {
-      $unpublished[] = "<" . $entity->field_product_id->value . "> " . $entity->name->value;
-      $entity->setUnpublished();
-      $entity->save();
+      \Drupal::logger('pubs_entity_type')->notice("Publication not found: " . $entity->field_product_id->value . ' - ' . $entity->name->value);
+      //$unpublished[] = "<" . $entity->field_product_id->value . "> " . $entity->name->value . " - " . (is_string($passed) ? $passed  : "not an object");
+      //$entity->setUnpublished();
+      //$entity->save();
     }
   }
 
-  if (!empty($unpublished)) {
-    \Drupal::logger('pubs_entity_type')->notice("Publications were not found in store feed and were unpublished: " . json_encode($unpublished));
-  }
+//  if (!empty($unpublished)) {
+//    \Drupal::logger('pubs_entity_type')->notice("Publications were not found in store feed and were unpublished: " . json_encode($unpublished));
+//  }
 }
 
 /**

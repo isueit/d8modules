@@ -1,0 +1,39 @@
+<?php
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy_import\Form\ImportForm;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
+
+function county_job_openings_install() {
+  $roles = Role::loadMultiple([
+    'content_editor'
+  ]);
+
+  $issueAccessPermissions = [
+    "edit own county_job_opening content",
+    "delete own county_job_opening content"
+  ];
+
+  foreach ($issueAccessPermissions as $permission) {
+    $roles['content_editor']->grantPermission($permission);
+  }
+  $roles['content_editor']->save();
+
+  $name = "Counties in Iowa";
+  $vid = "counties_in_iowa";
+  $desc = "List of counties in Iowa. This vocabulary is required for Staff Profiles.";
+  $path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'taxonomy_import') . '/src/data/IowaCounties.txt';
+  $vocabs = Vocabulary::loadMultiple();
+
+  //Create taxonomy if it does not exist
+  if (!isset($vocabs[$vid])) {
+    $vocab = Vocabulary::create(array(
+      'vid' => $vid,
+      'description' => $desc,
+      'name' => $name,
+    ));
+    $vocab->save();
+
+    ImportForm::loadVocabFromFile($path, $vid, $name);
+  }
+}

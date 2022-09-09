@@ -1,0 +1,6 @@
+fieldset#edit-field-counties-served--wrapper {max-width:900px; display:inline-block; padding:0; margin:0; }
+
+fieldset#edit-field-counties-served--wrapper div.form-group,
+    fieldset#edit-field-counties-served--wrapper div.form-type-checkbox {width:165px; float:left; margin:0; font-size:0.9em;}
+
+div#edit-job-template div.isu-form-type_radio {float:none;}

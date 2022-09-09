@@ -1,0 +1,8 @@
+name: Content Access Permissions Module
+description: 'Permissions module that disables permissions to edit or delete node at frontpage (node_id = 1)'
+package: Custom
+type: module
+version: 1.0
+core_version_requirement: ^8 || ^9
+dependencies: ''
+

@@ -12,6 +12,7 @@ dependencies:
   - drupal:layout_builder_base
   - drupal:layout_builder_base_library
   - drupal:layout_builder_restrictions
+  - pathauto:pathauto
   - educational_programs_field
 # - layout_builder_perms
 

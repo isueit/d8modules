@@ -1,0 +1,5 @@
+staff_contact_field:
+  version: 1.x
+  css:
+    layout:
+      css/staff_contact.css: {}

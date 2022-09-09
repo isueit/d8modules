@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_job_type
+    - node.type.county_job_opening
+  module:
+    - options
+id: node.county_job_opening.field_job_type
+field_name: field_job_type
+entity_type: node
+bundle: county_job_opening
+label: 'Job Type'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

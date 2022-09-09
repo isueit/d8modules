@@ -1,0 +1,5 @@
+ul.job-links {border:solid 1px #cccccc; list-style:none; padding:8px; margin: 0;  float:right;}
+ul.job-links a {text-decoration:none;}
+ul.job-links a:hover {text-decoration:underline;}
+ul.county-job-openings {list-style:none; padding:0; margin:0 0 0 30px; }
+ul.county-job-openings li {margin-bottom: 15px;}

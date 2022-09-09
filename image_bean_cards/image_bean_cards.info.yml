@@ -11,4 +11,5 @@ dependencies:
   - drupal:image
   - drupal:fontawesome
   - drupal:allowed_formats
+  - drupal:pubs_entity_type
 

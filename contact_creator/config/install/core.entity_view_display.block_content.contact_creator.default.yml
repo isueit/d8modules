@@ -7,40 +7,49 @@ dependencies:
     - field.field.block_content.contact_creator.field_contact_creator_email
     - field.field.block_content.contact_creator.field_contact_creator_phone
     - field.field.block_content.contact_creator.field_contact_creator_phone_2
+    - field.field.block_content.contact_creator.field_contact_creator_title
 id: block_content.contact_creator.default
 targetEntityType: block_content
 bundle: contact_creator
 mode: default
 content:
   field_contact_creator_address:
-    weight: 0
+    type: basic_string
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    weight: 1
     region: content
   field_contact_creator_email:
-    weight: 1
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 2
     region: content
   field_contact_creator_phone:
-    weight: 2
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 3
     region: content
   field_contact_creator_phone_2:
-    weight: 3
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 4
+    region: content
+  field_contact_creator_title:
     type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
     region: content
 hidden: {  }

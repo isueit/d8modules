@@ -57,7 +57,9 @@ class CouncilMembersBlock extends BlockBase
             $results .= '<li>' . PHP_EOL;
             $results .= '  <div class="council_name">'. $member['hed__Contact__r.FirstName'] . ' ' . $member['hed__Contact__r.LastName'] . '</div>' . PHP_EOL;
             $results .= '  <div class="council_date">(' . substr($member['hed__End_Date__c'], 0, 4) . ')</div>' . PHP_EOL;
-            $results .= '  <div class="council_position">' . $member['Extension_Council_Position__c'] . '</div>' . PHP_EOL;
+            if ($position != 'Member') {
+              $results .= '  <div class="council_position">' . $member['Extension_Council_Position__c'] . '</div>' . PHP_EOL;
+            }
             $results .= '  <div class="council_city">'. $member['hed__Contact__r.MailingCity'] . ', ' . $member['hed__Contact__r.MailingState'] . '</div>' . PHP_EOL;
             $results .= '</li>' . PHP_EOL;
           }

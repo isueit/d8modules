@@ -1,0 +1,41 @@
+<?php
+
+use Drupal\block\Entity\Block;
+use Drupal\block_content\Entity\BlockContent;
+
+/**
+ * Implements hook_install().
+ */
+function editor_login_signoff_install() {
+  $block_content = BlockContent::create([
+	'type' => 'editor_login_signoff',
+	'info' => 'staff_links'
+  ]);
+
+  $block_content->save();
+ 
+  $block = Block::create([
+	'id' => 'staff_links',
+	'plugin' => 'block_content:' . $block_content->uuid(),
+	'region' => 'sign_off',
+	'provider' => 'block_content',
+	'weight' => -100,
+	'theme' => \Drupal::config('system.theme')->get('default'),
+	'uri' => 'internal:/login',
+	'settings' => [
+	  'label' => 'Staff Links',
+	  'label_display' => 'hidden',
+    ],
+  ]);
+
+  $block->save();
+}
+
+function editor_login_signoff_uninstall() {
+  // $storage_handler = \Drupal::entityTypeManager()
+  //   ->getStorage('block_content');
+  // $blocks = $storage_handler->loadByProperties(['type' => 'editor_login_signoff']);
+  // $storage_handler->delete($blocks);
+
+}
+

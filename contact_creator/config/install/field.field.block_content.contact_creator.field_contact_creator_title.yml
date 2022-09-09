@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_creator
+    - field.storage.block_content.field_contact_creator_title
+id: block_content.contact_creator.field_contact_creator_title
+field_name: field_contact_creator_title
+entity_type: block_content
+bundle: contact_creator
+label: Title
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

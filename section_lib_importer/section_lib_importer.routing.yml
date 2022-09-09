@@ -4,6 +4,6 @@ section_lib_importer.content:
       _controller: '\Drupal\section_lib_importer\Controller\ExportLibTemplateController::content'
       _title: "Export Section Library Template"
     requirements:
-      _permission: 'access administration pages'
+      _permission: 'administer section library importer'
     options:
       _admin-route: TRUE
