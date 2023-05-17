@@ -1,4 +1,6 @@
 <?php
+
+use \Drupal\user\Entity\Role;
 use \Drupal\taxonomy\Entity\Vocabulary;
 use \Drupal\taxonomy\Entity\Term;
 use \Drupal\taxonomy_import\Form\ImportForm;
@@ -6,7 +8,8 @@ use \Drupal\taxonomy_import\Form\ImportForm;
 /**
  * Implements hook_install()
  */
-function staff_profile_primary_install() {
+function staff_profile_primary_install()
+{
   // Set homepage to the search staff page
   $config = \Drupal::configFactory()->getEditable('system.site');
   $config->set('page.front', '/search_staff')->save();
@@ -21,4 +24,19 @@ function staff_profile_primary_install() {
   user_role_revoke_permissions('content_editor', array(
     'create url aliases',
   ));
+
+  // Make sure we have a Regional Director Role
+  $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadByProperties(['id' => 'regional_director']);
+  if (count($roles) == 0) {
+    $role = Role::create(array('id' => 'regional_director', 'label' => 'Regional Director'));
+    $role->save();
+  }
+}
+
+function staff_profile_primary_uninstall() {
+  \Drupal::configFactory()->getEditable('encrypt.profile.staff_profile_primary')->delete();
+  \Drupal::configFactory()->getEditable('key.key.staff_profile_primary')->delete();
+  \Drupal::configFactory()->getEditable('views.view.county_feeds_json')->delete();
+  \Drupal::configFactory()->getEditable('views.view.staff_directory')->delete();
+  \Drupal::configFactory()->getEditable('views.view.web_author_feeds')->delete();
 }

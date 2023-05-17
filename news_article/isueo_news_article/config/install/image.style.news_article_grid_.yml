@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: news_article_grid_
+label: 'News Article (Grid)'
+effects:
+  3ef76939-28f2-4537-8c45-467b5e143352:
+    uuid: 3ef76939-28f2-4537-8c45-467b5e143352
+    id: image_scale
+    weight: 1
+    data:
+      width: 220
+      height: 220
+      upscale: false

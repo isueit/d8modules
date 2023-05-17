@@ -15,34 +15,28 @@ settings:
   allowed_values:
     -
       value: bean-card_red
-      label: Red
-    -
-      value: bean-card_blue
-      label: Blue
+      label: 'Full Red'
     -
       value: bean-card_green
-      label: Green
+      label: 'Full Green'
     -
       value: bean-card_dark-red
-      label: 'Dark Red'
+      label: 'Full Dk Red'
     -
       value: bean-card_dark-blue
-      label: 'Dark Blue'
+      label: 'Full Dk Blue'
     -
-      value: bean-card_dark-green
-      label: 'Dark Green'
+      value: bean-card-half_red
+      label: 'Partial Red'
     -
-      value: bean-card_brown
-      label: Brown
+      value: bean-card-half_green
+      label: 'Partial Green'
     -
-      value: bean-card_grey
-      label: Grey
+      value: bean-card-half_dark-red
+      label: 'Partial Dk Red'
     -
-      value: bean-card_dark-overlay_left
-      label: 'Dark Overlay Left'
-    -
-      value: bean-card_dark-overlay_bottom
-      label: 'Dark Overlay Bottom'
+      value: bean-card-half_dark-blue
+      label: 'Partial Dk Blue'
   allowed_values_function: ''
 module: options
 locked: false

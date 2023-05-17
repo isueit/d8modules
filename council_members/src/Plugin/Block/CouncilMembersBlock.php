@@ -23,6 +23,10 @@ class CouncilMembersBlock extends BlockBase
    */
   public function build()
   {
+
+    // Do NOT cache a page with this block on it
+    \Drupal::service('page_cache_kill_switch')->trigger();
+
     //Initialize some variables
     $config = \Drupal::config('council_members.settings');
     $results = '';

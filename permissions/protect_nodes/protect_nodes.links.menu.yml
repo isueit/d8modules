@@ -1,0 +1,6 @@
+protect_nodes.settings_form:
+  title: 'Protect Nodes Settings'
+  route_name: protect_nodes.settings_form
+  description: 'Settings for the protect_nodes Module'
+  parent: system.admin_config_content
+  weight: 100

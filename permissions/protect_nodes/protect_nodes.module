@@ -1,0 +1,96 @@
+<?php
+
+use Drupal\Core\Entity\EntityForm;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_form_alter().
+ */
+
+function protect_nodes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  // Don't restrict adminn, it's their foot :-)
+  if (Drupal::currentUser()->id() == 1) {
+    return;
+  }
+
+  // Get protected urls
+  $config = Drupal::configFactory()->get('protect_nodes.settings');
+  $protected_nodes = explode(',', $config->get('protect_nodes'));
+  $protected_titles = explode(',', $config->get('protect_titles'));
+
+  // Check if its a Node form, and if so, get the URL
+  $url = '';
+  if ($form_state->getFormObject() instanceof EntityForm) {
+    $node = Node::load($form_state->getFormObject()->getEntity()->id());
+    if (!empty($node)) {
+      $url = Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id());
+    }
+  }
+
+  // Check if it's a node delete form
+  if (strpos($form_id, 'node') !== false && strpos($form_id, 'delete_form') !== false && $form_id != "node_type_delete_form") {
+    // Check if this node is protected
+    if (in_array($url, $protected_nodes)) {
+      // Construct message
+      $results = '<p class="protect_nodes">';
+      $results .= '<strong>' . $node->getTitle() . '</strong>';
+      $results .= ' is a required page on this site, and can not be deleted';
+      $results .= '</p>' . PHP_EOL;
+
+      // Display message
+      $form['protect_nodes'] = array(
+        '#markup' => $results,
+        '#weight' => -10,
+      );
+
+      // Don't allow deleting this node
+      $form['actions']['cancel']['#title'] = t('Go back');
+      unset($form['description']);
+      unset($form['actions']['submit']);
+      unset($form['actions']['cancel']);
+    }
+  }
+
+  // Check if it's a node edit form
+  if (strpos($form_id, 'node') !== false && strpos($form_id, 'edit_form') !== false && $form_id != "node_type_edit_form") {
+    //Check if the title and url path are protected
+    if (in_array($url, $protected_nodes) || in_array($url, $protected_titles)) {
+      // Don't allow changing title or url path
+      $form['title']['widget']['#disabled'] = TRUE;
+      unset($form['path']); // Remove URL ALIAS (path) options
+      unset($form['status']); // Remove status/published checkbox
+    }
+  }
+
+  // Handle multiple deleting from the content menu
+  if ($form_id == 'node_delete_multiple_confirm_form') {
+    $list_items = '';
+
+    // Step through each node in the list
+    foreach ($form['entities']['#items'] as $key => $value) {
+      $node_info = explode(':', $key);
+      $url = Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node_info[0]);
+
+      // Check if it's protected
+      if (in_array($url, $protected_nodes)) {
+        $list_items .= '<li>' . $value . '</li>' . PHP_EOL;
+      }
+    }
+
+    // Do we have any protected nodes in the list
+    if (!empty($list_items)) {
+      // Give our error message
+      $form['protect_nodes'] = array(
+        '#markup' => '<p>These nodes can\'t be deleted because the following node(s) are protected:</p>' . PHP_EOL . '<ol>' . $list_items . '</ol>' . PHP_EOL,
+        '#weight' => 10,
+      );
+
+      // Modify the form
+      $form['actions']['cancel']['#title'] = t('Go back');
+      unset($form['description']);
+      unset($form['actions']['submit']);
+      unset($form['actions']['cancel']);
+    }
+  }
+}

@@ -1,0 +1,8 @@
+name: 'Staff Profile Reed'
+type: module
+core_version_requirement: ^8 || ^9
+description: 'Provides web editor management interface for Regional Directors'
+version: '8.x-1.1-dev'
+package: 'ISUEO'
+dependencies:
+  - staff_profile:staff_profile_primary

@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: news_articles_homepage_
+label: 'News Articles (Homepage)'
+effects:
+  e950d7a1-c6a5-4b3c-94b9-c5048b1519de:
+    uuid: e950d7a1-c6a5-4b3c-94b9-c5048b1519de
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 480
+      height: 320
+      anchor: center-center

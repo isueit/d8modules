@@ -9,10 +9,8 @@ dependencies:
     - text
 third_party_settings:
   allowed_formats:
-    wysiwyg: wysiwyg
-    full_html: '0'
-    basic: '0'
-    plain_text: '0'
+    allowed_formats: 
+    - plain_text
 id: node.news_article.field_teaser
 field_name: field_teaser
 entity_type: node

@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - smugmug_media_type
+id: media.field_media_smugmug_media_type
+field_name: field_media_smugmug_media_type
+entity_type: media
+type: smugmug_media_type
+settings: {  }
+module: smugmug_media_type
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
