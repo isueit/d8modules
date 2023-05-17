@@ -24,6 +24,7 @@ class ViewMyProfile extends ControllerBase
     \Drupal::service('page_cache_kill_switch')->trigger();
 
     $results = 'Profile not found!';
+    $found = false;
 
     // Skip it if logged in as admin
     $currentUser = \Drupal::currentUser();
@@ -39,11 +40,14 @@ class ViewMyProfile extends ControllerBase
       // Step through the nodes, redirect when the current user is the owner of the node
       foreach ($nodes as $node) {
         if ($node->getOwner()->getAccountName() == $currentUser->getAccountName()) {
+          $found = true;
           $response = new RedirectResponse('node/' . $node->id(), '302');
           $response->send();
         }
       }
-      \Drupal::logger('staff_profile_primary')->info('Profile not found: ' . $currentUser->getAccountName());
+      if (!$found) {
+        \Drupal::logger('staff_profile_primary')->info('Profile not found: ' . $currentUser->getAccountName());
+      }
     }
 
     // Return the results, when no redirect found

@@ -17,9 +17,6 @@ settings:
       value: bean-card_red
       label: Red
     -
-      value: bean-card_blue
-      label: Blue
-    -
       value: bean-card_green
       label: Green
     -
@@ -28,21 +25,6 @@ settings:
     -
       value: bean-card_dark-blue
       label: 'Dark Blue'
-    -
-      value: bean-card_dark-green
-      label: 'Dark Green'
-    -
-      value: bean-card_brown
-      label: Brown
-    -
-      value: bean-card_grey
-      label: Grey
-    -
-      value: bean-card_dark-overlay_left
-      label: 'Dark Overlay Left'
-    -
-      value: bean-card_dark-overlay_bottom
-      label: 'Dark Overlay Bottom'
   allowed_values_function: ''
 module: options
 locked: false

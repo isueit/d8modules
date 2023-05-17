@@ -11,7 +11,7 @@ field_name: field_social_media_links
 entity_type: block_content
 bundle: social_media_red_bar
 label: 'Social Media Links (multiple links allowed)'
-description: "Allowed Links: Facebook, Instagram, LinkedIn, Pinterest, Twitter, Vimeo, Snapchat, Youtube, TikTok, Libsyn, Google Podcasts, Apple Podcasts<br>\r\n\r\nLinks to other social media platforms will not show! To have another social media platform added email extensionweb@iastate.edu."
+description: "Allowed Links: Facebook, Instagram, LinkedIn, Pinterest, Twitter, Vimeo, Snapchat, Youtube, Libsyn, Google Podcasts, Apple Podcasts<br>\r\n\r\nLinks to other social media platforms will not show! To have another social media platform added email extensionweb@iastate.edu."
 required: false
 translatable: false
 default_value: {  }

@@ -1,9 +1,7 @@
 div.contact_photo {
-  max-width: 150px;
-  width: 33%;
-  float: left;
-  margin-right: 25px;
-  min-height: 100px;
+	min-height: 150px;
+	clip-path: inset(10px 10px 45px 0);
+	margin-bottom: -25px;
 }
 
 div.contact_group hr {
@@ -20,15 +18,24 @@ div.contact_group li {
   clear: both;
 }
 
+ul.staff_contact_list {
+	margin-left: -31px;
+}
+
 div.contact_group {
   clear: both;
 }
 
 div.contact_name {
-  font-size: 1.4em;
-  margin-bottom: 5px;
+  	font-weight: bold;
+	margin-bottom: 5px;
 }
 
 div.staff_contact_header {
-  font-size: 1.6em;
+	font-size: 1.5em;
+	margin-bottom: 1rem;
+	line-height: 1.25;
+	font-weight: 500;
+	border-bottom: 1px solid #ccc;
+	padding: 0 0 13px 0;
 }
