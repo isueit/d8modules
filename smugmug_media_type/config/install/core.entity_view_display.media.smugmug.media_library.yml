@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.media_library
+    - field.field.media.smugmug.field_media_smugmug_media_type
+    - image.style.thumbnail
+    - media.type.smugmug
+  module:
+    - field_formatter_class
+    - smugmug_media_type
+id: media.smugmug.media_library
+targetEntityType: media
+bundle: smugmug
+mode: media_library
+content:
+  field_media_smugmug_media_type:
+    type: smugmug_media_type_thumbnail
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      image_style: thumbnail
+      link_image_to: ''
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+hidden:
+  created: true
+  name: true
+  thumbnail: true
+  uid: true

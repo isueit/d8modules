@@ -1,0 +1,76 @@
+staff_profile_reed.portal_page:
+  path: regional-director-portal
+  requirements:
+    _role: 'regional_director'
+
+staff_profile_reed.county_web_editors:
+  path: county-web-editors
+  defaults:
+    _controller: '\Drupal\staff_profile_reed\Controller\CountyWebEditors::panel'
+    _title: 'County Web Editors'
+  requirements:
+    _role: 'regional_director'
+  options:
+    no_cache: 'TRUE'
+
+staff_profile_reed.county_staff:
+  path: county-staff
+  defaults:
+    _controller: '\Drupal\staff_profile_reed\Controller\CountyStaff::panel'
+    _title: 'County Staff'
+  requirements:
+    _role: 'regional_director'
+  options:
+    no_cache: 'TRUE'
+
+staff_profile_reed.council_members:
+  path: council-members
+  defaults:
+    _controller: '\Drupal\staff_profile_reed\Controller\CouncilMembers::panel'
+    _title: 'Council Members'
+  requirements:
+    _role: 'regional_director'
+  options:
+    no_cache: 'TRUE'
+
+entity.staff_profile_reed.remove_cty_editor_form:
+  path: '/staff_profile/{node}/remove_cty_editor/{cty}'
+  defaults:
+    _form: '\Drupal\staff_profile_reed\Form\CountyWebEditorsConfirmRemove'
+    _title: 'Remove County Editor'
+    _entity_form: staff_profile.remove_cty_editor
+  requirements:
+    _role: 'regional_director'
+    _content_type: 'staff_profile'
+  options:
+    _node_operation_route: true
+    parameters:
+      node:
+        type: entity:node
+      cty:
+        type: taxonomy
+
+entity.staff_profile_reed.add_cty_editor_form:
+  path: '/staff_profile/{node}/add_cty_editor/{cty}'
+  defaults:
+    _form: '\Drupal\staff_profile_reed\Form\CountyWebEditorsConfirmAdd'
+    _title: 'Add County Editor'
+    _entity_form: staff_profile.add_cty_editor
+  requirements:
+    _role: 'regional_director'
+    _content_type: 'staff_profile'
+  options:
+    _node_operation_route: true
+    parameters:
+      node:
+        type: entity:node
+      cty:
+        type: taxonomy
+
+staff_profile_reed.autocomplete:
+  path: '/staff_profile_reed/{field_name}/{count}'
+  defaults:
+    _controller: '\Drupal\staff_profile_reed\Controller\AutocompleteController::handleAutocomplete'
+    _format: json
+  requirements:
+    _role: 'regional_director'

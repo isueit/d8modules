@@ -1,0 +1,5 @@
+flip_cards:
+  version: 1.x
+  css:
+    layout:
+      css/flip_cards.css: {}

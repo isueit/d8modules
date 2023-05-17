@@ -47,6 +47,13 @@ class SmugmugIdFormatter extends FormatterBase
         '#markup' => $htmloutput,
       ];
     }
+
+    // Check that we're returning an image, if not, return our blank image
+    if (empty($element[0]['#markup'])) {
+      $element[0]['#markup'] = '<img class="staff_profile_smugmug staff_profile_blank_image" src="' .  \Drupal::request()->getBaseUrl() . '/modules/custom/d8modules/staff_profile/staff_profile/images/blank_image.png" alt="" />';
+      $element[0]['#type'] = 'markup';
+    }
+
     return $element;
   }
 }

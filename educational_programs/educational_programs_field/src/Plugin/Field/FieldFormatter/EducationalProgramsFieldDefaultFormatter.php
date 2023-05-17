@@ -67,7 +67,7 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase {
       foreach ($programs as $program) {
         if ($program['Id'] == trim(strip_tags($term->getDescription()))) {
           if (!empty($program['Web_Description__c'])) {
-            $description = $program['Web_Description__c'];
+            $description = str_replace(' target="_blank"', '', $program['Web_Description__c']);
           } elseif (!empty($program['hed__Extended_Description__c'])) {
             $description = $program['hed__Extended_Description__c'];
           } elseif (!empty($program['hed__Description__c'])) {

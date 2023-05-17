@@ -1,0 +1,38 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.medium_220x220_
+    - field.field.media.smugmug.field_media_smugmug_media_type
+    - image.style.medium
+    - media.type.smugmug
+  module:
+    - field_formatter_class
+    - layout_builder
+    - smugmug_media_type
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
+id: media.smugmug.medium_220x220_
+targetEntityType: media
+bundle: smugmug
+mode: medium_220x220_
+content:
+  field_media_smugmug_media_type:
+    label: visually_hidden
+    weight: 0
+    settings:
+      image_style: medium
+      alt: ''
+      link_image_to: ''
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    type: smugmug_media_type_image
+    region: content
+hidden:
+  created: true
+  name: true
+  thumbnail: true
+  uid: true

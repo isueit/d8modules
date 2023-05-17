@@ -59,6 +59,7 @@ margin-bottom:-9px;
 }
 
 div.program_offering_blocks {padding:10px 10px 20px 10px !important; }
-div.program_offering_blocks h2 {font-weight: 500; }
 div.program_offering_blocks a {text-decoration:none;}
 div.program_offering_blocks ul {padding:0;}
+
+div.event_series {font-style: italic; font-size: 12px;}

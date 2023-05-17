@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.flip_cards
+    - field.storage.block_content.field_flip_card_text_size
+  module:
+    - options
+id: block_content.flip_cards.field_flip_card_text_size
+field_name: field_flip_card_text_size
+entity_type: block_content
+bundle: flip_cards
+label: 'Text Size'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: bean-card_text-md
+default_value_callback: ''
+settings: {  }
+field_type: list_string

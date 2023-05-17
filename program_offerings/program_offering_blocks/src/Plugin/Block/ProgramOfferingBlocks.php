@@ -4,6 +4,7 @@ namespace Drupal\program_offering_blocks\Plugin\Block;
 
 use DateInterval;
 use DateTime;
+use Drupal;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
@@ -17,6 +18,7 @@ use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Drupal\program_offering_blocks\Controller\Helpers;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  * Provides a 'ProgramOfferingBlocks' block plugin.
@@ -31,6 +33,21 @@ use Drupal\program_offering_blocks\Controller\Helpers;
 
 class ProgramOfferingBlocks extends BlockBase
 {
+  // Set the Field_Names for the session start times, comes from MyData
+  const FIELD_NAMES = [
+    'Start_Time_and_Date__c',
+    'Second_Session_Date_Time__c',
+    'Third_Session_Begining_Date_and_Time__c',
+    'Fourth_Session_Beginning_Date_and_Time__c',
+    'Fifth_Session_Beginning_Date_and_Time__c',
+    'Sixth_Session_Beginning_Date_and_Time__c',
+    'Seventh_Session_Beginning_Date_and_Time__c',
+    'Eighth_Session_Beginning_Date_and_Time__c',
+    'Ninth_Session_Beginning_Date_and_Time__c',
+    'Tenth_Session_Beginning_Date_and_Time__c',
+    'Eleventh_Session_Start_Date__c',
+    'Twelfth_Session_Start_Date__c',
+  ];
 
   /**
    * {@inheritdoc}
@@ -48,6 +65,9 @@ class ProgramOfferingBlocks extends BlockBase
     $id = $this->getDerivativeID();
     $config = $this->getConfiguration();
     $module_config = \Drupal::config('program_offering_blocks.settings');
+    $site_name = \Drupal::config('system.site')->get('name');
+    $is_front_page = Drupal::service('path.matcher')->isFrontPage();
+    $is_county_site = strpos($site_name, ' County') !== false;
 
     // Show annoncement if there is one
     if (!empty($config['announcement_text'])) {
@@ -81,10 +101,13 @@ class ProgramOfferingBlocks extends BlockBase
     ini_set('default_socket_timeout', $default_socket_timeout);
     $json_events = json_decode($buffer, TRUE);
 
+    // Show all upcoming events, not just the next one
+    $all_events = self::include_series_events($json_events, $is_county_site);
+
     $results .= PHP_EOL . '<ul class="program_offering_blocks program_offering_blocks_' . $id . '">' . PHP_EOL;
     $found_events = [];
 
-    foreach ($json_events as $event) {
+    foreach ($all_events as $event) {
       $display_event = TRUE;
       if (!empty($config['program_area']) && $config['program_area'] != $event['PrimaryProgramUnit__c']) {
         $display_event = FALSE;
@@ -93,6 +116,11 @@ class ProgramOfferingBlocks extends BlockBase
       // Do we only display planned programs
       // This may someday need to be a separate function if we have to distingish the type of Associated Products, but this is OK for now
       if ($config['only_planned_programs'] && empty($event['All_Associated_Product_ID_s__c'])) {
+        $display_event = FALSE;
+      }
+
+      // Do we only display statewide/campus/multi-state events
+      if (array_key_exists('only_statewide_campus', $config) && $config['only_statewide_campus'] &&  !($event['Account__c'] == '0014600001eraRNAAY' || $event['Account__c'] == '0014600001er8DDAAY' || $event['Account__c'] == '0014p00001k0CdgAAE')) {
         $display_event = FALSE;
       }
 
@@ -123,6 +151,12 @@ class ProgramOfferingBlocks extends BlockBase
         }
       }
 
+      // Hide statewide events from home page
+      $additional_counties = explode(';', $event["Additional_Counties__c"]);
+      if ($is_county_site && count($additional_counties) > 50  && $is_front_page) {
+        $display_event = false;
+      }
+
       if ($display_event) {
         $found_events[] = [
           'Id' => $event['Id'],
@@ -145,6 +179,9 @@ class ProgramOfferingBlocks extends BlockBase
             <span class="event_time">' . date('g:i', $start_date) . '</span><span class="event_ampm">' . date('A', $start_date) . '</span></div>';
 
           $results .= $this->format_title($event, $config) . PHP_EOL;
+          if (!empty($event['series_info'])) {
+            $results .= '    <div class="event_series">' . $event['series_info'] . '</div>' . PHP_EOL;
+          }
           $results .= '    <div class="event_venue">';
           $results .= $event['Event_Location__c'] == 'Online' ? 'Online' : $event['Event_Location__c'] . ', ' . $event['Program_State__c'];
           $results .= '</div>' . PHP_EOL;
@@ -197,8 +234,12 @@ class ProgramOfferingBlocks extends BlockBase
       $results .= '<script>document.getElementById("block-programofferingblock' . $id . '").style.display = "none";</script>';
     }
 
-    if (!empty($config['show_more_page']) && !empty($config['show_more_text']) && $count > $max_events) {
-      $results .= '<a class="events_show_more btn-outline-white" href="' . $base_url . '/' . $config['show_more_page'] . '?filter=' . urlencode($string_of_search_terms) . '">' . $config['show_more_text'] . '</a><br />';
+    if (!empty($config['show_more_page']) && !empty($config['show_more_text']) && ($count > $max_events || ($is_county_site && $is_front_page))) {
+      // remove leading slash (/) from 'show_more_page value
+      $show_more_page = $config['show_more_page'];
+      $show_more_page = substr($show_more_page, 0, 1) == '/' ? substr($show_more_page, 1, strlen($show_more_page) - 1) : $show_more_page;
+
+      $results .= '<a class="events_show_more btn btn-danger" href="' . $base_url . '/' . $show_more_page . '?filter=' . urlencode($string_of_search_terms) . '">' . $config['show_more_text'] . '</a><br />';
     }
 
 
@@ -294,6 +335,13 @@ class ProgramOfferingBlocks extends BlockBase
       '#default_value' => $config['only_planned_programs'],
     );
 
+    $form['only_statewide_campus'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show Only Statewide/Campus/Multi-state Events'),
+      '#description' => t('When checked, only show events that are Statewide, Campus, or Multi-state'),
+      '#default_value' => empty($config['only_statewide_campus']) ? false : $config['only_statewide_campus'],
+    );
+
     $form['program_area'] = array(
       '#type' => 'select',
       '#options' => [
@@ -356,6 +404,7 @@ class ProgramOfferingBlocks extends BlockBase
     $this->configuration['announcement_text'] = $values['announcement_text'];
     $this->configuration['show_nonpublic_events'] = $values['show_nonpublic_events'];
     $this->configuration['only_planned_programs'] = $values['only_planned_programs'];
+    $this->configuration['only_statewide_campus'] = $values['only_statewide_campus'];
     $this->configuration['program_area'] = $values['program_area'];
     $this->configuration['county'] = array_key_exists('county', $values) ? $values['county'] : '';
     $this->configuration['placement'] = $values['placement'];
@@ -377,6 +426,7 @@ class ProgramOfferingBlocks extends BlockBase
       'announcement_text' => '',
       'show_nonpublic_events' => FALSE,
       'only_planned_programs' => FALSE,
+      'only_statewide_campus' => FALSE,
       'program_area' => '',
       'county' => '',
       'placement' => '',
@@ -472,5 +522,74 @@ class ProgramOfferingBlocks extends BlockBase
       }
     }
     return $found_term;
+  }
+
+  /**
+   * Compare function, used to sort array of events, used by usort() in include_series_events()
+   */
+  private static function cmp_array($a, $b)
+  {
+    if ($a['Next_Start_Date__c'] == $b['Next_Start_Date__c']) {
+      return 0;
+    }
+
+    return ($a['Next_Start_Date__c'] < $b['Next_Start_Date__c']) ? -1 : 1;
+  }
+
+  /**
+   * Include all upcoming sessions in the list of events, not just the next series
+   */
+  private static function include_series_events($json_events, $is_county_site)
+  {
+    $all_events = [];
+
+    // Step through the original list of  events
+    foreach ($json_events as $event) {
+
+      // Set some variables, and handle the next event
+      $series_dates = self::get_series_dates($event);
+      $series_length = count($series_dates);
+      $next_session = $event['Next_Start_Date__c'];
+      $event['series_info'] = $series_length > 1 ? sprintf('Session %d of %d', (array_search($event['Next_Start_Date__c'], $series_dates) + 1), $series_length) : '';
+
+      $all_events[] = $event;
+
+      /*
+      // This would hide future sessions for statewide events.
+      $additional_counties = explode(';', $event["Additional_Counties__c"]);
+      if ($is_county_site && count($additional_counties) > 50) {
+        continue;
+      }
+      */
+
+      // Step through the $series dates, and include all future dates
+      foreach ($series_dates as $series_date) {
+        if ($series_date > $next_session) {
+          $event['Next_Start_Date__c'] = $series_date;
+          $event['series_info'] = $series_length > 1 ? sprintf('Session %d of %d', (array_search($series_date, $series_dates) + 1), $series_length) : '';
+          $all_events[] = $event;
+          $next_session = $series_date;
+        }
+      }
+    }
+
+    usort($all_events, 'self::cmp_array');
+    return $all_events;
+  }
+
+  private static function get_series_dates($event)
+  {
+    $series_dates = [];
+
+    // Set through the field names, if the field has a value, add that value to the $series_dates array
+    foreach (self::FIELD_NAMES as $field_name) {
+      if (!empty($event[$field_name])) {
+        $series_dates[] = $event[$field_name];
+      }
+    }
+
+    // Sort the array and return it
+    sort($series_dates);
+    return $series_dates;
   }
 }

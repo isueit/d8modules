@@ -106,6 +106,7 @@ function staff_profile_primary_profile_from_database () {
   }
 
   $count = 0;
+  $regional_directors = [];
   foreach($profiles as $profile) {
 
     // Find the node that matches the profile, if one exists
@@ -207,6 +208,12 @@ function staff_profile_primary_profile_from_database () {
     $mynode->setPublished();
     $mynode->save();
 
+    // Check if this user is a Regional Director
+    if ($profile->DepartmentID == '30310' && (strpos($jobtitle, 'Assistant Director County Serv') !== false || strpos($jobtitle, 'Regional Extension Education') !== false || $jobtitle == 'County Services - Regional Dir') || $jobtitle == 'Regional Director' || $jobtitle == 'Associate Director County Serv'|| strpos($jobtitle, 'Director of Field Operations') !== false) {
+    //if ($profile->DepartmentID == '30310') {
+      $regional_directors[] = $profile->email;
+    }
+
     $count++;
   }
 
@@ -218,6 +225,35 @@ function staff_profile_primary_profile_from_database () {
     }
   }
 
+  // Remove Regional Director Role from users that don't have regional director in Staff database
+  $userids = \Drupal::entityQuery('user') ->condition('status', 1) ->condition('roles', 'regional_director') ->execute();
+  $users = User::loadMultiple($userids);
+  foreach($users as $user){
+    if ($user->id() == 1) {
+      continue;
+    }
+    $email =  $user->get('mail')->getString();
+    if (!in_array($email, $regional_directors)) {
+      $user->removeRole('regional_director');
+      $user->save();
+      \Drupal::logger('staff_profile_primary')->info('Deleted Role from: ' . $email);
+    }
+  }
+
+  // Add Regional Director Role to users that need it
+  foreach ($regional_directors as $director) {
+    $userids = \Drupal::entityQuery('user')->condition('status', 1)->condition('mail', $director)->execute();
+    $users = User::loadMultiple($userids);
+    foreach ($users as $user) {
+      if (!in_array('regional_director', $user->getRoles())) {
+        $user->addRole('regional_director');
+        $user->save();
+        \Drupal::logger('staff_profile_primary')->info('Added role to: ' . $director);
+      }
+    }
+  }
+
+  \Drupal::logger('staff_profile_primary')->info('Regional Directors: ' . count($regional_directors));
   \Drupal::logger('staff_profile_primary')->info('Staff from Staff Directory Database: ' . $count);
 }
 
@@ -266,6 +302,15 @@ function staff_profile_primary_node_presave($entity) {
     }
     $entity->setOwner($owner);
     $entity->setTitle($entity->field_staff_profile_pref_name->value . ' ' . $entity->field_staff_profile_last_name->value);
+
+    //Convert SmugMug URL into just the SmugMug ID value
+    $smugmugID = $entity->field_staff_profile_smugmug->value;
+    preg_match('/^https?:\/\/(isuextensionimages\.)?smugmug.com\/[A-Za-z0-9\-\_\/]*i\-(?<id>[A-Za-z0-9]+)(\/A)?$/', $smugmugID, $matches);
+    $smugmugID = isset($matches['id']) ? 'i-' . $matches['id'] : $smugmugID;
+    //if (substr($smugmugID, -2) == '/A') {
+    //  $smugmugID = substr($smugmugID, 0, strlen($smugmugID) - 2);
+    //}
+    $entity->field_staff_profile_smugmug->value = $smugmugID;
   }
 }
 
@@ -289,15 +334,6 @@ function rand_string($strength = 40) {
   return $rand_string;
 }
 
-function staff_profile_primary_uninstall() {
-  \Drupal::configFactory()->getEditable('encrypt.profile.staff_profile_primary')->delete();
-  \Drupal::configFactory()->getEditable('key.key.staff_profile_primary')->delete();
-  \Drupal::configFactory()->getEditable('views.view.county_feeds_json')->delete();
-  \Drupal::configFactory()->getEditable('views.view.staff_directory')->delete();
-  \Drupal::configFactory()->getEditable('views.view.web_author_feeds')->delete();
-}
-
-
 // This function helps take Web Editor Training functions from Moodle, and puts it into the staff directory
 function staff_profile_primary_web_editor_training() {
   $buffer = file_get_contents('https://datastore.exnet.iastate.edu/StaffDir/WebEditorTraining.json');
@@ -311,6 +347,9 @@ function staff_profile_primary_web_editor_training() {
     // Get taxonomy term id, and skip record if it's not found
     $course = 0;
     switch ($training['coursemoduleid']) {
+      case '10712':  // Drupal 8/9/10
+        $course = 114;
+        break;
       case '1041':  // Drupal 7
         $course = 113;
         break;
@@ -318,7 +357,7 @@ function staff_profile_primary_web_editor_training() {
         $course = 112;
         break;
       default:
-        \Drupal::logger('blah')->info('Course is unknown, not sure why');
+        \Drupal::logger('staff_profile_primary')->info('Course is unknown, not sure why');
         $course = 0;
     }
     if ($course == 0) continue;

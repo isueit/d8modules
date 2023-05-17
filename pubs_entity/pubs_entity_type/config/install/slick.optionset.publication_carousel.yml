@@ -3,11 +3,11 @@ status: true
 dependencies: {  }
 id: publication_carousel
 name: publication_carousel
-label: 'Publication carousel'
 weight: 0
+label: 'Publication carousel'
 group: ''
 skin: ''
-breakpoints: 3
+breakpoints: 4
 optimized: false
 options:
   options__active_tab: edit-options-responsives
@@ -17,10 +17,10 @@ options:
     accessibility: true
     adaptiveHeight: false
     autoplay: false
-    autoplaySpeed: 3000
     pauseOnHover: true
     pauseOnDotsHover: false
     pauseOnFocus: true
+    autoplaySpeed: 3000
     arrows: true
     prevArrow: ''
     nextArrow: ''
@@ -71,10 +71,10 @@ options:
         settings:
           adaptiveHeight: false
           autoplay: false
-          autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
           pauseOnFocus: false
+          autoplaySpeed: 3000
           arrows: true
           centerMode: false
           centerPadding: 50px
@@ -108,10 +108,10 @@ options:
         settings:
           adaptiveHeight: false
           autoplay: false
-          autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
           pauseOnFocus: false
+          autoplaySpeed: 3000
           arrows: true
           centerMode: false
           centerPadding: 50px
@@ -145,12 +145,49 @@ options:
         settings:
           adaptiveHeight: false
           autoplay: false
-          autoplaySpeed: 3000
           pauseOnHover: false
           pauseOnDotsHover: false
           pauseOnFocus: false
+          autoplaySpeed: 3000
           arrows: true
-          centerMode: false
+          centerMode: true
+          centerPadding: 50px
+          dots: false
+          draggable: true
+          fade: false
+          focusOnSelect: false
+          infinite: true
+          initialSlide: 0
+          respondTo: window
+          rows: 1
+          slidesPerRow: 1
+          slidesToShow: 2
+          slidesToScroll: 1
+          speed: 900
+          swipe: true
+          swipeToSlide: true
+          edgeFriction: 0.35
+          touchMove: true
+          touchThreshold: 5
+          cssEase: ease
+          cssEaseBezier: ''
+          cssEaseOverride: ''
+          variableWidth: false
+          vertical: false
+          verticalSwiping: false
+          waitForAnimate: false
+      -
+        breakpoint: 425
+        unslick: false
+        settings:
+          adaptiveHeight: false
+          autoplay: false
+          pauseOnHover: false
+          pauseOnDotsHover: false
+          pauseOnFocus: false
+          autoplaySpeed: 3000
+          arrows: false
+          centerMode: true
           centerPadding: 50px
           dots: false
           draggable: true

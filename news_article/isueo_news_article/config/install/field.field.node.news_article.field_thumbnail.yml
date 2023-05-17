@@ -10,8 +10,8 @@ field_name: field_thumbnail
 entity_type: node
 bundle: news_article
 label: Thumbnail
-description: ''
-required: false
+description: '<a href="https://stock.adobe.com/">Adobe Stock</a> is available for all staff and provides an unlimited photo license. Make sure to login with your net-id and password.'
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -22,6 +22,7 @@ settings:
       image: image
     sort:
       field: _none
+      direction: ASC
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

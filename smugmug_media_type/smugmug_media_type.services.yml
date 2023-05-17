@@ -1,0 +1,4 @@
+services:
+  smugmug_media_type.provider_manager:
+    class: Drupal\smugmug_media_type\ProviderManager
+    parent: default_plugin_manager
