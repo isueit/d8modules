@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - smugmug_media_type
+id: smugmug
+label: 'Smugmug Image'
+description: 'A remotely hosted image from SmugMug.'
+source: smugmug_media_type
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  source_field: field_media_smugmug_media_type
+field_map:
+  title: name
+  alt_text: field_alternative_text

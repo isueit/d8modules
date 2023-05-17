@@ -1,0 +1,8 @@
+name: SmugMug Media Type
+type: module
+description: 'Provides a media type for displaying Images from SmugMug'
+package: ISUEO
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:field
+  - drupal:media

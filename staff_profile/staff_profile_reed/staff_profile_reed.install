@@ -1,0 +1,17 @@
+<?php
+use \Drupal\user\Entity\Role;
+use \Drupal\user\Entity\User;
+
+function staff_profile_reed_install() {
+  //Add forms as entity operations
+  $def_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $staff_profile_type = $def_manager->getEntityType('staff_profile');
+  $node_type = $def_manager->getEntityType('node');
+
+  $node_type->setFormClass('add_cty_editor', 'Drupal\staff_profile_reed\Forms\CountyWebEditorsConfirmAdd');
+  $node_type->setFormClass('remove_cty_editor', 'Drupal\staff_profile_reed\Forms\CountyWebEditorsConfirmRemove');
+  $node_type->setHandlerClass('route_provider', 'Drupal\staff_profile_reed\Controller\StaffProfileReedRouteController');
+
+  $def_manager->updateEntityType($node_type);
+}

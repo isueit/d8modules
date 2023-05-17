@@ -1,0 +1,9 @@
+protect_nodes.settings_form:
+  path: 'admin/config/content/protect_nodes_settings'
+  defaults:
+    _form: '\Drupal\protect_nodes\Form\SettingsForm'
+    _title: 'Protect Nodes Settings'
+  requirements:
+    _permission: 'administer content'
+  options:
+    _admin-route: TRUE

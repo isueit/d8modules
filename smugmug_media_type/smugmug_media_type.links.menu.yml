@@ -1,0 +1,4 @@
+smugmug_media_type.settings:
+  title: Smugmug Settings
+  route_name: smugmug_media_type.settings
+  parent: system.admin_config_media

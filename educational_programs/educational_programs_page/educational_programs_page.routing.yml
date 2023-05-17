@@ -1,0 +1,8 @@
+educational_programs_page.json_api_educational_programs:
+  path: '/api/json/educational-programs'
+  defaults:
+    _controller: 'Drupal\educational_programs_page\Controller\JsonApiController::renderApi'
+    _title: 'JSON api'
+  methods:  [GET]
+  requirements:
+    _access: 'TRUE'

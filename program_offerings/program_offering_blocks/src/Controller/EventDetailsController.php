@@ -72,7 +72,7 @@ class EventDetailsController extends ControllerBase
           $results .= '  <div class="event_contact_phone">' . $event['Contact_Information_Phone__c'] . '</div>' . PHP_EOL;
         }
 
-        if ($event['Contact_Person__c'] <> $event['Primary_Instructor_Presenter__c']) {
+        if (!empty($event['Primary_Instructor_Presenter__c']) && ($event['Contact_Person__c'] <> $event['Primary_Instructor_Presenter__c'])) {
           $results .= '  <div class="event_contact_label">Primary Instructor:</div>' . PHP_EOL;
           $results .= '  <div class="event_contact_name">' . $event['Instructor_Information_Name__c'] . '</div>' . PHP_EOL;
           $results .= '  <div class="event_contact_email"><a href="mailto:' . $event['Instructor_Information_Email__c']  . '">' . $event['Instructor_Information_Email__c'] . '</a></div>' . PHP_EOL;
@@ -190,7 +190,7 @@ class EventDetailsController extends ControllerBase
 
     // Add more information link(s)
     if (!empty($event['Program_Offering_Website__c']) && $event['Registration_Link__c'] <> $event['Program_Offering_Website__c']) {
-      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Program_Offering_Website__c'] . '">More information this event</a></div>' . PHP_EOL;
+      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Program_Offering_Website__c'] . '">More information about this event</a></div>' . PHP_EOL;
     }
     if (!empty($event['Planned_Program_Website__c']) && $event['Registration_Link__c'] <> $event['Planned_Program_Website__c'] && $event['Program_Offering_Website__c'] <> $event['Planned_Program_Website__c']) {
       $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Planned_Program_Website__c'] . '">More information about this program</a></div>' . PHP_EOL;

@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Display an image with alterable components.
+ * If image style only uses scale, use max-height to scale to size, max-width is set to the whichever is less, 100% of the parent or given width
+ * If image style uses cropped, set width & height and use object-fit:cover to crop image to the proper size
+ */
+#}
+<img {{ attributes }}
+{% if url is not empty %} src="{{ url }}"{% endif %}
+{% if alt is not empty %} alt="{{ alt }}"{% endif %}
+{% if cropped is same as(false) %}
+  {% if width is not empty and height is not empty %} style="max-width:min({{ width }}px, 100%);max-height:{{ height }}px;"{% endif %}
+{% elseif cropped is same as(true) %}
+  {% if width is not empty and height is not empty %} style="width:{{ width }}px;height:{{ height }}px;object-fit:cover;"{% endif %}
+{% endif %}
+></img>
