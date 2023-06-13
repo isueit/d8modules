@@ -1,0 +1,8 @@
+name: 'Staff Profile Teams'
+type: module
+core_version_requirement: ^8 || ^9
+description: 'Provides a map of team members on a teams view page'
+version: '8.x-1.1-dev'
+package: 'ISUEO'
+dependencies:
+  - staff_profile:staff_profile_secondary
