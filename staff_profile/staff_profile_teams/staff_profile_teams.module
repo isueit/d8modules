@@ -16,8 +16,8 @@ use \Drupal\views\ViewExecutable;
 */
 
 function staff_profile_teams_views_pre_render(ViewExecutable $view) {
-  $colors = ['#CC0000', '#ea1278', '#32cb38', '#942312', '#2321a2', '#ac3482', '#873234', '#2341d8', '#9a7275'];
   if ($view->id() == 'staff_profile_teams' && $view->current_display == 'page_1') {
+    $colors = ['#CC0000', '#ea1278', '#32cb38', '#942312', '#2321a2', '#ac3482', '#873234', '#2341d8', '#9a7275'];
     $styles = '';
     $count = 0;
     foreach ($view->result as $rid => $row) {
