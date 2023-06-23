@@ -9,7 +9,6 @@ function social_red_preprocess_block(&$variables)
   if (substr($variables['plugin_id'], 0, 23) == 'social_red') {
     $variables['#attached']['library'][] = 'social_red/social_red';
     $variables['attributes']['class'][] = 'social_red';
-    $variables
   }
 }
 
