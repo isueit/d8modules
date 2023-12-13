@@ -30,18 +30,18 @@ class ExportLibTemplateForm extends FormBase {
         ];
 
         foreach ($layout->getComponents() as $component) {
-          $section['blocks'][] = [
-            'region' => $component->getRegion(),
-            
-            'id' => $component->get('configuration')['id'],
-            'label' => $component->get('configuration')['label'],
-            'provider' => $component->get('configuration')['provider'],
-            'label_display' => $component->get('configuration')['label_display'],
-            'view_mode' => $component->get('configuration')['view_mode'],
-
-            'info' => unserialize($component->get('configuration')['block_serialized'])->label(),
-            'body' => unserialize($component->get('configuration')['block_serialized'])->body->value
-          ];
+          $raw_section = $component->toArray();
+          //Remove UUID from block, it will be installation specific, search for it based on provider, id and label
+          if (preg_match('/[a-z0-9_]+\:[a-z0-9]{8}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{4}\-[a-z0-9]{12}/', $raw_section['configuration']['id'])) {
+            $raw_section['configuration']['id'] = explode(':', $raw_section['configuration']['id'])[0];
+          }
+          
+          //Include serialized blocks by base64 encoding them, prevents reading while in module, but can be converted using and base64 decoder, decoded when importing
+          if (array_key_exists('block_serialized', $raw_section['configuration'])) {
+            $raw_section['configuration']['block_serialized'] = base64_encode($raw_section['configuration']['block_serialized']);
+          }
+          
+          $section['blocks'][] = $raw_section;
         }
         $temp['sections'][] = $section;
       }
@@ -59,7 +59,8 @@ class ExportLibTemplateForm extends FormBase {
         '#type' => 'textarea',
         '#title' => 'Output',
         '#rows' => 16,
-        '#value' => str_replace(['":"', '":null', '":{', '":[', '":0', '{', '}', '<\/'], ['" => "', '" => null', '" => [', '" => [', '" => 0', '[', ']', '</'], json_encode($templates[($form_state->getValue('template_selector') === null ? 0 : $form_state->getValue('template_selector'))])),
+        '#value' => var_export($templates[($form_state->getValue('template_selector') === null ? 0 : $form_state->getValue('template_selector'))], true)
+        //str_replace(['":"', '":null', '":{', '":[', '":0', '{', '}', '<\/'], ['" => "', '" => null', '" => [', '" => [', '" => 0', '[', ']', '</'], json_encode($templates[($form_state->getValue('template_selector') === null ? 0 : $form_state->getValue('template_selector'))])),
       ]
     ];
 
