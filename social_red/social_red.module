@@ -16,3 +16,17 @@ function social_red_block_content_update(Drupal\Core\Entity\EntityInterface $ent
 function social_red_preprocess_block(&$variables) {
     $variables['#attached']['library'][] = 'social_red/social_red';
 }
+
+/**
+ * Implements hook_theme().
+ */
+function social_red_theme($existing, $type, $theme, $path)
+{
+  return [
+    'block__social_media_red_bar' => [
+      'variables' => ['test_var' => NULL],
+      'template' => 'block--social-media-red-bar',
+      'base hook' => 'block',
+    ],
+  ];
+}
