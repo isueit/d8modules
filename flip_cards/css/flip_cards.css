@@ -275,3 +275,8 @@ p.flip-card_button {
 	background-color: #003D4C;
 	border: 2px solid #003d4c;
 }
+
+.flip-card:focus-within {
+  	transition: none;
+}
+
