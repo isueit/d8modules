@@ -17,6 +17,10 @@
 	margin-right: 15px;
 }
 
+a.continue-reading-link {
+	text-decoration: underline;
+}
+
 @media screen and (max-width : 768px) {
 	#news_from_feed ul {
 		display: grid;

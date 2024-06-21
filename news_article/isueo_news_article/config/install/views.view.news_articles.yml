@@ -694,7 +694,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: 'Read more about {{ title }}'
+            text: 'Continue Reading about {{ title }}'
             make_link: false
             path: ''
             absolute: false
@@ -743,7 +743,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"card\">\r\n  <a href=\"{{ view_node }}\">\r\n    {{ field_thumbnail }}\r\n    <div class=\"card-body\">\r\n      <h3 class=\"card-title\">{{ title }}</h3>\r\n      <div>{{ field_teaser }}</div>\r\n    </div>\r\n  </a>\r\n  <div class=\"card-footer\">\r\n    <a href=\"{{ view_node }}\" class=\"btn btn-outline-danger\" aria-label=\"{{ nothing_1 }}\">Read More</a>\r\n  </div>\r\n</div>"
+            text: "<div class=\"card\">\r\n  <a href=\"{{ view_node }}\">\r\n    {{ field_thumbnail }}\r\n    <div class=\"card-body\">\r\n      <h3 class=\"card-title\">{{ title }}</h3>\r\n      <div>{{ field_teaser }}</div>\r\n    </div>\r\n  </a>\r\n  <div class=\"card-footer\">\r\n    <a href=\"{{ view_node }}\" class=\"continue-reading-link\" aria-label=\"{{ nothing_1 }}\">Continue Reading</a>\r\n  </div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
