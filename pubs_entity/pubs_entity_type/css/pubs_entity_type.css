@@ -1,3 +1,40 @@
+/* --------------------------------------  */
+/* ## NEW CHANGES
+/* --------------------------------------  */
+.isueo-pubs h3.card-title {
+	font-size: clamp(0.8rem, 1vw, 1rem);
+	margin: 0;
+}
+.isueo-pubs-date {
+    width: 50%;
+    float: left;
+    font-size: clamp(.8rem, 1vw, 1rem);
+    color: #676767;
+}
+.isueo-pubs-download {
+    width: 50%;
+    float: left;
+    text-align: right;
+}
+span.isueo-pubs-download-text {
+	font-size: 0.9rem;
+}
+.isueo-pubs .card-body {
+	padding: 0.8rem;
+	border-right: 1px solid #ebebeb;
+	border-left: 1px solid #ebebeb;
+}
+.isueo-pubs-container.card-footer {
+	padding: 0.8rem 0.8rem 1.8rem 0.8rem;
+	border-right: 1px solid #ebebeb;
+	border-left: 1px solid #ebebeb;
+	border-bottom: 1px solid #ebebeb;
+}
+.isueo-pubs-download a {
+	text-decoration: none;
+}
+
+/* Old Changes can be deleted after new goes live */
 .views-field-field-publication-date {
 	font-size: 14px;
 	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
@@ -24,7 +61,6 @@
 .slick__slide img {
 	margin-left: auto;
 	margin-right: auto;
-	border:solid 2px #003d4c;
 }
 
 .slick-list {
@@ -48,7 +84,7 @@ a.publication-title:hover {
 
 nav.slick__arrow {
 	position: sticky;
-	transform: translateY(-392%);
+	transform: translateY(-547%);
 }
 
 button.slick-next.slick-arrow {
