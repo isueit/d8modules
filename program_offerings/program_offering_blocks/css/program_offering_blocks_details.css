@@ -3,21 +3,54 @@
 /* --------------------------------------  */
 /* ## Events
 /* --------------------------------------  */
-
+.program_offering_blocks.ungerboeck_eventlist_details {
+    margin-top: 2.875rem;
+    margin-bottom: 3.875rem;
+}
 .event_details_links {
     padding-top: 20px;
 }
-
 .event_description {
     padding-top: 20px;
-    padding-bottom: 20px;
+    margin-bottom: 1.75rem;
 }
-
-.event_details_dates {
-    font-style: italic;
-    padding-right: 5px;
+.event_details_wrapper {
+    margin-bottom: 1.75rem;
 }
-
+.event_details_dates:before {
+    content: "\f017";
+    font-family: 'FontAwesome';
+    margin-right: 0.4em;
+    font-size: 1.6em;
+    color: var(--cardinal);
+    transition: all 0.2s ease-in-out;
+    vertical-align: middle;
+}
+.event_address_wrapper {
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+}
+.event_address_wrapper:before {
+    content: "\f14e";
+    font-family: 'FontAwesome';
+    margin-right: 0.4em;
+    font-size: 1.6em;
+    color: var(--cardinal);
+    transition: all 0.2s ease-in-out;
+    vertical-align: middle;
+}
+.event_contact_instructor_wrapper {
+    display: flex;
+    margin-top: 2.75rem;
+    margin-bottom: 1.75rem;
+}
+.event_contact_wrapper {
+    min-width: 50%;
+}
+.event_instructor_wrapper {
+    min-width: 50%;
+}
 .events_show_more{
     background-color: #006BA6;
         border-color: #006BA6;
@@ -39,7 +72,6 @@
 
 .event_sessions{padding-top:10px;}
 .event_contact_label{padding-top:10px;}
-.event_contact_name, .event_contact_email, .event_contact_phone {padding-left: 15px;}
 
 img.educational_program_image {max-width: 200px; float:left; margin: 0 8px 5px 0;}
 div.clearer {clear:both;}

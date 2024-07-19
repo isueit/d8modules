@@ -31,7 +31,7 @@ class EventDetailsController extends ControllerBase
     $program_offerings = json_decode($buffer, TRUE);
 
     foreach ($program_offerings as $event) {
-      if ($event['Id'] == $eventID  || (strlen($eventID) < 10 && trim(trim($event['Ungerboeck_Event_ID__c']), "0") == trim(trim($eventID),"0"))) {
+      if ($event['Id'] == $eventID  || (strlen($eventID) < 10 && trim(trim($event['Ungerboeck_Event_ID__c']), "0") == trim(trim($eventID), "0"))) {
 
         $title = $event['Name_Placeholder__c'];
 
@@ -39,7 +39,7 @@ class EventDetailsController extends ControllerBase
         if (!empty($event['Delivery_Language__c']) && 'english' != strtolower($event['Delivery_Language__c'])) {
           $title .= ' - ' . $event['Delivery_Language__c'];
         }
-
+        $results .= ' <div class="event_details_wrapper">' . PHP_EOL;
         $results .= $this->handle_dates($event) . PHP_EOL;
 
         if ('Online' == $event['Event_Location__c']) {
@@ -51,37 +51,42 @@ class EventDetailsController extends ControllerBase
           $event_address .= $event['Program_State__c'] . ' ';
           $event_address .= $event['Event_Location_Zip_Code__c'] . '<br/>' . PHP_EOL;
         }
-        $results .= '  <div class="event_address">' . $event_address . '  </div>' . PHP_EOL;
-
+        $results .= '  <div class="event_address_wrapper">' . '<div class="event_address">' . $event_address . '  </div>' . ' </div>' . PHP_EOL;
+        $results .= ' </div>' . PHP_EOL;
         $description = '';
-//        if (!empty($event['Planned_Program__r.Web_Description__c'])) {
-//          $description = str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . PHP_EOL;
-//        } else {
-          $description .= $event['Program_Description__c'] . PHP_EOL;
-//        }
+        //        if (!empty($event['Planned_Program__r.Web_Description__c'])) {
+        //          $description = str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . PHP_EOL;
+        //        } else {
+        $description .= $event['Program_Description__c'] . PHP_EOL;
+        //        }
         if (!empty($event['Planned_Program__r.Smugmug_ID__c'])) {
           $description .= '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $event['Planned_Program__r.Smugmug_ID__c'] . '/0/XL/' . $event['Planned_Program__r.Smugmug_ID__c'] . '-XL.jpg" alt="" />' . $description . '<div class="clearer"></div>';
         }
-//        if (isset($description)) {
-          $results .= '  <div class="event_description">' . $description . '</div>' . PHP_EOL;
-//        }
+        //        if (isset($description)) {
+        $results .= '  <div class="event_description">' . $description . '</div>' . PHP_EOL;
+        //        }
 
-        $results .= '  <div class="event_contact_label">Contact Info:</div>' . PHP_EOL;
+        $results .= '  <div class="event_contact_instructor_wrapper">' . PHP_EOL;
+        $results .= '  <div class="event_contact_wrapper">' . PHP_EOL;
+        $results .= '  <div class="event_contact_label"><h2 class="isu-block-title h4">Contact</h2></div>' . PHP_EOL;
         $results .= '  <div class="event_contact_name">' . $event['Contact_Information_Name__c'] . '</div>' . PHP_EOL;
         $results .= '  <div class="event_contact_email"><a href="mailto:' . $event['Contact_Information_Email__c']  . '">' . $event['Contact_Information_Email__c'] . '</a></div>' . PHP_EOL;
         if (!empty($event['Contact_Information_Phone__c'])) {
           $results .= '  <div class="event_contact_phone">' . $event['Contact_Information_Phone__c'] . '</div>' . PHP_EOL;
         }
+        $results .= ' </div>' . PHP_EOL;
 
         if (!empty($event['Primary_Instructor_Presenter__c']) && ($event['Contact_Person__c'] <> $event['Primary_Instructor_Presenter__c'])) {
-          $results .= '  <div class="event_contact_label">Primary Instructor:</div>' . PHP_EOL;
+          $results .= '  <div class="event_instructor_wrapper">' . PHP_EOL;
+          $results .= '  <div class="event_contact_label"><h2 class="isu-block-title h4">Instructor</h2></div>' . PHP_EOL;
           $results .= '  <div class="event_contact_name">' . $event['Instructor_Information_Name__c'] . '</div>' . PHP_EOL;
           $results .= '  <div class="event_contact_email"><a href="mailto:' . $event['Instructor_Information_Email__c']  . '">' . $event['Instructor_Information_Email__c'] . '</a></div>' . PHP_EOL;
           if (!empty($event['Instructor_Information_Phone__c'])) {
             $results .= '  <div class="event_contact_phone">' . $event['Instructor_Information_Phone__c'] . '</div>' . PHP_EOL;
           }
+          $results .= ' </div>' . PHP_EOL;
         }
-
+        $results .= PHP_EOL . '</div>' . PHP_EOL;
         $results .= $this->get_event_sessions($event);
         $results .= $this->get_event_links($event);
 
@@ -89,7 +94,6 @@ class EventDetailsController extends ControllerBase
         break;
       }
     }
-    $results .= PHP_EOL . '</div>' . PHP_EOL;
 
     $element = array(
       '#title' => $title,
@@ -179,7 +183,7 @@ class EventDetailsController extends ControllerBase
 
     return $returnStr;
   }
-
+  // KRISTI - Separate link functions so they can be placed differently.
   private function get_event_links($event)
   {
     $now = strtotime('today midnight');
@@ -191,20 +195,20 @@ class EventDetailsController extends ControllerBase
 
     // Add more information link(s)
     if (!empty($event['Program_Offering_Website__c']) && $event['Registration_Link__c'] <> $event['Program_Offering_Website__c']) {
-      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Program_Offering_Website__c'] . '">More information about this event</a></div>' . PHP_EOL;
+      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Program_Offering_Website__c'] . '" class="btn btn-outline-secondary" aria-lable="Learn more about the event">Event Information</a></div>' . PHP_EOL;
     }
     if (!empty($event['Planned_Program_Website__c']) && $event['Registration_Link__c'] <> $event['Planned_Program_Website__c'] && $event['Program_Offering_Website__c'] <> $event['Planned_Program_Website__c']) {
-      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Planned_Program_Website__c'] . '">More information about this program</a></div>' . PHP_EOL;
+      $returnStr .= '    <div class="event_details_more_information"><a href="' . $event['Planned_Program_Website__c'] . '" class="btn btn-outline-secondary" aria-label="Learn more about this program offering">More about this program</a></div>' . PHP_EOL;
     }
 
     if (!empty($event['Registration_Link__c'])) {
-     if ($now >= $regstartdate && $now <= $regenddate) {
-      $returnStr .= '    <div class="event_details_registration"><a href="' . $event['Registration_Link__c'] . '">Register Online</a></div>' . PHP_EOL;
-     } elseif ($now > $regenddate) {
-      $returnStr .= '    <div class="event_details_registration">Registration Closed ' . date('M d, Y', $regenddate) . '</div>' . PHP_EOL;
-     } else {
-      $returnStr .= '    <div class="event_details_registration">Registration Opens ' . date('M d, Y', $regstartdate) . '</div>' . PHP_EOL;
-     }
+      if ($now >= $regstartdate && $now <= $regenddate) {
+        $returnStr .= '    <div class="event_details_registration"><a href="' . $event['Registration_Link__c'] . '">Register Online</a></div>' . PHP_EOL;
+      } elseif ($now > $regenddate) {
+        $returnStr .= '    <div class="event_details_registration">Registration Closed ' . date('M d, Y', $regenddate) . '</div>' . PHP_EOL;
+      } else {
+        $returnStr .= '    <div class="event_details_registration">Registration Opens ' . date('M d, Y', $regstartdate) . '</div>' . PHP_EOL;
+      }
     }
 
     $returnStr .= '  </div>' . PHP_EOL;
