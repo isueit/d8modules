@@ -22,7 +22,7 @@ class EventDetailsController extends ControllerBase
     \Drupal::service('page_cache_kill_switch')->trigger();
 
     $results = '';
-    $results .= PHP_EOL . '<div class="program_offering_blocks ungerboeck_eventlist_details">' . PHP_EOL;
+    //$results .= PHP_EOL . '<div class="program_offering_blocks ungerboeck_eventlist_details">' . PHP_EOL;
     $title = 'Sorry, event not found';
 
     //    $eventID = intval($eventID);
@@ -39,59 +39,80 @@ class EventDetailsController extends ControllerBase
         if (!empty($event['Delivery_Language__c']) && 'english' != strtolower($event['Delivery_Language__c'])) {
           $title .= ' - ' . $event['Delivery_Language__c'];
         }
-        
-        if (!empty($event['Planned_Program__r.Smugmug_ID__c'])) {
-          $results .= '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $event['Planned_Program__r.Smugmug_ID__c'] . '/0/XL/' . $event['Planned_Program__r.Smugmug_ID__c'] . '-XL.jpg" alt="" />' . '<div class="clearer"></div>';
-        }
 
-        $results .= ' <div class="event_details_wrapper">' . PHP_EOL;
-        $results .= $this->handle_dates($event) . PHP_EOL;
+        $address = [
+          'building' => $event['Event_Location_Site_Building__c'],
+          'street' => $event['Event_Location_Street_Address__c'],
+          'city' => $event['Event_Location__c'],
+          'state' => $event['Program_State__c'],
+          'zip' => $event['Event_Location_Zip_Code__c'],
+        ];
 
-        if ('Online' == $event['Event_Location__c']) {
-          $event_address = 'Online';
-        } else {
-          $event_address = $event['Event_Location_Site_Building__c'] . ', ' . PHP_EOL;
-          $event_address .= $event['Event_Location_Street_Address__c'] . ', ' . PHP_EOL;
-          $event_address .= $event['Event_Location__c'] . ', ';
-          $event_address .= $event['Program_State__c'] . ' ';
-          $event_address .= $event['Event_Location_Zip_Code__c'] . PHP_EOL;
-        }
-        $results .= '  <div class="event_address_wrapper">' . $event_address . '  </div>' . PHP_EOL;
-    
+        //if (!empty($event['Planned_Program__r.Smugmug_ID__c'])) {
+          //$results .= '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $event['Planned_Program__r.Smugmug_ID__c'] . '/0/XL/' . $event['Planned_Program__r.Smugmug_ID__c'] . '-XL.jpg" alt="" />' . '<div class="clearer"></div>';
+        //}
+
+        //$results .= ' <div class="event_details_wrapper">' . PHP_EOL;
+        //$results .= $this->handle_dates($event) . PHP_EOL;
+
+        //if ('Online' == $event['Event_Location__c']) {
+          //$event_address = 'Online';
+        //} else {
+          //$event_address = $event['Event_Location_Site_Building__c'] . ', ' . PHP_EOL;
+          //$event_address .= $event['Event_Location_Street_Address__c'] . ', ' . PHP_EOL;
+          //$event_address .= $event['Event_Location__c'] . ', ';
+          //$event_address .= $event['Program_State__c'] . ' ';
+          //$event_address .= $event['Event_Location_Zip_Code__c'] . PHP_EOL;
+        //}
+        //$results .= '  <div class="event_address_wrapper">' . $event_address . '  </div>' . PHP_EOL;
+
         $description = '';
         //        if (!empty($event['Planned_Program__r.Web_Description__c'])) {
         //          $description = str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . PHP_EOL;
         //        } else {
-        $description .= $event['Program_Description__c'] . PHP_EOL;
+        //$description .= $event['Program_Description__c'] . PHP_EOL;
         //        }
-      
-        $results .= '  <div class="event_contact_wrapper">' . '  <a href="mailto:' . $event['Contact_Information_Email__c']  . '">' . $event['Contact_Information_Name__c'] . '</a>';
-        if (!empty($event['Contact_Information_Phone__c'])) {
-          $results .='  <span>' . $event['Contact_Information_Phone__c'] . '</span>' . '</div>' . PHP_EOL;
-        }
 
-        if (!empty($event['Primary_Instructor_Presenter__c']) && ($event['Contact_Person__c'] <> $event['Primary_Instructor_Presenter__c'])) {
-          $results .= '  <div class="event_instructor_wrapper">' . PHP_EOL;
-          $results .= '  <a href="mailto:' . $event['Instructor_Information_Email__c']  . '">' . $event['Instructor_Information_Name__c'] . '</a>';
-          if (!empty($event['Instructor_Information_Phone__c'])) {
-            $results .= '  <span>' . $event['Instructor_Information_Phone__c'] . '</span>' . PHP_EOL;
-          }
-          $results .= ' </div>' . PHP_EOL;
-        }
-        $results .= PHP_EOL . '</div>' . PHP_EOL;
+        $contact = [
+          'name' => $event['Contact_Information_Name__c'],
+          'email' => $event['Contact_Information_Email__c'],
+          'phone' => $event['Contact_Information_Phone__c'],
+        ];
+        $instructor = [
+          'name' => $event['Instructor_Information_Name__c'],
+          'email' => $event['Instructor_Information_Email__c'],
+          'phone' => $event['Instructor_Information_Phone__c'],
+        ];
+
+        //$results .= '  <div class="event_contact_wrapper">' . '  <a href="mailto:' . $event['Contact_Information_Email__c']  . '">' . $event['Contact_Information_Name__c'] . '</a>';
+        //if (!empty($event['Contact_Information_Phone__c'])) {
+          //$results .='  <span>' . $event['Contact_Information_Phone__c'] . '</span>' . '</div>' . PHP_EOL;
+        //}
+
+        //if (!empty($event['Primary_Instructor_Presenter__c']) && ($event['Contact_Person__c'] <> $event['Primary_Instructor_Presenter__c'])) {
+          //$results .= '  <div class="event_instructor_wrapper">' . PHP_EOL;
+          //$results .= '  <a href="mailto:' . $event['Instructor_Information_Email__c']  . '">' . $event['Instructor_Information_Name__c'] . '</a>';
+          //if (!empty($event['Instructor_Information_Phone__c'])) {
+            //$results .= '  <span>' . $event['Instructor_Information_Phone__c'] . '</span>' . PHP_EOL;
+          //}
+          //$results .= ' </div>' . PHP_EOL;
+        //}
+        //$results .= PHP_EOL . '</div>' . PHP_EOL;
 
         //        if (isset($description)) {
-          if (!empty($event['Program_Description__c'])) {
-        $results .= '  <div class="event_description">' . $description;
+          //if (!empty($event['Program_Description__c'])) {
+        //$results .= '  <div class="event_description">' . $description;
         if (!empty($event['Planned_Program_Website__c']) && $event['Registration_Link__c'] <> $event['Planned_Program_Website__c'] && $event['Program_Offering_Website__c'] <> $event['Planned_Program_Website__c']) {
           $results .= '    <span class="event_details_more_information"><a href="' . $event['Planned_Program_Website__c'] . '" aria-label="Learn more about ' . $event['Name_Placeholder__c'] . '">Learn more about this program.</a></span>' . PHP_EOL;
         }
-        $results .=' </div>';
+        //$results .=' </div>';
         //        }
-          }
+          //}
 
         $results .= $this->get_event_sessions($event);
         $results .= $this->get_event_links($event);
+
+        $sessions = $this->get_event_sessions($event);
 
         // We've found the correct event, quit looking for the right event
         break;
@@ -99,8 +120,22 @@ class EventDetailsController extends ControllerBase
     }
 
     $element = array(
+      '#theme' => count($sessions) > 1 ? 'program_offering_details_multisession' : 'program_offering_details_singlesession',
       '#title' => $title,
-      '#markup' => $results,
+      '#smugmug_id' => $event['Planned_Program__r.Smugmug_ID__c'],
+      '#date' => $this->handle_dates($event),
+      '#online' => 'Online' == $event['Event_Location__c'],
+      '#address' => $address,
+      '#description' => $event['Program_Description__c'],
+      '#contact' => $contact,
+      '#instructor' => $instructor,
+      '#sessions' => $sessions,
+      '#urls' => [
+        'event' => $event['Program_Offering_Website__c'],
+        'program' => $event['Planned_Program_Website__c'],
+      ],
+      '#registration' => $this->get_registration_info($event),
+      //'#markup' => $results,
       '#attached' => ['library' => ['program_offering_blocks/program_offering_blocks_details']],
     );
     return $element;
@@ -111,6 +146,22 @@ class EventDetailsController extends ControllerBase
     // Start with Date part of start time
     $startdate = strtoTime($event['Start_Time_and_Date__c']);
     $enddate = strtoTime($event['End_Date_and_Time__c']);
+    $nextdate = strtotime($event['Next_Start_Date__c']);
+
+    $date = [
+      'start_date' => date('F j, Y', $startdate),
+      'start_time' => date('Gi', $startdate) <> '0000' ? date('g:i A', $startdate) : '',
+      'start_day' => date('l', $startdate),
+      'end_date' => date('F j, Y', $enddate),
+      'end_time' => date('Gi', $enddate) <> '0000' ? date('g:i A', $enddate) : '',
+      'end_day' => date('l', $enddate),
+      'next_date' => date('F j, Y', $nextdate),
+      'next_time' => date('Gi', $nextdate) <> '0000' ? date('g:i A', $nextdate) : '',
+      'next_day' => date('l', $nextdate),
+    ];
+
+    return $date;
+/*
     $output = date('l, F j, Y', $startdate);
 
     // If start time isn't midnight, then display the start time also
@@ -142,10 +193,12 @@ class EventDetailsController extends ControllerBase
     }
 
     return $output;
+  */
   }
 
   private function get_event_sessions($event)
   {
+    $sessions = [];
     $count = 0;
     $returnStr = '';
     $event_sessions = '';
@@ -166,25 +219,18 @@ class EventDetailsController extends ControllerBase
 
     foreach ($session_names as $session_name) {
       if (!empty($event[$session_name])) {
-        $multiple_sessions = true;
-        $tmpstr = date('l, F j, Y g:i a', strtoTime($event[$session_name]));
-        if ($event[$session_name] == $event['Next_Start_Date__c']) {
-          $tmpstr = '<span class="next_session">' . $tmpstr . '</span>';
-        }
-        $event_sessions .= '<li>' . $tmpstr . '</li>' . PHP_EOL;
-        $count++;
+        $tmpdate = strtotime($event[$session_name]);
+        $sessions[date('U', $tmpdate)] = [
+          'date' => date('F j, Y', $tmpdate),
+          'time' => date('g:i a', $tmpdate),
+          'day' => date('l', $tmpdate),
+          'is_next' => $event[$session_name] == $event['Next_Start_Date__c'],
+        ];
       }
     }
 
-    if ($count > 1) {
-      $returnStr .= '<div class="event_sessions">Sessions:<br/>' . PHP_EOL;
-      $returnStr .= '<ol>' . PHP_EOL;
-      $returnStr .= $event_sessions;
-      $returnStr .= '</ol>' . PHP_EOL;
-      $returnStr .= '</div>' . PHP_EOL;
-    }
-
-    return $returnStr;
+    ksort($sessions);
+    return $sessions;
   }
   // KRISTI - Separate link functions so they can be placed differently.
   private function get_event_links($event)
@@ -217,5 +263,37 @@ class EventDetailsController extends ControllerBase
 
     $returnStr .= '  </div>' . PHP_EOL;
     return $returnStr;
+  }
+
+  private function get_registration_info($event) {
+
+    $now = strtotime('today midnight');
+    $regstartdate = !empty($event['Registration_Opens__c']) ? strtotime($event['Registration_Opens__c']) : $now;
+    $regenddate = !empty($event['Registration_Deadline__c']) ? strtotime($event['Registration_Deadline__c']) : $now;
+
+    $registration = [
+      'url' => $event['Registration_Link__c'],
+    ];
+
+    if (!empty($registration['url'])) {
+      if ($now >= $regstartdate && $now <= $regenddate) {
+        //$returnStr .= '    <div class="event_details_registration"><a href="' . $event['Registration_Link__c'] . '" aria-label="Register for ' . $event['Name_Placeholder__c'] . '">Register Online</a></div>' . PHP_EOL;
+      } elseif ($now > $regenddate) {
+        $registration['url'] = '';
+        $registration['closes']['date'] = date('F j, Y', $regenddate);
+        $registration['closes']['time'] = '11:59 PM';
+        $registration['closes']['day'] = date('l', $regenddate);
+
+        //$returnStr .= '    <div class="event_details_registration">Registration for this event closed on ' . date('F j, Y.', $regenddate) . '</div>' . PHP_EOL;
+      } else {
+        $registration['url'] = '';
+        $registration['opens']['date'] = date('F j, Y', $regenddate);
+        $registration['opens']['time'] = '00:00 AM';
+        $registration['opens']['day'] = date('l', $regenddate);
+        //$returnStr .= '    <div class="event_details_registration">Registration for this event opens on ' . date('F j, Y.', $regstartdate) . '</div>' . PHP_EOL;
+      }
+    }
+
+    return $registration;
   }
 }
