@@ -4,7 +4,7 @@
  * CSS styles for the Homepage Content Type
  *
  * This is used for county sites only
- * to prevent accidently deleting the page and 
+ * to prevent accidently deleting the page and
  * to maintain consistency for each site.
  *
  */
@@ -44,10 +44,10 @@
 .announcement {
 	font-weight: 700;
 	padding-bottom: 20px;
-	color: var(--midnight);
+	color: var(--gold);
 	margin-left: auto;
 	margin-right: auto;
-	background: var(--gold);
+	background: var(--midnight);
 	padding-left: 11%;
 	font-size: 1.25rem;
 }
