@@ -41,13 +41,18 @@
 .node-type_homepage-ct .isu-region.isu-region_content {
     width: 100%;
 }
-.announcement {
-	font-weight: 700;
-	padding-bottom: 20px;
-	color: var(--midnight);
+.announcement-wrapper {
+	background: var(--gold);
+	padding-top: .5rem;
+	padding-bottom: 1rem;
+}
+.announcement-wrapper-content {
+	max-width: 1140px;
 	margin-left: auto;
 	margin-right: auto;
-	background: var(--gold);
-	padding-left: 11%;
+}
+.announcement {
+	font-weight: 700;
+	color: var(--midnight);
 	font-size: 1.25rem;
 }
