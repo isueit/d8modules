@@ -1,0 +1,5 @@
+name: 'Date Dropdown'
+type: module
+description: 'A custom module to modify year dropdown options.'
+core_version_requirement: ^9 || ^10
+package: Custom
