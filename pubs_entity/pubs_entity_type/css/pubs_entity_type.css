@@ -1,11 +1,25 @@
 .views-field-field-publication-date {
 	font-size: 14px;
-	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
-	padding: 1.75rem 1rem 0.25rem 1rem;
-	background-color: #003D4C;
-	position:absolute;
-	bottom:0;
 	width:100%;
+	font-size: 16px;
+	color: var(--dk-gray);
+	position: absolute;
+	bottom: 0;
+	margin: 10px;
+
+}
+
+.views-field-name {
+	display: block;
+	color: var(--cardinal);
+	font-weight: 600;
+	font-size: 16px;
+	margin: 20px 5px;
+	text-decoration: none;
+}
+
+.views-field-name:hover {
+	color: var(--burgundy);
 }
 
 /* Fix for just homepage */
@@ -19,36 +33,34 @@
 	width: 250px;
 	float: left;
 	position:relative;
+	height: 480px;
+	margin-bottom: 50px;
+	transition: ease .25s;
+	border: 2px #ddd solid;
 }
 
 .slick__slide img {
 	margin-left: auto;
 	margin-right: auto;
-	border:solid 2px #003d4c;
+	border-bottom: 2px #ddd solid;
 }
 
-.slick-list {
-	margin-top:10px;
-}
 
 a.publication-title {
 	display: block;
 	min-height: 58px;
-	color: #ffffff;
-	border-bottom: 2px solid #f1be48;
-	text-align: center;
+	color: var(--cardinal);
 	text-decoration: none;
-	margin-bottom: 10%;
 }
 
 a.publication-title:hover {
-	color: #f1be48;
+	color: var(--burgundy);
 	text-decoration: none;
 }
 
 nav.slick__arrow {
 	position: sticky;
-	transform: translateY(-392%);
+	transform: translateY(-300px);
 }
 
 button.slick-next.slick-arrow {
@@ -102,6 +114,18 @@ button.slick-next, button.slick-prev {
 .slick-prev, .slick-next {
 	font-size: 0;
 }
+
+.isueo-pubs-download {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	margin: 10px;
+}
+
+.isueo-pubs-download a {
+	text-decoration: none;
+}
+
 
 /* --------------------------------------  */
 /* ## Responsive
