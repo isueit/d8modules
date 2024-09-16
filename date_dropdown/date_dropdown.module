@@ -1,22 +1,14 @@
 <?php
+
 /**
  * Implements hook_form_alter().
  */
 function date_dropdown_form_alter(&$form, &$form_state, $form_id) {
-  // Check if the form ID is the "node-county-job-opening-form".
+  // Correct the form ID based on the hidden input value you provided.
   if ($form_id === 'node_county_job_opening_form') {
-
-    // Check if the application deadline date field exists.
-    if (isset($form['field_application_deadline_date']['widget'][0]['value']['year'])) {
-
-      // Get the current year.
-      $current_year = date('Y');
-
-      // Define the range of years (current year to 2040).
-      $years = range($current_year, 2040);
-
-      // Set the options for the year dropdown.
-      $form['field_application_deadline_date']['widget'][0]['value']['year']['#options'] = array_combine($years, $years);
-    }
+    // Attach the custom JavaScript to modify the year dropdown.
+    $form['#attached']['library'][] = 'date_dropdown/date_dropdown_js';
   }
 }
+
+

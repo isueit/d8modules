@@ -1,0 +1,9 @@
+date_dropdown_js:
+  version: 1.x
+  js:
+    date_dropdown.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+
