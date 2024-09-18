@@ -29,7 +29,7 @@ class StaffContactBlock extends BlockBase
     $results = '';
 
     // Get the Staff Profiles from this site
-    $nids = \Drupal::entityQuery('node')->condition('type', 'staff_profile')->condition('status', 1)->sort('field_staff_profile_last_name')->sort('field_staff_profile_first_name')->execute();
+    $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->condition('status', 1)->sort('field_staff_profile_last_name')->sort('field_staff_profile_first_name')->execute();
     $staff_nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
 
     // Get the corrent node

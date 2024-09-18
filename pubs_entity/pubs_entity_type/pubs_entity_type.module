@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\isueo_helpers\ISUEOHelpers;
+
 /**
  * Validate entity in form and entity
  */
@@ -13,11 +15,11 @@ function validatePubsEntity($validateID, $curEntity) {
 
   try {
     if (0 === substr_compare($url, "/", -1) && explode(' ', get_headers($url . $validateID, 1)[0])[1] == 200) {
-      $raw = file_get_contents($url . $validateID);
+      $raw = ISUEOHelpers\Files::fetch_url($url . $validateID);
     } else if (0 === substr_compare($url, ".json", -5) && explode(' ', get_headers($url, 1)[0])[1] == 200) {
-      $raw = file_get_contents($url);
+      $raw = ISUEOHelpers\Files::fetch_url($url);
     } else if (explode(' ', get_headers($url . "/" . $validateID, 1)[0])[1] == 200) {
-      $raw = file_get_contents($url . "/" . $validateID);
+      $raw = ISUEOHelpers\Files::fetch_url($url . "/" . $validateID);
     } else {
       $raw = "";
     }

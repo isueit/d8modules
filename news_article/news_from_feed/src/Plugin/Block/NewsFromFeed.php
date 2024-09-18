@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Provides a 'NewsFromFeed' block plugin.
@@ -150,7 +151,7 @@ class NewsFromFeed extends BlockBase
   {
     static $parsed_json;
     if (!isset($parsed_json)) {
-      $json = file_get_contents('https://www.extension.iastate.edu/news/json-feed');
+      $json = ISUEOHelpers\Files::fetch_url('https://www.extension.iastate.edu/news/json-feed');
       $parsed_json = json_decode($json, false);
     }
     return $parsed_json;

@@ -1,0 +1,73 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.plp_program.body
+    - field.field.node.plp_program.field_plp_program_audiences
+    - field.field.node.plp_program.field_plp_program_category
+    - field.field.node.plp_program.field_plp_program_children
+    - field.field.node.plp_program.field_plp_program_contact_email
+    - field.field.node.plp_program.field_plp_program_contact_name
+    - field.field.node.plp_program.field_plp_program_contact_phone
+    - field.field.node.plp_program.field_plp_program_critical_issue
+    - field.field.node.plp_program.field_plp_program_event_pgm_ids
+    - field.field.node.plp_program.field_plp_program_interest_areas
+    - field.field.node.plp_program.field_plp_program_mydata_id
+    - field.field.node.plp_program.field_plp_program_num_events
+    - field.field.node.plp_program.field_plp_program_num_indicators
+    - field.field.node.plp_program.field_plp_program_num_measures
+    - field.field.node.plp_program.field_plp_program_on_counties
+    - field.field.node.plp_program.field_plp_program_program_area
+    - field.field.node.plp_program.field_plp_program_search_terms
+    - field.field.node.plp_program.field_plp_program_smugmug
+    - field.field.node.plp_program.field_plp_program_sort_calc
+    - field.field.node.plp_program.field_plp_program_title_filter
+    - field.field.node.plp_program.field_plp_program_topics
+    - field.field.node.plp_program.field_plp_program_website
+    - field.field.node.plp_program.layout_builder__layout
+    - node.type.plp_program
+  module:
+    - text
+    - user
+id: node.plp_program.teaser
+targetEntityType: node
+bundle: plp_program
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_plp_program_audiences: true
+  field_plp_program_category: true
+  field_plp_program_children: true
+  field_plp_program_contact_email: true
+  field_plp_program_contact_name: true
+  field_plp_program_contact_phone: true
+  field_plp_program_critical_issue: true
+  field_plp_program_event_pgm_ids: true
+  field_plp_program_interest_areas: true
+  field_plp_program_mydata_id: true
+  field_plp_program_num_events: true
+  field_plp_program_num_indicators: true
+  field_plp_program_num_measures: true
+  field_plp_program_on_counties: true
+  field_plp_program_program_area: true
+  field_plp_program_search_terms: true
+  field_plp_program_smugmug: true
+  field_plp_program_sort_calc: true
+  field_plp_program_title_filter: true
+  field_plp_program_topics: true
+  field_plp_program_website: true
+  layout_builder__layout: true

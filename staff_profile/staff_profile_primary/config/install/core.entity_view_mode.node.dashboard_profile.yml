@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+  enforced:
+    module:
+      - staff_profile_primary
+id: node.dashboard_profile
+label: 'Dashboard Profile'
+description: ''
+targetEntityType: node
+cache: true

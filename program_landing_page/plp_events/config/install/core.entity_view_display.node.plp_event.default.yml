@@ -1,0 +1,280 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.plp_event.body
+    - field.field.node.plp_event.field_plp_event_account
+    - field.field.node.plp_event.field_plp_event_add_counties
+    - field.field.node.plp_event.field_plp_event_audiences
+    - field.field.node.plp_event.field_plp_event_contact_email
+    - field.field.node.plp_event.field_plp_event_contact_name
+    - field.field.node.plp_event.field_plp_event_contact_phone
+    - field.field.node.plp_event.field_plp_event_end_dates
+    - field.field.node.plp_event.field_plp_event_instructor_email
+    - field.field.node.plp_event.field_plp_event_instructor_name
+    - field.field.node.plp_event.field_plp_event_instructor_phone
+    - field.field.node.plp_event.field_plp_event_location_city
+    - field.field.node.plp_event.field_plp_event_location_site
+    - field.field.node.plp_event.field_plp_event_location_state
+    - field.field.node.plp_event.field_plp_event_location_street
+    - field.field.node.plp_event.field_plp_event_location_zip
+    - field.field.node.plp_event.field_plp_event_mydata_id
+    - field.field.node.plp_event.field_plp_event_next_start_date
+    - field.field.node.plp_event.field_plp_event_program_area
+    - field.field.node.plp_event.field_plp_event_program_id
+    - field.field.node.plp_event.field_plp_event_program_name
+    - field.field.node.plp_event.field_plp_event_program_url
+    - field.field.node.plp_event.field_plp_event_reg_closes
+    - field.field.node.plp_event.field_plp_event_reg_opens
+    - field.field.node.plp_event.field_plp_event_reg_url
+    - field.field.node.plp_event.field_plp_event_start_dates
+    - field.field.node.plp_event.field_plp_event_url
+    - node.type.plp_event
+  module:
+    - datetime
+    - link
+    - text
+    - user
+id: node.plp_event.default
+targetEntityType: node
+bundle: plp_event
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_plp_event_account:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_plp_event_add_counties:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_plp_event_audiences:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 117
+    region: content
+  field_plp_event_contact_email:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_plp_event_contact_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_plp_event_contact_phone:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 111
+    region: content
+  field_plp_event_end_dates:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_plp_event_instructor_email:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 114
+    region: content
+  field_plp_event_instructor_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 113
+    region: content
+  field_plp_event_instructor_phone:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 115
+    region: content
+  field_plp_event_location_city:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 121
+    region: content
+  field_plp_event_location_site:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 119
+    region: content
+  field_plp_event_location_state:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 122
+    region: content
+  field_plp_event_location_street:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 120
+    region: content
+  field_plp_event_location_zip:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 123
+    region: content
+  field_plp_event_mydata_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 118
+    region: content
+  field_plp_event_next_start_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  field_plp_event_program_area:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 116
+    region: content
+  field_plp_event_program_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 124
+    region: content
+  field_plp_event_program_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 125
+    region: content
+  field_plp_event_program_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 126
+    region: content
+  field_plp_event_reg_closes:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 130
+    region: content
+  field_plp_event_reg_opens:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 129
+    region: content
+  field_plp_event_reg_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 131
+    region: content
+  field_plp_event_start_dates:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_plp_event_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 127
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

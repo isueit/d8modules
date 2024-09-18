@@ -1,6 +1,6 @@
 staff_profile_reed.regional_director_dashboard:
   title: 'Dashboard'
-  parent: main
-  menu_name: main
+  parent: staff
+  menu_name: staff
   route_name: staff_profile_reed.dashboard_page
   weight: 10

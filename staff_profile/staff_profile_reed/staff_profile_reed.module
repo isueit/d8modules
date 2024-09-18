@@ -40,10 +40,10 @@ function staff_profile_reed_mail($key, &$message, $params) {
       $message['from'] = \Drupal::config('system.site')->get('mail');
       if ($params['needstraining']) {
         $message['subject'] = t('Web Editor Training Requested', $options);
-        $message['body'][] = t('Notice: @director requested that you be given content editor access for @county county. To gain access, you must take the Contnet Editor Training at https://moodle.extension.iastate.edu/course/view.php?id=211. It may take up to 24 hours after you complete the training to gain access to login to the @county county website.', array('@county' => trim($params['county'])));
+        $message['body'][] = t('Notice: @director requested that you be given content editor access for @county county. To gain access, you must take the Content Editor Training at https://moodle.extension.iastate.edu/course/view.php?id=211. Please note that access is granted automatically, and there is no need to email or inform anyone once you have completed the training. Be patient, as it may take up to 24 hours for access to be granted after completing the training. Please submit all website related support requests through the ticketing system at https://isuextweb.atlassian.net/servicedesk/customer/portals.', array('@county' => trim($params['county'])));
       } else {
         $message['subject'] = t('Web Editor Access Given', $options);
-        $message['body'][] = t('Notice: You have been added as a @county county content editor. Login capabilities may take up to 24 hours after this notification.  No additional action is needed.', array('@county' => trim($params['county'])));
+        $message['body'][] = t('Notice: You have been added as a @county county content editor. Login capabilities may take up to 24 hours after this notification.  No additional action is needed. Please submit all website related support requests through the ticketing system at https://isuextweb.atlassian.net/servicedesk/customer/portals.', array('@county' => trim($params['county'])));
       }
       break;
     case 'request_staff_profile_editor_training_reg_director':
@@ -56,7 +56,7 @@ function staff_profile_reed_mail($key, &$message, $params) {
       //Sent to extweb to notify that training was requested
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('@director has added: "@name" [@netid] as a @county county content editor', array('@name' => $params['name'], '@netid' => $params['netid'], '@county' => trim($params['county']), '@director' => $params['reg_director']), $options);
-      $message['body'][] = t('Notice: User @director has added "@name" [@netid] as a @county county content editor. ' . ($params['needstraining'] ? "Training is been requested for this user." : "This user has the required Web Editor training"), array('@name' => $params['name'], '@netid' => $params['netid'], '@county' => trim($params['county']), '@director' => $params['reg_director']));
+      $message['body'][] = t('Notice: User @director has added "@name" [@netid] as a @county county content editor. ' . ($params['needstraining'] ? "Training has been requested for this user." : "This user has the required Web Editor training"), array('@name' => $params['name'], '@netid' => $params['netid'], '@county' => trim($params['county']), '@director' => $params['reg_director']));
       break;
 
     //Removing users
@@ -70,7 +70,7 @@ function staff_profile_reed_mail($key, &$message, $params) {
       //Sent to extweb to notify that staff_profile was removed from county
       $message['from'] = \Drupal::config('system.site')->get('mail');
       $message['subject'] = t('@director has removed: "@name" [@netid] as a @county county content editor', array('@name' => $params['name'], '@netid' => $params['netid'], '@county' => trim($params['county']), '@director' => $params['reg_director']), $options);
-      $message['body'][] = t('Notice: User @director has removed "@name" [@netid] from @county web editors', array('@name' => $params['name'], '@netid' => $params['netid'], '@county' => trim($params['county']), '@director' => $params['reg_director']));
+      $message['body'][] = t('Notice: User @director has removed "@name" [@netid] from @county county content editor', array('@name' => $params['name'], '@netid' => $params['netid'], '@county' => trim($params['county']), '@director' => $params['reg_director']));
       break;
   }
 }

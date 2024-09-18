@@ -39,7 +39,7 @@ class Templates extends PluginBase implements CKEditorPluginInterface, CKEditorP
    * Implements \Drupal\ckeditor\Plugin\CKEditorPluginInterface::getFile().
    */
   function getFile() {
-    return drupal_get_path('module', 'ckeditor_templates') . '/js/plugins/templates/plugin.js';
+    return \Drupal::service('extension.list.module')->getPath('ckeditor_templates') . '/js/plugins/templates/plugin.js';
   }
   /**
    * Implements \Drupal\ckeditor\Plugin\CKEditorPluginButtonsInterface::getButtons().
@@ -48,7 +48,7 @@ class Templates extends PluginBase implements CKEditorPluginInterface, CKEditorP
     return array(
       'Templates' => array(
         'label' => t('Templates'),
-        'image' => drupal_get_path('module', 'ckeditor_templates') . '/js/plugins/templates/icons/templates.png',
+        'image' => \Drupal::service('extension.list.module')->getPath('ckeditor_templates') . '/js/plugins/templates/icons/templates.png',
       )
     );
   }

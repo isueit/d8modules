@@ -1,0 +1,75 @@
+<?php
+
+use \Drupal\taxonomy\Entity\Vocabulary;
+
+/**
+ * Implements hook_install().
+ */
+function plp_programs_install()
+{
+  // Define Vocabularies/taxonomies
+  $vocabularies = [
+    'intended_audiences' => 'Intended Audiences',
+    'program_areas' => 'Program Areas',
+    'critical_issues' => 'Critical Issues',
+    'interest_areas' => 'Interest Areas',
+  ];
+
+  // Make sure Vocabulary exits
+  foreach ($vocabularies as $key => $value) {
+    if (!Vocabulary::load($key)) {
+      Vocabulary::create(['vid' => $key, 'description' => '', 'name' => $value,])->save();
+    }
+  }
+
+  // Don't show the page title of plp_programs using the block, it's handled elsewhere
+  $config = \Drupal::configFactory()->getEditable('block.block.iastate_theme_page_title');
+  if ($config) {
+    $config->set('visibility', [
+      "entity_bundle:node" => [
+        "id" => "entity_bundle:node",
+        "negate" => false,
+        "context_mapping" => [
+          "node" => "@node.node_route_context:node"
+        ],
+        "bundles" => [
+          "layout_ct" => "layout_ct",
+          "page" => "page",
+          "plp_child" => "plp_child",
+          "staff_profile" => "staff_profile"
+        ]
+      ],
+      "request_path" => [
+        "id" => "request_path",
+        "negate" => true,
+        "pages" => "<front>",
+      ],
+    ]);
+    $config->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+
+function plp_programs_uninstall()
+{
+
+  // Remove content from the content types created by this module
+  foreach (['plp_child', 'plp_program'] as $type) {
+    $storage_handler = \Drupal::entityTypeManager()->getStorage("node");
+    $entities = $storage_handler->loadByProperties(["type" => $type]);
+    $storage_handler->delete($entities);
+  }
+
+  // Remove the taxonomy this module created
+  /*
+  foreach (['intended_audiences', 'critical_issues', 'interest_areas'] as $type) {
+    $taxonomy = Vocabulary::load($type);
+    if ($taxonomy) {
+      $taxonomy->delete();
+    }
+  }
+  */
+}

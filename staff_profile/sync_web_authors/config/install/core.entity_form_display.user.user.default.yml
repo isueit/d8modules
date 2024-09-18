@@ -6,6 +6,9 @@ dependencies:
   module:
     - path
     - user
+  enforced:
+    module:
+      - sync_web_authors
 id: user.user.default
 targetEntityType: user
 bundle: user

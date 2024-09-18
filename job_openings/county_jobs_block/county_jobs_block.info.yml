@@ -1,0 +1,8 @@
+name: County Jobs Block - Create a block to display Jobs
+description: Module to create a block to display job openings for a county
+package: ISUEO
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - drupal:block
+  - d8modules:isueo_helpers

@@ -49,6 +49,6 @@ class PubImageFormatter extends FormatterBase {
          $alt = $value->getEntity()->name->value;
        }
      }
-     return '<img src="' . $url . '" alt="' . $alt . '">';
+     return '<img src="' . $url . '" alt="' . str_replace('"', '&quot;', $alt) . '">';
    }
 }

@@ -1,0 +1,31 @@
+/**
+ * @file
+ * CSS styles for the Landing Page Content Type
+ *
+ * Uses Layout Builder to create a Landing Page Content Type
+ * Iowa State University websites. If it is not desired or relevant, remove or
+ * disable it. Never repurpose or modify in any way.
+ *
+ */
+
+ :root {
+	--cardinal: #c8102e;
+	--gold: #f1be48;
+	--burgundy: #7c2529;
+	--dk-gray: #4a4a4a;
+	--lt-gray: #f5f5f5;
+	--md-gray: #ebebeb;
+	--midnight: #003d4c;
+	--green: #008540;
+}
+
+.node-type_layout-ct .isu-region.isu-region_content {
+  width: 100%;
+}
+.node-type_layout-ct #layout_builder {
+  border: 3px solid #2f91da;
+  background-color: #fff;
+}
+.node-type_layout-ct form#layout-builder-discard-changes {
+  padding-bottom: 20px;
+}

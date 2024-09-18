@@ -6,6 +6,7 @@ use Drupal;
 use Drupal\staff_profile_reed\Controller\CountyWebEditors;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
+use Drush\Drush;
 
 /**
  * Class MyHelperFunctions.
@@ -32,32 +33,54 @@ class MyHelperFunctions
    */
   public function getCountiesServed()
   {
+    // Get the config, and make sure it looks complete
+    $primary_config = \Drupal::config('staff_profile_primary.settings');
+
+    // Find Regional Director overrides and excludes
+    $regional_directors_overrides = array();
+    $overrides = explode("\r\n", $primary_config->get('reed_overrides'));
+    foreach ($overrides as $override) {
+      list($k, $v) = explode('|', $override);
+      $regional_directors_overrides[strtolower(trim($k))] = explode(';', $v);
+    }
+
+
+    // Initiate variables
     $user = User::load(\Drupal::currentUser()->id());
     $username = $user->getAccountName();
     $counties = [];
-    switch ($username) {
-      case 'adminn':
-        // Untested, but should work
-        $counties = $this->overrideCounties('all');
-        break;
-      case 'bwhaley':
-        $counties = $this->overrideCounties('north');
-        break;
-      case 'jansmith':
-        $counties = $this->overrideCounties('south');
-        break;
-      default:
+
+    // Find counties
+    if ($username == 'adminn') {
+      $counties = $this->overrideCounties('all');
+    } elseif (array_key_exists($username, $regional_directors_overrides)) {
+      // Handle overrides
+      switch ($regional_directors_overrides[$username][0]) {
+        case 'all':
+          $counties = $this->overrideCounties('all');
+          break;
+        case 'north':
+          $counties = $this->overrideCounties('north');
+          break;
+        case 'south':
+          $counties = $this->overrideCounties('south');
+          break;
+        default:
+          $counties = $this->overrideCounties('special', $regional_directors_overrides[$username]);
+          break;
+      }
+    } else {
+      // Use counties from staff directory
       $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'staff_profile', 'field_staff_profile_netid' => $username]);
-        if ($node = reset($nodes)) {
-          $counties = $node->field_staff_profile_cty_served->referencedEntities();
-        }
-        break;
+      if ($node = reset($nodes)) {
+        $counties = $node->field_staff_profile_cty_served->referencedEntities();
+      }
     }
 
     return $counties;
   }
 
-  private function overrideCounties($area)
+  private function overrideCounties($area, $override_counties = [])
   {
     $north = [
       'Allamakee', 'Black Hawk', 'Bremer', 'Buchanan', 'Buena Vista', 'Butler', 'Benton', 'Calhoun',
@@ -93,6 +116,11 @@ class MyHelperFunctions
           break;
         case 'south':
           if (in_array($tmp->label(), $south)) {
+            $counties[] = $tmp;
+          }
+          break;
+        case 'special':
+          if (in_array($tmp->label(), $override_counties)) {
             $counties[] = $tmp;
           }
           break;

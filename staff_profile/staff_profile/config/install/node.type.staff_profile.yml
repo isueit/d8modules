@@ -4,6 +4,9 @@ dependencies:
   module:
     - menu_ui
     - scheduler
+  enforced:
+    module:
+      - staff_profile
 third_party_settings:
   menu_ui:
     available_menus:

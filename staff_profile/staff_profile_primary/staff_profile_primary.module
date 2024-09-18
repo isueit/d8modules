@@ -4,11 +4,15 @@ use \Drupal\node\Entity\Node;
 use \Drupal\user\Entity\User;
 use \Drupal\Component\Utility\Random;
 use \Drupal\encrypt\Entity\EncryptionProfile;
+use \Drupal\taxonomy\Entity\Term;
+use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\redirect\Entity\Redirect;
 
 /**
  * Implements hook_rebuild()
  */
-function staff_profile_primary_rebuild() {
+function staff_profile_primary_rebuild()
+{
   \Drupal::logger('staff_profile_primary')->info('Starting staff profile refresh from hook_rebuild page');
   staff_profile_primary_profile_from_database();
   staff_profile_primary_web_editor_training();
@@ -19,7 +23,7 @@ function staff_profile_primary_rebuild() {
   while ($line = fgets($file)) {
     $exploded = explode(':', $line);
 
-    $nids = \Drupal::entityQuery('node')->condition('type', 'staff_profile')->condition('field_staff_profile_netid', $exploded[0])->execute();
+    $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->condition('field_staff_profile_netid', $exploded[0])->execute();
     $nodes =  Node::loadMultiple($nids);
     if (!empty($nodes)) {
       foreach ($nodes as $node) {
@@ -31,21 +35,21 @@ function staff_profile_primary_rebuild() {
     }
   }
   */
-
 }
 
 /**
  * Implements hook_cron().
  */
-function staff_profile_primary_cron() {
+function staff_profile_primary_cron()
+{
   //staff_profile_primary_profile_from_database();
   //staff_profile_primary_web_editor_training();
 }
 
-function staff_profile_primary_profile_from_database () {
+function staff_profile_primary_profile_from_database()
+{
   // Get all Staff Profile nodes
-  $nids = \Drupal::entityQuery('node')->condition('type','staff_profile')->execute();
-  $nodes =  Node::loadMultiple($nids);
+  $nodes = Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'staff_profile', ]);
 
   // Get the config, and make sure it looks complete
   $primary_config = \Drupal::config('staff_profile_primary.settings');
@@ -57,14 +61,27 @@ function staff_profile_primary_profile_from_database () {
   // Build array of address fixes
   $address_fixes = array();
   $temp_fixes = explode("\r\n", $primary_config->get('address_fixes'));
-  foreach($temp_fixes as $temp_fix) {
+  foreach ($temp_fixes as $temp_fix) {
     list($k, $v) = explode('::', $temp_fix);
     $address_fixes[strtolower($k)] = $v;
   }
 
+  // Find Regional Director overrides and excludes
+  $regional_directors_overrides = array();
+  $regional_directors_exclude = array();
+  $temp_fixes = explode("\r\n", $primary_config->get('reed_overrides'));
+  foreach ($temp_fixes as $temp_fix) {
+    list($k, $v) = explode('|', $temp_fix);
+    if (strtolower(trim($v)) == 'none') {
+      $regional_directors_exclude[] = strtolower(trim($k)) . '@iastate.edu';
+    } else {
+      $regional_directors_overrides[] = strtolower(trim($k)) . '@iastate.edu';
+    }
+  }
+
   // Get the database login informatio out of config
   $encrypt_profile = EncryptionProfile::load($primary_config->get('sync_encrypt_profile'));
-  $db_password = \Drupal::service('encryption')->decrypt( $primary_config->get('db_password'), $encrypt_profile);
+  $db_password = \Drupal::service('encryption')->decrypt($primary_config->get('db_password'), $encrypt_profile);
   $db_database = \Drupal::service('encryption')->decrypt($primary_config->get('db_database'), $encrypt_profile);
   $db_username = \Drupal::service('encryption')->decrypt($primary_config->get('db_username'), $encrypt_profile);
   $db_server = \Drupal::service('encryption')->decrypt($primary_config->get('db_address'), $encrypt_profile);
@@ -107,7 +124,7 @@ function staff_profile_primary_profile_from_database () {
 
   $count = 0;
   $regional_directors = [];
-  foreach($profiles as $profile) {
+  foreach ($profiles as $profile) {
 
     // Find the node that matches the profile, if one exists
     $mynode = '';
@@ -145,8 +162,8 @@ function staff_profile_primary_profile_from_database () {
     $mynode->field_staff_profile_last_name->value = $profile->LastName;
     $mynode->field_staff_profile_addr = array(
       'country_code' => 'US',
-      'address_line1' => array_key_exists(strtolower($profile->Address1), $address_fixes)? $address_fixes[strtolower($profile->Address1)] : $profile->Address1,
-      'address_line2' => array_key_exists(strtolower($profile->Address2), $address_fixes)? $address_fixes[strtolower($profile->Address2)] : $profile->Address2,
+      'address_line1' => array_key_exists(strtolower($profile->Address1), $address_fixes) ? $address_fixes[strtolower($profile->Address1)] : $profile->Address1,
+      'address_line2' => array_key_exists(strtolower($profile->Address2), $address_fixes) ? $address_fixes[strtolower($profile->Address2)] : $profile->Address2,
       'locality' => $profile->City,
       'administrative_area' => $profile->State,
       'postal_code' => $profile->Zip,
@@ -168,12 +185,15 @@ function staff_profile_primary_profile_from_database () {
     $taxonomy = array();
     if (!empty($profile->CountyName)) {
       $taxonomy = $taxonomyStorage->loadByProperties([
-          'name' => $profile->CountyName,
-          'vid' => 'counties_in_iowa'
+        'name' => $profile->CountyName,
+        'vid' => 'counties_in_iowa'
       ]);
     }
     $base_county = (!empty($taxonomy) ? array_keys($taxonomy)[0] : 0);
     $mynode->field_staff_profile_base_county = [['target_id' => $base_county]];
+
+    $tmp_position = _staff_profile_primary_get_position($profile, $jobtitle);
+    $mynode->field_staff_profile_position = [['target_id' => $tmp_position !== false ? $tmp_position : 0]];
 
     $mynode->field_staff_profile_college->value = $profile->CollegeName;
     $mynode->field_staff_profile_location->value = $profile->Location;
@@ -184,8 +204,8 @@ function staff_profile_primary_profile_from_database () {
     $temp_array = explode(', ', $profile->CountiesServed);
     foreach ($temp_array as $index => $temp_term) {
       $taxon = $taxonomyStorage->loadByProperties([
-            'name' => $temp_term,
-            'vid' => 'counties_in_iowa'
+        'name' => $temp_term,
+        'vid' => 'counties_in_iowa'
       ]);
       if (!empty($taxon) && array_keys($taxon)[0] > 0) {
         $mynode->field_staff_profile_cty_served[] = ['target_id' => array_keys($taxon)[0]];
@@ -195,22 +215,36 @@ function staff_profile_primary_profile_from_database () {
     $mynode->field_staff_profile_pgm_areas = [array()];
     $temp_array = explode(', ', $profile->ProgramAreas);
     foreach ($temp_array as $index => $temp_term) {
+      if (empty($temp_term)) {
+        continue;
+      }
+      if ($temp_term == '4-H Youth') $temp_term = '4-H Youth Development';
+      if ($temp_term == 'Agriculture') $temp_term = 'Agriculture and Natural Resources';
+
       $taxon = $taxonomyStorage->loadByProperties([
-            'name' => $temp_term,
-            'vid' => 'program_areas'
+        'name' => $temp_term,
+        'vid' => 'program_areas'
       ]);
-      if (!empty($taxon) && array_keys($taxon)[0] > 0) {
-        $mynode->field_staff_profile_pgm_areas[] = ['target_id' => array_keys($taxon)[0]];
+      if (empty($taxon)) {
+        $new = Term::create(['name' => $temp_term, 'vid' => 'program_areas']);
+        $new->save();
+        $mynode->field_staff_profile_pgm_areas[] = ['target_id' => $new->id()];
+      } else {
+        if (!empty($taxon) && array_keys($taxon)[0] > 0) {
+          $mynode->field_staff_profile_pgm_areas[] = ['target_id' => array_keys($taxon)[0]];
+        }
       }
     }
+
 
     $mynode->field_staff_profile_stale->value = FALSE;
     $mynode->setPublished();
     $mynode->save();
 
     // Check if this user is a Regional Director
-    if ($profile->DepartmentID == '30310' && (strpos($jobtitle, 'Assistant Director County Serv') !== false || strpos($jobtitle, 'Regional Extension Education') !== false || $jobtitle == 'County Services - Regional Dir') || $jobtitle == 'Regional Director' || $jobtitle == 'Associate Director County Serv'|| strpos($jobtitle, 'Director of Field Operations') !== false) {
-    //if ($profile->DepartmentID == '30310') {
+    //if ($profile->DepartmentID == '30310' && (strpos($jobtitle, 'Assistant Director County Serv') !== false || strpos($jobtitle, 'Regional Extension Education') !== false || $jobtitle == 'County Services - Regional Dir') || $jobtitle == 'Regional Director' || $jobtitle == 'Associate Director County Serv' || strpos($jobtitle, 'Director of Field Operations') !== false || strpos($jobtitle, 'Assistant Vice President for C - Administration') !== false || strpos($jobtitle, 'Senior Manager Information') !== false) {
+    if ($profile->DepartmentID == '30310' && (strpos($jobtitle, 'Assistant Director County Serv') !== false || strpos($jobtitle, 'Regional Extension Education') !== false || $jobtitle == 'County Services - Regional Dir') || $jobtitle == 'Regional Director' || $jobtitle == 'Associate Director County Serv' || strpos($jobtitle, 'Director of Field Operations') !== false) {
+      //if ($profile->DepartmentID == '30310') {
       $regional_directors[] = $profile->email;
     }
 
@@ -225,10 +259,14 @@ function staff_profile_primary_profile_from_database () {
     }
   }
 
+  // Use Regional Director overrides and excludes
+  $regional_directors = array_unique(array_merge($regional_directors, $regional_directors_overrides));
+  $regional_directors = array_diff($regional_directors, $regional_directors_exclude);
+
   // Remove Regional Director Role from users that don't have regional director in Staff database
-  $userids = \Drupal::entityQuery('user') ->condition('status', 1) ->condition('roles', 'regional_director') ->execute();
+  $userids = \Drupal::entityQuery('user')->accessCheck(false)->condition('status', 1)->condition('roles', 'regional_director')->execute();
   $users = User::loadMultiple($userids);
-  foreach($users as $user){
+  foreach ($users as $user) {
     if ($user->id() == 1) {
       continue;
     }
@@ -242,7 +280,7 @@ function staff_profile_primary_profile_from_database () {
 
   // Add Regional Director Role to users that need it
   foreach ($regional_directors as $director) {
-    $userids = \Drupal::entityQuery('user')->condition('status', 1)->condition('mail', $director)->execute();
+    $userids = \Drupal::entityQuery('user')->accessCheck(false)->condition('status', 1)->condition('mail', $director)->execute();
     $users = User::loadMultiple($userids);
     foreach ($users as $user) {
       if (!in_array('regional_director', $user->getRoles())) {
@@ -260,7 +298,8 @@ function staff_profile_primary_profile_from_database () {
 /*
  * Implements hook_preprocess_views_view()
  */
-function staff_profile_primary_preprocess_views_view(&$variables) {
+function staff_profile_primary_preprocess_views_view(&$variables)
+{
   $variables['#cache']['contexts'][] = 'route';
   if ($variables['view_array']['#name'] == 'staff_directory') {
     $variables['#attached']['library'][] = 'staff_profile_primary/staff_directory';
@@ -270,7 +309,8 @@ function staff_profile_primary_preprocess_views_view(&$variables) {
 /**
  * Implements hook_form_alter().
  */
-function staff_profile_primary_form_node_form_alter(&$form, &$form_state, $form_id) {
+function staff_profile_primary_form_node_form_alter(&$form, &$form_state, $form_id)
+{
   // Make sure we're on the staff_profile node edit screen
   $node = $form_state->getFormObject()->getEntity();
   if ($node->getType() == 'staff_profile') {
@@ -284,22 +324,23 @@ function staff_profile_primary_form_node_form_alter(&$form, &$form_state, $form_
     $form['field_staff_profile_sort_order']['widget'][0]['value']['#access'] = FALSE;
     $form['field_staff_profile_sort_order']['widget'][0]['value']['#disabled'] = TRUE;
     $form['field_staff_profile_sort_order']['widget'][0]['value']['#description'] = 'Sort order isn\'t used on this site, so it\'s disabled.';
-
   }
 }
 
 /*
  * Implements hook_ENTITY_TYPE_presave()
  */
-function staff_profile_primary_node_presave($entity) {
+function staff_profile_primary_node_presave($entity)
+{
   if ($entity->getType() == 'staff_profile') {
     // Set the owner of the new node, will probably need to create the user
-    $users =\Drupal::entityTypeManager()->getStorage('user')->loadByProperties(array('name' => $entity->field_staff_profile_netid->value));
+    $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(array('name' => $entity->field_staff_profile_netid->value));
     $owner = reset($users);
     if (!$owner) {
       $owner = User::create(array('name' => $entity->field_staff_profile_netid, 'mail' => $entity->field_staff_profile_email, 'pass' => rand_string(40)));
-      $owner->activate()->save();
     }
+    $owner->activate()->save();
+
     $entity->setOwner($owner);
     $entity->setTitle($entity->field_staff_profile_pref_name->value . ' ' . $entity->field_staff_profile_last_name->value);
 
@@ -311,23 +352,29 @@ function staff_profile_primary_node_presave($entity) {
     //  $smugmugID = substr($smugmugID, 0, strlen($smugmugID) - 2);
     //}
     $entity->field_staff_profile_smugmug->value = $smugmugID;
+
+    // In the Custodian of Public Record field, set a value of false to null
+    if ($entity->field_custodian_of_public_record->value == false) {
+      $entity->field_custodian_of_public_record->value=null;
+    }
   }
 }
 
-function rand_string($strength = 40) {
+function rand_string($strength = 40)
+{
   $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ?!@#$%&*()_+-=';
   $length = strlen($chars);
   $rand_string = '';
   try {
-    for ($i=0; $i < $strength; $i++) {
-      $rand_char = $chars[random_int(0, $length-1)];
+    for ($i = 0; $i < $strength; $i++) {
+      $rand_char = $chars[random_int(0, $length - 1)];
       $rand_string .= $rand_char;
     }
   } catch (\Exception $e) {
     //In cases where getrandom(2) or /dev/urandom fails, not cryptographically secure
     $rand_string = '';
-    for ($i=0; $i < $strength; $i++) {
-      $rand_char = $chars[mt_rand(0, $length-1)];
+    for ($i = 0; $i < $strength; $i++) {
+      $rand_char = $chars[mt_rand(0, $length - 1)];
       $rand_string .= $rand_char;
     }
   }
@@ -335,8 +382,11 @@ function rand_string($strength = 40) {
 }
 
 // This function helps take Web Editor Training functions from Moodle, and puts it into the staff directory
-function staff_profile_primary_web_editor_training() {
-  $buffer = file_get_contents('https://datastore.exnet.iastate.edu/StaffDir/WebEditorTraining.json');
+function staff_profile_primary_web_editor_training()
+{
+  $editor_qualifications = ISUEOHelpers\Taxonomy::get_terms('editor_qualifications');
+
+  $buffer = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/StaffDir/WebEditorTraining.json');
   $json_trainings = json_decode($buffer, TRUE);
 
   foreach ($json_trainings as $training) {
@@ -348,13 +398,13 @@ function staff_profile_primary_web_editor_training() {
     $course = 0;
     switch ($training['coursemoduleid']) {
       case '10712':  // Drupal 8/9/10
-        $course = 114;
+        $course = $editor_qualifications['Drupal 8 Training'];
         break;
       case '1041':  // Drupal 7
-        $course = 113;
+        $course = $editor_qualifications['Drupal 7 Training'];
         break;
       case '1044':  // Drupal 6
-        $course = 112;
+        $course = $editor_qualifications['Drupal 6 Training'];
         break;
       default:
         \Drupal::logger('staff_profile_primary')->info('Course is unknown, not sure why');
@@ -382,8 +432,8 @@ function staff_profile_primary_web_editor_training() {
       }
 
       // See if we should add Web Editor qualification to the staff profile
-      if (!in_array(111, $existing_terms)) {
-        $usernode->field_staff_profile_quals[] = ['target_id' => 111];
+      if (!in_array($editor_qualifications['Web Editor'], $existing_terms)) {
+        $usernode->field_staff_profile_quals[] = ['target_id' => $editor_qualifications['Web Editor']];
         \Drupal::logger('staff_profile_primary')->info('Adding "Web Editor" to ' . $usernode->get('field_staff_profile_netid')->value);
         $changed = true;
       }
@@ -394,4 +444,28 @@ function staff_profile_primary_web_editor_training() {
       }
     }
   }
+}
+
+/*
+ * Figure out staff position based on jobtitle, returns the taxonomy/vocabulary id of the position term
+ *
+ * TODO: This should lookup values in a taxonomy, not return hard coded values!
+ */
+function _staff_profile_primary_get_position($profile, $jobtitle = '')
+{
+  if (
+    ($profile->DepartmentID == '30310'
+      && (strpos($jobtitle, 'Assistant Director County Serv') !== false
+        || strpos($jobtitle, 'Regional Extension Education') !== false
+        || $jobtitle == 'County Services - Regional Dir'))
+    || $jobtitle == 'Regional Director'
+    || $jobtitle == 'Associate Director County Serv'
+    || $jobtitle == 'Field Operations Director'
+    || strpos($jobtitle, 'Director of Field Operations') !== false
+  ) {
+    return 180;
+  } elseif ($profile->Location == 'FLD-ISU-PD' && !empty($profile->CountiesServed)) {
+    return 181;
+  }
+  return false;
 }

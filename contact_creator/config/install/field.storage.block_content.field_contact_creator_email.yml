@@ -6,11 +6,8 @@ dependencies:
 id: block_content.field_contact_creator_email
 field_name: field_contact_creator_email
 entity_type: block_content
-type: string
-settings:
-  max_length: 255
-  is_ascii: false
-  case_sensitive: false
+type: email
+settings: {  }
 module: core
 locked: false
 cardinality: 1

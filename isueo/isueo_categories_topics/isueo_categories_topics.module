@@ -1,0 +1,108 @@
+<?php
+
+use \Drupal\isueo_helpers\ISUEOHelpers;
+
+/**
+ * Implements hook_rebuild().
+ */
+function isueo_categories_topics_rebuild()
+{
+  isueo_categories_topics_build_taxonomy();
+}
+
+/**
+ * Implements hook_cron().
+ */
+function isueo_categories_topics_cron()
+{
+  isueo_categories_topics_build_taxonomy();
+}
+
+function isueo_categories_topics_build_taxonomy()
+{
+
+  $desired_taxonomy = [];
+  $terms_used = [];
+  $categories_topics = ISUEOHelpers\Taxonomy::get_terms('categories_topics');
+
+  // Get the products/programs feed, if it's empty, wait 1 second and try again
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/EducationalPrograms.json', true);
+  if ($raw === false || strlen($raw) < 100000) {
+    sleep(1);
+    Drupal::logger('plp_programs')->info('Empty feed: wait 1 second and try again');
+    $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/EducationalPrograms.json', true);
+  }
+
+  // Convert the feed into an array
+  $products = json_decode($raw, true);
+  $min_programs = 100;
+  if (!is_array($products) || count($products) < $min_programs) {
+    Drupal::logger('plp_programs')->info('Less than ' . $min_programs . ' programs, exiting');
+    return;
+  }
+
+  // Record types to include in the catalog
+  // 0128Z000000yeo8QAA = Product Family Record Type
+  // 012460000012EiaAAE = Educational Program Record Type
+  $types = ['0128Z000000yeo8QAA', '012460000012EiaAAE',];
+
+  // Step through products, and build an array that defines the desired taxonomy
+  foreach ($products as $product) {
+    // Only include program records
+    if (!in_array($product['RecordTypeId'], $types)) {
+      continue;
+    }
+    // Don't include child programs
+    if (!empty($product['Related_Program__c'])) {
+      continue;
+    }
+    // Only include programs shown in the Program Landing Page
+    if (!$product['Show_on_Program_Landing_Page__c']) {
+      continue;
+    }
+
+    // Get the category ID
+    $category_name = $product['Program_landing_Page_Category__c'];
+    if (!empty($category_name)) {
+      $category_id = ISUEOHelpers\Taxonomy::get_term_id($category_name, $categories_topics, 'categories_topics');
+      $terms_used[$category_name] = $category_id;
+
+      //Handle Topics
+      if (!empty($product['Program_Landing_Page_Topic__c'])) {
+        $topics = explode(';', $product['Program_Landing_Page_Topic__c']);
+        foreach ($topics as $topic) {
+          $topic_id = ISUEOHelpers\Taxonomy::get_term_id($topic, $categories_topics, 'categories_topics');
+          $terms_used[$topic] = $topic_id;
+          if (!array_key_exists($topic_id, $desired_taxonomy) || !in_array($category_id, $desired_taxonomy[$topic_id])) {
+            $desired_taxonomy[$topic_id][] = $category_id;
+          }
+        }
+      }
+    }
+  }
+
+  // We now have the desired taxonomy, build it
+  foreach ($desired_taxonomy as $topic_id => $desired_parent_ids) {
+    $existing_parent_ids = [];
+    $term = Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->load($topic_id);
+
+    // Build an array of the parent ids
+    foreach ($term->parent as $parent) {
+      if ($parent->target_id > 0) {
+        $existing_parent_ids[] = $parent->target_id;
+      }
+    }
+    sort($desired_parent_ids);
+    sort($existing_parent_ids);
+
+    if ($desired_parent_ids != $existing_parent_ids) {
+      $term->set('parent', $desired_parent_ids);
+      $term->save();
+    }
+  }
+
+  // Delete unused terms
+  foreach (array_diff($categories_topics, $terms_used) as $term_name => $tid) {
+    \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($tid)->delete();
+  }
+}

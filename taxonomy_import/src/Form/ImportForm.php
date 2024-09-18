@@ -86,7 +86,7 @@ class ImportForm extends FormBase {
       '#size' => 60,
       '#maxlength' => 255,
     );
-    $dir = DRUPAL_ROOT . '/' . drupal_get_path('module', 'taxonomy_import') . '/src/data/';
+    $dir = DRUPAL_ROOT . '/' . \Drupal::service('extension.list.module')->getPath('taxonomy_import') . '/src/data/';
     $files = \Drupal::service('file_system')->scanDirectory($dir, '/\.(txt)/');
     $options = array('' => $this->t('Upload File Below'));
     foreach ($files as $file) {
@@ -130,13 +130,13 @@ class ImportForm extends FormBase {
   function getFilePath($filename) {
     $path = $filename;
     if (substr($filename, 0, 1) != '/') {
-      return DRUPAL_ROOT . '/' . drupal_get_path('module', 'taxonomy_import') . '/src/data/' . $filename;
+      return DRUPAL_ROOT . '/' . \Drupal::service('extension.list.module')->getPath('taxonomy_import') . '/src/data/' . $filename;
     } else {
       return $filename;
     }
   }
 
-  function loadVocabFromFile($path, $vid, $name) {
+  static function loadVocabFromFile($path, $vid, $name) {
     if ($file = fopen($path, 'r')) {
       $count_added = 0;
       $count_skipped = 0;

@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.categories_topics.field_category_icon
+    - field.field.taxonomy_term.categories_topics.field_category_image
+    - field.field.taxonomy_term.categories_topics.field_category_link
+    - taxonomy.vocabulary.categories_topics
+  module:
+    - text
+id: taxonomy_term.categories_topics.default
+targetEntityType: taxonomy_term
+bundle: categories_topics
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_category_icon: true
+  field_category_image: true
+  field_category_link: true
+  search_api_excerpt: true

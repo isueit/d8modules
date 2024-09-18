@@ -1,0 +1,4 @@
+.node--view-mode-staff-contact { display: flow; text-align: start; height: 100%; padding-bottom: 6px; position: relative; word-wrap: break-word; }
+.node--view-mode-staff-contact h1 { font-size: 1rem; }
+.node--view-mode-staff-contact h1 a { text-decoration: none; font-weight: 700; padding-top: 25px; line-height: 1.38095; }
+.node--view-mode-staff-contact img.staff_profile_smugmug { width: 65px; object-fit: cover; height: 100px; margin: 0.5rem; }

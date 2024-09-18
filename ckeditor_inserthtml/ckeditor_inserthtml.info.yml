@@ -2,7 +2,7 @@ name: CKEditor InsertHTML
 type: module
 description: 'Adds the inserthtml4x plugin to CKEditor.'
 # core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 package: CKEditor
 dependencies:
  - drupal:ckeditor

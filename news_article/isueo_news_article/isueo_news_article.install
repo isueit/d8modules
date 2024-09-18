@@ -15,6 +15,7 @@ function isueo_news_article_install() {
     'override news_article authored on option',
     'override news_article published option',
     'override news_article sticky option',
+    'view any unpublished news_article content',
   ]);
 }
 

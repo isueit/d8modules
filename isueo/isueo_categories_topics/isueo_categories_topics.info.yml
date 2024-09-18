@@ -1,0 +1,6 @@
+name: 'ISUEO - Categories/Topics'
+type: module
+core_version_requirement: ^10
+description: 'Creates the Taxonomy for Categories/Topics'
+version: '8.x-1.1-dev'
+package: 'ISUEO'

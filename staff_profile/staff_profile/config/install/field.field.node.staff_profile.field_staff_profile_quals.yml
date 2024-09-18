@@ -5,6 +5,9 @@ dependencies:
     - field.storage.node.field_staff_profile_quals
     - node.type.staff_profile
     - taxonomy.vocabulary.editor_qualifications
+  enforced:
+    module:
+      - staff_profile
 id: node.staff_profile.field_staff_profile_quals
 field_name: field_staff_profile_quals
 entity_type: node

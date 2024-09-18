@@ -1,0 +1,371 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.plp_program.body
+    - field.field.node.plp_program.field_plp_program_audiences
+    - field.field.node.plp_program.field_plp_program_category
+    - field.field.node.plp_program.field_plp_program_children
+    - field.field.node.plp_program.field_plp_program_contact_email
+    - field.field.node.plp_program.field_plp_program_contact_name
+    - field.field.node.plp_program.field_plp_program_contact_phone
+    - field.field.node.plp_program.field_plp_program_critical_issue
+    - field.field.node.plp_program.field_plp_program_event_pgm_ids
+    - field.field.node.plp_program.field_plp_program_interest_areas
+    - field.field.node.plp_program.field_plp_program_mydata_id
+    - field.field.node.plp_program.field_plp_program_num_events
+    - field.field.node.plp_program.field_plp_program_num_indicators
+    - field.field.node.plp_program.field_plp_program_num_measures
+    - field.field.node.plp_program.field_plp_program_on_counties
+    - field.field.node.plp_program.field_plp_program_program_area
+    - field.field.node.plp_program.field_plp_program_search_terms
+    - field.field.node.plp_program.field_plp_program_smugmug
+    - field.field.node.plp_program.field_plp_program_sort_calc
+    - field.field.node.plp_program.field_plp_program_title_filter
+    - field.field.node.plp_program.field_plp_program_topics
+    - field.field.node.plp_program.field_plp_program_website
+    - field.field.node.plp_program.layout_builder__layout
+    - node.type.plp_program
+    - views.view.program_pages
+  module:
+    - layout_builder
+    - layout_builder_base_library
+    - layout_discovery
+    - program_offering_blocks
+    - text
+    - user
+    - views
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_base_onecol
+        layout_settings:
+          label: '1 Column Layout'
+          context_mapping: {  }
+          classes: ''
+          column_widths: null
+          id: plp-events
+          column_gap: ''
+          row_gap: ''
+          column_width: ''
+          column_breakpoint: ''
+          align_items: ''
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout-height-default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+          layout_builder_styles_style:
+            hero_heading: 0
+        components:
+          dd738102-eac1-4cef-9585-fbea56e5d762:
+            uuid: dd738102-eac1-4cef-9585-fbea56e5d762
+            region: content
+            configuration:
+              id: 'program_offering_blocks:1'
+              label: 'Program Offering Block: 1'
+              label_display: '0'
+              provider: program_offering_blocks
+              context_mapping: {  }
+              event_details_page: 1
+              max_events: '5'
+              no_upcoming_events: 'There are no upcoming events scheduled. Please check back later for updates.'
+              format_with_time: 'M j, Y, g:i a'
+              format_without_time: 'M j, Y'
+              title_search: ''
+              show_more_page: /events
+              show_more_text: 'More Events'
+              announcement_text: ''
+              show_nonpublic_events: 0
+              only_planned_programs: 0
+              only_statewide_campus: 0
+              program_ids_field: field_plp_program_event_pgm_ids
+              program_area: ''
+              county: ''
+              placement: ''
+            weight: 0
+            additional:
+              layout_builder_styles_style:
+                upcoming_events_white: 0
+                vertical_alignment: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          e61006e6-f2de-4bfa-9c76-230ea93614dd:
+            uuid: e61006e6-f2de-4bfa-9c76-230ea93614dd
+            region: content
+            configuration:
+              id: 'extra_field_block:node:plp_program:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+          2e6a5077-d515-46ab-8480-b883a9693f66:
+            uuid: 2e6a5077-d515-46ab-8480-b883a9693f66
+            region: content
+            configuration:
+              id: 'field_block:node:plp_program:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_twocol
+        layout_settings:
+          label: '2 Column Layout'
+          classes: ''
+          column_widths: null
+          id: ''
+          column_gap: layout--column-gap--default
+          row_gap: layout--row-gap--none
+          column_width: layout--column-width--default
+          column_breakpoint: layout--column-breakpoint--medium
+          align_items: layout--align-items--normal
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout--height--default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+        components:
+          3c7a3e84-4b42-4bbf-934a-e2743f916839:
+            uuid: 3c7a3e84-4b42-4bbf-934a-e2743f916839
+            region: first
+            configuration:
+              id: 'views_block:program_pages-block_2'
+              label: ''
+              label_display: '0'
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 0
+            additional:
+              layout_builder_styles_style:
+                vertical_alignment: 0
+          3e0cc62d-7250-4a0b-94c4-ec9277d68eac:
+            uuid: 3e0cc62d-7250-4a0b-94c4-ec9277d68eac
+            region: second
+            configuration:
+              id: 'views_block:program_pages-block_3'
+              label: ''
+              label_display: '0'
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 0
+            additional:
+              layout_builder_styles_style:
+                vertical_alignment: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_onecol
+        layout_settings:
+          label: '1 Column Layout'
+          classes: ''
+          column_widths: null
+          id: ''
+          column_gap: ''
+          row_gap: ''
+          column_width: ''
+          column_breakpoint: ''
+          align_items: ''
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout--height--default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+        components:
+          d5c40ca4-2758-42b6-98bb-0ea204b4e7b1:
+            uuid: d5c40ca4-2758-42b6-98bb-0ea204b4e7b1
+            region: content
+            configuration:
+              id: 'views_block:program_pages-block_1'
+              label: ''
+              label_display: visible
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 0
+            additional:
+              layout_builder_styles_style:
+                vertical_alignment: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_onecol
+        layout_settings:
+          label: '1 Column Layout'
+          classes: ''
+          column_widths: null
+          id: ''
+          column_gap: ''
+          row_gap: ''
+          column_width: ''
+          column_breakpoint: ''
+          align_items: ''
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout--height--default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+        components:
+          0ba1bfa8-b95d-4293-83a2-d2b1b8662144:
+            uuid: 0ba1bfa8-b95d-4293-83a2-d2b1b8662144
+            region: content
+            configuration:
+              id: 'views_block:program_pages-block_4'
+              label: ''
+              label_display: visible
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 0
+            additional:
+              layout_builder_styles_style:
+                vertical_alignment: 0
+        third_party_settings: {  }
+id: node.plp_program.default
+targetEntityType: node
+bundle: plp_program
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_plp_program_audiences: true
+  field_plp_program_category: true
+  field_plp_program_children: true
+  field_plp_program_contact_email: true
+  field_plp_program_contact_name: true
+  field_plp_program_contact_phone: true
+  field_plp_program_critical_issue: true
+  field_plp_program_event_pgm_ids: true
+  field_plp_program_interest_areas: true
+  field_plp_program_mydata_id: true
+  field_plp_program_num_events: true
+  field_plp_program_num_indicators: true
+  field_plp_program_num_measures: true
+  field_plp_program_on_counties: true
+  field_plp_program_program_area: true
+  field_plp_program_search_terms: true
+  field_plp_program_smugmug: true
+  field_plp_program_sort_calc: true
+  field_plp_program_title_filter: true
+  field_plp_program_topics: true
+  field_plp_program_website: true
+  layout_builder__layout: true
+  search_api_excerpt: true

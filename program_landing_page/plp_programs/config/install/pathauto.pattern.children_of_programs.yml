@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+  enforced:
+    config:
+      - node.type.plp_program
+id: children_of_programs
+label: 'Children of Programs'
+type: 'canonical_entities:node'
+pattern: 'child/[node:title]'
+selection_criteria:
+  2a0f1648-10a6-4345-848b-7e6fd74a2eee:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 2a0f1648-10a6-4345-848b-7e6fd74a2eee
+    context_mapping:
+      node: node
+    bundles:
+      plp_child: plp_child
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -9,7 +9,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
-
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
@@ -26,6 +26,7 @@ use Symfony\Component\Validator\Constraints\Length;
  * @Block(
  *   id = "program_offering_blocks",
  *   admin_label = @Translation("Program Offering blocks"),
+ *   category = @Translation("Content block"),
  *   deriver = "Drupal\program_offering_blocks\Plugin\Derivative\ProgramOfferingBlocks"
  * )
  */
@@ -64,6 +65,7 @@ class ProgramOfferingBlocks extends BlockBase
     $count = 0;
     $id = $this->getDerivativeID();
     $config = $this->getConfiguration();
+    $horizontal_display = !empty($config['horizontal_display']);
     $module_config = \Drupal::config('program_offering_blocks.settings');
     $site_name = \Drupal::config('system.site')->get('name');
     $is_front_page = Drupal::service('path.matcher')->isFrontPage();
@@ -82,6 +84,30 @@ class ProgramOfferingBlocks extends BlockBase
 
     // Get the current node
     $node = \Drupal::routeMatch()->getParameter('node');
+    $filtering_by_program_ids = false;
+
+    $program_ids = [];
+    //Check if we're limitting program id's
+    if (
+      !empty($config['program_ids_field'])
+      && $node instanceof \Drupal\node\NodeInterface
+      && $node->hasField($config['program_ids_field'])
+      && !empty($node->get($config['program_ids_field'])->getString())
+    ) {
+      $program_ids = unserialize($node->get($config['program_ids_field'])->getString());
+      $filtering_by_program_ids = true;
+    }
+
+    $referring_node_id = intval(Drupal::request()->query->get('referring_nid'));
+    if (!empty($referring_node_id) && !empty($config['program_ids_field'])) {
+      $referring_node = Drupal\node\Entity\Node::load($referring_node_id);
+      if (
+        $referring_node != null && $referring_node->hasField($config['program_ids_field'])
+        && !empty($referring_node->get($config['program_ids_field'])->getString())
+      ) {
+        $program_ids = unserialize($referring_node->get($config['program_ids_field'])->getString());
+      }
+    }
 
     // Check for a filter in the query string
     $querystring_filter = \Drupal::request()->query->get('filter');
@@ -92,19 +118,20 @@ class ProgramOfferingBlocks extends BlockBase
     // Combine all search filters, into a $search_terms array()
     $string_of_search_terms = $this->build_search_string(!empty($node->field_event_title_filter->value) ? $node->field_event_title_filter->value : '', $config['title_search']);
     $string_of_search_terms = $this->build_search_string($string_of_search_terms, $querystring_filter);
-    $search_terms_array = explode('|', $string_of_search_terms);
+    $search_terms_array = [];
+    if (!empty($string_of_search_terms)) {
+      $search_terms_array = explode('|', $string_of_search_terms);
+    }
 
     // Set the timeout to 2 seconds, Get the events from the JSON feed, then reset timeout to previous value
     $default_socket_timeout = ini_get('default_socket_timeout');
     ini_set('default_socket_timeout', 2);
-    $buffer = file_get_contents($module_config->get('url'));
+    $buffer = ISUEOHelpers\Files::fetch_url($module_config->get('url') . '?time=' . time(), true);
     ini_set('default_socket_timeout', $default_socket_timeout);
     $json_events = json_decode($buffer, TRUE);
 
     // Show all upcoming events, not just the next one
     $all_events = self::include_series_events($json_events, $is_county_site);
-
-    $results .= PHP_EOL . '<ul class="program_offering_blocks program_offering_blocks_' . $id . '">' . PHP_EOL;
 
     foreach ($all_events as $event) {
       $display_event = TRUE;
@@ -112,6 +139,10 @@ class ProgramOfferingBlocks extends BlockBase
         $display_event = FALSE;
       }
 
+      // Check for Program IDs
+      if ($program_ids && !in_array($event['Planned_Program__c'], $program_ids)) {
+        $display_event = FALSE;
+      }
       // Do we only display planned programs
       // This may someday need to be a separate function if we have to distingish the type of Associated Products, but this is OK for now
       if ($config['only_planned_programs'] && empty($event['All_Associated_Product_ID_s__c'])) {
@@ -134,6 +165,7 @@ class ProgramOfferingBlocks extends BlockBase
         }
       }
 
+      $tmpstr = $event['Additional_Counties__c'];
       if (!empty($config['county'])) {
         $search_county = strtolower($config['county']) . ' county';
         if ($search_county == 'pottawattamie - west county') {
@@ -144,30 +176,67 @@ class ProgramOfferingBlocks extends BlockBase
         }
         if (
           !(strpos(strtolower($event['Account__c.Name']), $search_county) !== FALSE)
-          && !(strpos(strtolower($event['Additional_Counties__c']), $search_county) !== FALSE)
+          && !(!empty($tmpstr) && strpos(strtolower($tmpstr), $search_county) !== FALSE)
         ) {
           $display_event = FALSE;
         }
       }
 
-      // Hide statewide events from home page
-      $additional_counties = explode(';', $event["Additional_Counties__c"]);
-      if ($is_county_site && count($additional_counties) > 50  && $is_front_page) {
-        $display_event = false;
+      if (!empty($tmpstr)) {
+        // Hide statewide events from home page
+        $additional_counties = explode(';', $tmpstr);
+        if ($is_county_site && count($additional_counties) > 50  && $is_front_page) {
+          $display_event = false;
+        }
       }
 
       if ($display_event) {
+        if ($count == 0) {
+          // For Horizontal Displays - Add div with ID
+          if ($horizontal_display) {
+            $results .= PHP_EOL . '  <div id="isu-horiz-events">' . PHP_EOL;
+          }
+          $results .= PHP_EOL . '<ul class="program_offering_blocks program_offering_blocks_' . $id . '">' . PHP_EOL;
+        }
+
         if ($count < $max_events) {
           $start_date = strtotime($event['Next_Start_Date__c']);
           $results .= '  <li class="event">' . PHP_EOL;
-          $results .= '    <div class="event_date"><span class="event_day">' . date('d', $start_date) . '</span>
-            <span class="event_month">' . date('M', $start_date) . '</span>
-            <span class="event_time">' . date('g:i', $start_date) . '</span><span class="event_ampm">' . date('A', $start_date) . '</span></div>';
 
-          $results .= $this->format_title($event, $config) . PHP_EOL;
+          // Make the entire Horizontal Display Card a link
+           if ($horizontal_display) {
+            $results .= '    <a href="' . base_path() . 'event_details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) . '">' . PHP_EOL;
+          }
+          // For Horizontal Displays
+          // Month and day should be switched so that month comes first, move time
+          if ($horizontal_display) {
+            $results .= '    <div class="event_date">
+              <span class="event_month">' . date('M', $start_date) . '</span>
+              <span class="event_day">' . date('d', $start_date) . '</span>
+              </div>';
+          } else {
+            $results .= '    <div class="event_date">
+              <span class="event_day">' . date('d', $start_date) . '</span>
+              <span class="event_month">' . date('M', $start_date) . '</span>
+              <span class="event_time">' . date('g:i', $start_date) . '</span><span class="event_ampm">' . date('A', $start_date) . '</span>
+              </div>';
+          }
+          // Horizontal Diplay - Since the whole card is a link the title should not be
+          if ($horizontal_display) {
+            $results .= ' <div class="event_title">' . $this->get_title_text($event) . '</div>' . PHP_EOL;
+          } else {
+            $results .= $this->format_title($event, $config) . PHP_EOL;
+          }
+
           if (!empty($event['series_info'])) {
             $results .= '    <div class="event_series">' . $event['series_info'] . '</div>' . PHP_EOL;
           }
+
+          // For Horizontal Displays - Move time
+          if ($horizontal_display) {
+            $results .= '<span class="event_time">' . date('g:i', $start_date) . '</span><span class="event_ampm">' . date('A', $start_date) . '</span>';
+          }
+
           $results .= '    <div class="event_venue">';
           $results .= $event['Event_Location__c'] == 'Online' ? 'Online' : $event['Event_Location__c'] . ', ' . $event['Program_State__c'];
           $results .= '</div>' . PHP_EOL;
@@ -175,16 +244,30 @@ class ProgramOfferingBlocks extends BlockBase
           $startDate = date($config['format_with_time'], strtotime($event['Next_Start_Date__c']));
           $results .= '    <div class="event_startdate">' . $startDate . '</div>' . PHP_EOL;
 
+          // Close the link tag for horizontal displays
+          if ($horizontal_display) {
+            $results .= '  </a>' . PHP_EOL;
+          }
           $results .= '  </li>' . PHP_EOL;
         }
         $count++;
       }
     }
 
-    $results .= '</ul>' . PHP_EOL;
+    if ($count > 0) {
+      $results .= '</ul>' . PHP_EOL;
+      // For Horizontal Displays, close the div tag
+      if ($horizontal_display) {
+        $results .= '</div>' . PHP_EOL;
+      }
+    } else {
+      if (!empty($config['no_upcoming_events'])) {
+        $results .= '<p class="event_no_events">' . $config['no_upcoming_events'] . '</p>';
+      }
 
-    // Use Javascript to hide block if it's not showing any events (Should this be an option in config?)
-    if (0 == $count) {
+      // Use Javascript to hide block if it's not showing any events (Should this be an option in config?)
+      // This only works when the block is placed on a page, with layout builder, it will show the above message
+      // Not sure this JavaScript is still working...
       $results .= '<script>document.getElementById("block-programofferingblock' . $id . '").style.display = "none";</script>';
     }
 
@@ -193,7 +276,16 @@ class ProgramOfferingBlocks extends BlockBase
       $show_more_page = $config['show_more_page'];
       $show_more_page = substr($show_more_page, 0, 1) == '/' ? substr($show_more_page, 1, strlen($show_more_page) - 1) : $show_more_page;
 
-      $results .= '<a class="events_show_more btn btn-danger" href="' . $base_url . '/' . $show_more_page . '?filter=' . urlencode($string_of_search_terms) . '">' . $config['show_more_text'] . '</a><br />';
+      $tmpfilter = '';
+      $tmpfilter = !empty($string_of_search_terms) ? '?filter=' . urlencode($string_of_search_terms) : '';
+      if ($filtering_by_program_ids) {
+        $tmpfilter .= (empty($tmpfilter) ? '?' : '&') . 'referring_nid=' . $node->id();
+      }
+      if ($node instanceof \Drupal\node\NodeInterface && $node->bundle() == 'plp_program') {
+        $results .= '<a class="events_show_more" id="plp-events" href="' . $base_url . '/' . $show_more_page . $tmpfilter . '">' . $config['show_more_text'] . '</a><br />';
+      } else {
+        $results .= '<a class="events_show_more btn btn-danger" href="' . $base_url . '/' . $show_more_page . $tmpfilter . '">' . $config['show_more_text'] . '</a><br />';
+      }
     }
 
     return [
@@ -222,6 +314,15 @@ class ProgramOfferingBlocks extends BlockBase
       '#description' => t('Zero (0) means display all events'),
       '#size' => 15,
       '#default_value' => $config['max_events'],
+    );
+
+    $form['no_upcoming_events'] = array(
+      '#type' => 'textfield',
+      '#title' => t('No Upcoming Events '),
+      '#description' => t('Text to display if there is no upcoming events'),
+      '#size' => 75,
+      '#maxlength' => 300,
+      '#default_value' => $config['no_upcoming_events'],
     );
 
     $form['event_details_page'] = array(
@@ -258,6 +359,7 @@ class ProgramOfferingBlocks extends BlockBase
       '#description' => t('Path to add to base URL where all events are listed'),
       '#default_value' => $config['show_more_page'],
     );
+
     $form['show_more_text'] = array(
       '#type' => 'textfield',
       '#title' => t('Text for Show More Events Link'),
@@ -293,6 +395,13 @@ class ProgramOfferingBlocks extends BlockBase
       '#title' => t('Show Only Statewide/Campus/Multi-state Events'),
       '#description' => t('When checked, only show events that are Statewide, Campus, or Multi-state'),
       '#default_value' => empty($config['only_statewide_campus']) ? false : $config['only_statewide_campus'],
+    );
+
+    $form['program_ids_field'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Node Field Containing Program IDs'),
+      '#description' => t('This field from the node is for when you want to limit events based on the Program IDs they are associated with. The field should be formatted as a PHP Serialized Array. However, just the name of the field goes here, ie field_plp_program_event_pgm_ides'),
+      '#default_value' => $config['program_ids_field'],
     );
 
     $form['program_area'] = array(
@@ -337,6 +446,13 @@ class ProgramOfferingBlocks extends BlockBase
       '#default_value' => $config['placement'],
     );
 
+    $form['horizontal_display'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Show Events as Horizontal'),
+      '#description' => t('When checked, events will be displayed horizontally as opposed to the default vertical list.'),
+      '#default_value' => empty($config['horizontal_display']) ? false : $config['horizontal_display'],
+    );
+
     return $form;
   }
 
@@ -349,6 +465,7 @@ class ProgramOfferingBlocks extends BlockBase
 
     $this->configuration['event_details_page'] = $values['event_details_page'];
     $this->configuration['max_events'] = $values['max_events'];
+    $this->configuration['no_upcoming_events'] = $values['no_upcoming_events'];
     $this->configuration['format_with_time'] = $values['format_with_time'];
     $this->configuration['format_without_time'] = $values['format_without_time'];
     $this->configuration['title_search'] = $values['title_search'];
@@ -358,9 +475,11 @@ class ProgramOfferingBlocks extends BlockBase
     $this->configuration['show_nonpublic_events'] = $values['show_nonpublic_events'];
     $this->configuration['only_planned_programs'] = $values['only_planned_programs'];
     $this->configuration['only_statewide_campus'] = $values['only_statewide_campus'];
+    $this->configuration['program_ids_field'] = $values['program_ids_field'];
     $this->configuration['program_area'] = $values['program_area'];
     $this->configuration['county'] = array_key_exists('county', $values) ? $values['county'] : '';
     $this->configuration['placement'] = $values['placement'];
+    $this->configuration['horizontal_display'] = $values['horizontal_display'];
   }
 
   /**
@@ -371,6 +490,7 @@ class ProgramOfferingBlocks extends BlockBase
     return array(
       'event_details_page' => TRUE,
       'max_events' => 0,
+      'no_upcoming_events' => 'There are no upcoming events scheduled. Please check back later for updates.',
       'format_with_time' => 'M j, Y, g:i a',
       'format_without_time' => 'M j, Y',
       'title_search' => '',
@@ -380,9 +500,11 @@ class ProgramOfferingBlocks extends BlockBase
       'show_nonpublic_events' => FALSE,
       'only_planned_programs' => FALSE,
       'only_statewide_campus' => FALSE,
+      'program_ids_field' => '',
       'program_area' => '',
       'county' => '',
       'placement' => '',
+      'horizontal_display' => FALSE,
     );
   }
 
@@ -415,12 +537,15 @@ class ProgramOfferingBlocks extends BlockBase
   private function format_title($event, $config)
   {
     $title = '<div class="event_title">';
+    /*
     $title_text = $event['Name_Placeholder__c'];
 
     // Append language to the end of the title, when it's not English
     if (!empty($event['Delivery_Language__c']) && 'english' != strtolower($event['Delivery_Language__c'])) {
       $title_text .= ' - ' . $event['Delivery_Language__c'];
     }
+    */
+    $title_text = $this->get_title_text($event);
 
     if ($config['event_details_page']) {
       $title .= '<a href="' . base_path() . 'event_details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) . '">' . $title_text . '</a>';
@@ -444,13 +569,32 @@ class ProgramOfferingBlocks extends BlockBase
   }
 
   /**
+   * Return title text, checking for delivery language
+   */
+  private function get_title_text($event)
+  {
+    $title_text = $event['Name_Placeholder__c'];
+
+    // Append language to the end of the title, when it's not English
+    if (!empty($event['Delivery_Language__c']) && 'english' != strtolower($event['Delivery_Language__c'])) {
+      $title_text .= ' - ' . $event['Delivery_Language__c'];
+    }
+
+    return $title_text;
+  }
+
+  /**
    * Combine two search strings into 1
    */
   private function build_search_string($str1, $str2)
   {
     $return_string = '';
-    $str1 = trim(strtolower($str1));
-    $str2 = trim(strtolower($str2));
+    if (!empty($str1)) {
+      $str1 = trim(strtolower($str1));
+    }
+    if (!empty($str2)) {
+      $str2 = trim(strtolower($str2));
+    }
     if (!empty($str1) && !empty($str2)) {
       $return_string = $str1 . '|' . $str2;
     } elseif (!empty($str1)) {

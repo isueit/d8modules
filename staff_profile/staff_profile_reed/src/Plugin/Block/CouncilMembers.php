@@ -5,6 +5,7 @@ namespace Drupal\staff_profile_reed\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Provides a 'Council Members' Block.
@@ -25,14 +26,17 @@ class CouncilMembers extends BlockBase
   {
     $council_members = [];
     $counties = \Drupal::service('staff_profile_reed.helper_functions')->getCountiesServed();
-    $raw = json_decode(file_get_contents('https://datastore.exnet.iastate.edu/mydata/ExtensionCouncilMembers.json'), true);
+    $raw = json_decode(ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/ExtensionCouncilMembers.json'), true);
     foreach ($raw as $member) {
       $member['Client_County__c'] = str_replace('East Pottawattamie', 'Pottawattamie - East', $member['Client_County__c']);
       $member['Client_County__c'] = str_replace('West Pottawattamie', 'Pottawattamie - West', $member['Client_County__c']);
       $council_members[$member['Client_County__c']][] = $member;
     }
 
-    $result = [];
+    $result = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['isueo-dashboard']],
+    ];
 
     $result['#markup'] = '<p>These are the council members for each county.<br/>
         To add a member, you need to go to MyData, to modify/remove a member, click on their name below.
@@ -76,6 +80,7 @@ class CouncilMembers extends BlockBase
         //'#allowed_tags' => $tags,
       ];
     }
+
 
     return $result;
   }

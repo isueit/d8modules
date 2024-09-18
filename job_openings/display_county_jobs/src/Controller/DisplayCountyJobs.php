@@ -6,6 +6,7 @@ use Drupal;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\node\Entity\Node;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Provides route responses for staff_profile_primary module
@@ -25,7 +26,7 @@ class DisplayCountyJobs extends ControllerBase
     \Drupal::service('page_cache_kill_switch')->trigger();
     $config = Drupal::config('display_county_jobs.settings');
     $feed_url = str_replace(' ', '+', $config->get('feed_url'));
-    $openings = json_decode(file_get_contents($feed_url), true);
+    $openings = json_decode(ISUEOHelpers\Files::fetch_url($feed_url), true);
     $site_name = \Drupal::config("system.site")->get('name');
 
     $results = '</ul>' . PHP_EOL;

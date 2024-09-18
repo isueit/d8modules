@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - staff_profile
 id: node.field_staff_profile_stale
 field_name: field_staff_profile_stale
 entity_type: node

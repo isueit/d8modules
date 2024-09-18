@@ -1,0 +1,7 @@
+plp_programs.admin_settings_form:
+  title: 'PLP - Programs'
+  route_name: plp_programs.admin_settings_form
+  description: 'Extension Program Information pulled from MyData'
+  parent: system.admin_config_content
+  weight: 99
+

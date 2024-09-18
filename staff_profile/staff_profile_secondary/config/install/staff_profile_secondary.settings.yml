@@ -1,1 +1,5 @@
+dependencies:
+  enforced:
+    module:
+      - staff_profile_secondary
 sync_url: ''

@@ -23,6 +23,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 //use Drupal\node\Entity\Node;
 //use Drupal\node\NodeInterface;
 use Drupal\pubs_entity_type\Entity\PubsEntity;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 //use \Drupal\pubs_entity_type\Form;
 
@@ -78,13 +79,13 @@ function pubs_entity_from_feed_form_pubs_entity_settings_validate(&$form, FormSt
 function pubs_entity_from_feed_rebuild() {
   $config = \Drupal::config('pubs_entity_type.settings');
   $feed_url = $config->get('pubs_json_feed');
-  $raw = file_get_contents($feed_url);
+  $raw = ISUEOHelpers\Files::fetch_url($feed_url);
   $products = json_decode($raw, TRUE);
   $count = 0;
 
   foreach ($products as $product) {
     $count--;
-    $found_entities = \Drupal::entityQuery('pubs_entity')->condition('field_product_id', $product['ProductID'])->execute();
+    $found_entities = \Drupal::entityQuery('pubs_entity')->accessCheck(false)->condition('field_product_id', $product['ProductID'])->execute();
 
     if (empty($found_entities)) {
       $myentity = PubsEntity::create([
@@ -110,7 +111,7 @@ function pubs_entity_from_feed_rebuild() {
   $mydate = new DrupalDateTime('now');
   $mydate->sub(new DateInterval('PT5M'));
 
-  $old_ids= \Drupal::entityQuery('pubs_entity')->condition('field_from_feed', TRUE)->condition('changed', $mydate->format('U'), '<')->execute();
+  $old_ids= \Drupal::entityQuery('pubs_entity')->accessCheck(false)->condition('field_from_feed', TRUE)->condition('changed', $mydate->format('U'), '<')->execute();
   $old_entities = PubsEntity::loadMultiple($old_ids);
   foreach($old_entities as $entity) {
     \Drupal::logger('pubs_entity_from_feed')->info($entity->get('name')->getString());

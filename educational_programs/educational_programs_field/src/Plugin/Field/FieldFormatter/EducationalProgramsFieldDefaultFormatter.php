@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldFilteredMarkup;
 use DOMDocument;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Plugin implementation of the 'educational_programs_field_default' formatter.
@@ -36,7 +37,7 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase {
     $elements = array();
 
     // Get the feed from MyData
-    $fromFeed = file_get_contents('https://datastore.exnet.iastate.edu/mydata/EducationalPrograms.json');
+    $fromFeed = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/EducationalPrograms.json');
     $fromFeed = str_replace('\u0026#039;', '\'', $fromFeed);
     $programs = json_decode($fromFeed, TRUE);
 

@@ -2,46 +2,57 @@
 
 use \Drupal\node\Entity\Node;
 use \Drupal\taxonomy\Entity\Term;
+use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_rebuild().
  */
-function staff_profile_secondary_rebuild() {
+function staff_profile_secondary_rebuild()
+{
   staff_profile_secondary_handle_feeds();
 }
 
 /**
  * Implements hook_cron().
  */
-function staff_profile_secondary_cron() {
+function staff_profile_secondary_cron()
+{
   staff_profile_secondary_handle_feeds();
 }
 
 /**
  * Pull in the feeds
  */
-function staff_profile_secondary_handle_feeds() {
+function staff_profile_secondary_handle_feeds()
+{
+  $count = 0;
+  $before_staff = [];
+  $after_staff = [];
+  $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+  // Get feed URL(s) from the module config
   $config = \Drupal::config('staff_profile_secondary.settings');
   if (empty($config->get('sync_url'))) {
     \Drupal::logger('staff_profile_secondary')->warning('Need to set a URL for the JSON feed to Sync from Staff Directory');
     return;
   }
+  $feedUrls = explode(',', $config->get('sync_url'));
 
   // Get all Staff Profile nodes
-  $nids = \Drupal::entityQuery('node')->condition('type', 'staff_profile')->execute();
-  $nodes =  Node::loadMultiple($nids);
-  // Mark nodes as "stale"
+  $nodes = \Drupal::entityTypeManager()->getStorage("node")->loadByProperties(["type" => "staff_profile"]);
+
+  // Get the id's of the staff that were on the site before doing the sync
   foreach ($nodes as $node) {
     if ($node->isPublished()) {
-      $node->set('field_staff_profile_stale', TRUE)->save();
+      $before_staff[] = $node->id();
     }
   }
 
-  $feedUrls = explode(',', $config->get('sync_url'));
-  $count = 0;
-
+  //Handle each URL
   foreach ($feedUrls as $feedUrl) {
-    $fromFeed = file_get_contents($feedUrl);
+    // Retrieve the feed for this URL
+    $fromFeed = ISUEOHelpers\Files::fetch_url($feedUrl);
     $fromFeed = str_replace('\u0026#039;', '\'', $fromFeed);
     $profiles = json_decode($fromFeed, TRUE);
 
@@ -62,6 +73,8 @@ function staff_profile_secondary_handle_feeds() {
         // Weight defaults to zero on creation
         $mynode->field_staff_profile_sort_order->value = 0;
       }
+
+      $after_staff[] = $mynode->id();
 
       // Handle the title and body
       $mynode->setTitle(html_entity_decode($profile['title']));
@@ -98,14 +111,37 @@ function staff_profile_secondary_handle_feeds() {
         'postal_code' => $profile['field_staff_profile_addr_postal_code'],
       );
 
+      # Handle the Custodian of Public Record Field
+      if (!empty($profile['field_custodian_of_public_record']) && $profile['field_custodian_of_public_record'] == 'Custodian of Public Record') {
+        $mynode->field_custodian_of_public_record->value = true;
+      } else {
+        $mynode->field_custodian_of_public_record->value = null;
+      }
+
+      // Handle staff Position
+      $taxonomy = array();
+      $position = 0;
+      if (!empty($profile['field_staff_profile_position'])) {
+        $taxonomy = $taxonomyStorage->loadByProperties([
+          'name' =>  $profile['field_staff_profile_position'],
+          'vid' => 'staff_positions'
+        ]);
+        if (!empty($taxonomy)) {
+          $position = array_keys($taxonomy)[0];
+        } else {
+          $new = Term::create(['name' => $profile['field_staff_profile_position'], 'vid' => 'staff_positions']);
+          $new->save();
+          $position = $new->id();
+        }
+      }
+      $mynode->field_staff_profile_position = [['target_id' => $position]];
 
       // Handle the base county
-      $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
       $taxonomy = array();
       if (!empty($profile['field_staff_profile_base_county'])) {
         $taxonomy = $taxonomyStorage->loadByProperties([
-            'name' => str_replace('&#039;', '\'', $profile['field_staff_profile_base_county']),
-            'vid' => 'counties_in_iowa'
+          'name' => str_replace('&#039;', '\'', $profile['field_staff_profile_base_county']),
+          'vid' => 'counties_in_iowa'
         ]);
       }
       $base_county = (!empty($taxonomy) ? array_keys($taxonomy)[0] : 0);
@@ -115,12 +151,24 @@ function staff_profile_secondary_handle_feeds() {
       $mynode->field_staff_profile_pgm_areas = [array()];
       $temp_array = explode(', ', $profile['field_staff_profile_pgm_areas']);
       foreach ($temp_array as $index => $temp_term) {
+        if (empty($temp_term)) {
+          continue;
+        }
+        if ($temp_term == '4-H Youth') $temp_term = '4-H Youth Development';
+        if ($temp_term == 'Agriculture') $temp_term = 'Agriculture and Natural Resources';
+
         $taxon = $taxonomyStorage->loadByProperties([
-            'name' => $temp_term,
-            'vid' => 'program_areas'
+          'name' => $temp_term,
+          'vid' => 'program_areas'
         ]);
-        if (!empty($taxon) && array_keys($taxon)[0] > 0) {
-          $mynode->field_staff_profile_pgm_areas[] = ['target_id' => array_keys($taxon)[0]];
+        if (empty($taxon)) {
+          $new = Term::create(['name' => $temp_term, 'vid' => 'program_areas']);
+          $new->save();
+          $mynode->field_staff_profile_pgm_areas[] = ['target_id' => $new->id()];
+        } else {
+          if (!empty($taxon) && array_keys($taxon)[0] > 0) {
+            $mynode->field_staff_profile_pgm_areas[] = ['target_id' => array_keys($taxon)[0]];
+          }
         }
       }
 
@@ -129,8 +177,8 @@ function staff_profile_secondary_handle_feeds() {
       $temp_array = explode(', ', str_replace('&#039;', '\'', $profile['field_staff_profile_cty_served']));
       foreach ($temp_array as $index => $temp_term) {
         $taxon = $taxonomyStorage->loadByProperties([
-            'name' => $temp_term,
-            'vid' => 'counties_in_iowa'
+          'name' => $temp_term,
+          'vid' => 'counties_in_iowa'
         ]);
         if (!empty($taxon) && array_keys($taxon)[0] > 0) {
           $mynode->field_staff_profile_cty_served[] = ['target_id' => array_keys($taxon)[0]];
@@ -147,8 +195,8 @@ function staff_profile_secondary_handle_feeds() {
         }
 
         $taxon = $taxonomyStorage->loadByProperties([
-            'name' => $temp_term,
-            'vid' => 'teams_groups'
+          'name' => $temp_term,
+          'vid' => 'teams_groups'
         ]);
         if (!empty($taxon) && array_keys($taxon)[0] > 0) {
           //Team-group exists in taxon, add to staff profile
@@ -160,8 +208,8 @@ function staff_profile_secondary_handle_feeds() {
             'vid' => 'teams_groups'
           ])->save();
           $taxon = $taxonomyStorage->loadByProperties([
-              'name' => $temp_term,
-              'vid' => 'teams_groups'
+            'name' => $temp_term,
+            'vid' => 'teams_groups'
           ]);
           $mynode->field_staff_profile_teams_groups[] = ['target_id' => array_keys($taxon)[0]];
         }
@@ -175,13 +223,12 @@ function staff_profile_secondary_handle_feeds() {
     }
   }
 
-  // Unpublish nodes that are still marked "stale"
-  foreach ($nodes as $node) {
-    if ($node->get('field_staff_profile_stale')->value) {
-      $node->field_staff_profile_stale->value = FALSE;
-      $node->setUnpublished();
-      $node->save();
-    }
+  // Unpublish nodes that are no longer in the feed(s)
+  $array_diff = array_diff($before_staff, $after_staff);
+  foreach ($array_diff as $node_id) {
+    $working = Drupal::entityTypeManager()->getStorage('node')->load($node_id);
+    $working->setUnpublished();
+    $working->save();
   }
 
   // Log a message to ensure it ran
@@ -205,7 +252,24 @@ function staff_profile_secondary_form_node_form_alter(&$form, &$form_state, $for
     $form['field_staff_profile_pref_phone']['widget'][0]['value']['#disabled'] = TRUE;
     $form['field_staff_profile_smugmug']['widget'][0]['value']['#disabled'] = TRUE;
     $form['field_staff_profile_teams_groups']['widget']['#disabled'] = TRUE;
+    $form['field_custodian_of_public_record']['widget']['#disabled'] = TRUE;
 
     $form['body']['widget']['#disabled'] = TRUE;
   }
+}
+
+
+
+/**
+* Implements hook_views_pre_render().
+*/
+function staff_profile_secondary_pre_render(ViewExecutable $view) {
+    $view->element['#attached']['library'][] = 'staff_profile_secondary/staff_profile_secondary';
+  }
+
+/**
+ * Implements hook_preprocess_HOOK()
+ */
+function staff_profile_secondary_preprocess_node(&$variables) {
+    $variables['#attached']['library'][] = 'staff_profile_secondary/staff_profile_secondary';
 }

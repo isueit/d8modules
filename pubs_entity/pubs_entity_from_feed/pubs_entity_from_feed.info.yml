@@ -1,8 +1,9 @@
 name: 'Pubs Entity from feed'
 type: module
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 description: 'Creates pubs entities from json feed'
 version: '8.x-1.0-dev'
 package: 'ISUEO'
 dependencies:
-  - isueo_d8modules:pubs_entity_type
+  - d8modules:pubs_entity_type
+  - d8modules:isueo_helpers

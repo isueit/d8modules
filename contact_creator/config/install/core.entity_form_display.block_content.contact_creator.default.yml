@@ -5,6 +5,7 @@ dependencies:
     - block_content.type.contact_creator
     - field.field.block_content.contact_creator.field_contact_creator_address
     - field.field.block_content.contact_creator.field_contact_creator_email
+    - field.field.block_content.contact_creator.field_contact_creator_hours
     - field.field.block_content.contact_creator.field_contact_creator_phone
     - field.field.block_content.contact_creator.field_contact_creator_phone_2
     - field.field.block_content.contact_creator.field_contact_creator_title
@@ -22,16 +23,24 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_contact_creator_email:
-    type: string_textfield
+    type: email_default
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_contact_creator_hours:
+    type: string_textarea
     weight: 3
     region: content
     settings:
-      size: 60
+      rows: 3
       placeholder: ''
     third_party_settings: {  }
   field_contact_creator_phone:
     type: string_textfield
-    weight: 4
+    weight: 5
     region: content
     settings:
       size: 60
@@ -39,7 +48,7 @@ content:
     third_party_settings: {  }
   field_contact_creator_phone_2:
     type: string_textfield
-    weight: 5
+    weight: 6
     region: content
     settings:
       size: 60

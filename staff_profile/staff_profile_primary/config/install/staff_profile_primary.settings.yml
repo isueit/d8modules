@@ -7,3 +7,4 @@ smug_mug_password: null
 smug_mug_api_key: null
 sync_encrypt_profile: staff_profile_primary
 address_fixes: "1705 MCPHERSON AVE. STE 2::1705 MCPHERSON AVE. STE 200\r\n500 EAST TAYLOR ST SUITE::500 EAST TAYLOR ST SUITE A\r\n3420 UNIVERSITY AVE. STE::3420 UNIVERSITY AVE. STE B"
+reed_overrides: "andwelch|all\r\nraeannb|north\r\njansmith|south\r\nmmauton|Polk;Story\r\nheaverlo|Polk;Story"

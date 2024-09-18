@@ -5,9 +5,12 @@ dependencies:
     - block_content.type.contact_creator
     - field.field.block_content.contact_creator.field_contact_creator_address
     - field.field.block_content.contact_creator.field_contact_creator_email
+    - field.field.block_content.contact_creator.field_contact_creator_hours
     - field.field.block_content.contact_creator.field_contact_creator_phone
     - field.field.block_content.contact_creator.field_contact_creator_phone_2
     - field.field.block_content.contact_creator.field_contact_creator_title
+  module:
+    - field_formatter_class
 id: block_content.contact_creator.default
 targetEntityType: block_content
 bundle: contact_creator
@@ -21,12 +24,18 @@ content:
     weight: 1
     region: content
   field_contact_creator_email:
-    type: string
+    type: basic_string
     label: above
-    settings:
-      link_to_entity: false
+    settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 6
+    region: content
+  field_contact_creator_hours:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
     region: content
   field_contact_creator_phone:
     type: string
@@ -46,10 +55,12 @@ content:
     region: content
   field_contact_creator_title:
     type: string
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
     weight: 0
     region: content
 hidden: {  }
