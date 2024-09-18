@@ -19,6 +19,9 @@ dependencies:
     - serialization
     - taxonomy
     - user
+  enforced:
+    module:
+      - staff_profile_primary
 id: web_author_feeds
 label: 'Web Author Feeds'
 module: views
@@ -363,7 +366,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '{{ field_staff_profile_cty_author | replace({ ''&#039;'': "''" }) | raw }}'
+            text: "{{ field_staff_profile_cty_author | replace({ '&#039;': \"'\" }) | raw }}"
             make_link: false
             path: ''
             absolute: false
@@ -551,7 +554,6 @@ display:
           default_argument_type: fixed
           default_argument_options:
             argument: ''
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -684,7 +686,6 @@ display:
         - request_format
         - url
         - url.query_args
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -722,7 +723,7 @@ display:
         arguments: true
       display_description: ''
       display_extenders: {  }
-      path: feeds/cty-authors/%
+      path: staff/feeds/cty-authors/%
     cache_metadata:
       max-age: -1
       contexts:
@@ -730,7 +731,6 @@ display:
         - 'languages:language_interface'
         - request_format
         - url
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -772,7 +772,6 @@ display:
           default_argument_type: fixed
           default_argument_options:
             argument: ''
-          default_argument_skip_url: false
           summary_options:
             base_path: ''
             count: true
@@ -822,7 +821,7 @@ display:
           required: false
       display_description: ''
       display_extenders: {  }
-      path: feeds/site-authors/%
+      path: staff/feeds/site-authors/%
     cache_metadata:
       max-age: -1
       contexts:
@@ -830,7 +829,6 @@ display:
         - 'languages:language_interface'
         - request_format
         - url
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:
@@ -999,7 +997,7 @@ display:
       group_by: false
       display_description: ''
       display_extenders: {  }
-      path: feeds/cty-authors/all
+      path: staff/feeds/cty-authors/all
     cache_metadata:
       max-age: -1
       contexts:
@@ -1007,7 +1005,6 @@ display:
         - 'languages:language_interface'
         - request_format
         - url
-        - user
         - 'user.node_grants:view'
         - user.permissions
       tags:

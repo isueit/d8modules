@@ -1,0 +1,29 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.staff_contact_block
+    - field.field.block_content.staff_contact_block.field_staff_member
+  enforced:
+    module:
+      - staff_block
+id: block_content.staff_contact_block.default
+targetEntityType: block_content
+bundle: staff_contact_block
+mode: default
+content:
+  field_staff_member:
+    type: options_select
+    weight: 26
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

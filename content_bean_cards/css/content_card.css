@@ -1,0 +1,105 @@
+:root {
+	--cardinal: #c8102e;
+	--gold: #f1be48;
+	--burgundy: #7c2529;
+	--dk-gray: #4a4a4a;
+	--lt-gray: #f5f5f5;
+	--md-gray: #ebebeb;
+	--midnight: #003d4c;
+	--green: #008540;
+}
+
+/* -------------------------------------- */
+/* ## CONTENT CARDS
+/* -------------------------------------- */
+
+.bean-card-content_label {
+	display: flex;
+	padding: 0.75rem 1rem;
+	justify-content: center;
+	background: var(--cardinal);
+	font-size: 1.5rem;
+	position: relative;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+.bean-card-content_label p {
+    margin: 0;
+	line-height: 1.45;
+	font-family: Merriweather,serif;
+}
+.bean-card-content_label div {
+    margin: 0;
+}
+.bean-card_body {
+	color: black;
+	padding: 0.5rem 0.5rem 0 0.5rem;
+	border: 3px solid var(--cardinal);
+}
+
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 991px) {
+	.bean-card-content_label p {
+		line-height: 1;
+	}
+ }
+
+/* -------------------------------------- */
+/* ## CARD COLORS
+/* -------------------------------------- */
+.bean-card-content_label.Blue {
+	background: var(--midnight);
+}
+.bean-card-content_label.Green {
+	background: var(--green);
+}
+.bean-card-content_label.Dark.Red {
+	background: var(--burgundy);
+}
+.bean-card-content_label.Dark.Blue {
+	background: var(--midnight);
+}
+
+/* Border Color based on Label Color */
+.bean-card-content_body.Blue { 
+	border-color: var(--midnight);
+}
+.bean-card-content_body.Green { 
+	border-color: var(--green); 
+}
+.bean-card-content_body.Dark.Red { 
+	border-color: var(--burgundy); 
+}
+.bean-card-content_body.Dark.Blue { 
+	border-color: var(--midnight); 
+}
+
+/* -------------------------------------- */
+/* ## CARD FONTS
+/* -------------------------------------- */
+.bean-card-content_label.Small {
+	font-size: 0.93rem !important;
+  }
+  .bean-card-content_label.Medium {
+	font-size: 1.5rem !important;
+  }
+  .bean-card-content_label.Large {
+	font-size: 2rem !important;
+  }
+
+  /* When Icons are in the Label */
+  .bean-card-content_label.Small div.fontawesome-icons {
+	margin-right: 0.5rem;
+	padding-right: 5px;
+  }
+  .bean-card-content_label.Medium div.fontawesome-icons {
+	margin-right: 1rem;
+	padding-right: 5px;
+  }
+  .bean-card-content_label.Large div.fontawesome-icons {
+	margin-right: 1.25rem;
+	padding-right: 5px;
+  }

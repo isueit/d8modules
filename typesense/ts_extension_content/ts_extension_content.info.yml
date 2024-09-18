@@ -1,0 +1,6 @@
+name: 'Typesense - Extension Content'
+type: module
+core_version_requirement: ^10
+description: 'Put Content into a global collection in Typesense'
+version: '8.x-1.1-dev'
+package: 'ISUEO'

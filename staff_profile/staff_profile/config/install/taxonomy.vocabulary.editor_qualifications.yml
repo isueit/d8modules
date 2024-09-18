@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - staff_profile
 name: 'Editor Qualifications'
 vid: editor_qualifications
 description: 'Editor Qualifications for use in staff profiles'

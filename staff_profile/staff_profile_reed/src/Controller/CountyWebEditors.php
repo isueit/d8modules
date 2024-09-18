@@ -11,7 +11,11 @@ class CountyWebEditors extends ControllerBase {
   public function panel() {
     $counties = \Drupal::service('staff_profile_reed.helper_functions')->getCountiesServed();
 
-    $result = [];
+    $result = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['isueo-web-editors']],
+    ];
+
     foreach ($counties as $key => $county) {
       $result[$county->label()] = array(
         '#type' => 'fieldset',

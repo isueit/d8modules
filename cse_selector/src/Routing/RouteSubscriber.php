@@ -9,7 +9,7 @@ use Drupal\Core\Routing\RoutingEvents;
  * Listens to the dynamic route events.
  */
 class RouteSubscriber extends RouteSubscriberBase {
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents() : array {
     $events[RoutingEvents::ALTER] = 'onAlterRoutes';
     return $events;
   }

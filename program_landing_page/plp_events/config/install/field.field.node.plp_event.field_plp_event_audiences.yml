@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_event_audiences
+    - node.type.plp_event
+    - taxonomy.vocabulary.intended_audiences
+id: node.plp_event.field_plp_event_audiences
+field_name: field_plp_event_audiences
+entity_type: node
+bundle: plp_event
+label: 'Event Audiences'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      intended_audiences: intended_audiences
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

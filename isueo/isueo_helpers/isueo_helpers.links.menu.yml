@@ -1,0 +1,6 @@
+isueo_helpers.primary_settings_form:
+  title: 'ISUEO Helpers Settings'
+  route_name: isueo_helpers.primary_settings_form
+  description: 'Change settings for ISUEO Helpers'
+  parent: system.admin_config_system
+  weight: 100

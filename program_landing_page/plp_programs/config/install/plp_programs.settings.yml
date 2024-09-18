@@ -1,0 +1,20 @@
+counties:
+  county_boost: '0'
+  county_multiplier: '1'
+  county_interval: '1'
+indicators:
+  indicator_boost: '25'
+  indicator_multiplier: '0'
+  indicator_interval: '1'
+measurements:
+  measurement_boost: '25'
+  measurement_multiplier: '0'
+  measurement_interval: '1'
+events:
+  event_boost: '75'
+  event_multiplier: '0'
+  event_interval: '1'
+children:
+  child_boost: '0'
+  child_multiplier: '20'
+  child_interval: '1'

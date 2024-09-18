@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_program_smugmug
+    - node.type.plp_program
+id: node.plp_program.field_plp_program_smugmug
+field_name: field_plp_program_smugmug
+entity_type: node
+bundle: plp_program
+label: 'SmugMug ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

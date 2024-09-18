@@ -17,11 +17,7 @@ function content_bean_cards_theme_suggestions_block_alter(&$suggestions, $variab
   }
 }
 
-function content_bean_cards_preprocess_block(&$variables)
-{
-  // Include the program_offering_blocks css file for the block
-  if (substr($variables['plugin_id'], 0, 23) == 'content_bean_cards') {
+function content_bean_cards_preprocess_block(&$variables) {
     $variables['#attached']['library'][] = 'content_bean_cards/content_bean_cards';
-    $variables['attributes']['class'][] = 'content_bean_cards';
-  }
 }
+

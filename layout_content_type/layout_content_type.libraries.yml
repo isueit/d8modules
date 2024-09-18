@@ -1,0 +1,5 @@
+layout_content_type:
+  version: 1.x
+  css:
+    layout:
+      css/layout_content_type.css: {}

@@ -3,9 +3,8 @@ description: Module for creating the block that contains the white icons in the 
 package: Custom
 type: module
 version: 1.0
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 dependencies:
  - block
  - block_content
  - drupal:link
- - drupal:linkicon

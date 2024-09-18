@@ -5,37 +5,21 @@ dependencies:
     - block_content.type.social_media_red_bar
     - field.field.block_content.social_media_red_bar.field_social_media_links
   module:
-    - linkicon
+    - link
 id: block_content.social_media_red_bar.default
 targetEntityType: block_content
 bundle: social_media_red_bar
 mode: default
 content:
   field_social_media_links:
-    type: linkicon
-    label: inline
+    type: link
+    label: hidden
     settings:
       trim_length: 80
       url_only: false
       url_plain: false
       rel: ''
       target: ''
-      linkicon_prefix: icon
-      linkicon_wrapper_class: ''
-      linkicon_icon_class: ''
-      linkicon_label_class: ''
-      linkicon_load: false
-      linkicon_vertical: false
-      linkicon_style: ''
-      linkicon_color: ''
-      linkicon_tooltip: false
-      linkicon_no_text: false
-      linkicon_maxlength: 60
-      linkicon_position: ''
-      linkicon_link: false
-      linkicon_global_title: ''
-      linkicon_size: ''
-      linkicon_bundle: ''
     third_party_settings: {  }
     weight: 4
     region: content

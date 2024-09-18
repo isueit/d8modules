@@ -1,0 +1,5 @@
+typesense:
+  api_key: bilLvsiWoO1EqcM21L8XrzofmVBYfyB9
+  host: typesense.extension.iastate.edu
+  port: '443'
+  protocol: https

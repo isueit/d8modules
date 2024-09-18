@@ -26,7 +26,7 @@ class StaffProfilePrimaryCommands extends DrushCommands {
    *  Add Web Editor to staff profile bwebster
    */
   public function addeditor($netid, $options = ['course' => ""]) {
-    $nids = \Drupal::entityQuery('node')->condition('type', 'staff_profile')->condition('field_staff_profile_netid', $netid)->execute();
+    $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->condition('field_staff_profile_netid', $netid)->execute();
 
     if ($nid = reset($nids) && $nid !== FALSE) {
       $node =  Node::load(reset($nids));

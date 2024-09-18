@@ -23,7 +23,10 @@ class CountyWebEditorsAddForm extends FormBase {
       '#autocomplete_route_parameters' => [
         'field_name' => 'field_staff_profile_netid',
         'count' => 5
-      ]
+      ],
+      '#attributes' => [
+        'placeholder' => $this->t('Type NetID here.'),
+      ],
     ];
     $form['cty'] = [
       '#type' => 'hidden',

@@ -1,0 +1,6 @@
+ts_extension_content.primary_settings_form:
+  title: 'Typesense - Extension Content'
+  route_name: ts_extension_content.primary_settings_form
+  description: 'Settings for the Main Typesense Indexer'
+  parent: system.admin_config_search
+  weight: 100

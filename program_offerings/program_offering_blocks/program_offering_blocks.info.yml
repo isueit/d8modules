@@ -1,8 +1,9 @@
 name: 'Program Offering Blocks'
 type: module
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 description: 'Creates Blocks to display Program Offerings from MyData'
 version: '8.x-1.0-dev'
 package: 'ISUEO'
 dependencies:
   - drupal:block
+  - d8modules:isueo_helpers

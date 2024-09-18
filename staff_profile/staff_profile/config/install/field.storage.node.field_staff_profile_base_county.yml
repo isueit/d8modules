@@ -4,6 +4,9 @@ dependencies:
   module:
     - node
     - taxonomy
+  enforced:
+    module:
+      - staff_profile
 id: node.field_staff_profile_base_county
 field_name: field_staff_profile_base_county
 entity_type: node

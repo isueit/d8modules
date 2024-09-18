@@ -5,6 +5,9 @@ dependencies:
     - field.storage.user.field_from_feed
   module:
     - user
+  enforced:
+    module:
+      - sync_web_authors
 id: user.user.field_from_feed
 field_name: field_from_feed
 entity_type: user

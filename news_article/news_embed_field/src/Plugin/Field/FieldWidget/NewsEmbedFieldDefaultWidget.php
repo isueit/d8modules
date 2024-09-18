@@ -33,7 +33,7 @@ class NewsEmbedFieldDefaultWidget extends WidgetBase {
       '#type' => 'details',
       '#title' => $this->t('Embed News Article'),
       '#attributes' => array(
-        'class' => 'news_embed_widget',
+        'class' => ['news_embed_widget'],
       ),
       '#open' => FALSE,
     );

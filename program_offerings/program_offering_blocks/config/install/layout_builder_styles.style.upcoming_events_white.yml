@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upcoming_events_white
+label: 'Upcoming Events White'
+classes: upcoming-events-white
+type: component
+group: default
+block_restrictions:
+  - 'program_offering_blocks:1'
+layout_restrictions: {  }
+weight: 0

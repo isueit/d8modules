@@ -3,6 +3,15 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 
+
+/**
+ * Implements hook_preprocess_HOOK()
+ */
+function homepage_content_preprocess_node(&$variables)
+{
+    $variables['#attached']['library'][] = 'homepage_content/homepage_content';
+  }
+
 /**
  * Implements hook_menu_local_tasks_alter().
  * Add tab with custom title and link only to pages of a selected content type

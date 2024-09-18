@@ -1,0 +1,5 @@
+staff_block:
+  version: 1.x
+  css:
+    layout:
+      css/staff_block.css: {}

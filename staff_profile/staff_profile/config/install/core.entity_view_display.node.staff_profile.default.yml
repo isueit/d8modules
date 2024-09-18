@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.staff_profile.body
+    - field.field.node.staff_profile.field_custodian_of_public_record
     - field.field.node.staff_profile.field_staff_profile_addr
     - field.field.node.staff_profile.field_staff_profile_base_county
     - field.field.node.staff_profile.field_staff_profile_canonical
@@ -20,6 +21,7 @@ dependencies:
     - field.field.node.staff_profile.field_staff_profile_netid
     - field.field.node.staff_profile.field_staff_profile_pgm_areas
     - field.field.node.staff_profile.field_staff_profile_phone
+    - field.field.node.staff_profile.field_staff_profile_position
     - field.field.node.staff_profile.field_staff_profile_pref_name
     - field.field.node.staff_profile.field_staff_profile_pref_phone
     - field.field.node.staff_profile.field_staff_profile_pref_title
@@ -42,6 +44,9 @@ dependencies:
     - staff_profile
     - text
     - user
+  enforced:
+    module:
+      - staff_profile
 third_party_settings:
   field_group:
     group_contact_:
@@ -63,10 +68,10 @@ third_party_settings:
         - field_staff_profile_region
         - field_staff_profile_college
         - field_staff_profile_pgm_areas
-        - field_staff_profile_location
         - field_staff_profile_base_county
         - field_staff_profile_cty_served
         - field_staff_profile_teams_groups
+        - field_custodian_of_public_record
       label: 'Location Information'
       parent_name: ''
       region: content
@@ -88,6 +93,18 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_custodian_of_public_record:
+    type: boolean
+    label: hidden
+    settings:
+      format: custom
+      format_custom_false: ''
+      format_custom_true: 'Custodian of Public Record'
+    third_party_settings:
+      field_formatter_class:
+        class: isu-custodian-records
+    weight: 18
+    region: content
   field_staff_profile_addr:
     type: address_default
     label: hidden
@@ -101,14 +118,14 @@ content:
     settings:
       link: false
     third_party_settings: {  }
-    weight: 7
+    weight: 15
     region: content
   field_staff_profile_college:
     type: list_default
     label: inline
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 12
     region: content
   field_staff_profile_cty_dept:
     type: string
@@ -128,7 +145,7 @@ content:
         delimiter: ','
       field_formatter_class:
         class: staff_profile_counties_served
-    weight: 8
+    weight: 16
     region: content
   field_staff_profile_email:
     type: email_mailto
@@ -136,13 +153,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 3
-    region: content
-  field_staff_profile_location:
-    type: list_default
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-    weight: 6
     region: content
   field_staff_profile_pgm_areas:
     type: entity_reference_label
@@ -154,7 +164,7 @@ content:
         delimiter: ','
       field_formatter_class:
         class: ''
-    weight: 5
+    weight: 13
     region: content
   field_staff_profile_pref_phone:
     type: string
@@ -179,7 +189,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 3
+    weight: 11
     region: content
   field_staff_profile_smugmug:
     type: smugmug_id_formatter
@@ -190,7 +200,7 @@ content:
     region: content
   field_staff_profile_teams_groups:
     type: entity_reference_label
-    label: above
+    label: inline
     settings:
       link: false
     third_party_settings:
@@ -198,7 +208,7 @@ content:
         delimiter: ','
       field_formatter_class:
         class: staff_profile_teams_groups
-    weight: 9
+    weight: 17
     region: content
 hidden:
   field_staff_profile_canonical: true
@@ -208,8 +218,10 @@ hidden:
   field_staff_profile_first_name: true
   field_staff_profile_job_title: true
   field_staff_profile_last_name: true
+  field_staff_profile_location: true
   field_staff_profile_netid: true
   field_staff_profile_phone: true
+  field_staff_profile_position: true
   field_staff_profile_pref_name: true
   field_staff_profile_quals: true
   field_staff_profile_site_author: true

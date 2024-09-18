@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_plp_event_end_dates
+field_name: field_plp_event_end_dates
+entity_type: node
+type: datetime
+settings:
+  datetime_type: datetime
+module: datetime
+locked: false
+cardinality: 12
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
