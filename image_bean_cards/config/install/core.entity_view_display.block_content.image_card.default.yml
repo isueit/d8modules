@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - block_content.type.image_card
+    - field.field.block_content.image_card.field_image_card_caption
     - field.field.block_content.image_card.field_image_card_color_style
     - field.field.block_content.image_card.field_image_card_icon
     - field.field.block_content.image_card.field_image_card_image
@@ -20,46 +21,55 @@ targetEntityType: block_content
 bundle: image_card
 mode: default
 content:
-  field_image_card_color_style:
-    weight: 5
+  field_image_card_caption:
+    type: basic_string
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 7
+    region: content
+  field_image_card_color_style:
     type: list_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
     region: content
   field_image_card_icon:
-    weight: 4
+    type: fontawesome_icon_formatter
     label: hidden
     settings:
       layers: false
     third_party_settings: {  }
-    type: fontawesome_icon_formatter
+    weight: 4
     region: content
   field_image_card_image:
-    weight: 2
+    type: image
     label: hidden
     settings:
       image_link: ''
       image_style: ''
+      image_loading:
+        attribute: lazy
     third_party_settings: {  }
-    type: image
+    weight: 2
     region: content
   field_image_card_text_size:
-    weight: 6
+    type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 6
     region: content
   field_image_card_title:
-    weight: 0
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 0
     region: content
   field_image_card_url:
-    weight: 3
+    type: link
     label: hidden
     settings:
       trim_length: 80
@@ -68,8 +78,8 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 3
     region: content
 hidden:
   field_image_card_body: true
-
+  search_api_excerpt: true

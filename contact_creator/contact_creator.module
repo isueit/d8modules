@@ -4,7 +4,7 @@
  * Implements hook_ENTITY_TYPE_update()
  */
 function contact_creator_block_content_update(Drupal\Core\Entity\EntityInterface $entity){
-	// Clear cache if BlockContent is of type 'contact_info'
+	// Clear cache if BlockContent is of type 'contact_creator'
 	if ($entity->bundle() == 'contact_info') {
 	  \Drupal::service('cache.render')->invalidateAll();
 	}
@@ -13,15 +13,6 @@ function contact_creator_block_content_update(Drupal\Core\Entity\EntityInterface
 /**
  * Implements hook_preprocess_HOOK()
  */
-function contact_creator_preprocess_block(&$variables)
-{
-  // Get plugin id of the contact_us block
-  $config = \Drupal::config('block.block.contact_us');
-  $contact_us_plugin_id = $config->get('plugin');
-
-  // Include the contact_creator css when contact_us block is included
-  if ($variables['plugin_id'] == $contact_us_plugin_id) {
+function contact_creator_preprocess_block(&$variables) {
     $variables['#attached']['library'][] = 'contact_creator/contact_creator';
-    $variables['attributes']['class'][] = 'contact_creator';
   }
-}

@@ -1,0 +1,5 @@
+news_from_feed:
+  version: 1.x
+  css:
+    layout:
+      css/news_from_feed.css: {}

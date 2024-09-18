@@ -12,9 +12,7 @@ label: Address
 description: ''
 required: false
 translatable: false
-default_value:
-  -
-    value: "Office of the Assistant Vice-President of \r\nIowa State University Extension and Outreach\r\n2150 Beardshear Hall\r\nAmes, IA 50011-2031"
+default_value: {  }
 default_value_callback: ''
 settings: {  }
 field_type: string_long

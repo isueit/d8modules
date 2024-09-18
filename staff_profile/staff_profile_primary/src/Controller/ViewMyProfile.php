@@ -32,9 +32,7 @@ class ViewMyProfile extends ControllerBase
       $results = 'No staff profile for Admin user';
     } else {
       // Get all the staff_profile nodes
-      $nids = \Drupal::entityQuery('node')
-        ->condition('type', 'staff_profile')
-        ->execute();
+      $nids = \Drupal::entityQuery('node') ->accessCheck(false) ->condition('type', 'staff_profile') ->execute();
       $nodes = Node::loadMultiple($nids);
 
       // Step through the nodes, redirect when the current user is the owner of the node

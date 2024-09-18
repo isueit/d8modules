@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_event_program_url
+    - node.type.plp_event
+  module:
+    - link
+id: node.plp_event.field_plp_event_program_url
+field_name: field_plp_event_program_url
+entity_type: node
+bundle: plp_event
+label: 'Event Program URL'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 17
+  title_predefined: ''
+field_type: link

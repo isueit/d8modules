@@ -101,5 +101,6 @@ class CountyWebEditorsConfirmAdd extends ContentEntityConfirmFormBase {
       \Drupal::messenger()->addStatus(('Notification emails sent.'));
     }
     $form_state->setRedirect('staff_profile_reed.county_web_editors');
+    //$form_state->setRedirect('staff_profile_reed.dashboard_page');
   }
 }

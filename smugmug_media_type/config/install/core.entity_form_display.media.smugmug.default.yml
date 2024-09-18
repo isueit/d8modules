@@ -5,47 +5,21 @@ dependencies:
     - field.field.media.smugmug.field_media_smugmug_media_type
     - media.type.smugmug
   module:
-    - path
     - smugmug_media_type
 id: media.smugmug.default
 targetEntityType: media
 bundle: smugmug
 mode: default
 content:
-  created:
-    type: datetime_timestamp
-    weight: 2
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   field_media_smugmug_media_type:
-    weight: 0
-    settings: {  }
-    third_party_settings: {  }
     type: smugmug_media_type_textfield
-    region: content
-  path:
-    type: path
-    weight: 3
+    weight: 0
     region: content
     settings: {  }
-    third_party_settings: {  }
-  status:
-    type: boolean_checkbox
-    settings:
-      display_label: true
-    weight: 4
-    region: content
-    third_party_settings: {  }
-  uid:
-    type: entity_reference_autocomplete
-    weight: 1
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
 hidden:
+  created: true
   name: true
+  path: true
+  status: true
+  uid: true

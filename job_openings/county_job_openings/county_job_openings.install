@@ -22,7 +22,7 @@ function county_job_openings_install() {
   $name = "Counties in Iowa";
   $vid = "counties_in_iowa";
   $desc = "List of counties in Iowa. This vocabulary is required for Staff Profiles.";
-  $path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'taxonomy_import') . '/src/data/IowaCounties.txt';
+  $path = DRUPAL_ROOT . '/' . \Drupal::service('extension.list.module')->getPath('taxonomy_import') . '/src/data/IowaCounties.txt';
   $vocabs = Vocabulary::loadMultiple();
 
   //Create taxonomy if it does not exist

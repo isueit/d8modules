@@ -1,0 +1,5 @@
+staff_profile_seondary:
+  version: 1.x
+  css:
+    layout:
+      css/staff_profile_secondary.css: {}

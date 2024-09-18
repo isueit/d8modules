@@ -3,6 +3,7 @@
 namespace Drupal\program_offering_blocks\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Provides route responses for the program_offering_blocks  module.
@@ -26,7 +27,7 @@ class EventDetailsController extends ControllerBase
 
     //    $eventID = intval($eventID);
     $module_config = \Drupal::config('program_offering_blocks.settings');
-    $buffer = file_get_contents($module_config->get('url'));
+    $buffer = ISUEOHelpers\Files::fetch_url($module_config->get('url'), true);
     $program_offerings = json_decode($buffer, TRUE);
 
     foreach ($program_offerings as $event) {
@@ -52,18 +53,18 @@ class EventDetailsController extends ControllerBase
         }
         $results .= '  <div class="event_address">' . $event_address . '  </div>' . PHP_EOL;
 
-        if (!empty($event['Planned_Program__r.Web_Description__c'])) {
-          $description = str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . PHP_EOL;
-        } else {
-          $results .= $event['Program_Description__c'] . PHP_EOL;
-        }
+        $description = '';
+//        if (!empty($event['Planned_Program__r.Web_Description__c'])) {
+//          $description = str_replace('<p><br></p>', '', $event['Planned_Program__r.Web_Description__c']) . PHP_EOL;
+//        } else {
+          $description .= $event['Program_Description__c'] . PHP_EOL;
+//        }
         if (!empty($event['Planned_Program__r.Smugmug_ID__c'])) {
           $description = '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $event['Planned_Program__r.Smugmug_ID__c'] . '/0/XL/' . $event['Planned_Program__r.Smugmug_ID__c'] . '-XL.jpg" alt="" />' . $description . '<div class="clearer"></div>';
         }
-        if (isset($description)) {
-          $results .= '  <div class="event_description">' . $description . PHP_EOL;
-        }
-
+//        if (isset($description)) {
+          $results .= '  <div class="event_description">' . $description . '</div>' . PHP_EOL;
+//        }
 
         $results .= '  <div class="event_contact_label">Contact Info:</div>' . PHP_EOL;
         $results .= '  <div class="event_contact_name">' . $event['Contact_Information_Name__c'] . '</div>' . PHP_EOL;

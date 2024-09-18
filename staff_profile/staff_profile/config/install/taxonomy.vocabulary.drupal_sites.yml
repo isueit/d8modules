@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - staff_profile
 name: 'Drupal Sites'
 vid: drupal_sites
 description: 'Drupal Sites for use in staff profiles'

@@ -10,7 +10,7 @@ skin: ''
 breakpoints: 4
 optimized: false
 options:
-  options__active_tab: edit-options-responsives
+  options__active_tab: edit-options-settings
   settings:
     mobileFirst: false
     asNavFor: ''
@@ -22,8 +22,8 @@ options:
     pauseOnFocus: true
     autoplaySpeed: 3000
     arrows: true
-    prevArrow: ''
-    nextArrow: ''
+    prevArrow: 'Previous Slide'
+    nextArrow: 'Next Slide'
     downArrow: false
     downArrowTarget: ''
     downArrowOffset: 0

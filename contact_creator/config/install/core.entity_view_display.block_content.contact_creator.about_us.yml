@@ -1,0 +1,39 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_creator
+    - core.entity_view_mode.block_content.about_us
+    - field.field.block_content.contact_creator.field_contact_creator_address
+    - field.field.block_content.contact_creator.field_contact_creator_email
+    - field.field.block_content.contact_creator.field_contact_creator_hours
+    - field.field.block_content.contact_creator.field_contact_creator_phone
+    - field.field.block_content.contact_creator.field_contact_creator_phone_2
+    - field.field.block_content.contact_creator.field_contact_creator_title
+  module:
+    - field_formatter_class
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: block_content.contact_creator.about_us
+targetEntityType: block_content
+bundle: contact_creator
+mode: about_us
+content:
+  field_contact_creator_hours:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 0
+    region: content
+hidden:
+  field_contact_creator_address: true
+  field_contact_creator_email: true
+  field_contact_creator_phone: true
+  field_contact_creator_phone_2: true
+  field_contact_creator_title: true

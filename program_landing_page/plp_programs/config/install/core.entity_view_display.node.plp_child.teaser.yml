@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.plp_child.body
+    - field.field.node.plp_child.field_plp_child_mydata_id
+    - field.field.node.plp_child.field_plp_child_website
+    - node.type.plp_child
+  module:
+    - text
+    - user
+id: node.plp_child.teaser
+targetEntityType: node
+bundle: plp_child
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_plp_child_mydata_id: true
+  field_plp_child_website: true

@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_program_critical_issue
+    - node.type.plp_program
+id: node.plp_program.field_plp_program_critical_issue
+field_name: field_plp_program_critical_issue
+entity_type: node
+bundle: plp_program
+label: 'Program Critical Issue'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      critical_issues: critical_issues
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

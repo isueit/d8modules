@@ -1,0 +1,5 @@
+educational_programs_page:
+  version: 1.x
+  css:
+    layout:
+      css/educational_programs_page.css: {}

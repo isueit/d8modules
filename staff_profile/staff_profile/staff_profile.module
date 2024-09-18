@@ -73,7 +73,7 @@ function staff_profile_form_node_validate(&$form, FormStateInterface $form_state
 
   // If it's a new node, or the netID changed, then make sure this netID doesn't already have a node
   if ($is_new_node || $old_netid != $new_netid) {
-    $nids = \Drupal::entityQuery('node')->condition('type','staff_profile')
+    $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type','staff_profile')
       ->condition('field_staff_profile_netid', $new_netid)
       ->execute();
     if (!empty($nids)) {
@@ -100,6 +100,7 @@ function staff_profile_mark_database_fields_readonly(&$form) {
   $form['field_staff_profile_job_title']['widget'][0]['value']['#disabled'] = TRUE;
   $form['field_staff_profile_staffid']['widget'][0]['value']['#disabled'] = TRUE;
   $form['field_staff_profile_base_county']['widget']['#disabled'] = TRUE;
+  $form['field_staff_profile_position']['widget']['#disabled'] = TRUE;
 
   $form['field_staff_profile_pgm_areas']['widget']['#disabled'] = TRUE;
   $form['field_staff_profile_cty_served']['widget']['#disabled'] = TRUE;

@@ -5,6 +5,7 @@ namespace Drupal\staff_profile_map\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Provides a 'Staff Profile Map' Block.
@@ -27,8 +28,6 @@ class StaffProfileMap extends BlockBase
     $results = '';
     $config = $this->getConfiguration();
     $styles = $this->default_styles($config['max_size']);
-    $mapPath = \Drupal::service('file_system')->realpath(\Drupal::service('module_handler')->getModule('staff_profile_map')->getPath()) . '/iowa_map.svg';
-    $mapCode = file_get_contents($mapPath);
     $displayMap = false;
 
     //Make sure we're on a node
@@ -61,7 +60,7 @@ class StaffProfileMap extends BlockBase
 
     //Add the map to results when appropriate
     if ($displayMap) {
-      $results .= str_replace('/*ReplaceMe*/', $styles, $mapCode);
+      $results .= ISUEOHelpers\Map::map_get_svg($styles);
     }
 
     return [

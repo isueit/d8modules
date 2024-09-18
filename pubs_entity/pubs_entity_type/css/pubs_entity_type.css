@@ -48,16 +48,29 @@ a.publication-title:hover {
 
 nav.slick__arrow {
 	position: sticky;
-	transform: translateY(-472%);
+	transform: translateY(-392%);
 }
 
 button.slick-next.slick-arrow {
 	float: right;
-	margin-right: -3%;
+	margin-right: -2%;
+	border-radius: 50%;
+	cursor: pointer;
+	pointer-events: auto;
+	background-color: var(--burgundy);
+	width: 3.75rem;
+	height: 3.75rem;
 }
 
 button.slick-prev.slick-arrow {
-	margin-left: -3%;
+	margin-left: -2%;
+	border-radius: 50%;
+	cursor: pointer;
+	pointer-events: auto;
+	background-color: var(--burgundy);
+	transition: background-color .3s ease-in-out;
+	width: 3.75rem;
+	height: 3.75rem;
 }
 
 .slick__arrow {
@@ -76,10 +89,25 @@ button.slick-next, button.slick-prev {
 	content: '\f053';
 	font-family: 'FontAwesome';
 	font-size: 22px;
+	color: #fff;
 }
 
 .slick .slick-next::before {
 	content: '\f054';
 	font-family: 'FontAwesome';
 	font-size: 22px;
+	color: #fff;
+}
+
+.slick-prev, .slick-next {
+	font-size: 0;
+}
+
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 992px) {
+	nav.slick__arrow {
+		transform: translateY(-250%);
+	}
 }

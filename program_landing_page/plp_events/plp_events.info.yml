@@ -1,0 +1,8 @@
+name: 'Extension Events'
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+description: 'Import events from MyData'
+version: '8.x-1.0-dev'
+package: 'ISUEO'
+dependencies:
+  - d8modules:isueo_helpers

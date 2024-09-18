@@ -5,6 +5,9 @@ dependencies:
     - field.storage.node.field_staff_profile_site_author
     - node.type.staff_profile
     - taxonomy.vocabulary.drupal_sites
+  enforced:
+    module:
+      - staff_profile
 id: node.staff_profile.field_staff_profile_site_author
 field_name: field_staff_profile_site_author
 entity_type: node

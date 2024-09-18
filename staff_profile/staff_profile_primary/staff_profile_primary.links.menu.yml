@@ -5,30 +5,9 @@ staff_profile_primary.primary_settings_form:
   parent: user.admin_index
   weight: 100
 
-staff_profile_primary.search:
-  title: 'Search'
-  parent: main
-  menu_name: main
-  url: internal:/
-  weight: -50
-
-staff_profile_primary.login:
-  title: 'Login'
-  parent: main
-  menu_name: main
-  url: internal:/user/login
-  weight: 0
-
 staff_profile_primary.view_my_profile:
   title: 'View My Profile'
-  parent: main
-  menu_name: main
+  parent: staff
+  menu_name: staff
   route_name: staff_profile_primary.view_my_profile
   weight: 10
-
-staff_profile_primary.logout:
-  title: 'Logout'
-  parent: main
-  menu_name: main
-  url: internal:/user/logout
-  weight: 50

@@ -1,0 +1,13 @@
+name: "Extension Programs"
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+description: "Import programs from MyData"
+version: "8.x-1.0-dev"
+package: "ISUEO"
+dependencies:
+  - d8modules:isueo_categories_topics
+  - d8modules:isueo_helpers
+  - d8modules:program_offering_blocks
+  - views_data_export:views_data_export
+  - views_accordion:views_accordion
+  - search_api_typesense:search_api_typesense
