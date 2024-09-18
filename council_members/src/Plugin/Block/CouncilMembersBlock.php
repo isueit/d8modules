@@ -3,8 +3,7 @@
 namespace Drupal\council_members\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Field\FieldFilteredMarkup;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Provides a 'Council Members' Block.
@@ -36,7 +35,7 @@ class CouncilMembersBlock extends BlockBase
     // Make sure we have a County name and a URL for the feed
     if (!empty($county_name) && !empty($feed_url)) {
       $local_members = array();
-      $active_council_members = json_decode(file_get_contents($feed_url), true);
+      $active_council_members = json_decode(ISUEOHelpers\Files::fetch_url($feed_url), true);
       $results .= '<p class="council_note">(Number) is the year the term expires</p>';
       $results .= '<ul class="council_list">' . PHP_EOL;
 

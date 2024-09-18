@@ -1,0 +1,250 @@
+/* CSS for Program Landing Page Programs */
+
+:root {
+	--cardinal: #c8102e;
+	--gold: #f1be48;
+	--burgundy: #7c2529;
+	--dk-gray: #4a4a4a;
+	--lt-gray: #f5f5f5;
+	--md-gray: #ebebeb;
+	--midnight: #003d4c;
+	--green: #008540;
+  }
+
+/* ------------------------------------- */
+/* ## PROGRAM PAGES
+/* ------------------------------------- */
+.node--type-plp-program .layout-content, .node--type-plp-program .layout__region--content {
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Program Offerings */
+#plp-events .program_offering_blocks ul{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 1em;
+}
+#plp-events li.event {
+    box-shadow: 0.5625rem 0.5625rem 1.25rem rgb(0 0 0 / 20%);
+    padding: .5em;	
+}
+#plp-events div.event_date {
+    border-right: none;
+    height: 100%;
+    text-align: center;
+    padding-right: 5%;
+    margin: 0;
+    min-width: auto;
+    color: var(--midnight);
+    line-height: 1.2;
+}
+#plp-events span.event_day {
+    color:var(--midnight);
+    font-weight: 700;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+#plp-events span.event_month {
+    margin-bottom: -7px;
+    color: var(--midnight);
+}
+#plp-events div.event_title a {
+    display: block;
+    line-height: 1.2;
+    padding-bottom: .2rem;
+    margin-top: .3em;
+    font-size: clamp(.9rem, 1.1vw, .8rem);
+}
+#plp-events div.event_series {
+    font-size:clamp(.6rem, 1.1vw, .8rem);
+    color: #666;
+}
+#plp-events div.event_venue {
+    font-size: clamp(.6rem, 1.1vw, .8rem);
+}
+a#plp-events {
+    text-decoration: underline;
+    float: right;
+}
+
+/* Hero Image & Title */
+.program-hero-wrapper {
+height: 100%;
+max-height: 50vh;
+min-height: 40vh;
+position: relative;
+}
+.program-hero-image img {
+    width: 100%;
+    max-height: 50vh;
+    object-fit: cover;
+min-height: 1px;
+}
+.program-hero-label-wrapper {
+bottom: 0;
+width: 100%;
+position: absolute;
+padding: 0.75rem 1rem;
+background: rgba(200, 0, 21, .7);
+}
+.program-hero-label h1.isu-page-title {
+    color: #fff;
+    font-size: clamp(1.2rem, 3.375vw - 1rem, 3.375rem);
+margin: 0;
+}
+
+/* Program Blocks */
+.plp-program-contact-blocks .isueo-box-shadow {
+    padding: 1rem;
+background-color: #fff;
+}
+.plp-program-contact-blocks a {
+    text-decoration: none;
+    color: var(--midnight);
+}
+.plp-program-contact-blocks a:hover {
+    text-decoration: none;
+    color: var(--midnight);
+    outline: var(--gold) auto 3px;
+}
+.plp-program-contact-blocks p {
+    margin-bottom: 0;
+}
+.plp-program-contact-blocks svg {
+    padding-bottom: 11px;
+}
+
+/* Accordions */
+.views-element-container {
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+.accordion {
+    margin-block-end: 2em;
+}
+.ui-accordion .ui-accordion-header {
+    color: var(--cardinal);
+    font-family: Nimbus Sans, sans-serif;
+    font-size: 1.3125rem;
+    font-weight: 700;
+    line-height: 1.42587;
+    padding: 1.5625rem 1.125rem;
+    border-bottom: 0.125rem solid #ebebeb;
+}
+.accordion .ui-state-default, .accordion .ui-widget-content .ui-state-default, .accordion .ui-widget-header .ui-state-default, .accordion .ui-button, html .accordion .ui-button.ui-state-disabled:hover, html .accordion .ui-button.ui-state-disabled:active {
+    border: none;
+    background: none;
+}
+.accordion .ui-state-hover, .accordion .ui-widget-content .ui-state-hover, .accordion .ui-widget-header .ui-state-hover, .accordion .ui-state-focus, .accordion .ui-widget-content .ui-state-focus, .accordion .ui-widget-header .ui-state-focus, .accordion .ui-button:hover, .accordion .ui-button:focus {
+    background: none;
+    border: none;
+}
+.accordion .ui-state-active, .accordion .ui-widget-content .ui-state-active, .accordion .ui-widget-header .ui-state-active, .accordion a.ui-button:active, .accordion .ui-button:active, .accordion .ui-button.ui-state-active:hover {
+    border: none;
+    background: none;
+    color: var(--cardinal);
+    border-bottom: 0 !important;
+}
+.accordion .ui-widget-content {
+    border: none;
+    background: none;
+    color: #212529;
+}
+.accordion .ui-widget-content .views-field-field-plp-child-website a {
+    color: var(--burgundy);
+}
+.accordion .ui-widget-content .views-field-field-plp-child-website a:hover {
+    color: var(--cardinal);
+}
+.ui-accordion .ui-accordion-content {
+    transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out,border-radius 0.15s ease;
+    padding: 1em 2.2em 1.2em;
+    word-wrap: break-word;
+}
+.accordion .ui-icon {
+    overflow: visible;
+}
+.accordion .ui-icon:before {
+    transform: rotate(180deg);
+    left: 10px;
+    width: 20px;
+    background: var(--cardinal);
+    transition: all 600ms cubic-bezier(0.4,0,0.2,1);
+    content: '';
+    display: block;
+    height: 2px;
+    position: absolute;
+    will-change: transform;
+}
+.accordion .ui-state-active .ui-icon:before {
+    transform: rotate(180deg);
+}
+.accordion .ui-icon:after {
+    transform: rotate(-90deg);
+    background: var(--cardinal);
+    content: '';
+    right: 0px;
+    width: 20px;
+    left: auto;
+    display: block;
+    height: 2px;
+    z-index: -1;
+    transition: all 600ms cubic-bezier(0.4,0,0.2,1);
+    will-change: transform;
+}
+.accordion .ui-state-active .ui-icon:after {
+    transform: rotate(180deg);
+}
+.accordion .ui-icon, .accordion .ui-widget-content .ui-icon, .accordion .ui-state-active .ui-icon, .accordion .ui-button:active .ui-icon, .accordion .ui-state-hover .ui-icon, .accordion .ui-state-focus .ui-icon, .accordion .ui-button:hover .ui-icon, .accordion .ui-button:focus .ui-icon {
+    background-image: none;
+    padding: 0 10px;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    position: absolute;
+    z-index: 1;
+    top: calc(50% - 1px);
+    box-sizing: border-box;
+    left: auto;
+    right: 11px;
+}
+
+/* Related Programs */
+.plp-related-title {
+    font-size: clamp(1rem, 1.2vw, 1.5rem);
+    font-family: Merriweather, serif;
+    line-height: 1.4;
+    font-weight: 700;
+}
+.card.plp-related {
+    padding-top: 2rem;
+}
+.plp-related-icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.plp-related-programs ul.row {
+    row-gap: 3rem;
+}
+.plp-related-programs .card a {
+    text-decoration: underline;
+}
+.plp-related-programs .col-md-6.col-lg-4 .card {
+    align-items: stretch;
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+}
+.plp-related-programs {
+    margin-top: 7%;
+    margin-block-end: 13%;
+}
+.plp-related-programs .views-field.views-field-nothing {
+	height: 100%;
+}

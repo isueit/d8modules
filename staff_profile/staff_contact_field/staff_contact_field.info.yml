@@ -2,7 +2,7 @@ name: Staff Contact Field
 type: module
 description: 'Provide a field type to specify staff contacts for a node'
 package: ISUEO
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 dependencies:
   - drupal:field
   - drupal:system

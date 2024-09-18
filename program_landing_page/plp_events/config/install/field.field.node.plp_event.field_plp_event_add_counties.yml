@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_event_add_counties
+    - node.type.plp_event
+    - taxonomy.vocabulary.counties_in_iowa
+id: node.plp_event.field_plp_event_add_counties
+field_name: field_plp_event_add_counties
+entity_type: node
+bundle: plp_event
+label: 'Event Additional Counties'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      counties_in_iowa: counties_in_iowa
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

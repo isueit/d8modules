@@ -20,3 +20,10 @@
      default:
    }
 }
+
+/**
+ * Implements hook_preprocess_HOOK()
+ */
+function cse_selector_preprocess_block(&$variables) {
+    $variables['#attached']['library'][] = 'cse_selector/cse_search_block';
+}

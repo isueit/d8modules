@@ -2,7 +2,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
-
+use function Drupal\Core\Session\user_role_permissions;
 
 /**
  * Implements hook_install().
@@ -30,4 +30,10 @@ use Drupal\block_content\Entity\BlockContent;
     ],
   ]);
   $block->save();
- }
+
+  // Set up permissions for content editors
+    user_role_grant_permissions('content_editor', [
+      'create contact_creator block content',
+      'delete own contact_creator block content',
+    ]);
+  }

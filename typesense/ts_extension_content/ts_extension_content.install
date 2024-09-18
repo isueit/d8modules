@@ -1,0 +1,54 @@
+<?php
+/**
+* Implements hook_install().
+*/
+
+function ts_extension_content_install() {
+  $path = DRUPAL_ROOT;
+  $folders = explode('/', $path);
+  $site = $folders[count($folders) - 2];
+  $url = 'https://www.extension.iastate.edu/' . $site;
+  if (str_contains($site , '.')) {
+    $url = 'https://www.' . $site;
+    $site = explode('.', $site)[0];
+  }
+
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+
+  $existingTypes = [];
+  $allContentTypes = $entityTypeManager->getStorage('node_type')->loadMultiple();
+  foreach ($allContentTypes as $contentType) {
+    $existingTypes[$contentType->id()] = $contentType->label();
+  }
+  $indexedTypes = [
+    'educational_programs_page',
+    'homepage_ct',
+    'layout_ct',
+    'news_article',
+    'page',
+    'plp_program',
+    'staff_profile',
+  ];
+
+  $config = \Drupal::service('config.factory')->getEditable('ts_extension_content.settings');
+  $config->set('api_key', 'eS90dAFa47TIaOa1gm21fskmfTgwAUBE');
+  $config->set('collection', 'extension_content');
+  $config->set('site_name', $site);
+  $config->set('home_url', $url);
+  foreach ($indexedTypes as $type) {
+    if (array_key_exists($type, $existingTypes)) {
+     $config->set('content_types.' . $type, $type);
+    }
+  }
+  $config->save();
+
+  ts_extension_content_index_all_nodes();
+}
+
+/**
+* Implements hook_uninstall().
+*/
+
+function ts_extension_content_uninstall() {
+  ts_extension_content_delete_all_from_collection();
+}

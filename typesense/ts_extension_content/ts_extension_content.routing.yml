@@ -1,0 +1,9 @@
+ts_extension_content.primary_settings_form:
+  path: 'admin/config/ts_extension_content_settings'
+  defaults:
+    _form: '\Drupal\ts_extension_content\Form\SettingsForm'
+    _title: 'Typesense - Extension Content'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

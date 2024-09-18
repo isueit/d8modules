@@ -6,6 +6,9 @@ dependencies:
     - node.type.staff_profile
   module:
     - weight
+  enforced:
+    module:
+      - staff_profile
 id: node.staff_profile.field_staff_profile_sort_order
 field_name: field_staff_profile_sort_order
 entity_type: node

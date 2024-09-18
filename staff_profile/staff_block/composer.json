@@ -1,0 +1,5 @@
+{
+  "name": "isueit/staff_block",
+  "type": "drupal-custom-module",
+  "description": "Custom block type attached to Staff Profile content"
+}

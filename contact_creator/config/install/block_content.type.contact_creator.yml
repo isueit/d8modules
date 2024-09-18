@@ -1,7 +1,12 @@
 langcode: en
 status: true
-dependencies: {  }
 id: contact_creator
 label: 'Contact Information'
 revision: 0
 description: 'Used for formatted contact information, such as an address, email and phone number.'
+dependencies:
+  enforced:
+    module:
+     - contact_creator
+     - field
+     - field_group

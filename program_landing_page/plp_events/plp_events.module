@@ -1,0 +1,339 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\isueo_helpers\ISUEOHelpers;
+
+/**
+ * Implements hook_rebuild().
+ */
+
+function plp_events_rebuild()
+{
+  plp_events_getevents();
+}
+
+/**
+ * Implements hook_cron().
+ */
+
+function plp_events_cron()
+{
+  plp_events_getevents();
+
+  //$queue = Drupal::queue('events');
+  /*
+    // Short-running operation example, not using a queue:
+    // Delete all expired records since the last cron run.
+    $expires = \Drupal::state()->get('mymodule.last_check', 0);
+    \Drupal::database()->delete('mymodule_table')
+      ->condition('expires', $expires, '>=')
+      ->execute();
+    \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
+
+    // Long-running operation example, leveraging a queue:
+    // Queue news feeds for updates once their refresh interval has elapsed.
+    $queue = \Drupal::queue('aggregator_feeds');
+    $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+    foreach (Feed::loadMultiple($ids) as $feed) {
+      if ($queue->createItem($feed)) {
+        // Add timestamp to avoid queueing item more than once.
+        $feed->setQueuedTime(REQUEST_TIME);
+        $feed->save();
+      }
+    }
+    $ids = \Drupal::entityQuery('aggregator_feed')
+      ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+      ->execute();
+    if ($ids) {
+      $feeds = Feed::loadMultiple($ids);
+      foreach ($feeds as $feed) {
+        $feed->setQueuedTime(0);
+        $feed->save();
+      }
+    }
+  */
+}
+
+
+function plp_events_getevents()
+{
+  // Get the events feed, if it's empty, wait 1 second and try again
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
+
+  if ($raw === false || strlen($raw) < 100000) {
+    sleep(1);
+    Drupal::logger('plp_events')->info('Empty feed: wait 1 second and try again');
+    $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
+  }
+  $events = json_decode($raw, true);
+  $eventIds = [];
+  $nodeIds = [];
+  $min_events = 1000;
+  if (!is_array($events) || count($events) < $min_events) {
+    Drupal::logger('plp_events')->info('Less than ' . $min_events . ' events, exiting');
+    return;
+  }
+
+  // Get the taxonomy terms for Counties
+  $counties = [];
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('counties_in_iowa');
+  foreach ($terms as $term) {
+    if ($term->name == 'Pottawattamie - East') $term->name = 'East Pottawattamie';
+    if ($term->name == 'Pottawattamie - West') $term->name = 'West Pottawattamie';
+    $counties[$term->name] = $term->tid;
+  }
+
+  $intended_audiences = [];
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('intended_audiences');
+  foreach ($terms as $term) {
+    $intended_audiences[$term->name] = $term->tid;
+  }
+
+  $program_areas = [];
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('program_areas');
+  foreach ($terms as $term) {
+    $program_areas[$term->name] = $term->tid;
+  }
+
+  // Get all existing nodes
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_event')->execute();
+  $nodes =  Node::loadMultiple($nids);
+  foreach ($nodes as $node) {
+    $nodeIds[] = $node->field_plp_event_mydata_id->value;
+  }
+
+  // Step through the events feed
+  foreach ($events as $event) {
+
+    $eventIds[] = $event['Id'];
+    $mynode = null;
+    $save = false;
+
+    // Check for existing node for this event
+    foreach ($nodes as $node) {
+      if ($node->field_plp_event_mydata_id->value == $event['Id']) {
+        $mynode = $node;
+        break;
+      }
+    }
+
+    // Create node if one's not found
+    if ($mynode == null) {
+      $mynode = Node::create(array('type' => 'plp_event', 'title' => html_entity_decode($event['Name_Placeholder__c']), 'field_plp_event_mydata_id' => $event['Id'],));
+      $save = true;
+    }
+
+    // Handle Title
+    if ($mynode->getTitle() != html_entity_decode($event['Name_Placeholder__c'])) {
+      $mynode->setTitle(html_entity_decode($event['Name_Placeholder__c']));
+      $save = true;
+    }
+
+    // Handle Cancelled Programs
+    if ($event['Cancelled_Program__c'] && $mynode->isPublished()) {
+      $mynode->setUnpublished();
+      $save = true;
+    }
+
+    if (!$mynode->isPublished()) {
+      $mynode->setPublished();
+      $save = true;
+    }
+
+    // Handle the body
+    $body = '';
+    if (strlen($event['Program_Description__c']) > 0) {
+      $body .= '<div>' . $event['Program_Description__c'] . '</div>' . PHP_EOL;
+    }
+    if (strlen($event['Planned_Program__r.Web_Description__c']) > 0) {
+      $body .= '<div>' . $event['Planned_Program__r.Web_Description__c'] . '</div>' . PHP_EOL;
+    }
+    if ($mynode->body->value != $body) {
+      $mynode->body->value = $body;
+      $mynode->body->format = 'full_html';
+      $save = true;
+    }
+
+    // Handle the text fields using an array and a loop
+    $fields = [
+      'field_plp_event_contact_name' => 'Contact_Information_Name__c',
+      'field_plp_event_contact_email' => 'Contact_Information_Email__c',
+      'field_plp_event_contact_phone' => 'Contact_Information_Phone__c',
+      'field_plp_event_instructor_name' => 'Instructor_Information_Name__c',
+      'field_plp_event_instructor_email' => 'Instructor_Information_Email__c',
+      'field_plp_event_instructor_phone' => 'Instructor_Information_Phone__c',
+      'field_plp_event_location_site' => 'Event_Location_Site_Building__c',
+      'field_plp_event_location_street' => 'Event_Location_Street_Address__c',
+      'field_plp_event_location_city' => 'Event_Location__c',
+      'field_plp_event_location_state' => 'Program_State__c',
+      'field_plp_event_location_zip' => 'Event_Location_Zip_Code__c',
+      'field_plp_event_program_id' => 'Planned_Program__c',
+      //'field_plp_event_program_name' => '',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->getString() != $event[$value]) {
+        $mynode->set($key, $event[$value]);
+        $save = true;
+      }
+    }
+
+    $fields = [
+      'field_plp_event_program_url' => 'Planned_Program_Website__c',
+      'field_plp_event_url' => 'Program_Offering_Website__c',
+      'field_plp_event_reg_url' => 'Registration_Link__c',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->uri != $event[$value]) {
+        $mynode->set($key, ['uri' => $event[$value]]);
+        $save = true;
+      }
+    }
+
+    $fields = [
+      'field_plp_event_reg_opens' => 'Registration_Opens__c',
+      'field_plp_event_reg_closes' => 'Registration_Deadline__c',
+      'field_plp_event_next_start_date' => 'Next_Start_Date__c',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->getString() != str_replace('Z', '', $event[$value])) {
+        $mynode->set($key, str_replace('Z', '', $event[$value]));
+        $save = true;
+      }
+    }
+
+    // Handle Start/End Dates
+    $sessions = event_get_dates($event);
+    $count = 0;
+    $existingStartDates = $mynode->get('field_plp_event_start_dates')->getString();
+    $existingEndDates = $mynode->get('field_plp_event_end_dates')->getString();
+    $newStartDates = implode(', ', $sessions[0]);
+    $newEndDates = implode(', ', $sessions[1]);
+    //if (count(explode(', ', $existingStartDates)) > 1) {
+    if ($existingStartDates != $newStartDates) {
+      $mynode->set('field_plp_event_start_dates', $sessions[0]);
+      $mynode->set('field_plp_event_end_dates', $sessions[1]);
+      $save = true;
+    }
+    if ($existingEndDates != $newEndDates) {
+      $mynode->set('field_plp_event_end_dates', $sessions[1]);
+      $save = true;
+    }
+
+    // Handle Account (Host County)
+    $host = 0;
+    $acctName = str_replace(' County Extension', '', $event['Account__c.Name']);
+    if (array_key_exists($acctName, $counties)) {
+      $host = $counties[$acctName];
+    }
+    if ($mynode->get('field_plp_event_account')->getString() != $host) {
+      $mynode->set('field_plp_event_account', $host);
+      $save = true;
+    }
+
+    // Handle Additional Counties
+    $feed_counties = explode(';', $event['Additional_Counties__c']);
+    $new_counties = [];
+    foreach ($feed_counties as $county) {
+      $county = str_replace(' County', '', $county);
+      if (array_key_exists($county, $counties)) {
+        $new_counties[] = $counties[$county];
+      }
+    }
+    if ($mynode->get('field_plp_event_add_counties')->getString() != implode(', ', $new_counties)) {
+      $mynode->set('field_plp_event_add_counties', $new_counties);
+      $save = true;
+    }
+
+    // Handle Program Area
+    $term = 0;
+    if (!empty($event['PrimaryProgramUnit__c'])) {
+      if (!array_key_exists($event['PrimaryProgramUnit__c'], $program_areas)) {
+        $program_areas[$event['PrimaryProgramUnit__c']] = Term::create(['name' => $event['PrimaryProgramUnit__c'], 'vid' => 'program_areas'])->save();
+      }
+      $term = $program_areas[$event['PrimaryProgramUnit__c']];
+    }
+    if ($mynode->get('field_plp_event_program_area')->getString() != $term) {
+      $mynode->set('field_plp_event_program_area', $term);
+      $save = true;
+    }
+
+    // Handle Intended Audiences
+    $terms = [];
+      if (!empty($event['Audiences__c'])) {
+    foreach (explode(';', $event['Audiences__c']) as $audience) {
+        if (!array_key_exists($audience, $intended_audiences)) {
+          $intended_audiences[$audience] = Term::create(['name' => $audience, 'vid' => 'intended_audiences'])->save();
+        }
+        $terms[] = $intended_audiences[$audience];
+      }
+    }
+    if ($mynode->get('field_plp_event_audiences')->getString() != implode(', ', $terms)) {
+      $mynode->set('field_plp_event_audiences', $terms);
+      $save = true;
+    }
+
+    // Only save if there has been a changed, this saves a ton of time
+    if ($save) {
+      $mynode->save();
+    }
+  }
+
+  // Find and unpublish deleted events
+  $deleted = array_diff($nodeIds, $eventIds);
+  foreach ($nodes as $node) {
+    if (in_array($node->field_plp_event_mydata_id->value, $deleted) && $node->isPublished()) {
+      $node->setUnpublished()->save();
+      //$node->delete();
+    }
+  }
+}
+
+function event_get_dates($event)
+{
+  // Set the Field_Names for the session start times, comes from MyData
+  $field_plp_names = [
+    ['Start_Time_and_Date__c', 'End_Date_and_Time__c',],
+    ['Second_Session_Date_Time__c', 'Second_Session_End_Date_Time__c',],
+    ['Third_Session_Begining_Date_and_Time__c', 'Third_Session_End_Date_and_Time__c',],
+    ['Fourth_Session_Beginning_Date_and_Time__c', 'Fourth_Session_End_Date_and_Time__c',],
+    ['Fifth_Session_Beginning_Date_and_Time__c', 'Fifth_Session_End_Date_and_Time__c',],
+    ['Sixth_Session_Beginning_Date_and_Time__c', 'Sixth_Session_End_Date_and_Time__c',],
+    ['Seventh_Session_Beginning_Date_and_Time__c', 'Seventh_Session_End_Date_and_Time__c',],
+    ['Eighth_Session_Beginning_Date_and_Time__c', 'Eighth_Session_End_Date_and_Time__c',],
+    ['Ninth_Session_Beginning_Date_and_Time__c', 'Ninth_Session_End_Date_and_Time__c',],
+    ['Tenth_Session_Beginning_Date_and_Time__c', 'Tenth_Session_End_Date_and_Time__c',],
+    ['Eleventh_Session_Start_Date__c', 'Eleventh_Session_End_Date__c',],
+    ['Twelfth_Session_Start_Date__c', 'Twelfth_Session_End_Date__c',],
+  ];
+  $sessions = [];
+
+  foreach ($field_plp_names as $fields) {
+    if (!empty($event[$fields[0]])) {
+      $sessions[] = [str_replace('Z', '', $event[$fields[0]]), str_replace('Z', '', $event[$fields[1]])];
+    }
+  }
+  usort($sessions, 'event_cmp_array');
+
+  $startDates = [];
+  $endDates = [];
+
+  foreach ($sessions as $session) {
+    $startDates[] = $session[0];
+    $endDates[] = $session[1];
+  }
+
+  return [$startDates, $endDates];
+}
+
+/**
+ * Compare function, used to sort array of events, used by usort() in include_series_events()
+ */
+function event_cmp_array($a, $b)
+{
+  if ($a[0] == $b[0]) {
+    return 0;
+  }
+
+  return ($a[0] < $b[0]) ? -1 : 1;
+}

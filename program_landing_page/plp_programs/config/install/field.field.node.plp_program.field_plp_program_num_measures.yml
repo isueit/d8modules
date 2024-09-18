@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_program_num_measures
+    - node.type.plp_program
+id: node.plp_program.field_plp_program_num_measures
+field_name: field_plp_program_num_measures
+entity_type: node
+bundle: plp_program
+label: 'Number of Measurements'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

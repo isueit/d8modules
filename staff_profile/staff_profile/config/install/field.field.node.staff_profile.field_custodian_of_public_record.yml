@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_custodian_of_public_record
+    - node.type.staff_profile
+  enforced:
+    module:
+      - staff_profile
+id: node.staff_profile.field_custodian_of_public_record
+field_name: field_custodian_of_public_record
+entity_type: node
+bundle: staff_profile
+label: 'Custodian of Public Record'
+description: '<strong>DO NOT</strong> use if you are not a Custodian of Public Record. <br>This field <strong>only</strong> applies to the <em>one</em> county staff member per office that was appointed by their Extension Council.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Custodian of Public Record'
+  off_label: Nope
+field_type: boolean

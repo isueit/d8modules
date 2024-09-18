@@ -3,8 +3,9 @@ description: Creates section library entries from predefined one, two and three 
 package: Custom
 
 type: module
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^8 || ^9 || ^10
 
 dependencies:
   - section_library:section_library
   - layout_builder_base_library
+  - d8modules:isueo_helpers

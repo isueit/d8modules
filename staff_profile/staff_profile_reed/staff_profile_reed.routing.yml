@@ -1,33 +1,13 @@
-staff_profile_reed.portal_page:
-  path: regional-director-portal
+staff_profile_reed.dashboard_page:
+  path: staff/regional-director-dashboard
   requirements:
     _role: 'regional_director'
 
 staff_profile_reed.county_web_editors:
-  path: county-web-editors
+  path: staff/county-web-editors
   defaults:
     _controller: '\Drupal\staff_profile_reed\Controller\CountyWebEditors::panel'
     _title: 'County Web Editors'
-  requirements:
-    _role: 'regional_director'
-  options:
-    no_cache: 'TRUE'
-
-staff_profile_reed.county_staff:
-  path: county-staff
-  defaults:
-    _controller: '\Drupal\staff_profile_reed\Controller\CountyStaff::panel'
-    _title: 'County Staff'
-  requirements:
-    _role: 'regional_director'
-  options:
-    no_cache: 'TRUE'
-
-staff_profile_reed.council_members:
-  path: council-members
-  defaults:
-    _controller: '\Drupal\staff_profile_reed\Controller\CouncilMembers::panel'
-    _title: 'Council Members'
   requirements:
     _role: 'regional_director'
   options:

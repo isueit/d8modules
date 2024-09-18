@@ -4,6 +4,7 @@ dependencies:
   config:
     - block_content.type.editor_login_signoff
     - field.field.block_content.editor_login_signoff.field_login_link
+    - field.field.block_content.editor_login_signoff.field_myextension_link
   module:
     - link
 id: block_content.editor_login_signoff.default
@@ -11,15 +12,28 @@ targetEntityType: block_content
 bundle: editor_login_signoff
 mode: default
 content:
+  field_login_link:
+    type: link_default
+    weight: 1
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_myextension_link:
+    type: link_default
+    weight: 2
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
   info:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-hidden:
-  field_login_link: true
-  field_myextension_link: true
-
+hidden: {  }

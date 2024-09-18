@@ -1,15 +1,19 @@
 <?php
+
 use \Drupal\taxonomy\Entity\Vocabulary;
 use \Drupal\taxonomy\Entity\Term;
 use \Drupal\taxonomy_import\Form\ImportForm;
+use \Drupal\node\Entity\Node;
+use \Drupal\user\Entity\User;
 
-function staff_profile_install() {
+function staff_profile_install()
+{
   // Chron entity update needs to be run before search index
   module_set_weight("staff_profile", -1);
   $name = "Counties in Iowa";
   $vid = "counties_in_iowa";
   $desc = "List of counties in Iowa. This vocabulary is required for Staff Profiles.";
-  $path = DRUPAL_ROOT . '/' . drupal_get_path('module', 'taxonomy_import') . '/src/data/IowaCounties.txt';
+  $path = DRUPAL_ROOT . '/' . Drupal::service('extension.list.module')->getPath('taxonomy_import') . '/src/data/IowaCounties.txt';
   $vocabs = Vocabulary::loadMultiple();
 
   //Create taxonomy if it does not exist
@@ -32,13 +36,6 @@ function staff_profile_install() {
       'name' => 'Program Areas',
     ));
     $vocab->save();
-
-    $term = Term::create(array('vid' => $vid, 'name' => 'Agriculture'))->save();
-    $term = Term::create(array('vid' => $vid, 'name' => 'Communities'))->save();
-    $term = Term::create(array('vid' => $vid, 'name' => '4-H Youth'))->save();
-    $term = Term::create(array('vid' => $vid, 'name' => 'Human Sciences'))->save();
-    $term = Term::create(array('vid' => $vid, 'name' => 'Administration'))->save();
-    $term = Term::create(array('vid' => $vid, 'name' => 'Business & Industry'))->save();
   }
 
   $vid = 'teams_groups';
@@ -47,6 +44,16 @@ function staff_profile_install() {
       'vid' => $vid,
       'description' => 'Teams/Groups used by Staff Profiles',
       'name' => 'Teams/Groups',
+    ));
+    $vocab->save();
+  }
+
+  $vid = 'staff_positions';
+  if (!isset($vocabs[$vid])) {
+    $vocab = Vocabulary::create(array(
+      'vid' => $vid,
+      'description' => 'Possible Staff Positions',
+      'name' => 'Staff Positions',
     ));
     $vocab->save();
   }
@@ -102,8 +109,71 @@ function staff_profile_install() {
   ));
 }
 
-/*
-function staff_profile_uninstall() {
-  Drupal::configFactory()->getEditable('pathauto.pattern.staff_profiles')->delete();
+/**
+ * Implements hook_uninstall().
+ */
+function staff_profile_uninstall()
+{
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->execute();
+  $nodes = Node::loadMultiple($nids);
+  foreach ($nodes as $node) {
+    $owner = User::load($node->getOwnerId());
+    if ($owner && $owner->id() > 1) {
+      $owner->block()->save();
+    }
+    $node->delete();
+  }
 }
-*/
+
+/**
+ * Adjust Program Areas Taxonomy
+ *
+ */
+
+/*
+ * Date: July 13, 2023
+ */
+function staff_profile_update_9001(&$sandbox)
+{
+  _staff_profile_change_taxonomy_term('4-H Youth', '4-H Youth Development', 'program_areas');
+  _staff_profile_change_taxonomy_term('Agriculture', 'Agriculture and Natural Resources', 'program_areas');
+  _staff_profile_change_taxonomy_term('Business & Industry', '', 'program_areas');
+  _staff_profile_change_taxonomy_term('Communities', 'Community and Economic Development', 'program_areas');
+}
+
+/*
+ * Do the work of changing name and/or deleting the old term
+ */
+function _staff_profile_change_taxonomy_term($old_name, $new_name, $vid)
+{
+  // Find the old taxonomy term
+  $oldTerm = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['name' => $old_name, 'vid' => $vid]);
+  $oldTerm = reset($oldTerm);
+
+  // Make sure we have the old term
+  if ($oldTerm !== false) {
+    $item = Term::load($oldTerm->id());
+
+    // If no new name, then just delete the term
+    if (empty($new_name)) {
+      $item->delete();
+      Drupal::messenger()->addMessage('Deleted: ' . $old_name);
+    } else {
+      // Check if new hame exists
+      $newTerm = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['name' => $new_name, 'vid' => $vid]);
+      $newTerm = reset($newTerm);
+      if ($newTerm === false) {
+        // Doesn't exist, so rename the term
+        $item->setName($new_name);
+        $item->save();
+        Drupal::messenger()->addMessage('Renamed: ' . $old_name . ' to ' . $new_name);
+      } else {
+        // Exists, so delete the old one
+        $item->delete();
+        Drupal::messenger()->addMessage('Deleted: ' . $old_name);
+      }
+    }
+  } else {
+    Drupal::messenger()->addMessage('Not found: ' . $old_name);
+  }
+}

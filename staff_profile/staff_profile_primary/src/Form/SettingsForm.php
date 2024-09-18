@@ -93,9 +93,17 @@ class SettingsForm extends ConfigFormBase {
         '#size' => 64,
         '#default_value' => $this->t(""),
       );
+      $form['reed_overrides'] = array(
+        '#type' => 'textarea',
+        '#title' => $this->t('Regional Director Overrides'),
+        '#description' => $this->t('Format: netid|override<br/>Override can be none, north, south, all, or a list of counties, ie Adair;Adams;Story;Pottawattamie - West<br/>Counties should match what\'s in the Counties in Iowa Vocabulary/Taxonomy'),
+        '#rows' => 10,
+        '#cols' => 14,
+        '#default_value' => !empty($config->get('reed_overrides')) ? $config->get('reed_overrides') : '',
+      );
 
       // List of encryption profiles for selector
-      $encrypt_ids = \Drupal::entityQuery('encryption_profile')->execute();
+      $encrypt_ids = \Drupal::entityQuery('encryption_profile')->accessCheck(false)->execute();
       $encrypt_list = array();
 
       if (empty($encrypt_ids)) {
@@ -154,6 +162,7 @@ class SettingsForm extends ConfigFormBase {
         ->set('smug_mug_password', $form_state->getValue('smugmug_pwd'))
         ->set('smug_mug_api_key', $form_state->getValue('smugmug_api'))
         ->set('sync_encrypt_profile', $form_state->getValue('encrypt_profile'))
+        ->set('reed_overrides', $form_state->getValue('reed_overrides'))
         ->save();
 
   }

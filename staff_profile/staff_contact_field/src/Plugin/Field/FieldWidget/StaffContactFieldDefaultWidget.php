@@ -34,7 +34,7 @@ class StaffContactFieldDefaultWidget extends WidgetBase
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state)
   {
     // Get the Staff Profiles from this site
-    $nids = \Drupal::entityQuery('node')->condition('type','staff_profile')->condition('status', 1)->sort('field_staff_profile_last_name')->sort('field_staff_profile_first_name')->execute();
+    $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type','staff_profile')->condition('status', 1)->sort('field_staff_profile_last_name')->sort('field_staff_profile_first_name')->execute();
     $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
     $default_header = isset($items[$delta]->contact_header) ? $items[$delta]->contact_header : 'Staff Contacts';
     $default_display = isset($items[$delta]->contact_display) ? $items[$delta]->contact_display : 'medium';

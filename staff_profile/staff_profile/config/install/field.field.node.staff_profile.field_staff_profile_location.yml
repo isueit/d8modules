@@ -6,6 +6,9 @@ dependencies:
     - node.type.staff_profile
   module:
     - options
+  enforced:
+    module:
+      - staff_profile
 id: node.staff_profile.field_staff_profile_location
 field_name: field_staff_profile_location
 entity_type: node

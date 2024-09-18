@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.staff_profile.body
+    - field.field.node.staff_profile.field_custodian_of_public_record
     - field.field.node.staff_profile.field_staff_profile_addr
     - field.field.node.staff_profile.field_staff_profile_base_county
     - field.field.node.staff_profile.field_staff_profile_canonical
@@ -20,6 +21,7 @@ dependencies:
     - field.field.node.staff_profile.field_staff_profile_netid
     - field.field.node.staff_profile.field_staff_profile_pgm_areas
     - field.field.node.staff_profile.field_staff_profile_phone
+    - field.field.node.staff_profile.field_staff_profile_position
     - field.field.node.staff_profile.field_staff_profile_pref_name
     - field.field.node.staff_profile.field_staff_profile_pref_phone
     - field.field.node.staff_profile.field_staff_profile_pref_title
@@ -37,52 +39,55 @@ dependencies:
     - address
     - field_group
     - path
-    - scheduler
     - telephone
     - text
     - weight
+  enforced:
+    module:
+      - staff_profile
 third_party_settings:
   field_group:
     group_main_accordion:
       children:
         - group_name
         - group_more_from_staff_directory
+      label: 'Main Accordion'
+      region: content
       parent_name: group_from_staff_directory
       weight: 20
       format_type: accordion
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         effect: none
-      label: 'Main Accordion'
-      region: content
     group_name:
       children:
         - field_staff_profile_first_name
         - field_staff_profile_last_name
+      label: Name
+      region: content
       parent_name: group_main_accordion
       weight: 21
       format_type: accordion_item
       format_settings:
+        classes: ''
+        id: ''
         formatter: closed
         required_fields: true
-        id: ''
-        classes: ''
-      label: Name
-      region: content
     group_from_staff_directory:
       children:
         - group_main_accordion
+      label: 'From Staff Directory (Do NOT edit)'
+      region: content
       parent_name: ''
       weight: 1
       format_type: fieldset
       format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: staff-profile-from-staff-directory
         description: ''
         required_fields: true
-        id: staff-profile-from-staff-directory
-        classes: ''
-      label: 'From Staff Directory'
-      region: content
     group_more_from_staff_directory:
       children:
         - field_staff_profile_netid
@@ -96,20 +101,21 @@ third_party_settings:
         - field_staff_profile_departmentid
         - field_staff_profile_pgm_areas
         - field_staff_profile_job_title
+        - field_staff_profile_position
         - field_staff_profile_base_county
         - field_staff_profile_cty_served
         - field_staff_profile_staffid
+      label: 'More from Staff Directory'
+      region: content
       parent_name: group_main_accordion
       weight: 22
       format_type: accordion_item
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         formatter: closed
-        required_fields: true
         description: ''
-      label: 'More from Staff Directory'
-      region: content
+        required_fields: true
     group_extra_staff_info:
       children:
         - field_staff_profile_cty_dept
@@ -118,45 +124,46 @@ third_party_settings:
         - field_staff_profile_pref_name
         - field_staff_profile_pref_phone
         - field_staff_profile_smugmug
+        - field_custodian_of_public_record
         - field_staff_profile_teams_groups
+      label: 'Extra Staff Info'
+      region: content
       parent_name: ''
       weight: 2
       format_type: fieldset
       format_settings:
-        id: ''
         classes: ''
+        id: ''
         description: ''
         required_fields: true
-      label: 'Extra Staff Info'
-      region: content
     group_web_author_info:
       children:
         - group_web_author_info_fold
-      parent_name: ''
-      weight: 17
-      format_type: accordion
-      region: content
-      format_settings:
-        effect: none
-        id: ''
-        classes: staff-profile-web-author-info
       label: 'Web Author Info'
+      region: content
+      parent_name: ''
+      weight: 12
+      format_type: accordion
+      format_settings:
+        classes: staff-profile-web-author-info
+        id: ''
+        effect: none
     group_web_author_info_fold:
       children:
         - field_staff_profile_cty_author
         - field_staff_profile_web_amb
         - field_staff_profile_site_author
         - field_staff_profile_quals
+      label: 'Web Author Info'
+      region: content
       parent_name: group_web_author_info
       weight: 20
       format_type: accordion_item
-      region: content
       format_settings:
-        formatter: closed
-        id: ''
         classes: ''
+        id: ''
+        formatter: closed
         required_fields: false
-      label: 'Web Author Info'
 id: node.staff_profile.default
 targetEntityType: node
 bundle: staff_profile
@@ -165,237 +172,245 @@ content:
   body:
     type: text_textarea_with_summary
     weight: 125
+    region: content
     settings:
       rows: 9
       summary_rows: 3
       placeholder: ''
       show_summary: false
     third_party_settings: {  }
-    region: content
   created:
     type: datetime_timestamp
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_custodian_of_public_record:
+    type: boolean_checkbox
+    weight: 130
+    region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   field_staff_profile_addr:
-    weight: 18
-    settings: {  }
-    third_party_settings: {  }
     type: address_default
+    weight: 18
     region: content
+    settings:
+      wrapper_type: details
+    third_party_settings: {  }
   field_staff_profile_base_county:
-    weight: 27
-    settings: {  }
-    third_party_settings: {  }
     type: options_select
-    region: content
-  field_staff_profile_college:
-    weight: 23
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
-  field_staff_profile_cty_author:
-    weight: 14
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
-    region: content
-  field_staff_profile_cty_dept:
-    weight: 124
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_staff_profile_cty_served:
     weight: 28
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
-  field_staff_profile_departmentid:
-    weight: 24
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
-  field_staff_profile_email:
-    weight: 17
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: email_default
-    region: content
-  field_staff_profile_fax:
-    weight: 20
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: telephone_default
-    region: content
-  field_staff_profile_first_name:
-    weight: 122
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_staff_profile_job_title:
-    weight: 26
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_staff_profile_last_name:
-    weight: 123
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_staff_profile_location:
-    weight: 22
-    settings: {  }
-    third_party_settings: {  }
+  field_staff_profile_college:
     type: options_select
+    weight: 23
     region: content
-  field_staff_profile_netid:
-    weight: 16
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_staff_profile_pgm_areas:
-    weight: 25
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
+  field_staff_profile_cty_author:
+    type: options_select
+    weight: 14
     region: content
-  field_staff_profile_phone:
-    weight: 19
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: telephone_default
-    region: content
-  field_staff_profile_pref_name:
-    weight: 127
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_staff_profile_pref_phone:
-    weight: 128
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: telephone_default
-    region: content
-  field_staff_profile_pref_title:
-    weight: 126
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
-  field_staff_profile_quals:
-    weight: 17
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
+  field_staff_profile_cty_dept:
+    type: string_textfield
+    weight: 124
     region: content
-  field_staff_profile_region:
-    weight: 21
     settings:
+      size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_staff_profile_cty_served:
+    type: options_buttons
+    weight: 29
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_staff_profile_departmentid:
     type: number
+    weight: 24
     region: content
-  field_staff_profile_site_author:
-    weight: 16
-    settings: {  }
+    settings:
+      placeholder: ''
     third_party_settings: {  }
-    type: options_buttons
+  field_staff_profile_email:
+    type: email_default
+    weight: 17
     region: content
-  field_staff_profile_smugmug:
-    weight: 129
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_staff_profile_fax:
+    type: telephone_default
+    weight: 20
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_first_name:
+    type: string_textfield
+    weight: 122
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_staff_profile_job_title:
     type: string_textfield
+    weight: 26
     region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_last_name:
+    type: string_textfield
+    weight: 123
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_location:
+    type: options_select
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_staff_profile_netid:
+    type: string_textfield
+    weight: 16
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_pgm_areas:
+    type: options_buttons
+    weight: 25
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_staff_profile_phone:
+    type: telephone_default
+    weight: 19
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_position:
+    type: options_select
+    weight: 27
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_staff_profile_pref_name:
+    type: string_textfield
+    weight: 127
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_pref_phone:
+    type: telephone_default
+    weight: 128
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_pref_title:
+    type: string_textfield
+    weight: 126
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_quals:
+    type: options_buttons
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_staff_profile_region:
+    type: number
+    weight: 21
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_staff_profile_site_author:
+    type: options_select
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_staff_profile_smugmug:
+    type: string_textfield
+    weight: 129
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_staff_profile_sort_order:
     type: weight_selector
-    weight: 3
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }
   field_staff_profile_staffid:
     type: number
-    weight: 29
+    weight: 30
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_staff_profile_teams_groups:
-    weight: 130
+    type: options_select
+    weight: 131
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
   field_staff_profile_web_amb:
-    weight: 15
+    type: options_select
+    weight: 16
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_buttons
-    region: content
   path:
     type: path
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
+    weight: 7
+    region: content
     settings:
       display_label: true
-    weight: 6
-    region: content
-    third_party_settings: {  }
-  publish_on:
-    type: datetime_timestamp_no_default
-    weight: 9
-    region: content
-    settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
+    weight: 11
+    region: content
     settings:
       display_label: true
-    weight: 12
-    region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
+    weight: 8
+    region: content
     settings:
       display_label: true
-    weight: 7
-    region: content
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -407,25 +422,21 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 4
+    weight: 5
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
-    third_party_settings: {  }
-  unpublish_on:
-    type: datetime_timestamp_no_default
-    weight: 10
-    region: content
-    settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 11
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
   field_staff_profile_canonical: true
   field_staff_profile_stale: true
+  publish_on: true
+  unpublish_on: true

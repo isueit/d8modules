@@ -1,0 +1,5 @@
+links_block:
+  version: 1.x
+  css:
+    layout:
+      css/links_block.css: {}

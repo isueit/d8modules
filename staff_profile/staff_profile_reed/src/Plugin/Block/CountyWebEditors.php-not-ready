@@ -1,0 +1,49 @@
+<?php
+
+// Big problem is Operation Links don't get overwritten
+
+namespace Drupal\staff_profile_reed\Plugin\Block;
+
+use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Field\FieldFilteredMarkup;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Provides a 'County Web Editors' Block.
+ *
+ * @Block(
+ *   id = "reed_county_web_editors",
+ *   admin_label = @Translation("County Web Editors"),
+ *   category = @Translation("Staff Profile"),
+ * )
+ */
+class CountyWebEditors extends BlockBase
+{
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build()
+  {
+    $counties = \Drupal::service('staff_profile_reed.helper_functions')->getCountiesServed();
+
+    $result = [];
+    foreach ($counties as $key => $county) {
+      $result[$county->label()] = array(
+        '#type' => 'fieldset',
+        "#title" => $this->t($county->label())
+      );
+      $result[$county->label()]['view'] = [
+        '#type' => 'view',
+        '#name' => 'regional_director_county',
+        '#display_id' => 'county_web_editors',
+        '#arguments' => [$county->id()],
+        '#embed' => TRUE,
+      ];
+      $result[$county->label()]['add-form'] = \Drupal::formBuilder()->getForm('\Drupal\staff_profile_reed\Form\CountyWebEditorsAddForm');
+      $result[$county->label()]['add-form']['cty']['#value'] = $county->id();
+      $result[$county->label()]['add-form']['cty']['#default_value'] = $county->id();
+    }
+    return $result;
+  }
+}

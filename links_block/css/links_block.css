@@ -1,0 +1,42 @@
+:root {
+	--cardinal: #c8102e;
+	--gold: #f1be48;
+	--burgundy: #7c2529;
+	--dk-gray: #4a4a4a;
+	--lt-gray: #f5f5f5;
+	--md-gray: #ebebeb;
+	--midnight: #003d4c;
+	--green: #008540;
+}
+
+/**
+ * @file
+ * CSS styles for Links Block
+ *
+ */
+
+.links_block_field {
+    display: -webkit-box;
+}
+a.links_block_field {
+    text-decoration: none;
+    margin-bottom: 0.55rem;
+    width: fit-content;
+}  
+a.links_block_field > p {
+    margin: 0;
+}  
+.links_block_field .fontawesome-icons svg {
+    width: 1.5rem;
+    margin-right: 0.25em;
+    font-size: 1.45em;
+}
+
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 768px) {
+	a.links_block_field > p { display: none; }
+	a.links_block_field { display: inline-block; margin-bottom: 3.55rem; }
+	a.links_block_field .fontawesome-icons svg { width: 1.25em; }
+}

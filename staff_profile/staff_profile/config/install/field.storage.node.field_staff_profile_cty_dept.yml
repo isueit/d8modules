@@ -3,14 +3,17 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - staff_profile
 id: node.field_staff_profile_cty_dept
 field_name: field_staff_profile_cty_dept
 entity_type: node
 type: string
 settings:
   max_length: 255
-  is_ascii: false
   case_sensitive: false
+  is_ascii: false
 module: core
 locked: false
 cardinality: 1

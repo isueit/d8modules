@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_typesense
+  enforced:
+    module:
+      - plp_programs
+id: typesense_plp_programs
+name: 'Typesense PLP Programs'
+description: ''
+backend: search_api_typesense
+backend_config:
+  admin_api_key: KPwl7XwGfNLPjKdRtZSL1H0Rb1YeApcD
+  nodes:
+    -
+      host: typesense.exnet.iastate.edu
+      port: '8108'
+      protocol: https
+  retry_interval_seconds: '2'
