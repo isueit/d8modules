@@ -1,16 +1,32 @@
 <?php
 
+ use Drupal\user\Entity\Role;
 /**
- * Implements hook_install().
+ * Implements hook_update_N().
+ */
+function staff_profile_secondary_update_8001() {
+  revoke_permissions_from_content_editor();
+}
+
+/**
+ * Revoke specific permissions from the content_editor role.
  */
 
-function staff_profile_secondary_install() {
-  // Set up permissions, allow users to edit their own staff profile
-  user_role_grant_permissions('content_editor', array(
-    'edit any staff_profile content',
-  ));
+ function revoke_permissions_from_content_editor() {
+   // Load the role object.
+   $role = Role::load('content_editor');
 
-  user_role_revoke_permissions('content_editor', array(
-    'create staff_profile content',
-  ));
-}
+   if ($role) {
+     $permissions_to_revoke = [
+       'create staff_profile content',
+       'edit any staff_profile content',
+     ];
+
+     foreach ($permissions_to_revoke as $permission) {
+       $role->revokePermission($permission);
+     }
+
+     // Save the updated role.
+     $role->save();
+   }
+ }
