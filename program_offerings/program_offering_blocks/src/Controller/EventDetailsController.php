@@ -4,6 +4,8 @@ namespace Drupal\program_offering_blocks\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * Provides route responses for the program_offering_blocks  module.
@@ -101,41 +103,57 @@ class EventDetailsController extends ControllerBase
 
   private function handle_dates($event)
   {
+    // Ensure that event ID exists in the event array
+    if (!isset($event['Id']) || empty($event['Id'])) {
+      // Handle the missing event ID case gracefully
+      return '<div class="error">Event ID is missing</div>';
+    }
+
+    $eventID = $event['Id']; // Extract the event ID from the $event array
+
     // Start with Date part of start time
-    $startdate = strtoTime($event['Start_Time_and_Date__c']);
-    $enddate = strtoTime($event['End_Date_and_Time__c']);
+    $startdate = strtotime($event['Start_Time_and_Date__c']);
+    $enddate = strtotime($event['End_Date_and_Time__c']);
     $output = date('l, m/d/Y', $startdate);
 
     // If start time isn't midnight, then display the start time also
-    if (date('Gi', $startdate) <> '0000') {
+    if (date('Gi', $startdate) != '0000') {
       $output .= date(' g:i A', $startdate);
     }
 
     $output .= ' - ';
 
     // If date part of start and end dates are different, then include the end date
-    if (date('z', $startdate) <> date('z', $enddate)) {
-      $output .= date('l, m/d/y', $enddate);
+    if (date('z', $startdate) != date('z', $enddate)) {
+      $output .= date('l, m/d/Y', $enddate);
     }
 
     // If the end time isn't midnight, then display the end time
-    if (date('Gi', $enddate) <> '0000') {
+    if (date('Gi', $enddate) != '0000') {
       $output .= date(' g:i A', $enddate);
     }
 
-    $output = '  <div class="event_details_dates">' . $output . '</div>' . PHP_EOL;
+    $output = '<div class="event_details_dates">' . $output . '</div>' . PHP_EOL;
+
+    // Check for Next Session and display it
     if ($event['Start_Time_and_Date__c'] != $event['Next_Start_Date__c']) {
       $tmpdate = strtotime($event['Next_Start_Date__c']);
-      $tmpstr = date('l, m/d/y', $tmpdate);
+      $tmpstr = date('l, m/d/Y', $tmpdate);
       // If start time isn't midnight, then display the start time also
-      if (date('Gi', $tmpdate) <> '0000') {
+      if (date('Gi', $tmpdate) != '0000') {
         $tmpstr .= date(' h:i A', $tmpdate);
       }
-      $output .= '  <p>Next Session: <span class="event_details_dates">' . $tmpstr . '</span></p>' . PHP_EOL;
+      $output .= '<p>Next Session: <span class="event_details_dates">' . $tmpstr . '</span></p>' . PHP_EOL;
     }
+
+    // Generate the "Add to Calendar" link
+    $add_to_calendar_url = Url::fromRoute('program_offering_blocks.ics_download', ['eventID' => $eventID]);
+    $add_to_calendar_link = Link::fromTextAndUrl($this->t('Add to Calendar'), $add_to_calendar_url)->toString();
+    $output .= '<div class="add-to-calendar">' . $add_to_calendar_link . '</div>' . PHP_EOL;
 
     return $output;
   }
+
 
   private function get_event_sessions($event)
   {
@@ -179,6 +197,73 @@ class EventDetailsController extends ControllerBase
 
     return $returnStr;
   }
+
+  public function generate_ics($event) {
+    $ics_content = "BEGIN:VCALENDAR\r\n";
+    $ics_content .= "VERSION:2.0\r\n";
+    $ics_content .= "PRODID:-//Your Organization//NONSGML Event//EN\r\n";
+    $ics_content .= "BEGIN:VEVENT\r\n";
+    $ics_content .= "UID:" . uniqid() . "\r\n"; // Unique ID
+    $ics_content .= "DTSTAMP:" . gmdate('Ymd\THis\Z') . "\r\n"; // Timestamp
+
+    // Start date
+    $start_date = gmdate('Ymd\THis\Z', strtotime($event['Start_Time_and_Date__c']));
+    $ics_content .= "DTSTART:" . $start_date . "\r\n";
+
+    // Check if the end date is set, otherwise skip it
+    if (!empty($event['End_Date_and_Time__c'])) {
+      $end_date = gmdate('Ymd\THis\Z', strtotime($event['End_Date_and_Time__c']));
+      $ics_content .= "DTEND:" . $end_date . "\r\n";
+    }
+
+    // Event summary (title)
+    $ics_content .= "SUMMARY:" . htmlspecialchars($event['Name_Placeholder__c']) . "\r\n";
+
+    // Event description
+    $ics_content .= "DESCRIPTION:" . htmlspecialchars($event['Program_Description__c']) . "\r\n";
+
+    // Event location
+    $location = $event['Event_Location_Site_Building__c'] . ", " . $event['Event_Location__c'] . ", " . $event['Program_State__c'] . ", " . $event['Event_Location_Zip_Code__c'];
+    $ics_content .= "LOCATION:" . htmlspecialchars($location) . "\r\n";
+
+    $ics_content .= "END:VEVENT\r\n";
+    $ics_content .= "END:VCALENDAR\r\n";
+
+    return $ics_content;
+  }
+  public function download_ics($eventID) {
+    // Fetch the event details from your database or API
+    $event = $this->getEventDetails($eventID); // Make sure this gets the right event info
+
+    // Generate the .ics content
+    $ics_content = $this->generate_ics($event);
+
+    // Serve the file
+    return new \Symfony\Component\HttpFoundation\Response(
+      $ics_content,
+      200,
+      array(
+        'Content-Type' => 'text/calendar',
+        'Content-Disposition' => 'attachment; filename="event.ics"',
+      )
+    );
+  }
+  private function getEventDetails($eventID) {
+    $module_config = \Drupal::config('program_offering_blocks.settings');
+    $buffer = ISUEOHelpers\Files::fetch_url($module_config->get('url'), true);
+    $program_offerings = json_decode($buffer, TRUE);
+
+    // Loop through the events to find the one that matches the eventID
+    foreach ($program_offerings as $event) {
+      if ($event['Id'] == $eventID || (strlen($eventID) < 10 && trim(trim($event['Ungerboeck_Event_ID__c']), "0") == trim(trim($eventID), "0"))) {
+        return $event;
+      }
+    }
+
+    // Return null if no event is found
+    return null;
+  }
+
 
   private function get_event_links($event)
   {
