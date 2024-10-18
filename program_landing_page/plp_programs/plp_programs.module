@@ -83,14 +83,15 @@ function plp_programs_getprograms()
   // Step through the programs feed
   foreach ($programs as $program) {
 
-    $programIds[] = $program['Id'];
+    $program_id = $program['Id'];
+    $programIds[] = $program_id;
     $mynode = null;
     $save = false;
 
-    if (!empty($nodes[$program['Id']])) {
-      $mynode = $nodes[$program['Id']];
+    if (!empty($nodes[$program_id])) {
+      $mynode = $nodes[$program_id];
     } else {
-      $mynode = Node::create(array('type' => 'plp_program', 'title' => html_entity_decode($program['Name']), 'field_plp_program_mydata_id' => $program['Id'],));
+      $mynode = Node::create(array('type' => 'plp_program', 'title' => html_entity_decode($program['Name']), 'field_plp_program_mydata_id' => $program_id,));
       $save = true;
     }
 
@@ -166,7 +167,7 @@ function plp_programs_getprograms()
       'field_plp_program_num_measures' => $measurements,
     ];
     foreach ($number_fields as $key => $value) {
-      $num = plp_programs_get_number_of_items($program['Id'], $value, $children);
+      $num = plp_programs_get_number_of_items($program_id, $value, $children);
       if ($mynode->get($key)->getString() != $num) {
         $mynode->set($key, $num);
         $save = true;
@@ -174,10 +175,10 @@ function plp_programs_getprograms()
     }
 
     // Get list of programID's that should be include in event list
-    $event_programs = [$program['Id']];
-    if (array_key_exists($program['Id'], $children)) {
-      ksort($children[$program['Id']]);
-      foreach ($children[$program['Id']] as $child) {
+    $event_programs = [$program_id];
+    if (array_key_exists($program_id, $children)) {
+      ksort($children[$program_id]);
+      foreach ($children[$program_id] as $child) {
         $event_programs[] = $child['Id'];
       }
     }
@@ -195,16 +196,16 @@ function plp_programs_getprograms()
     }
 
     // Handle when a program shouldn't have children
-    if (!array_key_exists($program['Id'], $child_nodes) && !empty($mynode->field_plp_program_children[0])) {
+    if (!array_key_exists($program_id, $child_nodes) && !empty($mynode->field_plp_program_children[0])) {
       $mynode->set('field_plp_program_children', []);
       $save = true;
     }
 
     // Handle Program Children
-    if (array_key_exists($program['Id'], $child_nodes)) {
+    if (array_key_exists($program_id, $child_nodes)) {
       $tmp_existing_children = explode(', ', $mynode->field_plp_program_children->getString());
       sort($tmp_existing_children);
-      $tmp_new_children = $child_nodes[$program['Id']];
+      $tmp_new_children = $child_nodes[$program_id];
       sort($tmp_new_children);
 
       if ($tmp_existing_children != $tmp_new_children) {
@@ -214,7 +215,7 @@ function plp_programs_getprograms()
     }
 
     // Calculate the sort number
-    $tmpnum = plp_programs_sort_calculator($mynode, $child_nodes, $program['Id'], $config);
+    $tmpnum = plp_programs_sort_calculator($mynode, $child_nodes, $program_id, $config);
     if ($mynode->field_plp_program_sort_calc->value != $tmpnum) {
       $mynode->set('field_plp_program_sort_calc', $tmpnum);
       $save = true;
