@@ -275,3 +275,68 @@ function plp_programs_handle_topic_hierarchy(array $categories_topics, array $pr
     }
   }
 }
+
+function plp_programs_get_contact_counties(string $tmpstring, string $program_id, array $events, array $children, array $event_programs) {
+  $contacts = [];
+  $counties = explode(';', $tmpstring);
+  foreach ($counties as $county) {
+    if (!empty($county)) {
+      $county = trim($county);
+      switch ($county) {
+        case 'blackhawk':
+          $county = 'Black Hawk';
+          break;
+        case 'buenavista':
+          $county = 'Buena Vista';
+          break;
+        case 'cerrogordo':
+          $county = 'Cerro Gordo';
+          break;
+        case 'desmoines':
+          $county = 'Des Moines';
+          break;
+        case 'eastpottawattamie':
+          $county = 'Pottawattamie - East';
+          break;
+        case 'obrien':
+          $county = 'O\'Brien';
+          break;
+        case 'paloalto':
+          $county = 'Palo Alto';
+          break;
+        case 'vanburen':
+          $county = 'Van Buren';
+          break;
+        case 'westpottawattamie':
+          $county = 'Pottawattamie - West';
+          break;
+        default:
+          $county = ucwords($county);
+          break;
+      }
+      $contacts[] = $county;
+    }
+  }
+
+  foreach ($event_programs as $event_program) {
+    if (array_key_exists($event_program, $events)) {
+      foreach ($events[$event_program] as $event) {
+        if (str_contains($event['Account__c.Name'], ' County Extension')){
+          $contacts[] = str_replace(' County Extension', '', $event['Account__c.Name']);
+        }
+        $additional_counties_string = $event['Additional_Counties__c'];
+        $additional_counties_string = str_replace(['East Pottawattamie', 'West Pottawattamie',], ['Pottawattamie - East', 'Pottawattamie - West',], $additional_counties_string);
+        $additional_counties = explode(';', $additional_counties_string);
+        foreach ($additional_counties as $additional_county) {
+          if (str_contains($additional_county, ' County')) {
+            $contacts[] = str_replace(' County', '', $additional_county);
+          }
+        }
+      }
+    }
+  }
+  $contacts = array_unique($contacts);
+  sort($contacts);
+
+  return $contacts;
+}

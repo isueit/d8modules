@@ -194,6 +194,10 @@ function plp_programs_getprograms()
       $mynode->set('field_plp_program_on_counties', $tmpstring);
       $save = true;
     }
+    $contact_counties = [];
+    $contact_counties = plp_programs_get_contact_counties($tmpstring, $program_id, $events, $children, $event_programs);
+    echo $program['Name'] . ',' . count($contact_counties) . ','. implode(';', $contact_counties) . PHP_EOL;
+
 
     // Handle when a program shouldn't have children
     if (!array_key_exists($program_id, $child_nodes) && !empty($mynode->field_plp_program_children[0])) {
