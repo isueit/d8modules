@@ -322,6 +322,7 @@ function plp_programs_get_contact_counties(string $tmpstring, string $program_id
     if (array_key_exists($event_program, $events)) {
       foreach ($events[$event_program] as $event) {
         if (str_contains($event['Account__c.Name'], ' County Extension')){
+          $event['Account__c.Name'] = str_replace(['East Pottawattamie', 'West Pottawattamie',], ['Pottawattamie - East', 'Pottawattamie - West',], $event['Account__c.Name']);
           $contacts[] = str_replace(' County Extension', '', $event['Account__c.Name']);
         }
         $additional_counties_string = $event['Additional_Counties__c'];

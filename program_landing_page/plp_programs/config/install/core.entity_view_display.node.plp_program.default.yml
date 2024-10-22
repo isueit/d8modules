@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.plp_program.field_plp_program_contact_email
     - field.field.node.plp_program.field_plp_program_contact_name
     - field.field.node.plp_program.field_plp_program_contact_phone
+    - field.field.node.plp_program.field_plp_program_counties
     - field.field.node.plp_program.field_plp_program_critical_issue
     - field.field.node.plp_program.field_plp_program_event_pgm_ids
     - field.field.node.plp_program.field_plp_program_interest_areas
@@ -111,6 +112,7 @@ third_party_settings:
             weight: 0
             additional:
               layout_builder_styles_style:
+                hero_heading_page_title: 0
                 upcoming_events_white: 0
                 vertical_alignment: 0
         third_party_settings: {  }
@@ -128,7 +130,8 @@ third_party_settings:
               context_mapping:
                 entity: layout_builder.entity
             weight: 0
-            additional: {  }
+            additional:
+              hidden: true
           2e6a5077-d515-46ab-8480-b883a9693f66:
             uuid: 2e6a5077-d515-46ab-8480-b883a9693f66
             region: content
@@ -149,6 +152,7 @@ third_party_settings:
         layout_id: layout_base_twocol
         layout_settings:
           label: '2 Column Layout'
+          context_mapping: {  }
           classes: ''
           column_widths: null
           id: ''
@@ -158,7 +162,7 @@ third_party_settings:
           column_breakpoint: layout--column-breakpoint--medium
           align_items: layout--align-items--normal
           background: layout--background--none
-          background_image: ''
+          background_image: '29'
           background_image_style: ''
           background_attachment: layout--background-attachment--default
           background_position: layout--background-position--center
@@ -178,12 +182,14 @@ third_party_settings:
           left_padding: ''
           container: layout--container--none
           content_container: layout--content-container--default
-          height: layout--height--default
+          height: layout-height-default
           color: layout--color--default
           alignment: ''
           modifier: ''
           customizable_columns: ''
           modifiers: ''
+          layout_builder_styles_style:
+            hero_heading: 0
         components:
           3c7a3e84-4b42-4bbf-934a-e2743f916839:
             uuid: 3c7a3e84-4b42-4bbf-934a-e2743f916839
@@ -339,6 +345,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_plp_program_counties:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
     region: content
   links:
     settings: {  }

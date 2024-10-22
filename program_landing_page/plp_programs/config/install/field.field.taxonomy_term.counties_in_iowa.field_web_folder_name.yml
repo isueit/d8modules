@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_web_folder_name
+    - taxonomy.vocabulary.counties_in_iowa
+id: taxonomy_term.counties_in_iowa.field_web_folder_name
+field_name: field_web_folder_name
+entity_type: taxonomy_term
+bundle: counties_in_iowa
+label: 'Web Folder Name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -74,6 +74,7 @@ function plp_programs_getprograms()
   $critical_issues = ISUEOHelpers\Taxonomy::get_terms('critical_issues');
   $interest_areas = ISUEOHelpers\Taxonomy::get_terms('interest_areas');
   $categories_topics = ISUEOHelpers\Taxonomy::get_terms('categories_topics');
+  $iowa_counties = ISUEOHelpers\Taxonomy::get_terms('counties_in_iowa');
 
   // Get all existing program and child nodes
   $nodes = plp_programs_get_existing_nodes('plp_program', 'field_plp_program_mydata_id');
@@ -137,6 +138,31 @@ function plp_programs_getprograms()
       $save = true;
     }
 
+    // Get list of programID's that should be include in event list
+    $event_programs = [$program_id];
+    if (array_key_exists($program_id, $children)) {
+      ksort($children[$program_id]);
+      foreach ($children[$program_id] as $child) {
+        $event_programs[] = $child['Id'];
+      }
+    }
+    $tmpstring = serialize($event_programs);
+    if ($mynode->field_plp_program_event_pgm_ids->value != $tmpstring) {
+      $mynode->set('field_plp_program_event_pgm_ids', $tmpstring);
+      $save = true;
+    }
+
+    // Handle counties, use the same list of programs as events
+    $tmpstring = plp_programs_get_counties($counties, $event_programs);
+    if ($mynode->field_plp_program_on_counties->value != $tmpstring) {
+      $mynode->set('field_plp_program_on_counties', $tmpstring);
+      $save = true;
+    }
+    $contact_counties = [];
+    $contact_counties = plp_programs_get_contact_counties($tmpstring, $program_id, $events, $children, $event_programs);
+    //echo $program['Name'] . ',' . count($contact_counties) . ','. implode(';', $contact_counties) . PHP_EOL;
+    $program['Contact_Counties'] = implode(';', $contact_counties);
+
     // Handle taxonomy lookup fields
     $fields_single_entity_reference = [
       'field_plp_program_audiences' => ['taxonomy_array' => &$intended_audiences, 'taxonomy_id' => 'intended_audiences', 'json_element' => 'Intended_Audiences__c'],
@@ -145,6 +171,7 @@ function plp_programs_getprograms()
       'field_plp_program_program_area' => ['taxonomy_array' => &$program_areas, 'taxonomy_id' => 'program_areas', 'json_element' => 'hed__Account__r.Name'],
       'field_plp_program_category' => ['taxonomy_array' => &$categories_topics, 'taxonomy_id' => 'categories_topics', 'json_element' => 'Program_landing_Page_Category__c'],
       'field_plp_program_topics' => ['taxonomy_array' => &$categories_topics, 'taxonomy_id' => 'categories_topics', 'json_element' => 'Program_Landing_Page_Topic__c'],
+      'field_plp_program_counties' => ['taxonomy_array' => &$iowa_counties, 'taxonomy_id' => 'counties_in_iowa', 'json_element' => 'Contact_Counties'],
     ];
     foreach ($fields_single_entity_reference as $key => $value) {
       $terms = [];
@@ -173,31 +200,6 @@ function plp_programs_getprograms()
         $save = true;
       }
     }
-
-    // Get list of programID's that should be include in event list
-    $event_programs = [$program_id];
-    if (array_key_exists($program_id, $children)) {
-      ksort($children[$program_id]);
-      foreach ($children[$program_id] as $child) {
-        $event_programs[] = $child['Id'];
-      }
-    }
-    $tmpstring = serialize($event_programs);
-    if ($mynode->field_plp_program_event_pgm_ids->value != $tmpstring) {
-      $mynode->set('field_plp_program_event_pgm_ids', $tmpstring);
-      $save = true;
-    }
-
-    // Handle counties, use the same list of programs as events
-    $tmpstring = plp_programs_get_counties($counties, $event_programs);
-    if ($mynode->field_plp_program_on_counties->value != $tmpstring) {
-      $mynode->set('field_plp_program_on_counties', $tmpstring);
-      $save = true;
-    }
-    $contact_counties = [];
-    $contact_counties = plp_programs_get_contact_counties($tmpstring, $program_id, $events, $children, $event_programs);
-    echo $program['Name'] . ',' . count($contact_counties) . ','. implode(';', $contact_counties) . PHP_EOL;
-
 
     // Handle when a program shouldn't have children
     if (!array_key_exists($program_id, $child_nodes) && !empty($mynode->field_plp_program_children[0])) {

@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.plp_program.field_plp_program_contact_email
     - field.field.node.plp_program.field_plp_program_contact_name
     - field.field.node.plp_program.field_plp_program_contact_phone
+    - field.field.node.plp_program.field_plp_program_counties
     - field.field.node.plp_program.field_plp_program_critical_issue
     - field.field.node.plp_program.field_plp_program_event_pgm_ids
     - field.field.node.plp_program.field_plp_program_interest_areas
@@ -55,6 +56,7 @@ hidden:
   field_plp_program_contact_email: true
   field_plp_program_contact_name: true
   field_plp_program_contact_phone: true
+  field_plp_program_counties: true
   field_plp_program_critical_issue: true
   field_plp_program_event_pgm_ids: true
   field_plp_program_interest_areas: true

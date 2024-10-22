@@ -47,6 +47,7 @@ function plp_programs_install()
     ]);
     $config->save();
   }
+  plp_programs_update_10001(null);
 }
 
 /**
@@ -72,4 +73,24 @@ function plp_programs_uninstall()
     }
   }
   */
+}
+
+/**
+* Implements hook_update_N().
+*/
+
+function plp_programs_update_10001(&$sandbox) {
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => 'counties_in_iowa',]);
+  foreach ($terms as $term) {
+    $folder = $term->name->getString();
+    $folder = str_replace('Pottawattamie - West', 'westpottowattamie', $folder);
+    $folder = str_replace('Pottawattamie - East', 'eastpottowattamie', $folder);
+    $folder = str_replace('\'', '', $folder);
+    $folder = str_replace(' ', '', $folder);
+    $folder = strtolower($folder);
+
+    $term->set('field_web_folder_name', $folder);
+    $term->save();
+  }
+
 }
