@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - taxonomy
+  enforced:
+    config:
+      - node.type.plp_program
 id: taxonomy_term.field_web_folder_name
 field_name: field_web_folder_name
 entity_type: taxonomy_term

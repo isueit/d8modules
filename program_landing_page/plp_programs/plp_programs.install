@@ -47,7 +47,8 @@ function plp_programs_install()
     ]);
     $config->save();
   }
-  plp_programs_update_10001(null);
+  $tmp = null;
+  plp_programs_update_10001($tmp);
 }
 
 /**

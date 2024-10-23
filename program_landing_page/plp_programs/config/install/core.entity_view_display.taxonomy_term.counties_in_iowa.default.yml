@@ -4,8 +4,12 @@ dependencies:
   config:
     - field.field.taxonomy_term.counties_in_iowa.field_web_folder_name
     - taxonomy.vocabulary.counties_in_iowa
+    - node.type.plp_program
   module:
     - text
+  enforced:
+    config:
+      - node.type.plp_program
 id: taxonomy_term.counties_in_iowa.default
 targetEntityType: taxonomy_term
 bundle: counties_in_iowa
