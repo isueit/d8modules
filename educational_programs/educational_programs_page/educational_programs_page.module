@@ -65,7 +65,7 @@ function educational_programs_page_node_presave(Drupal\Core\Entity\EntityInterfa
 					} else {
 						// Don't know why, but sometimes $menu_link_result doesn't contain our link so search for it here to delete the existing link
 						foreach ($main_menu_tree as $menu_item) {
-							foreach($menu_item->subtree as $child_link) {
+							foreach ($menu_item->subtree as $child_link) {
 								if ($child_term_name == $child_link->link->getTitle()) {
 									$child_link->link->deleteLink();
 								}
@@ -150,19 +150,57 @@ function educational_programs_page_cron()
  */
 function educational_programs_page_check_published_nodes()
 {
-	// Get all taxonomy terms, store in array
-	$terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadTree('educational_programs');
-	// Create array and store all taxonomy term names, these should be what our edu_page content is called
-	$term_names = array();
-	foreach ($terms as $term) {
-		array_push($term_names, $term->name);
+	// Initialize variables
+	$terms = [];
+	$nodes = [];
+
+	// Get the Educational Programs from the Taxonomy
+	$vid = 'educational_programs';
+	$taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+	$terms_raw = $taxonomyStorage->loadByProperties(['vid' => $vid]);
+	foreach ($terms_raw as $term) {
+    $description = '';
+    if (!empty($term->getDescription()) && !empty(strip_tags($term->getDescription()))) {
+      $description = trim(strip_tags($term->getDescription()));
+    }
+		if (!empty($description)) {
+			// Description means it's a Program
+			$terms[$term->id()] = $term;
+		}
 	}
 
-	// Get all published nodes of edu_page type
-	$nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(array('type' => 'educational_programs_page', 'status' => '1'));
+	// Get all the published nodes
+	$nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'educational_programs_page', 'status' => 1]);
 	foreach ($nodes as $node) {
-		// Check if node label is in array of term names, if not unpublish and save node
-		if (!in_array(Term::load($node->get('field_educational_program')[0]->get('term_id')->getValue())->getName(), $term_names)) {
+		$term_id = $node->get('field_educational_program')[0]->get('term_id')->getValue();
+		// Make sure the Taxonomy term exists
+		if (key_exists($term_id, $terms)) {
+			// If the Taxonomy term is unpublished, the node should be unpublished also
+			if (!$terms[$term_id]->isPublished()) {
+				$node->setUnpublished();
+				$node->save();
+			}
+
+			// Get the sessions from Layout Builder
+			$layout = $node->get('layout_builder__layout');
+			$sections = $layout->getSections();
+
+			// Check if node should be redirected because there is no local content
+			if ($node->field_educational_program->auto_redirect != null) {
+				if (count($sections) == 0 && empty($node->field_educational_program->auto_redirect)) {
+					$node->field_educational_program->auto_redirect = true;
+					$node->save();
+				}
+			}
+
+			// If the title needs changing, save the node, and the educational_programs_field will change the $node title
+			if ($node->getTitle() != $terms[$term_id]->getName()) {
+				$node->save();
+			}
+
+
+		} else {
+			// Shouldn't get here, but if the Taxonomy term doesn't exist, unpublish the node
 			$node->setUnpublished();
 			$node->save();
 		}
@@ -172,9 +210,10 @@ function educational_programs_page_check_published_nodes()
 /**
  * Implements hook_preprocess_HOOK()
  */
-function educational_programs_page_preprocess_node(&$variables) {
-    $variables['#attached']['library'][] = 'educational_programs_page/educational_programs_page';
-  }
+function educational_programs_page_preprocess_node(&$variables)
+{
+	$variables['#attached']['library'][] = 'educational_programs_page/educational_programs_page';
+}
 
 /* function educational_programs_page_node_delete(Drupal\Core\Entity\EntityInterface $entity) {
   if ($entity->bundle() == 'educational_programs_page') {

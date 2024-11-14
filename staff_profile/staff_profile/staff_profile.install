@@ -3,6 +3,8 @@
 use \Drupal\taxonomy\Entity\Vocabulary;
 use \Drupal\taxonomy\Entity\Term;
 use \Drupal\taxonomy_import\Form\ImportForm;
+use \Drupal\node\Entity\Node;
+use \Drupal\user\Entity\User;
 
 function staff_profile_install()
 {
@@ -11,7 +13,7 @@ function staff_profile_install()
   $name = "Counties in Iowa";
   $vid = "counties_in_iowa";
   $desc = "List of counties in Iowa. This vocabulary is required for Staff Profiles.";
-  $path = DRUPAL_ROOT . '/' . Drupal::service('extension.list.module')->getPath('taxonomy_import'). '/src/data/IowaCounties.txt';
+  $path = DRUPAL_ROOT . '/' . Drupal::service('extension.list.module')->getPath('taxonomy_import') . '/src/data/IowaCounties.txt';
   $vocabs = Vocabulary::loadMultiple();
 
   //Create taxonomy if it does not exist
@@ -107,11 +109,21 @@ function staff_profile_install()
   ));
 }
 
-/*
-function staff_profile_uninstall() {
-  Drupal::configFactory()->getEditable('pathauto.pattern.staff_profiles')->delete();
+/**
+ * Implements hook_uninstall().
+ */
+function staff_profile_uninstall()
+{
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->execute();
+  $nodes = Node::loadMultiple($nids);
+  foreach ($nodes as $node) {
+    $owner = User::load($node->getOwnerId());
+    if ($owner && $owner->id() > 1) {
+      $owner->block()->save();
+    }
+    $node->delete();
+  }
 }
-*/
 
 /**
  * Adjust Program Areas Taxonomy

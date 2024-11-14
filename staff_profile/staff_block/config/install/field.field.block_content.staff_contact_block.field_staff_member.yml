@@ -5,6 +5,9 @@ dependencies:
     - block_content.type.staff_contact_block
     - field.storage.block_content.field_staff_member
     - node.type.staff_profile
+  enforced:
+    module:
+      - staff_block
 id: block_content.staff_contact_block.field_staff_member
 field_name: field_staff_member
 entity_type: block_content

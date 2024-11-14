@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - block_content.type.image_card
+    - field.field.block_content.image_card.field_image_card_caption
     - field.field.block_content.image_card.field_image_card_color_style
     - field.field.block_content.image_card.field_image_card_icon
     - field.field.block_content.image_card.field_image_card_image
@@ -20,12 +21,19 @@ targetEntityType: block_content
 bundle: image_card
 mode: default
 content:
+  field_image_card_caption:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
   field_image_card_color_style:
     type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 4
+    weight: 5
     region: content
   field_image_card_icon:
     type: fontawesome_icon_formatter
@@ -33,7 +41,7 @@ content:
     settings:
       layers: false
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   field_image_card_image:
     type: entity_reference_entity_view
@@ -44,14 +52,14 @@ content:
     third_party_settings:
       field_formatter_class:
         class: ''
-    weight: 1
+    weight: 2
     region: content
   field_image_card_text_size:
     type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
   field_image_card_title:
     type: text_default
@@ -70,7 +78,8 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
 hidden:
   field_image_card_body: true
+  search_api_excerpt: true

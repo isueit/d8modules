@@ -43,6 +43,9 @@ dependencies:
     - layout_builder
     - staff_profile
     - user
+  enforced:
+    module:
+      - staff_profile_primary
 third_party_settings:
   field_group:
     group_contact_:

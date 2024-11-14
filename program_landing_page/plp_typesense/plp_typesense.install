@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+
+function plp_typesense_install()
+{
+  // Lower the weight of this module, want hook_rebuild and hood_cron to run after other PLP modules
+  module_set_weight('plp_typesense', 50);
+}

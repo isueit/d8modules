@@ -47,7 +47,7 @@ function plp_programs_getprograms()
   // Record types to include in the catalog
   // 0128Z000000yeo8QAA = Product Family Record Type
   // 012460000012EiaAAE = Educational Program Record Type
-  $types = ['0128Z000000yeo8QAA', '012460000012EiaAAE', ];
+  $types = ['0128Z000000yeo8QAA', '012460000012EiaAAE',];
 
   // Step through products, looking for programs that should be included
   foreach ($products as $product) {
@@ -221,7 +221,7 @@ function plp_programs_getprograms()
     }
 
     // Publish the node if it's unpublished
-    if (!$mynode->isPublished) {
+    if (!$mynode->isPublished()) {
       $mynode->setPublished();
       $save = true;
     }
@@ -279,10 +279,11 @@ function plp_programs_theme($existing, $type, $theme, $path)
 }
 
 /**
-* Implements hook_preprocess_HOOK().
-*/
+ * Implements hook_preprocess_HOOK().
+ */
 
-function plp_programs_preprocess_node(&$variables) {
+function plp_programs_preprocess_node(&$variables)
+{
   // Add the css file if we're on content type of plp_program
   $node = $variables['node'];
   if ($node->getType() == 'plp_program') {

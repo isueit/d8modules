@@ -19,6 +19,7 @@
 /* --------------------------------------  */
 /* ## Google Custom Search Styles
 /* --------------------------------------  */
+/* Header Search */
 .isu-socials-responsive #block-csesearchblock {
 	display: none;
 }
@@ -31,7 +32,52 @@
 #block-csesearchblock .form-group {
 	margin-bottom: 0.5rem;
 }
+#block-csesearchblock .form-control:focus {
+	box-shadow: 0 0 0 .2rem var(--gold);
+	outline: 0;
+}
 
+/* Search Results Page */
+form#cse-search-form {
+	display: flex;
+	justify-content: flex-start;
+}
+form#cse-search-form .form-group {
+	margin-bottom: 1.5rem;
+}
+form#cse-search-form .form-control:focus {
+	box-shadow: 0 0 0 .2rem var(--gold);
+	outline: 0;
+}
+form#cse-search-form .isu-search__search-btn {
+	width: 2.5rem;
+	padding: 0;
+	color: #676767;
+	background-color: #fff;
+	border-top: 1px solid #eeeeee;
+	border-right: 1px solid #eeeeee;
+	border-bottom: 1px solid #eeeeee;
+}
+form#cse-search-form .isu-search__search-btn-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+form#cse-search-form .isu-search__search-field {
+	border-right: 0;
+}
+form#cse-search-form .form-control {
+	height: 2.5rem;
+	border-radius: 0.25rem 0 0 0.25rem;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+	border-left: 1px solid;
+}
 /* --------------------------------------  */
 /* ## Responsive
 /* --------------------------------------  */

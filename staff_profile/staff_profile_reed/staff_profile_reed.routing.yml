@@ -1,10 +1,10 @@
 staff_profile_reed.dashboard_page:
-  path: regional-director-dashboard
+  path: staff/regional-director-dashboard
   requirements:
     _role: 'regional_director'
 
 staff_profile_reed.county_web_editors:
-  path: county-web-editors
+  path: staff/county-web-editors
   defaults:
     _controller: '\Drupal\staff_profile_reed\Controller\CountyWebEditors::panel'
     _title: 'County Web Editors'

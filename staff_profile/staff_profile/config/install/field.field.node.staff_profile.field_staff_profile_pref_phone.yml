@@ -6,12 +6,15 @@ dependencies:
     - node.type.staff_profile
   module:
     - telephone
+  enforced:
+    module:
+      - staff_profile
 id: node.staff_profile.field_staff_profile_pref_phone
 field_name: field_staff_profile_pref_phone
 entity_type: node
 bundle: staff_profile
 label: 'Preferred Phone'
-description: 'Displayed on public web pages. Can use your office phone, cell phone. Blank field won''t display any phone number.'
+description: "Displayed on public web pages. Can use your office phone, cell phone. Blank field won't display any phone number."
 required: false
 translatable: false
 default_value: {  }

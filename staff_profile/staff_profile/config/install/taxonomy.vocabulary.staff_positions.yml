@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - staff_profile
+name: 'Staff Positions'
+vid: staff_positions
+description: 'Possible Staff Positions'
+weight: 0

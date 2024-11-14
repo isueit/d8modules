@@ -1,0 +1,9 @@
+isueo_helpers.primary_settings_form:
+  path: 'admin/config/isueo_helpers_settings'
+  defaults:
+    _form: '\Drupal\isueo_helpers\Form\SettingsForm'
+    _title: 'ISUEO Helpers Settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

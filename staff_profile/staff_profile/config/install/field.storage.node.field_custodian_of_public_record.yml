@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - staff_profile
 id: node.field_custodian_of_public_record
 field_name: field_custodian_of_public_record
 entity_type: node

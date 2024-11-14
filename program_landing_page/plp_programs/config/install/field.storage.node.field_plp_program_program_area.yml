@@ -4,6 +4,9 @@ dependencies:
   module:
     - node
     - taxonomy
+  enforced:
+    config:
+      - node.type.plp_program
 id: node.field_plp_program_program_area
 field_name: field_plp_program_program_area
 entity_type: node

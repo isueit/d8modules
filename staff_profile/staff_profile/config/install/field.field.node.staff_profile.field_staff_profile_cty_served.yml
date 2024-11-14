@@ -4,6 +4,9 @@ dependencies:
   config:
     - field.storage.node.field_staff_profile_cty_served
     - node.type.staff_profile
+  enforced:
+    module:
+      - staff_profile
 id: node.staff_profile.field_staff_profile_cty_served
 field_name: field_staff_profile_cty_served
 entity_type: node

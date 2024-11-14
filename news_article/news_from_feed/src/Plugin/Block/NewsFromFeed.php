@@ -80,7 +80,7 @@ class NewsFromFeed extends BlockBase
       $results .= '            </div>' . PHP_EOL;
       $results .= '          </a>' . PHP_EOL;
       $results .= '          <div class="card-footer">' . PHP_EOL;
-      $results .= '            <a href="https://www.extension.iastate.edu' . $node->node->Path . '" class="btn btn-outline-danger" aria-label="' . $node->node->title . '">Read More</a>' . PHP_EOL;
+      $results .= '            <a href="https://www.extension.iastate.edu' . $node->node->Path . '" class="btn btn-outline-danger" aria-label="Read More about ' . $node->node->title . '">Read More</a>' . PHP_EOL;
       $results .= '          </div>' . PHP_EOL;
       $results .= '        </div>' . PHP_EOL;
       $results .= '      </li>' . PHP_EOL;

@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    config:
+      - node.type.plp_program
 id: node.field_plp_program_num_measures
 field_name: field_plp_program_num_measures
 entity_type: node

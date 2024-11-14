@@ -25,14 +25,32 @@ function educational_programs_taxonomy_cron()
  */
 function educational_programs_taxonomy_handle_feeds()
 {
-
   // Initialize some variables
-  // $now is 10 seconds ago
-  $now = time() - 10;
+  $terms_all = [];
+  $terms_published_starting = [];
+  $terms_published_ending = [];
+  $terms_program_areas = [];
 
+  // Get the Educational Programs from the Taxonomy
   $vid = 'educational_programs';
   $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-  $all_terms = $taxonomyStorage->loadByProperties(['vid' => $vid]);
+  $terms_raw = $taxonomyStorage->loadByProperties(['vid' => $vid]);
+  foreach ($terms_raw as $term) {
+    $description = '';
+    if (!empty($term->getDescription()) && !empty(strip_tags($term->getDescription()))) {
+      $description = trim(strip_tags($term->getDescription()));
+    }
+    if (empty($description)) {
+      // No description means it's a Program Area
+      $terms_program_areas[$term->getName()] = $term;
+    } else {
+      // Description means it's a Program
+      $terms_all[$description] = $term;
+      if ($term->isPublished()) {
+        $terms_published_starting[] = $term->id();
+      }
+    }
+  }
 
   // Get the feed from MyData
   $fromFeed = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/EducationalPrograms.json');
@@ -50,56 +68,49 @@ function educational_programs_taxonomy_handle_feeds()
     return;
   }
 
+  // Now, step throught the list of programs from MyData
   foreach ($programs as $program) {
     // Skip programs that are not tagged public
+    // Also skip the ones that aren't of the right record types
     if ($program['Public_Access__c'] == '0') continue;
     if (!in_array($program['RecordTypeId'], $types)) continue;
 
     // Parent is the Program Area, need to get the ID
-    $query = $taxonomyStorage->loadByProperties([
-       'name' => $program['hed__Account__r.Name'],
-       'vid' => $vid,
-    ]);
-    // See if the Program Area Exists, if not, create it
-    if (empty($query)) {
-      $parent_id = Term::create(array('vid' => $vid, 'name' => $program['hed__Account__r.Name']))->save();
+    if (key_exists($program['hed__Account__r.Name'], $terms_program_areas)) {
+      $parent_id = $terms_program_areas[$program['hed__Account__r.Name']]->id();
     } else {
-      $parent_term = reset($query);
-      if ($parent_term->getChangedTime() < $now) {
-        $parent_term->setPublished();
-        $parent_term->setChangedTime($now);
-        $parent_term->save();
-      }
-      $parent_id = $parent_term->id();
+      // Need to create this Program Area in the Taxonomy
+      $parent = Term::create(array('vid' => $vid, 'name' => $program['hed__Account__r.Name']));
+      $parent->save();
+      $parent_id = $parent->id();
+      $terms_program_areas[$program['hed__Account__r.Name']] = Term::load($parent_id);
     }
 
-    // Check if this Program already exists
-    $exists = false;
-    foreach ($all_terms as $existing_term) {
-      if (!empty($existing_term->getDescription()) && strpos($existing_term->getDescription(), $program['Id']) !== false) {
-        $exists = true;
+    // Check if the program is already in the Taxonomy
+    if (key_exists($program['Id'], $terms_all)) {
+      $existing_term = $terms_all[$program['Id']];
+      $term_id = $existing_term->id();
+      // If the term was unpublishe, or if the name has changed, then we should change them in the taxonomy
+      if (!$existing_term->isPublished() || $existing_term->getName() != $program['Name']) {
         $existing_term->setName($program['Name']);
         $existing_term->parent = [$parent_id];
         $existing_term->setPublished();
-        $existing_term->setChangedTime($now);
+        $existing_term->setChangedTime(time());
         $existing_term->save();
-        break;
       }
+    } else {
+      // Need to create the program in the taxonomy
+      $new_term = Term::create(array('vid' => $vid, 'name' => $program['Name'], 'description' => $program['Id'], 'parent' => [$parent_id]));
+      $new_term->save();
+      $term_id = $new_term->id();
     }
-
-    // Create a new term if this one doesn't exist
-    if (!$exists) {
-      $term = Term::create(array('vid' => $vid, 'name' => $program['Name'], 'description' => $program['Id'], 'parent' => [$parent_id]))->save();
-    }
+    $terms_published_ending[] = $term_id;
   }
 
-  // Get all the terms again, step through the list, and unpublish unused terms
-  $all_terms = $taxonomyStorage->loadByProperties(['vid' => $vid]);
-  foreach ($all_terms as $term) {
-    if ($term->getChangedTime() < $now && $term->isPublished()) {
-      $term->setUnpublished();
-      $term->setChangedTime($now);
-      $term->save();
-    }
+  // Chech if there are any programs in the Taxonomy that should be unpublished
+  foreach (array_diff($terms_published_starting, $terms_published_ending) as $id_to_unpublish) {
+    $term = Term::load($id_to_unpublish);
+    $term->setUnpublished();
+    $term->save();
   }
 }

@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    config:
+      - node.type.plp_program
 id: node.field_plp_program_contact_phone
 field_name: field_plp_program_contact_phone
 entity_type: node

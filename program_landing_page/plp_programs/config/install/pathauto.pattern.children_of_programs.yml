@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    config:
+      - node.type.plp_program
 id: children_of_programs
 label: 'Children of Programs'
 type: 'canonical_entities:node'

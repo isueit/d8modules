@@ -63,3 +63,83 @@ div.program_offering_blocks a {text-decoration:none;}
 div.program_offering_blocks ul {padding:0;}
 
 div.event_series {font-style: italic; font-size: 12px;}
+
+/* --------------------------------------  */
+/* ## Horizontal Events
+/* --------------------------------------  */
+/* Styles from ext_iastate need removed after current sites have been manually updated. */
+#isu-horiz-events ul.program_offering_blocks {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1em;
+}
+#isu-horiz-events li.event {
+  box-shadow: 0.5625rem 0.5625rem 1.25rem rgb(0 0 0 / 20%);
+  padding: 0;
+}
+#isu-horiz-events div.event_date {
+  border-right: none;
+  height: 100%;
+  background-color: var(--cardinal);
+  line-height: 1.2;
+  width: 82px;
+  font-size: 1.6rem;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 12px 35px 0;
+}
+#isu-horiz-events span.event_day {
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0;
+  margin-top: 0;
+  float: none;
+  font-size: 1.6rem;
+}
+#isu-horiz-events span.event_month {
+  color: #fff;
+  font-size: 1.6rem;
+  margin-bottom: 0;
+}
+#isu-horiz-events div.event_title {
+  display: block;
+  line-height: 1.2;
+  margin-top: 1em;
+  font-size: clamp(.9rem, 1.1vw, .8rem);
+  color: var(--cardinal);
+  font-weight: 600;
+}
+#isu-horiz-events li:hover {
+  border: 0.2rem solid var(--gold);
+  transition: opacity .2s ease-in-out;
+  cursor: pointer;
+  margin: -3px;
+}
+#isu-horiz-events span.event_time {
+  font-weight: normal;
+  font-size: clamp(.8rem, 1.2vw, .8rem);
+}
+#isu-horiz-events span.event_ampm {
+  font-size: clamp(.7rem, 1.1vw, .7rem);
+  font-weight: normal;
+}
+#isu-horiz-events div.event_venue {
+  font-size: clamp(.8rem, 1.2vw, .8rem);
+  margin-bottom: 1em;
+}
+#isu-horiz-events div.event_series {
+  font-size:clamp(.6rem, 1.1vw, .8rem);
+  color: #666;
+}
+#isu-horiz-events div.event_venue {
+  font-size: clamp(.6rem, 1.1vw, .8rem);
+}
+a#isu-horiz-events {
+  text-decoration: underline;
+  float: right;
+}
+#isu-horiz-events .program_offering_blocks a {
+  color: #000;
+}

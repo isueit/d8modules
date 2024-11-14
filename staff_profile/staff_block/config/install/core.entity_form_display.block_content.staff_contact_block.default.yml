@@ -4,6 +4,9 @@ dependencies:
   config:
     - block_content.type.staff_contact_block
     - field.field.block_content.staff_contact_block.field_staff_member
+  enforced:
+    module:
+      - staff_block
 id: block_content.staff_contact_block.default
 targetEntityType: block_content
 bundle: staff_contact_block

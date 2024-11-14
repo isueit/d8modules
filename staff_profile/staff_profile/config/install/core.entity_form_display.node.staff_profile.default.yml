@@ -42,6 +42,9 @@ dependencies:
     - telephone
     - text
     - weight
+  enforced:
+    module:
+      - staff_profile
 third_party_settings:
   field_group:
     group_main_accordion:

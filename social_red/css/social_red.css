@@ -7,6 +7,8 @@
 	--md-gray: #ebebeb;
 	--midnight: #003d4c;
 	--green: #008540;
+	--sans-font: 'Arial, Helvetica Neue, sans-serif';
+	--serif-font: 'Merriweather, serif';
 }
 
 /* --------------------------------------  */
@@ -22,7 +24,7 @@
 }
 .isu-social-menu-red #dropdownMenuButton {
 	color: var(--burgundy);
-	font-family: Nimbus sans,sans-serif;
+	font-family: var(--sans-font);
 	background: none;
 	border: none;
 }

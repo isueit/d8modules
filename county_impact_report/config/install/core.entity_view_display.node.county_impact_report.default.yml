@@ -1,0 +1,69 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.county_impact_report.field_impact_story
+    - node.type.county_impact_report
+  module:
+    - entity_reference_revisions
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          346fd0bd-c30a-4f7e-bd41-851eda963153:
+            uuid: 346fd0bd-c30a-4f7e-bd41-851eda963153
+            region: content
+            configuration:
+              id: 'field_block:node:county_impact_report:field_impact_story'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_revisions_entity_view
+                label: hidden
+                settings:
+                  view_mode: default
+                  link: ''
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+          998ffcbd-6b5d-4614-8dfd-9a033f307934:
+            uuid: 998ffcbd-6b5d-4614-8dfd-9a033f307934
+            region: content
+            configuration:
+              id: 'extra_field_block:node:county_impact_report:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
+id: node.county_impact_report.default
+targetEntityType: node
+bundle: county_impact_report
+mode: default
+content:
+  field_impact_story:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

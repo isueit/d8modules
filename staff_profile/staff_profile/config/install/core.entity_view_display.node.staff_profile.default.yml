@@ -44,6 +44,9 @@ dependencies:
     - staff_profile
     - text
     - user
+  enforced:
+    module:
+      - staff_profile
 third_party_settings:
   field_group:
     group_contact_:
@@ -65,7 +68,6 @@ third_party_settings:
         - field_staff_profile_region
         - field_staff_profile_college
         - field_staff_profile_pgm_areas
-        - field_staff_profile_location
         - field_staff_profile_base_county
         - field_staff_profile_cty_served
         - field_staff_profile_teams_groups
@@ -152,13 +154,6 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-  field_staff_profile_location:
-    type: list_default
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-    weight: 14
-    region: content
   field_staff_profile_pgm_areas:
     type: entity_reference_label
     label: inline
@@ -223,6 +218,7 @@ hidden:
   field_staff_profile_first_name: true
   field_staff_profile_job_title: true
   field_staff_profile_last_name: true
+  field_staff_profile_location: true
   field_staff_profile_netid: true
   field_staff_profile_phone: true
   field_staff_profile_position: true

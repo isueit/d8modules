@@ -24,6 +24,7 @@ dependencies:
     - field.field.node.plp_program.field_plp_program_title_filter
     - field.field.node.plp_program.field_plp_program_topics
     - field.field.node.plp_program.field_plp_program_website
+    - field.field.node.plp_program.layout_builder__layout
     - node.type.plp_program
   module:
     - link
@@ -291,4 +292,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  layout_builder__layout: true

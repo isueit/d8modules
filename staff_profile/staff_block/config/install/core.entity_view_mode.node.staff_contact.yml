@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - staff_block
 id: node.staff_contact
 label: 'Staff Contact'
 description: ''

@@ -70,8 +70,12 @@ class EducationalProgramsFieldDefaultWidget extends WidgetBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Auto Redirect Public Users to Educational Program Webpage'),
       '#default_value' => isset($items[$delta]->auto_redirect) ? $items[$delta]->auto_redirect : 0,
-      //'#default_value' => 1,
-      //'#description' => $this->t('Select this if you want public users to be redirected to the program page automatically, thus bypassing this page'),
+    ];
+
+    $element['hide_image'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Hide the image that comes from MyData, used when local info includes an image'),
+      '#default_value' => isset($items[$delta]->hide_image) ? $items[$delta]->hide_image : 0,
     ];
 
     return $element;

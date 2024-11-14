@@ -40,6 +40,9 @@ dependencies:
     - field_group
     - layout_builder
     - user
+  enforced:
+    module:
+      - staff_block
 third_party_settings:
   field_group:
     group_contact_:

@@ -73,12 +73,20 @@
 	<main class="isu-main" role="main">
 
 		<a id="main-content" tabindex="-1"></a>
-
 		{% if page.post_nav %}
 			{{ page.post_nav }}
 		{% endif %}
 
 		{{ page.breadcrumbs }}
+				<div class="program-hero-wrapper">
+				<div class="program-hero-overlay"></div>
+	<div class="program-hero-image"><img src="https://photos.smugmug.com/photos/{{ node.field_plp_program_smugmug.value }}/0/XL/{{ node.field_plp_program_smugmug.value }}-XL.jpg" alt="{{ node.label }}"></div>
+<div class="program-hero-label-wrapper">
+<div class="program-hero-label container">
+<h1 class="isu-page-title vertical-alignment"><span>{{ node.label }}</span></h1>
+</div>
+</div>
+</div>
 		<div class="row">
 
 			{% if page.sidebar_first|render and page.sidebar_second|render %}
@@ -98,7 +106,6 @@
 					</aside>
 				</div>
 			{% endif %}
-
 			{% if page.content|render %}
 				{{ page.content }}
 			{% endif %}

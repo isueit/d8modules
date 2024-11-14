@@ -4,6 +4,9 @@ dependencies:
   config:
     - field.storage.node.field_staff_profile_netid
     - node.type.staff_profile
+  enforced:
+    module:
+      - staff_profile
 id: node.staff_profile.field_staff_profile_netid
 field_name: field_staff_profile_netid
 entity_type: node

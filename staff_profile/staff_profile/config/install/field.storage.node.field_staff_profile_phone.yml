@@ -4,6 +4,9 @@ dependencies:
   module:
     - node
     - telephone
+  enforced:
+    module:
+      - staff_profile
 id: node.field_staff_profile_phone
 field_name: field_staff_profile_phone
 entity_type: node

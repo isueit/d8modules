@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Default template for child projects withing the educational_programs_field
+ *
+ * Available variables:
+ *   - subprograms: Array of children
+ *     - name
+ *     - description
+ *     - url
+ */
+#}
+
+{% if subprograms %}
+  {# Start of accordion #}
+  <dl class="ckeditor-accordion">
+
+  {% for child in subprograms %}
+  {# Output the child name #}
+    <dt>{{ child.name }}</dt>
+    {# Output the child description #}
+    <dd>
+      <p>{{ child.description }}</p>
+      {# Output the child url, if given one #}
+      {% if child.url %}
+      <a href="{{ child.url }}">Discover program details.</a>
+      {% endif %}
+    </dd>
+  {% endfor %}
+  </dl>
+{% endif %}

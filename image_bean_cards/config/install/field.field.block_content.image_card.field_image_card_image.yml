@@ -5,6 +5,7 @@ dependencies:
     - block_content.type.image_card
     - field.storage.block_content.field_image_card_image
     - media.type.image
+    - media.type.smugmug
 id: block_content.image_card.field_image_card_image
 field_name: field_image_card_image
 entity_type: block_content
@@ -20,9 +21,10 @@ settings:
   handler_settings:
     target_bundles:
       image: image
+      smugmug: smugmug
     sort:
       field: _none
       direction: ASC
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: image
 field_type: entity_reference

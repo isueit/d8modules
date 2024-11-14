@@ -4,6 +4,9 @@ dependencies:
   module:
     - address
     - node
+  enforced:
+    module:
+      - staff_profile
 id: node.field_staff_profile_addr
 field_name: field_staff_profile_addr
 entity_type: node

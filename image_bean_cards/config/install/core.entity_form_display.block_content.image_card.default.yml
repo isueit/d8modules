@@ -3,45 +3,56 @@ status: true
 dependencies:
   config:
     - block_content.type.image_card
+    - field.field.block_content.image_card.field_image_card_caption
     - field.field.block_content.image_card.field_image_card_color_style
     - field.field.block_content.image_card.field_image_card_icon
     - field.field.block_content.image_card.field_image_card_image
     - field.field.block_content.image_card.field_image_card_text_size
     - field.field.block_content.image_card.field_image_card_title
     - field.field.block_content.image_card.field_image_card_url
+    - image.style.thumbnail
   module:
     - allowed_formats
     - fontawesome
+    - image
     - link
-    - media_library
     - text
 id: block_content.image_card.default
 targetEntityType: block_content
 bundle: image_card
 mode: default
 content:
+  field_image_card_caption:
+    type: string_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 3
+      placeholder: 'There is no limit to this field, however, only 200 characters will display.'
+    third_party_settings: {  }
   field_image_card_color_style:
     type: options_select
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_image_card_icon:
     type: fontawesome_icon_widget
-    weight: 4
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
   field_image_card_image:
-    type: media_library_widget
+    type: image_image
     weight: 2
     region: content
     settings:
-      media_types: {  }
+      progress_indicator: throbber
+      preview_image_style: thumbnail
     third_party_settings: {  }
   field_image_card_text_size:
     type: options_select
-    weight: 6
+    weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -58,7 +69,7 @@ content:
         hide_guidelines: '0'
   field_image_card_url:
     type: link_default
-    weight: 3
+    weight: 4
     region: content
     settings:
       placeholder_url: ''
@@ -70,6 +81,6 @@ content:
     region: content
     settings:
       size: 60
-      placeholder: 'Administrative name for block, not displayed to user'
+      placeholder: ''
     third_party_settings: {  }
 hidden: {  }

@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    config:
+      - node.type.plp_program
 id: node.field_plp_program_on_counties
 field_name: field_plp_program_on_counties
 entity_type: node

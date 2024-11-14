@@ -1,0 +1,359 @@
+<?php
+
+/*
+ * Implements hook_ENTITY_TYPE_update()
+ */
+
+use Drupal\contact\Entity\Message;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
+use Drupal\paragraphs\Entity\Paragraph;
+
+/**
+ * Implements hook_entity_presave().
+ */
+
+function county_impact_report_node_presave(Drupal\Core\Entity\EntityInterface $entity)
+{
+  $userId = \Drupal::currentUser()->id();
+  if ($entity->getType() == 'county_impact_report') {
+    $entity->setOwnerId($userId);
+  }
+}
+
+function county_impact_report_content_update(Drupal\Core\Entity\EntityInterface $entity)
+{
+  // Clear cache if BlockContent is of type
+  if ($entity->bundle() == 'county_impact_remport') {
+    \Drupal::service('cache.render')->invalidateAll();
+  }
+}
+
+function county_impact_report_theme_suggestions_block_alter(&$suggestions, $variables)
+{
+  $content = $variables['elements']['content'];
+  if (isset($content['#block_content']) && $content['#block_content'] instanceof \Drupal\block_content\BlockContentInterface) {
+    $suggestions[] = 'block__' . $content['#block_content']->bundle();
+  }
+}
+
+function county_impact_report_preprocess_block(&$variables)
+{
+  $variables['#attached']['library'][] = 'county_impact_report/county_impact_report';
+}
+
+/**
+ * Implements hook_theme().
+ */
+function county_impact_report_theme($existing, $type, $theme, $path)
+{
+  return [
+    'paragraph__county_impact_story' => [
+      'variables' => [
+        'direct_contacts' => 0,
+        'volenteer_hours' => 0,
+        'youth' => 0,
+        'partners' => 0,
+        'certifications' => 0,
+      ],
+      'template' => 'paragraph--county-impact-story',
+      'base hook' => 'paragraph',
+    ],
+    'page__type__county_impact_report__canonical' => [
+      'variables' => [
+        'direct_contacts' => 0,
+        'volenteer_hours' => 0,
+        'youth' => 0,
+        'partners' => 0,
+        'certifications' => 0,
+      ],
+      'template' => 'page--type--county-impact-report--canonical',
+      'base hook' => 'node',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+
+function county_impact_report_preprocess_paragraph__county_impact_story(&$variables)
+{
+  $site_name = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
+  $data = county_impact_report_impact_data();
+
+  $variables['direct_contacts'] = number_format($data[$site_name][0]);
+  $variables['volenteer_hours'] = number_format($data[$site_name][1]);
+  $variables['youth'] = number_format($data[$site_name][2]);
+  $variables['partners'] = number_format($data[$site_name][3]);
+  $variables['certifications'] = number_format($data[$site_name][4]);
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+
+function county_impact_report_preprocess_page__type__county_impact_report__canonical(&$variables)
+{
+  $site_name = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
+  $data = county_impact_report_impact_data();
+
+  $variables['direct_contacts'] = number_format($data[$site_name][0]);
+  $variables['volenteer_hours'] = number_format($data[$site_name][1]);
+  $variables['youth'] = number_format($data[$site_name][2]);
+  $variables['partners'] = number_format($data[$site_name][3]);
+  $variables['certifications'] = number_format($data[$site_name][4]);
+}
+
+function county_impact_report_impact_data()
+{
+  return [
+    'Adair' => [4695, 981, 640, 12, 402,],
+    'Adams' => [1858, 257, 241, 16, 177,],
+    'Allamakee' => [7079, 792.25, 730, 31, 463,],
+    'Appanoose' => [4800, 1134, 678, 24, 305,],
+    'Audubon' => [3613, 692.5, 423, 11, 287,],
+    'Benton' => [8442, 1751.45, 1809, 26, 1055,],
+    'Black Hawk' => [17363, 3785.69, 5323, 111, 3987,],
+    'Boone' => [10118, 2720.4, 1918, 42, 1029,],
+    'Bremer' => [11742, 1934.75, 1720, 54, 886,],
+    'Buchanan' => [8473, 1614.72, 1653, 27, 902,],
+    'Buena Vista' => [4061, 1644.5, 735, 29, 707,],
+    'Butler' => [4347, 1368.5, 511, 26, 485,],
+    'Calhoun' => [4383, 876, 604, 17, 392,],
+    'Carroll' => [10850, 0, 4175, 32, 1033,],
+    'Cass' => [7023, 738.25, 1056, 20, 784,],
+    'Cedar' => [6649, 2867.5, 1859, 26, 807,],
+    'Cerro Gordo' => [11873, 1304.45, 4818, 19, 1752,],
+    'Cherokee' => [3678, 541.45, 499, 16, 648,],
+    'Chickasaw' => [3242, 913, 431, 8, 631,],
+    'Clarke' => [3118, 139.75, 243, 16, 318,],
+    'Clay' => [5808, 1029.5, 672, 16, 879,],
+    'Clayton' => [9369, 726.75, 1226, 21, 862,],
+    'Clinton' => [8250, 4279.55, 574, 21, 1238,],
+    'Crawford' => [4601, 29, 339, 11, 625,],
+    'Dallas' => [17472, 9107.8, 1152, 39, 3499,],
+    'Davis' => [3731, 2678.25, 709, 3, 188,],
+    'Decatur' => [2753, 0, 220, 6, 242,],
+    'Delaware' => [9478, 5878.75, 1746, 22, 680,],
+    'Des Moines' => [10120, 3059.19, 366, 16, 1892,],
+    'Dickinson' => [4677, 545.75, 394, 38, 510,],
+    'Dubuque' => [35878, 7463.85, 7789, 136, 3921,],
+    'East Pottawattamie' => [5423, 89.25, 481, 24, 212,],
+    'Emmet' => [2916, 328, 175, 8, 313,],
+    'Fayette' => [10117, 708.05, 1031, 63, 786,],
+    'Floyd' => [9249, 1331, 1206, 25, 563,],
+    'Franklin' => [5399, 99.9, 724, 19, 496,],
+    'Fremont' => [4193, 384, 330, 21, 226,],
+    'Greene' => [5162, 0, 341, 21, 456,],
+    'Grundy' => [5409, 3829, 874, 38, 645,],
+    'Guthrie' => [4784, 33, 487, 8, 424,],
+    'Hamilton' => [6801, 1445.78, 750, 28, 499,],
+    'Hancock' => [5892, 204, 592, 5, 505,],
+    'Hardin' => [4044, 72, 317, 8, 472,],
+    'Harrison' => [4569, 66.5, 493, 30, 537,],
+    'Henry' => [8103, 58.2, 1389, 45, 553,],
+    'Howard' => [5455, 626, 601, 9, 707,],
+    'Humboldt' => [4214, 974, 592, 4, 307,],
+    'Ida' => [2804, 730, 199, 6, 376,],
+    'Iowa' => [23124, 1492.4, 6420, 9, 12722,],
+    'Jackson' => [7467, 6849.75, 817, 40, 698,],
+    'Jasper' => [9208, 1536.98, 672, 26, 1337,],
+    'Jefferson' => [4674, 3565, 403, 27, 433,],
+    'Johnson' => [14110, 1390.61, 581, 23, 5730,],
+    'Jones' => [6778, 3875.45, 637, 3, 981,],
+    'Keokuk' => [7660, 277.75, 579, 12, 248,],
+    'Kossuth' => [5159, 1078.4, 740, 19, 669,],
+    'Lee' => [8942, 75.67, 877, 37, 1067,],
+    'Linn' => [22305, 13947.71, 4416, 54, 7184,],
+    'Louisa' => [4635, 691.95, 1267, 20, 453,],
+    'Lucas' => [3008, 974, 430, 36, 285,],
+    'Lyon' => [7121, 629.5, 674, 19, 781,],
+    'Madison' => [6397, 738.75, 1134, 28, 640,],
+    'Mahaska' => [7391, 2728.17, 551, 27, 691,],
+    'Marion' => [7911, 1641.15, 972, 20, 1179,],
+    'Marshall' => [6497, 971.43, 1113, 27, 1205,],
+    'Mills' => [4991, 1545.5, 1836, 26, 380,],
+    'Mitchell' => [6328, 944.5, 569, 18, 512,],
+    'Monona' => [3666, 880, 1324, 11, 217,],
+    'Monroe' => [4116, 1148.5, 399, 31, 105,],
+    'Montgomery' => [3490, 504, 419, 23, 469,],
+    'Muscatine' => [5772, 741.5, 894, 38, 1172,],
+    'O\'Brien' => [5234, 224.25, 460, 39, 822,],
+    'Osceola' => [2761, 957, 396, 18, 361,],
+    'Page' => [6915, 1868, 1063, 13, 867,],
+    'Palo Alto' => [5645, 540.5, 355, 39, 390,],
+    'Plymouth' => [9431, 5720.25, 757, 13, 907,],
+    'Pocahontas' => [3084, 647, 383, 23, 305,],
+    'Polk' => [39702, 16043.5, 1875, 109, 18050,],
+    'Poweshiek' => [4683, 1078, 323, 13, 800,],
+    'Ringgold' => [2234, 245, 204, 18, 221,],
+    'Sac' => [5353, 929.05, 401, 8, 455,],
+    'Scott' => [12134, 3332.95, 1490, 20, 4363,],
+    'Shelby' => [4665, 1119.7, 664, 27, 651,],
+    'Sioux' => [8514, 365.56, 877, 47, 1428,],
+    'Story' => [19360, 10822.4, 2983, 73, 3002,],
+    'Tama' => [7634, 1114.75, 2105, 55, 759,],
+    'Taylor' => [2176, 70, 116, 13, 242,],
+    'Union' => [3999, 663, 609, 5, 536,],
+    'Van Buren' => [2355, 2045, 314, 26, 195,],
+    'Wapello' => [8821, 1840.75, 474, 19, 821,],
+    'Warren' => [12034, 3309.1, 1185, 15, 2117,],
+    'Washington' => [17699, 2516.5, 2874, 31, 874,],
+    'Wayne' => [2345, 609, 855, 14, 142,],
+    'Webster' => [6723, 1655.5, 567, 20, 1187,],
+    'West Pottawattamie' => [12780, 2392.5, 397, 31, 1611,],
+    'Winnebago' => [3140, 433.5, 492, 53, 420,],
+    'Winneshiek' => [12757, 2769.95, 1328, 87, 893,],
+    'Woodbury' => [16848, 3630.9, 4785, 64, 3424,],
+    'Worth' => [3373, 5, 412, 4, 178,],
+    'Wright' => [3564, 750, 526, 8, 390,],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+
+function county_impact_report_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  if ($form_id == 'node_county_impact_report_edit_form') {
+
+    $form['actions']['save_review'] = array(
+      '#type' => 'submit',
+      '#value' => 'Save & Submit for Review',
+      '#name' => 'op',
+      //'#submit' => ['county_impact_report_form_submit'], /* NEED this */
+      '#submit' => array_merge(
+        $form['actions']['submit']['#submit'],
+        ['county_impact_report_form_submit']
+      ),
+      '#weight' => 10
+    );
+  }
+}
+
+// Handle the form submission
+function county_impact_report_form_submit($form, FormStateInterface $form_state)
+{
+  $node = $form_state->getFormObject()->getEntity();
+
+  $params = county_impact_report_build_params($node);
+  $params['key'] = 'county_impact_report_to_reed';
+  $params['to'] = $params['reed'];
+  $params['reply'] = 'Content Editor <' . $params['content_editor'] . '>';
+  $params['subject'] = 'Review - ' . $params['title'];
+  county_impact_report_send_mail($params);
+
+  $params['subject'] = 'Approval Link for ' . $params['title'];
+  $params['message'] = 'The approval link for ' . $params['title'] . ' is ' . \Drupal::request()->getSchemeAndHttpHost() . \Drupal::request()->getBaseUrl() . '/regional_director_approval '
+    . 'Only use this link for the FINAL approval';
+  $params['reply'] = 'Extension Web <extensionweb@iastate.edu>';
+
+  county_impact_report_send_mail($params);
+
+  \Drupal::messenger()->addStatus('Saved, and Submitted to Regional Director for Review!');
+}
+
+/**
+ * Implements hook_mail().
+ */
+
+function county_impact_report_mail($key, &$message, $params)
+{
+  //$from = 'Extension Web <extensionweb@iastate.edu>';
+
+  //$message['from'] = $from;
+  //$message['headers']['From'] = $from;
+  //$message['headers']['Sender'] = $from;
+  $message['body'][] = $params['message'];
+  $message['subject'] = $params['subject'];
+  $message['headers']['reply-To'] = $params['reply'];
+}
+
+function county_impact_report_get_emails($nodes, string $title, string $defaultAddress)
+{
+  $address = $defaultAddress;
+  foreach ($nodes as $node) {
+    if (str_contains(strtolower($node->field_staff_profile_job_title->value), strtolower($title))) {
+      $address = $node->field_staff_profile_email->value;
+      break;
+    }
+  }
+  return $address;
+}
+
+function county_impact_report_build_params($node)
+{
+  $nids = \Drupal::entityQuery('node')->accessCheck(true)->condition('type', 'staff_profile')->condition('status', 1)->execute();
+  $staffNodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
+  $params = [];
+  $params['title'] = $node->getTitle();
+  $params['content_editor'] = $node->getOwner()->getEmail();
+  $params['reed'] = county_impact_report_get_emails($staffNodes, 'Assistant Director County Services', 'andwelch@iastate.edu');
+  $params['advancement_specialist'] = county_impact_report_get_emails($staffNodes, 'Marketing Specialist', 'jbrimey@iastate.edu');
+  $params['module'] = 'county_impact_report';
+  $params['langcode'] = 'en';
+  $params['send'] = true;
+  $params['reply'] = NULL;
+
+  $paragraphs = $node->get('field_impact_story');
+  $message = '<br>';
+  $message .= $params['title'];
+  $message .= '<br>';
+  $message .= 'Last edited by: ' . $params['content_editor'];
+  $message .= '<br>';
+  $message .= '<p>';
+  $message .= '*******BEGIN OUTPUT OF DRAFT CONTENT*******';
+  $message .= '</p>';
+  foreach ($paragraphs as $paragraph) {
+    $values = Paragraph::load($paragraph->target_id);
+    $image = Media::load($values->field_county_impact_story_image->getValue()[0]['target_id']);
+    $file = File::load($image->field_media_image->target_id);
+
+    $message .= '<br>';
+    $message .= '<br>';
+    //$message .= '<strong>' . $values->field_county_impact_story_title->value . '</strong>';
+    $message .= PHP_EOL;
+    $message .= $values->field_county_impact_story_title->value;
+    $message .= PHP_EOL;
+    $message .= '<br>';
+    $message .= $values->field_county_impact_story_body->getValue()[0]['value'];
+    if ($file) {
+      //$img = '<img src="' . \Drupal::request()->getSchemeAndHttpHost() . \Drupal::request()->getBaseUrl() . '/files/' . str_replace('public://', '', $file->getFileUri()) . '" alt="' . $image->toArray()['field_media_image'][0]['alt'] . '" style="max-width: 300px;" />';
+      //$message .= $img;
+      //$message .= '<br>';
+      $message .= str_replace(' ', '%20', \Drupal::request()->getSchemeAndHttpHost() . \Drupal::request()->getBaseUrl() . '/files/' . str_replace('public://', '', $file->getFileUri()));
+    }
+    $message .= '<br>';
+    $message .= '-----------------';
+    $message .= '<br>';
+    $message .= PHP_EOL;
+  }
+
+  $params['message'] = $message;
+
+  return $params;
+}
+
+function county_impact_report_send_mail($params)
+{
+  try {
+    $mailManager = \Drupal::service('plugin.manager.mail');
+
+    $result = $mailManager->mail($params['module'], $params['key'], $params['to'], $params['langcode'], $params, $params['NULL'], $params['send']);
+    if ($result['result'] != true) {
+      $errorMessage = t('There was a problem sending your email notification to @email.', array('@email' => $params['to']));
+      \Drupal::messenger()->addError($errorMessage);
+      \Drupal::logger('county_impact_report')->error($errorMessage);
+      return;
+    }
+
+    $successMessage = t('An email notification has been sent to @email ', array('@email' => $params['to']));
+    \Drupal::messenger()->addStatus($successMessage);
+    \Drupal::logger('county_impact_report')->notice($successMessage);
+  } catch (Exception $e) {
+    \Drupal::messenger()->addStatus($e->getMessage());
+  }
+}

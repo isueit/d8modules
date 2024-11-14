@@ -13,19 +13,17 @@ id: block_content.editor_login_signoff.field_login_link
 field_name: field_login_link
 entity_type: block_content
 bundle: editor_login_signoff
-label: 'Login Link'
-description: ''
+label: "Login Link"
+description: ""
 required: true
 translatable: false
 default_value:
-  -
-    attributes: {  }
-    uri: 'internal:/login'
-    title: 'Editor Login'
-    options: {  }
-default_value_callback: ''
+  - attributes: {}
+    uri: "internal:/login"
+    title: "Staff Login"
+    options: {}
+default_value_callback: ""
 settings:
   link_type: 1
   title: 2
 field_type: link
-

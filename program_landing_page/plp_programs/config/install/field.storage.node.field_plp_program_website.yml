@@ -4,6 +4,9 @@ dependencies:
   module:
     - link
     - node
+  enforced:
+    config:
+      - node.type.plp_program
 id: node.field_plp_program_website
 field_name: field_plp_program_website
 entity_type: node

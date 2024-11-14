@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - staff_block
 id: staff_contact_block
 label: 'Staff Contact Block'
 revision: 0

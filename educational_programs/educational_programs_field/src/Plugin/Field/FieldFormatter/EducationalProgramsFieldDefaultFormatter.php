@@ -26,20 +26,28 @@ use Drupal\isueo_helpers\ISUEOHelpers;
  *   }
  * )
  */
-class EducationalProgramsFieldDefaultFormatter extends FormatterBase {
+class EducationalProgramsFieldDefaultFormatter extends FormatterBase
+{
 
   public static $canonicalURL = '';
 
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
+  public function viewElements(FieldItemListInterface $items, $langcode)
+  {
     $elements = array();
 
     // Get the feed from MyData
     $fromFeed = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/EducationalPrograms.json');
     $fromFeed = str_replace('\u0026#039;', '\'', $fromFeed);
-    $programs = json_decode($fromFeed, TRUE);
+    $products = json_decode($fromFeed, TRUE);
+
+    // Record types to include in the catalog
+    // 0128Z000000yeo8QAA = Product Family Record Type
+    // 012460000012EiaAAE = Educational Program Record Type
+    // 0124p000000S43XAAS = Educational Service or Consultation
+    //$types = ['0128Z000000yeo8QAA', '012460000012EiaAAE', '0124p000000S43XAAS'];
 
     // Do NOT cache a page with this block on it.
     \Drupal::service('page_cache_kill_switch')->trigger();
@@ -56,37 +64,67 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase {
       // Load the Taxonomy Term
       $term = Term::load($item->term_id);
       if ($term == null) {
-        $output = PHP_EOL . '<div class="educational_program_description">Program not found</div>' . PHP_EOL;
-        $elements[$delta] = array('#markup' => $output);
         continue;
       }
+      $program_id = trim(strip_tags($term->getDescription()));
 
-      // Find the description of the program by steppign through the list of Programs until we find the right one based on the MyData ID
-      $description = 'Program not found';
-      $website = "";
-      $website_description = "";
-      foreach ($programs as $program) {
-        if ($program['Id'] == trim(strip_tags($term->getDescription()))) {
-          if (!empty($program['Web_Description__c'])) {
-            $description = str_replace(' target="_blank"', '', $program['Web_Description__c']);
-          } elseif (!empty($program['hed__Extended_Description__c'])) {
-            $description = $program['hed__Extended_Description__c'];
-          } elseif (!empty($program['hed__Description__c'])) {
-            $description = $program['hed__Description__c'];
-          } else {
-            $description = 'Description not found';
-          }
-          if (!empty($program['Smugmug_ID__c'])) {
-            $description = '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $program['Smugmug_ID__c'] . '/0/XL/' . $program['Smugmug_ID__c'] . '-XL.jpg" alt="" />'. $description . '<div class="clearer"></div>';
+      // Find the description of the program by stepping through the list of Programs until we find the right one based on the MyData ID
+      $website = '';
+      $description = '';
+      $redirected = false;
+      $subprograms = [];
+      $program = [];
+
+      foreach ($products as $product) {
+        //if (!in_array($product['RecordTypeId'], $types)) {
+          //continue;
+        //}
+        if ($product['Id'] == $program_id) {
+          $description = $this::educational_programs_field_get_description($product);
+          if (!empty($product['Planned_Program_Website__c'])) {
+            $website = $product['Planned_Program_Website__c'];
           }
 
-          if (!empty($program['Planned_Program_Website__c'])) {
-            $website = $program['Planned_Program_Website__c'];
-            $website_description = "More about " . $program['Name'];
+          // Add a note if page is being redirected
+          if (!empty($website) && !empty($item->auto_redirect)) {
+            $redirected = true;
           }
-          break;
+
+          $program = [
+            'name' => $product['Name'],
+            'description' => [
+              '#markup' => $description,
+            ],
+            'url' => $website,
+            'smugmug_id' => $product['Smugmug_ID__c'],
+            'redirected' => $redirected,
+            'hide_image' => !empty($item->hide_image),
+          ];
+        }
+
+        if (
+          !empty($product['Related_Program__c'])
+          && $program_id == $product['Related_Program__c']
+          && ($product['Show_on_Program_Landing_Page__c'] || $product['Public_Access__c'])
+        ) {
+          $subprograms[$product['Name']] = [
+            //'#theme' => 'educational_programs_field_program',
+            'name' => $product['Name'],
+            'url' => $product['Planned_Program_Website__c'],
+            'description' => ['#markup' => $this::educational_programs_field_get_description($product),],
+          ];
         }
       }
+      ksort($subprograms);
+      $elements[$delta] = [
+        '#theme' => 'educational_programs_field_default',
+        '#program' => $program,
+        '#children' => [
+
+          '#theme' => 'educational_programs_field_children',
+          '#subprograms' => $subprograms,
+        ],
+      ];
 
       // Redirect if user is anonymous, we have a web site, and auto_redirect is enabled
       if (\Drupal::currentUser()->isAnonymous() && !empty($website) && !empty($item->auto_redirect)) {
@@ -95,36 +133,31 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase {
         continue;
       }
 
-      // Render output
-      $output = PHP_EOL;
-      $output .= '<div class="educational_program">' . PHP_EOL;
-
-      // Add a note if page is being redirected
-      if (!empty($website) && !empty($item->auto_redirect)) {
-        $output .= '<div class="educational_program_redirected">' . PHP_EOL;
-        $output .= '<h4>Note: Page Redirected</h4>' . PHP_EOL;
-        $output .= '<p>Public users will automatically be redirected to <a href="' . $website . '">' . $website . '</a></p>' . PHP_EOL;
-        $output .= '</div>' . PHP_EOL;
-      }
-
-      $output .= '<div class="educational_program_description">' . PHP_EOL;
-      $output .= $description . PHP_EOL;
-      $output .= '</div>' . PHP_EOL;
-      if (!empty($website)) {
-        $output .= '<div class="educational_program_link"><a href="' . $website . '">' . $website_description . '</a></div>' . PHP_EOL;
-      }
-      $output .= '</div>' . PHP_EOL;
-
       //May need this stuff
-      $tags = FieldFilteredMarkup::allowedTags();
-      array_push($tags, 'iframe', 'div', 'h2', 'h3', 'h4', 'h5', 'h5', 'h6', 'footer', 'article', 'img');
-      while (preg_match('/<iframe[a-zA-Z0-9\" =\/\._\?\%]+\/>/', $output, $matches, PREG_OFFSET_CAPTURE)) {
-        $output = substr_replace($output, "> </iframe>", strlen($matches[0][0])+$matches[0][1]-2, 11);
-      }
+      //$tags = FieldFilteredMarkup::allowedTags();
+      //array_push($tags, 'iframe', 'div', 'h2', 'h3', 'h4', 'h5', 'h5', 'h6', 'footer', 'article', 'img');
+      //while (preg_match('/<iframe[a-zA-Z0-9\" =\/\._\?\%]+\/>/', $description, $matches, PREG_OFFSET_CAPTURE)) {
+      //$description = substr_replace($description, "> </iframe>", strlen($matches[0][0])+$matches[0][1]-2, 11);
+      //}
 
-      //$elements[$delta] = array('#markup' => $output);
-      $elements[$delta] = array('#markup' => $output, '#allowed_tags' => $tags);
     }
+
     return $elements;
+  }
+
+  private static function educational_programs_field_get_description($product)
+  {
+    $description = '';
+    if (!empty($product['Web_Description__c'])) {
+      $description = str_replace(' target="_blank"', '', $product['Web_Description__c']);
+    } elseif (!empty($product['hed__Extended_Description__c'])) {
+      $description = $product['hed__Extended_Description__c'];
+    } elseif (!empty($product['hed__Description__c'])) {
+      $description = $product['hed__Description__c'];
+    } else {
+      $description = 'Description not found';
+    }
+
+    return $description;
   }
 }

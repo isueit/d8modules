@@ -33,7 +33,10 @@ class CouncilMembers extends BlockBase
       $council_members[$member['Client_County__c']][] = $member;
     }
 
-    $result = [];
+    $result = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['isueo-dashboard']],
+    ];
 
     $result['#markup'] = '<p>These are the council members for each county.<br/>
         To add a member, you need to go to MyData, to modify/remove a member, click on their name below.
@@ -77,6 +80,7 @@ class CouncilMembers extends BlockBase
         //'#allowed_tags' => $tags,
       ];
     }
+
 
     return $result;
   }

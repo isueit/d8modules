@@ -10,10 +10,6 @@ use \Drupal\taxonomy_import\Form\ImportForm;
  */
 function staff_profile_primary_install()
 {
-  // Set homepage to the search staff page
-  $config = \Drupal::configFactory()->getEditable('system.site');
-  $config->set('page.front', '/search_staff')->save();
-
   // Set up permissions, allow users to edit their own staff profile
   user_role_grant_permissions('authenticated', array(
     'edit own staff_profile content',
@@ -34,9 +30,27 @@ function staff_profile_primary_install()
 }
 
 function staff_profile_primary_uninstall() {
-  \Drupal::configFactory()->getEditable('encrypt.profile.staff_profile_primary')->delete();
-  \Drupal::configFactory()->getEditable('key.key.staff_profile_primary')->delete();
   \Drupal::configFactory()->getEditable('views.view.county_feeds_json')->delete();
   \Drupal::configFactory()->getEditable('views.view.staff_directory')->delete();
   \Drupal::configFactory()->getEditable('views.view.web_author_feeds')->delete();
+}
+
+/**
+* Blank out all staff id's
+*/
+
+function staff_profile_primary_update_8001() {
+  // Uninstall unused modules
+  \Drupal::service('module_installer')->uninstall(['real_aes']);
+  \Drupal::service('module_installer')->uninstall(['encrypt']);
+  \Drupal::service('module_installer')->uninstall(['key']);
+
+  // Get current nodes
+  $nodes = Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'staff_profile',]);
+  foreach ($nodes as $node) {
+    if (!empty($node->field_staff_profile_staffid->getString())) {
+      $node->set('field_staff_profile_staffid', '');
+      $node->save();
+    }
+  }
 }

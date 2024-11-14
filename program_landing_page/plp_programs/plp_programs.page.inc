@@ -2,6 +2,9 @@
 
 use Drupal\node\Entity\Node;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\Taxonomy;
+use Drupal\isueo_helpers\ISUEOHelpers\Typesense;
+use Drupal\taxonomy\Entity\Term;
 
 // Return an array of existing nodes with MyData ID as the array key
 function plp_programs_get_existing_nodes(string $content_type, string $mydata_id_field)
@@ -69,9 +72,7 @@ function plp_programs_generate_body(array $program)
   } else {
     $body = $program['hed__Description__c'];
   }
-  if (!empty($program['Smugmug_ID__c'])) {
-    $body = '<img class="educational_program_image" src="https://photos.smugmug.com/photos/' . $program['Smugmug_ID__c'] . '/0/XL/' . $program['Smugmug_ID__c'] . '-XL.jpg" alt="" />' . $body . '<div class="clearer"></div>';
-  }
+
   if (!empty($program['Intended_Audiences__c'])) {
     $body .= '<p><b>Intended Audiences:</b><br />' . str_replace(';', ', ', $program['Intended_Audiences__c']) . '</p>';
   }
@@ -109,6 +110,7 @@ function plp_programs_handle_children(array $children, array $programs)
     foreach ($value as $child) {
       // Make sure the child should be shown
       if (!$child['Show_on_Program_Catalog__c']) {
+      //if (!$child['Show_on_Program_Landing_Page__c']) {
         continue;
       }
 
