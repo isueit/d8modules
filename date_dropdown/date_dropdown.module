@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * Implements hook_form_alter().
+ */
+function date_dropdown_form_alter(&$form, &$form_state, $form_id) {
+  // Correct the form ID based on the hidden input value you provided.
+  if ($form_id === 'node_county_job_opening_form') {
+    // Attach the custom JavaScript to modify the year dropdown.
+    $form['#attached']['library'][] = 'date_dropdown/date_dropdown_js';
+  }
+}
+
+
