@@ -136,7 +136,8 @@ div#block-iastate-theme-content--2 .paragraph {
 		letter-spacing: 0;
 		margin: 2rem 0 0.625rem;
 		color: var(--cardinal);
-		width: 1140px;
+		width: 100%;
+		clear: both;
 	}
 	.impact-print-wrapper {
 		max-width: 1140px;
@@ -154,5 +155,8 @@ div#block-iastate-theme-content--2 .paragraph {
 	}
 	.impact-story-stats-two .layout--top-bottom-padding--big {
 		padding-bottom: 0;
+	}
+	.impact-story-stats-one, .impact-story-stats-two {
+		margin-top: 0;
 	}
 }
