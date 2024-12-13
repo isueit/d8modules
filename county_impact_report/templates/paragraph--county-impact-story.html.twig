@@ -39,6 +39,8 @@
  *   youth: Unique Youth
  *   partners: County Partners
  *   certifications: Professional Certification and CEU Contacts
+ *   first_paragraph_id: ID number of the first paragraph
+ *   last_paragraph_id: ID number of the last paragraph
  *
  * @see template_preprocess_paragraph()
  *
@@ -65,7 +67,7 @@
      </div>
     {% endblock %}
 
-    {% if paragraph.id() == 1 %}
+    {% if paragraph.id() == first_paragraph_id %}
     <div class="impact-story-stats-one">
       <div class="layout layout--base--threecols layout--base--threecols-- layout--background--none layout--background-attachment--default layout--background-position--center layout--background-size--cover layout--background-overlay--none layout--top-bottom-padding--big layout--left-right-padding--small layout--container--none layout--content-container--default layout--height--default layout--color--default layout--column-gap--default layout--row-gap--none layout--column-breakpoint--medium layout--column-width--default layout--align-items--normal layout-builder-base--three-columns layout--fourcol">
         <div class="layout-content">

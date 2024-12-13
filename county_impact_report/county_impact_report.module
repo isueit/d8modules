@@ -69,6 +69,8 @@ function county_impact_report_theme($existing, $type, $theme, $path)
         'partners' => 0,
         'certifications' => 0,
         'volunteer_value' => 0,
+        'first_paragraph_id' => 0,
+        'last_paragraph_id' => 0,
       ],
       'template' => 'page--type--county-impact-report--canonical',
       'base hook' => 'node',
@@ -91,6 +93,20 @@ function county_impact_report_preprocess_paragraph__county_impact_story(&$variab
   $variables['partners'] = number_format($data[$site_name][3]);
   $variables['certifications'] = number_format($data[$site_name][4]);
   $variables['volunteer_value'] = number_format($data[$site_name][5]);
+
+  // Get the first and last id of the paragraphs on the page
+  $variables['first_paragraph_id'] = 0;
+  $variables['last_paragraph_id'] = 0;
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    $paragraphs = $node->get('field_impact_story')->getValue();
+    foreach ($paragraphs as $paragraph) {
+      if ($variables['first_paragraph_id'] == 0) {
+        $variables['first_paragraph_id'] = $paragraph['target_id'];
+      }
+      $variables['last_paragraph_id'] = $paragraph['target_id'];
+    }
+  }
 }
 
 /**
