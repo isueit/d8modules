@@ -159,7 +159,10 @@ function educational_programs_page_check_published_nodes()
 	$taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
 	$terms_raw = $taxonomyStorage->loadByProperties(['vid' => $vid]);
 	foreach ($terms_raw as $term) {
-		$description = trim(strip_tags($term->getDescription()));
+    $description = '';
+    if (!empty($term->getDescription()) && !empty(strip_tags($term->getDescription()))) {
+      $description = trim(strip_tags($term->getDescription()));
+    }
 		if (!empty($description)) {
 			// Description means it's a Program
 			$terms[$term->id()] = $term;

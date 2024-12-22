@@ -1,0 +1,5 @@
+{
+  "name": "isueit/county_impact_report",
+  "type": "drupal-custom-module",
+  "description": "Creates a content type for county impact reports"
+}

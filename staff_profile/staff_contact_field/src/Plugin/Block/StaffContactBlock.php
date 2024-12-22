@@ -6,6 +6,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Provides a 'Staff Contact' Block.
@@ -55,38 +56,12 @@ class StaffContactBlock extends BlockBase
               // Find the right staff member and output...
               foreach ($staff_nodes as $staff_member) {
                 if ($staff_member->id() == $key) {
-                  /*
-                  switch ($conact_list['contact_display']) {
-                    case 'short':
-                      $results .= '<li><a href="' . $base_url . \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $staff_member->id()) . '">' . $staff_member->getTitle() . '</a></li>' . PHP_EOL;
-                      break;
-                    case 'medium':
-                      $results .= '<li>';
-                      $results .= '<a href="' . $base_url . \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $staff_member->id()) . '">' . $staff_member->getTitle() . '</a><br/>' . PHP_EOL;
-                      $results .= $staff_member->get('field_staff_profile_pref_title')->value . '<br/>'. PHP_EOL;
-                      $results .= '<a href="mailto:' . $staff_member->get('field_staff_profile_email')->value . '">' . $staff_member->get('field_staff_profile_email')->value . '</a><br/>' . PHP_EOL;
-                      $results .= $staff_member->get('field_staff_profile_pref_phone')->value . PHP_EOL;
-                      $results .= '</li>';
-                      break;
-                    case 'long':
-                      $smugmug_id = $staff_member->get('field_staff_profile_smugmug')->value;
-                      $results .= '<li>';
-                      $results .= '<img src="https://photos.smugmug.com/photos/' . $smugmug_id . '/0/XL/' . $smugmug_id . '-XL.jpg"/>' . '<br/>' . PHP_EOL;
-                      $results .= '<a href="' . $base_url . \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $staff_member->id()) . '">' . $staff_member->getTitle() . '</a><br/>' . PHP_EOL;
-                      $results .= $staff_member->get('field_staff_profile_pref_title')->value . '<br/>'. PHP_EOL;
-                      $results .= '<a href="mailto:' . $staff_member->get('field_staff_profile_email')->value . '">' . $staff_member->get('field_staff_profile_email')->value . '</a><br/>' . PHP_EOL;
-                      $results .= $staff_member->get('field_staff_profile_pref_phone')->value . PHP_EOL;
-                      $results .= '</li>';
-                      break;
-                  }
-                  */
-
                       $smugmug_id = $staff_member->get('field_staff_profile_smugmug')->value;
                       $results .= '<li>';
                       if ($conact_list['contact_display'] == 'long') {
                         $results .= '<div class="contact_photo">';
                         if (!empty($smugmug_id)) {
-                          $results .= '<img src="https://photos.smugmug.com/photos/' . $smugmug_id . '/0/XL/' . $smugmug_id . '-XL.jpg" alt=" ' . $staff_member->getTitle() . '"/>';
+                          $results .= '<img src="' . ISUEOHelpers\General::build_smugmug_url($smugmug_id, 'XL') . '" alt=" ' . $staff_member->getTitle() . '"/>';
                         }
                         $results .= '</div>' . PHP_EOL;
                       }

@@ -1,0 +1,16 @@
+name: County Impact Report
+description: Creates a content type for county impact reports.
+package: ISUEO
+type: module
+version: 1.0
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - drupal:node
+  - drupal:path
+  - drupal:text
+  - drupal:ds
+  - drupal:layout_builder
+  - drupal:layout_builder_base
+  - drupal:layout_builder_base_library
+  - layout_builder_restrictions
+  - drupal:paragraphs

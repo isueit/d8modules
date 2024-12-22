@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.county_impact_report.field_impact_story
+    - node.type.county_impact_report
+  module:
+    - user
+id: node.county_impact_report.teaser
+targetEntityType: node
+bundle: county_impact_report
+mode: teaser
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_impact_story: true

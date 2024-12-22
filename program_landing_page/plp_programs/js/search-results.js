@@ -63,7 +63,7 @@ searchResults.addWidgets([
           imagelink =
             '<img src ="https://photos.smugmug.com/photos/' +
             item.field_plp_program_smugmug +
-            "/0/XL/" +
+            "/10000/XL/" +
             item.field_plp_program_smugmug +
             '-XL.jpg" alt="" />';
         }
@@ -127,6 +127,23 @@ searchResults.addWidgets([
   instantsearch.widgets.refinementList({
     container: "#topic_names",
     attribute: "topic_names",
+    templates: {
+      item(item) {
+        const { url, label, count, isRefined } = item;
+      return `
+        <a href="${url}">
+          <span class="btn btn-outline-primary">${label} (${count})</span>
+        </a>
+      `;
+      },
+    },
+  }),
+]);
+
+searchResults.addWidgets([
+  instantsearch.widgets.refinementList({
+    container: "#audiences",
+    attribute: "audiences",
     templates: {
       item(item) {
         const { url, label, count, isRefined } = item;

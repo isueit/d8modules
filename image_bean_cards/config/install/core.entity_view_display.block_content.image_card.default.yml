@@ -11,8 +11,8 @@ dependencies:
     - field.field.block_content.image_card.field_image_card_title
     - field.field.block_content.image_card.field_image_card_url
   module:
+    - field_formatter_class
     - fontawesome
-    - image
     - link
     - options
     - text
@@ -44,14 +44,14 @@ content:
     weight: 4
     region: content
   field_image_card_image:
-    type: image
+    type: entity_reference_entity_view
     label: hidden
     settings:
-      image_link: ''
-      image_style: ''
-      image_loading:
-        attribute: lazy
-    third_party_settings: {  }
+      view_mode: large_480x480_
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
     weight: 2
     region: content
   field_image_card_text_size:

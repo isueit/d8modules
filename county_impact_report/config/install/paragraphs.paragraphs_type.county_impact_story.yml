@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies: {  }
+id: county_impact_story
+label: 'Impact Story'
+icon_uuid: null
+icon_default: null
+description: 'For county stakeholder report stories.'
+behavior_plugins: {  }

@@ -46,7 +46,8 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase
     // Record types to include in the catalog
     // 0128Z000000yeo8QAA = Product Family Record Type
     // 012460000012EiaAAE = Educational Program Record Type
-    $types = ['0128Z000000yeo8QAA', '012460000012EiaAAE',];
+    // 0124p000000S43XAAS = Educational Service or Consultation
+    //$types = ['0128Z000000yeo8QAA', '012460000012EiaAAE', '0124p000000S43XAAS'];
 
     // Do NOT cache a page with this block on it.
     \Drupal::service('page_cache_kill_switch')->trigger();
@@ -75,9 +76,9 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase
       $program = [];
 
       foreach ($products as $product) {
-        if (!in_array($product['RecordTypeId'], $types)) {
-          continue;
-        }
+        //if (!in_array($product['RecordTypeId'], $types)) {
+          //continue;
+        //}
         if ($product['Id'] == $program_id) {
           $description = $this::educational_programs_field_get_description($product);
           if (!empty($product['Planned_Program_Website__c'])) {
@@ -99,6 +100,9 @@ class EducationalProgramsFieldDefaultFormatter extends FormatterBase
             'redirected' => $redirected,
             'hide_image' => !empty($item->hide_image),
           ];
+          if (!empty($product['Smugmug_ID__c'])) {
+            $program['smugmug_url'] = ISUEOHelpers\General::build_smugmug_url(trim($product['Smugmug_ID__c'], '/'), 'XL');
+          }
         }
 
         if (

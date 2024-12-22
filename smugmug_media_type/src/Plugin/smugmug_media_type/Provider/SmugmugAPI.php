@@ -7,9 +7,11 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\ImageEffect\ScaleImageEffect;
 use Drupal\image\Plugin\ImageEffect\CropImageEffect;
 use Drupal\Component\Utility\HTML;
+use Drupal\isueo_helpers\ISUEOHelpers;
+
 /**
  * A Smugmug provider plugin.
- * This Plugin is only intended to be used for ISUExtensionImages, 
+ * This Plugin is only intended to be used for ISUExtensionImages,
  *
  * @ImageEmbedProvider(
  *   id = "smugmug_api",
@@ -32,7 +34,7 @@ class SmugmugAPI extends ProviderPluginBase {
     if ($size != '') {
       $style = ImageStyle::load($size);
       foreach ($style->getEffects()->getIterator() as $styleplugin) {
-        // Only look for sizes, break after first sizing 
+        // Only look for sizes, break after first sizing
         // Assuming only effect is scaling, as that is the only one smugmug provides
         if ($styleplugin instanceof ScaleImageEffect) {
           //If either height/width is not set for scaling, use the alternative dimension
@@ -60,7 +62,7 @@ class SmugmugAPI extends ProviderPluginBase {
       }
     }
 
-    //Smugmug sizes and corresponding codes, these are the larger 
+    //Smugmug sizes and corresponding codes, these are the larger
     $available_sizes = [
       100 => 'Ti',//Tiny
       150 => 'Th',//Thumbnail
@@ -76,7 +78,7 @@ class SmugmugAPI extends ProviderPluginBase {
       5120 => '5K',
       PHP_INT_MAX => '',//Original image size, can be any actual dimension
     ];
-    
+
     //Minimum size 100px, go through available sizes until one is equal to or larger than the image style scale
     $closest = 100;
     foreach ($available_sizes as $size_key => $charcode) {
@@ -86,18 +88,18 @@ class SmugmugAPI extends ProviderPluginBase {
       }
     }
     $size_char = $available_sizes[$closest];
-    
+
     // Use metadata alt text if none is provided
     // Alt text is mandatory field, so this should not happen
     if ($alt == '') {
       $alt = $this->getAltText();
     }
-    
+
     //Uses smugmug-embed-image.html.twig template
     $image = [
       '#type' => 'smugmug_embed_image',
       '#provider' => 'smugmugapi',
-      '#url' => "https://photos.smugmug.com/photos/i-{$this->getImageId()}/0/{$size_char}/i-{$this->getImageId()}-{$size_char}.jpg",
+      '#url' => ISUEOHelpers\General::build_smugmug_url($this->getImageId(), $size_char),
       '#alt' => HTML::escape($alt), //htmlspecialchars()
       '#height' => $height,
       '#width' => $width,
@@ -115,7 +117,7 @@ class SmugmugAPI extends ProviderPluginBase {
   public function getRemoteThumbnailUrl() {
     if ($this->imageId != '') {
       // Return 100x100 "Tiny" image style
-      return "https://photos.smugmug.com/photos/i-{$this->imageId}/0/Ti/i-{$this->imageId}-Ti.jpg";
+      return ISUEOHelpers\General::build_smugmug_url($this->imageId, 'Ti');
     } else {
       $thumbnail = $this->oEmbedData();
       if (isset($thumbnail)) {
@@ -125,11 +127,11 @@ class SmugmugAPI extends ProviderPluginBase {
       }
     }
   }
-  
+
   public function getThumbnailUri() {
     if ($this->imageId != '') {
       // Return 100x100 "Tiny" image style
-      return "https://photos.smugmug.com/photos/i-{$this->imageId}/0/Ti/i-{$this->imageId}-Ti.jpg";
+      return ISUEOHelpers\General::build_smugmug_url($this->imageId, 'Ti');
     } else {
       $thumbnail = $this->oEmbedData();
       if (isset($thumbnail)) {
@@ -147,7 +149,7 @@ class SmugmugAPI extends ProviderPluginBase {
    *    Image Title, Caption, Thumbnail URL, Original Height and Width
    * https://api.smugmug.com/api/v2/image/<ID>!sizes?APIKey=<API Key>&_accept=application/json
    *    Image Large, Image Medium, Image Small, ImageThumb etc sizes urls
-   * Image 
+   * Image
    *
    * @return array
    *   An array of data from the oembed endpoint.
@@ -189,7 +191,7 @@ class SmugmugAPI extends ProviderPluginBase {
       return "SmugMug Image: {$this->getImageId()}";
     }
   }
-  
+
   /**
    * {@inheritdoc}
    */

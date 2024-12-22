@@ -60,6 +60,7 @@ function staff_profile_primary_profile_from_database()
   // Get entries from Setwise
   $raw = ISUEOHelpers\Files::fetch_url('https://directory.extension.iastate.edu/api/employees?token=mC5EFLgaEkTEcnFc3qhzs2mAtRtjP6fF');
   $entries = json_decode($raw, true);
+  $address_fields = ['CITY', 'ADDRESS STREET 1', 'ADDRESS STREET 2',];
   foreach ($entries as $entry) {
     if (str_contains($entry['EMAIL ADDRESS'], '@iastate.edu')) {
       if (array_key_exists('PHONE', $entry) && !empty($entry['PHONE'])) {
@@ -70,6 +71,15 @@ function staff_profile_primary_profile_from_database()
       }
       if (!array_key_exists('STATE', $entry) || empty($entry['STATE'])) {
         $entry['STATE'] = 'IA';
+      }
+
+      // Make Upper case addresses into mixed case
+      foreach ($address_fields as $address_field) {
+        $tmp_value = ucwords(strtolower($entry[$address_field]));
+        $tmp_value = str_replace([' 4-h', 'Po B', 'P.o. B', ' Us ',], [' 4-H', 'PO B', 'PO B', ' US ',], $tmp_value);
+        if ($entry[$address_field] != $tmp_value) {
+          $entry[$address_field] = $tmp_value;
+        }
       }
       $netid = str_replace('@iastate.edu', '', $entry['EMAIL ADDRESS']);
       $setwise_netid[$netid] = $entry;

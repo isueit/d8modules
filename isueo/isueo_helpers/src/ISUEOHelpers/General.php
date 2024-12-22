@@ -48,4 +48,23 @@ class General
     }
     return $county_name;
   }
+
+  // Build a Smugmug URL given the image ID and an optional Size
+  //    100 => 'Ti',//Tiny
+  //    150 => 'Th',//Thumbnail
+  //    300 => 'S',
+  //    450 => 'M',
+  //    600 => 'L',
+  //    768 => 'XL',
+  //    960 => 'X2',//2XL
+  //    1200 => 'X3',
+  //    2048 => 'X4',
+  //    2560 => 'X5',
+  //    3840 => '4K',
+  //    5120 => '5K',
+  //    PHP_INT_MAX => '',//Original image size, can be any actual dimension
+  public static function build_smugmug_url(string $id, string $size = 'XL')
+  {
+    return 'https://photos.smugmug.com/photos/' . $id . '/10000/' . $size . '/' . $id . '-' . $size . '.jpg';
+  }
 }

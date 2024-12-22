@@ -9,6 +9,7 @@
  *     - description: Description
  *     - url: URL for the program
  *     - smugmug_id: SmugMug ID
+ *     - smugmug_url: URL to the SmugMug image
  *     - redirected: true/false - Automatically redirected to the program page
  *     - hide_image: true/false - Hide the hero image that comes from MyData/SmugMug
  *   - children: Array of children
@@ -28,9 +29,9 @@
       </div>
     {% endif %}
 
-    {% if not program.hide_image %}
+    {% if not program.hide_image and program.smugmug_id %}
       <div class="program-hero-image">
-        <img src="https://photos.smugmug.com/photos/{{ program.smugmug_id }}/0/XL/{{ program.smugmug_id }}-XL.jpg" alt="{{ program.name }}" />
+        <img src="{{ program.smugmug_url }}" alt="{{ program.name }}" />
       </div>
     {% endif %}
 

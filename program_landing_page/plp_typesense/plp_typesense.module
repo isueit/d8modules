@@ -35,7 +35,6 @@ function plp_typesense_entity_presave(Drupal\Core\Entity\EntityInterface $entity
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
 
-    Drupal::logger('blah')->info('I am here');
   try {
     switch ($entity->bundle()) {
       case 'plp_program':
@@ -60,7 +59,7 @@ function plp_typesense_index_all_programs()
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
 
-  //$client->collections[$collection_name]->documents->delete(['filter_by' => 'field_plp_program_sort_calc:>=0', ]);
+  $client->collections[$collection_name]->documents->delete(['filter_by' => 'field_plp_program_sort_calc:>=0', ]);
 
   $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
   $nodes =  Node::loadMultiple($nids);
@@ -90,6 +89,7 @@ function plp_typesense_index_program($client, $collection_name, $node)
     'children_body' => [],
     'field_plp_program_topics' => [],
     'topic_names' => [],
+    'audiences' => [],
   ];
 
   // Handle Topics
@@ -107,6 +107,28 @@ function plp_typesense_index_program($client, $collection_name, $node)
       $record['children_title'][] = $child_node->getTitle();
       $record['children_body'][] = $child_node->get('body')->getString();
     }
+  }
+
+  // Handle Audiences
+  $topics = explode(', ', $node->get('field_plp_program_audiences')->getString());
+  foreach ($topics as $topic_id) {
+    if (empty($topic_id)) {
+      continue;
+    }
+    $term_name = Term::load(intval($topic_id))->getName();
+    if (str_contains($term_name, 'Youth')) {
+      $record['audiences'][] = 'Youth';
+      if (str_contains(Term::load($node->get('field_plp_program_program_area')->getString())->getName(), '4-H')) {
+        $record['audiences'][] = '4-H Youth';
+      }
+    } else {
+      $record['audiences'][] = 'Adult';
+    }
+  }
+  if (empty($record['audiences'])) {
+    $record['audiences'][] = 'Adult';
+  } else {
+    $record['audiences'] = array_unique($record['audiences']);
   }
 
   $client->collections[$collection_name]->documents->upsert($record);

@@ -143,3 +143,15 @@ a#isu-horiz-events {
 #isu-horiz-events .program_offering_blocks a {
   color: #000;
 }
+
+#isu-horiz-events + a.events_show_more {
+    all: revert;
+    float: right;
+    color: var(--burgundy);
+}
+
+#isu-horiz-events + a.events_show_more:hover, #isu-horiz-events + a.events_show_more:after {
+    all: revert;
+    float: right;
+    color: var(--cardinal);
+}
