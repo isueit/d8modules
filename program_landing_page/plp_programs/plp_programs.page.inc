@@ -2,6 +2,9 @@
 
 use Drupal\node\Entity\Node;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\Taxonomy;
+use Drupal\isueo_helpers\ISUEOHelpers\Typesense;
+use Drupal\taxonomy\Entity\Term;
 
 // Return an array of existing nodes with MyData ID as the array key
 function plp_programs_get_existing_nodes(string $content_type, string $mydata_id_field)

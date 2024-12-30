@@ -1,0 +1,162 @@
+:root {
+	--cardinal: #c8102e;
+	--gold: #f1be48;
+	--burgundy: #7c2529;
+	--dk-gray: #4a4a4a;
+	--lt-gray: #f5f5f5;
+	--md-gray: #ebebeb;
+	--midnight: #003d4c;
+	--green: #008540;
+	--sans-font: 'Arial', 'Helvetica Neue', sans-serif;
+	--serif-font: 'Merriweather', serif;
+  }
+
+/* -------------------------------------- */
+/* ## Impact Reports
+/* ------------------------------------- */
+.county-impact-report h1.isu-page-title {
+	position: absolute !important;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+	height: 1px;
+	width: 1px;
+	word-wrap: normal;
+}
+div#block-iastate-theme-content--2 .paragraph {
+	max-width: 1140px;
+	margin: auto;
+	clear: both;
+}
+.paragraph .impact-story-image {
+	float: right;
+}
+.paragraph .impact-story-image img {
+	height: 275px;
+	border-radius: .25rem;
+	object-fit: cover;
+	max-width: 350px;
+	margin-left: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+.paragraph.paragraph--type--county-impact-story h2 {
+	padding-top: 4rem;
+}
+.county-impact-report-contact .layout-builder-base--two-columns.layout--column-width--75-25 .layout-content {
+	grid-template-columns: 0.75fr 0.25fr;
+	display: grid;
+	column-gap: 40px;
+}
+.county-impact-report-contact .layout--top-bottom-padding--big {
+	padding-top: 60px;
+	padding-bottom: 60px;
+}
+.county-impact-report-contact .layout--content-container--default .layout-content {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Statistics */
+.impact_statistic__title {
+	color: var(--gold);
+	font-family: var(--serif-font);
+	font-weight: 700;
+	font-size: 3.4375rem;
+	line-height: 1.23636;
+	margin: 0;
+}
+.impact_statistic__text {
+	font-family: var(--sans-font);
+	font-weight: 700;
+	font-size: 1.125rem;
+	line-height: 1.66667;
+}
+.impact-story-stats-one .layout--left-right-padding--small, .impact-story-stats-two .layout--left-right-padding--small {
+	padding-right: 20px;
+}
+.impact-story-stats-two .layout--top-bottom-padding--big {
+	padding-bottom: 60px;
+}
+.impact-story-stats-one .isueo-callout-stat, .impact-story-stats-two .isueo-callout-stat {
+	padding: 2.5rem 2.5rem;
+	height: 100%;
+}
+.impact-story-stats-one .layout-builder-base--three-columns .layout-content, .impact-story-stats-two .layout-builder-base--three-columns .layout-content {
+	grid-template-columns: 1fr 1fr 1fr;
+	display: grid;
+	column-gap: 40px;
+}
+.impact-story-stats-one .layout--content-container--default .layout-content, .impact-story-stats-two .layout--content-container--default .layout-content {
+	margin-left: auto;
+	margin-right: auto;
+}
+.impact-story-stats-one, .impact-story-stats-two {
+	margin-top: 60px;
+	margin-bottom: 1rem;
+}
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 575px) {
+	.paragraph .impact-story-image {
+		float: none;
+	}
+	.paragraph .impact-story-image img {
+		margin-left: 0;
+	}
+	.impact-story-stats-one .layout-builder-base--three-columns .layout-content, .impact-story-stats-two .layout-builder-base--three-columns .layout-content {
+		row-gap: 40px;
+	}
+}
+
+/* -------------------------------------- */
+/* ## PRINT STYLES
+/* -------------------------------------- */
+@media print {
+	@page {
+		margin: 0.5cm;
+	}
+	.impact_statistic__title {
+		color: #000;
+	}
+	.impact_statistic__text {
+		font-weight: normal;
+	}
+	div.isueo-callout-stat svg {
+		color: var(--cardinal);
+	}
+	.county-impact-hero.d-print-block img {
+		max-width: 60%;
+		float: left;
+		margin-right: 4rem;
+	}
+	.county-impact-report h1 {
+		line-height: 1.32857;
+		font-weight: 400;
+		font-family: var(--serif-font);
+		letter-spacing: 0;
+		margin: 2rem 0 0.625rem;
+		color: var(--cardinal);
+		width: 100%;
+		clear: both;
+	}
+	.impact-print-wrapper {
+		max-width: 1140px;
+		margin: auto;
+		padding-top: 2rem;
+	}
+	.paragraph.paragraph--type--county-impact-story h2 {
+		padding-top: 1rem;
+	}
+	article:not(.isu-user):not(.isu-search_collapse) {
+		margin-bottom: 0;
+	}
+	.county-impact-report-contact .layout--top-bottom-padding--big {
+		padding-bottom: 0;
+	}
+	.impact-story-stats-two .layout--top-bottom-padding--big {
+		padding-bottom: 0;
+	}
+	.impact-story-stats-one, .impact-story-stats-two {
+		margin-top: 0;
+	}
+}

@@ -8,6 +8,7 @@ dependencies:
     - field.field.block_content.isueo_card_deck.field_card_deck_link
   module:
     - link
+    - allowed_formats
     - media_library
     - text
 id: block_content.isueo_card_deck.default

@@ -20,3 +20,23 @@ function educational_programs_field_update_9001() {
     $schema->addField('node_revision__field_educational_program', 'field_educational_program_auto_redirect', $spec);
   }
 }
+
+
+/**
+ * Add the hide_image fields to the database
+ */
+function educational_programs_field_update_9002() {
+  $spec = [
+    'type' => 'int',
+    'size' => 'tiny',
+    'description' => 'Hide image when selected',
+  ];
+
+  $schema = Database::getConnection()->schema();
+  if (!$schema->fieldExists('node__field_educational_program', 'field_educational_program_hide_image')) {
+    $schema->addField('node__field_educational_program', 'field_educational_program_hide_image', $spec);
+  }
+  if (!$schema->fieldExists('node_revision__field_educational_program', 'field_educational_program_hide_image')) {
+    $schema->addField('node_revision__field_educational_program', 'field_educational_program_hide_image', $spec);
+  }
+}

@@ -1,10 +1,12 @@
 <?php
+
 use Drupal\taxonomy\Entity\Term;
 
 /**
-* Implements hook_entity_presave().
-*/
-function educational_programs_field_node_presave($entity) {
+ * Implements hook_entity_presave().
+ */
+function educational_programs_field_node_presave($entity)
+{
   $program_name = '';
 
   foreach ($entity->getFields() as $field) {
@@ -27,4 +29,25 @@ function educational_programs_field_node_presave($entity) {
 function educational_programs_field_preprocess_node(&$variables)
 {
   $variables['#attached']['library'][] = 'educational_programs_field/educational_programs_field';
+}
+
+/**
+ * Implements hook_theme().
+ */
+
+function educational_programs_field_theme($existing, $type, $theme, $path)
+{
+  return [
+    'educational_programs_field_default' => [
+      'variables' => [
+        'program' => [],
+        'children' => [],
+      ],
+    ],
+    'educational_programs_field_children' => [
+      'variables' => [
+        'subprograms' => [],
+      ],
+    ],
+  ];
 }

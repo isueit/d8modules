@@ -3,3 +3,5 @@ flip_cards:
   css:
     layout:
       css/flip_cards.css: {}
+  js:
+    js/flip_cards.js: {}

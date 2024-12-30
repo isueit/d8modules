@@ -24,16 +24,19 @@ class ResultsForm extends FormBase {
     $form['#method'] = 'get';
     $form['search']['search_broadness'] = array(
       '#type' => 'radios',
-      '#options' => array(
-        'narrow' => t($cse_narrow_search_text),
-        'wide' => t($cse_wide_search_text),
-      ),
       '#attributes' => array(
         'onchange' => 'add_param();form.submit("cse_selector_results_form");',
       ),
       '#executes_submit_callback' => TRUE,
       '#default_value' => (array_key_exists('search_broadness', $get_results) ? $searchbroadness : $cse_search_type),
     );
+
+// Add the options to the radio button field
+if ($cse_narrow_search_text) {
+    $form['search']['search_broadness']['#options']['narrow'] = t($cse_narrow_search_text);
+}
+$form['search']['search_broadness']['#options']['wide'] = t($cse_wide_search_text);
+
     if (array_key_exists($cse_url_text, $get_results)) {
       $form['search'][$cse_url_text] = array(
         '#type' => 'hidden',

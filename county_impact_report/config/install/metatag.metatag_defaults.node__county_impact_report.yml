@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies: {  }
+id: node__county_impact_report
+label: 'Content: County Impact Report'
+tags:
+  canonical_url: '[current-page:url]'
+  description: 'Discover how [site:slogan] is making a difference and creating real impact in [site:name].'
+  image_src: 'https://www.extension.iastate.edu/files/images/realimpactfb.png'
+  title: '[site:name] [current-page:title]'

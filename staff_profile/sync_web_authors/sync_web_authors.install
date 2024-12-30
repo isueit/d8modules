@@ -1,0 +1,23 @@
+<?php
+
+use \Drupal\user\Entity\User;
+
+/**
+* Implements hook_uninstall().
+*/
+function sync_web_authors_uninstall() {
+  // Block uses from the feed
+  $nids = \Drupal::entityQuery('user')->accessCheck(FALSE)->condition('field_from_feed', 1)->condition('field_from_feed', 1)->condition('status', 1)->execute();
+  $staleusers =  User::loadMultiple($nids);
+  foreach ($staleusers as $user) {
+    if ($user->id() == 1) continue;
+
+    // Block the user
+    $user->changed->value = time();
+    $user->removeRole('content_editor');
+    $user->block();
+    $user->save();
+
+    Drupal::logger('sync_web_authors')->info('Blocked user: ' . $user->getAccountName());
+  }
+}

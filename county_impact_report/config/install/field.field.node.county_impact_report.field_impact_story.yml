@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_impact_story
+    - node.type.county_impact_report
+    - paragraphs.paragraphs_type.county_impact_story
+  module:
+    - entity_reference_revisions
+id: node.county_impact_report.field_impact_story
+field_name: field_impact_story
+entity_type: node
+bundle: county_impact_report
+label: 'Impact Story'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      county_impact_story: county_impact_story
+    negate: 0
+    target_bundles_drag_drop:
+      county_impact_story:
+        weight: 2
+        enabled: true
+field_type: entity_reference_revisions

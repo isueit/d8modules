@@ -3,8 +3,8 @@ const typesenseInstantsearchAdapterBar = new TypesenseInstantSearchAdapter({
     apiKey: "bilLvsiWoO1EqcM21L8XrzofmVBYfyB9", // Be sure to use an API key that only allows searches, in production
     nodes: [
       {
-        host: "typesense.exnet.iastate.edu",
-        port: "8108",
+        host: "typesense.extension.iastate.edu",
+        port: "443",
         protocol: "https",
       },
     ],

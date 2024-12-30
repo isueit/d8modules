@@ -9,6 +9,7 @@ namespace Drupal\staff_profile\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
  * Plugin implementation of the 'smugmug_id_formatter' formatter.
@@ -39,7 +40,7 @@ class SmugmugIdFormatter extends FormatterBase
       $htmloutput = '';
 
       if (!empty($item->value)) {
-        $htmloutput = '<img class="staff_profile_smugmug" src="https://photos.smugmug.com/photos/' . $item->value . '/0/XL/' . $item->value . '-XL.jpg" alt="Staff photo" />' ;
+        $htmloutput .= PHP_EOL . '<img class="staff_profile_smugmug" src="' . ISUEOHelpers\General::build_smugmug_url($item->value, 'XL') . '" alt="Staff photo" />' ;
       }
 
       $element[$delta] = [

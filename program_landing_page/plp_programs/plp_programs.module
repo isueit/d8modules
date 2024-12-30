@@ -11,6 +11,7 @@ include_once('plp_programs.page.inc');
 function plp_programs_rebuild()
 {
   plp_programs_getprograms();
+  //plp_typesense_index_all_programs();
 }
 
 /**

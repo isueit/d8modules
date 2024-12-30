@@ -1,0 +1,53 @@
+{#
+/**
+ * @file
+ * Default template for educational_programs_field
+ *
+ * Available variables:
+ *   - program
+ *     - name: Name for the Program
+ *     - description: Description
+ *     - url: URL for the program
+ *     - smugmug_id: SmugMug ID
+ *     - smugmug_url: URL to the SmugMug image
+ *     - redirected: true/false - Automatically redirected to the program page
+ *     - hide_image: true/false - Hide the hero image that comes from MyData/SmugMug
+ *   - children: Array of children
+ *     - name
+ *     - description
+ *     - url
+ */
+#}
+
+<div class="educational_program">
+  {% if program %}
+    {# Output redirected message when needed #}
+    {% if program.redirected %}
+      <div class="alert alert-info" role="alert">
+        <p class="text-uppercase font-weight-bold">This page has been redirected</p>
+        <p>Visitors to this page will be automatically redirected to <a href="{{ program.url }}">{{ program.url }}.</a></p>
+      </div>
+    {% endif %}
+
+    {% if not program.hide_image and program.smugmug_id %}
+      <div class="program-hero-image">
+        <img src="{{ program.smugmug_url }}" alt="{{ program.name }}" />
+      </div>
+    {% endif %}
+
+    {# Output the description #}
+    <div class="educational_program_description">
+      {{ program.description }}
+        <span class="educational_program_link"><a class="btn btn-outline-secondary" href="{{ program.url }}">Explore additional details</a></span>
+    </div>
+
+    {# Step through all the child records #}
+      {{ children }} {# uses the educational-programs-field-children TWIG template #}
+
+  {% else %}
+    {# Don't have a program to output #}
+    <div class="educational_program_description">
+      Program not found
+    </div>
+  {% endif %}
+</div>

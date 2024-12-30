@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.county_impact_story.field_county_impact_story_body
+    - field.field.paragraph.county_impact_story.field_county_impact_story_image
+    - field.field.paragraph.county_impact_story.field_county_impact_story_title
+    - paragraphs.paragraphs_type.county_impact_story
+  module:
+    - field_formatter_class
+    - text
+id: paragraph.county_impact_story.default
+targetEntityType: paragraph
+bundle: county_impact_story
+mode: default
+content:
+  field_county_impact_story_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_county_impact_story_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 2
+    region: content
+  field_county_impact_story_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

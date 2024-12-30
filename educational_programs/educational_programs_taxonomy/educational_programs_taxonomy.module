@@ -36,7 +36,10 @@ function educational_programs_taxonomy_handle_feeds()
   $taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $terms_raw = $taxonomyStorage->loadByProperties(['vid' => $vid]);
   foreach ($terms_raw as $term) {
-    $description = trim(strip_tags($term->getDescription()));
+    $description = '';
+    if (!empty($term->getDescription()) && !empty(strip_tags($term->getDescription()))) {
+      $description = trim(strip_tags($term->getDescription()));
+    }
     if (empty($description)) {
       // No description means it's a Program Area
       $terms_program_areas[$term->getName()] = $term;
