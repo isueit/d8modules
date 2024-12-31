@@ -3,21 +3,56 @@
 /* --------------------------------------  */
 /* ## Events
 /* --------------------------------------  */
-
-.event_details_links {
-    padding-top: 20px;
+.program_offering_blocks.ungerboeck_eventlist_details {
+    margin-top: 2.875rem;
 }
-
+.event_details_links {
+    margin-bottom: 3.875rem;
+    margin-top: 2.875rem;
+}
 .event_description {
     padding-top: 20px;
-    padding-bottom: 20px;
+    margin-bottom: 1.75rem;
 }
-
-.event_details_dates {
-    font-style: italic;
-    padding-right: 5px;
+.event_details_wrapper {
+    margin-bottom: 1.75rem;
 }
-
+.event_details_dates:before {
+    content: "\f073";
+    font-family: 'FontAwesome';
+    margin-right: 0.4em;
+    font-size: 1.4em;
+    color: #676767;
+    transition: all 0.2s ease-in-out;
+    vertical-align: middle;
+}
+p.event_details_next_session {
+    padding-left: 2rem;
+}
+.event_address_wrapper {
+    margin-top: 15px;
+}
+.event_address_wrapper:before {
+    content: "\f14e";
+    font-family: 'FontAwesome';
+    margin-right: 0.4em;
+    font-size: 1.4em;
+    color: #676767;
+    transition: all 0.2s ease-in-out;
+    vertical-align: middle;
+}
+.event_contact_wrapper {
+    margin-top: 15px;
+}
+.event_contact_wrapper:before {
+    content: "\f2c1";
+    font-family: 'FontAwesome';
+    margin-right: 0.4em;
+    font-size: 1.4em;
+    color: #676767;
+    transition: all 0.2s ease-in-out;
+    vertical-align: middle;
+}
 .events_show_more{
     background-color: #006BA6;
         border-color: #006BA6;
@@ -30,7 +65,26 @@
         color: #fff;
         text-decoration: none;
 }
-
+img.educational_program_image {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    object-fit: cover;
+    max-height: 50vh;
+    margin-bottom: 2.875rem;
+}
+.event_instructor_wrapper {
+    margin-top: 15px;
+}
+.event_instructor_wrapper:before {
+    content: "\f2bd";
+    font-family: 'FontAwesome';
+    margin-right: 0.4em;
+    font-size: 1.4em;
+    color: #676767;
+    transition: all 0.2s ease-in-out;
+    vertical-align: middle;
+}
 .events_show_more:hover{
     background-color: #202124;
     color: #fff;
@@ -39,9 +93,8 @@
 
 .event_sessions{padding-top:10px;}
 .event_contact_label{padding-top:10px;}
-.event_contact_name, .event_contact_email, .event_contact_phone {padding-left: 15px;}
 
-img.educational_program_image {max-width: 200px; float:left; margin: 0 8px 5px 0;}
+
 div.clearer {clear:both;}
 
 .next_session{font-weight: bold;}

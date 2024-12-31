@@ -11,3 +11,42 @@ function program_offering_blocks_preprocess_block(&$variables)
     $variables['attributes']['class'][] = 'program_offering_blocks';
   }
 }
+
+/**
+* Implements hook_theme().
+*/
+
+function program_offering_blocks_theme($existing, $type, $theme, $path) {
+  return [
+    'program_offering_details_multisession' => [
+      'variables' => [
+        'title' => '',
+        'smugmug_id' => '',
+        'date' => [],
+        'online' => false,
+        'address' => [],
+        'description' => '',
+        'contact' => [],
+        'instructor' => [],
+        'sessions' => [],
+        'urls' => [],
+        'registration' => [],
+      ],
+    ],
+    'program_offering_details_singlesession' => [
+      'variables' => [
+        'title' => '',
+        'smugmug_id' => '',
+        'date' => [],
+        'online' => false,
+        'address' => [],
+        'description' => '',
+        'contact' => [],
+        'instructor' => [],
+        'sessions' => [],
+        'urls' => [],
+        'registration' => [],
+      ],
+    ],
+  ];
+}
