@@ -11,7 +11,6 @@
     margin-top: 2.875rem;
 }
 .event_description {
-    padding-top: 3rem;
     margin-bottom: 3rem;
     font-weight: normal;
     font-size: initial;
@@ -22,13 +21,15 @@
     font-size: 1.18rem;
 }
 p.event_details_next_session {
-    padding-left: 2rem;
+    padding-left: 3rem;
+    font-weight: normal;
 }
 .event_address_wrapper {
     margin-top: 1.5rem;
 }
 .event_contact_wrapper {
     margin-top: 1.5rem;
+    padding-bottom: 3rem;
 }
 .events_show_more{
     background-color: #006BA6;
@@ -58,10 +59,16 @@ img.educational_program_image {
     color: #fff;
     text-decoration: none;
 }
-
-.event_sessions{padding-top:10px;}
+.event_sessions {
+    font-size: initial;
+    font-weight: normal;
+    padding: 1.5rem;
+}
+.event_details_session_registration {
+    display: grid;
+    grid-template-columns: auto auto;
+}
 .event_contact_label{padding-top:10px;}
-
 
 div.clearer {clear:both;}
 

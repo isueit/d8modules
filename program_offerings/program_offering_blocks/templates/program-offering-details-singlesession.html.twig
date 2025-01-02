@@ -82,8 +82,8 @@
       {% if online %}
         Online
       {% else %}
-        {{ address.building }}<br>
-        {{ address.street }}<br>
+        {{ address.building }},
+        {{ address.street }}
         {{ address.city }},
         {{ address.state }}
         {{ address.zip }}
@@ -100,8 +100,10 @@
         {% if contact.phone %}
           <span>{{ contact.phone }}</span>
         {% endif %}
-      </div>
+      </div<
     {% endif %}
+  </div>
+  </div>
 
   {% if smugmug_id %}
     <img class="educational_program_image" src="https://photos.smugmug.com/photos/{{ smugmug_id }}/0/XL/{{ smugmug_id }}-XL.jpg" alt="" />
@@ -114,7 +116,7 @@
     <span class="event_details_links">
       {% if (urls.event) and (urls.event != registration.url) %}
         <div class="event_details_more_information">
-          <a href="{{ urls.event }}" class="btn btn-outline-secondary" aria-label="Learn more about {{ title }}">Event Information</a>
+          <a href="{{ urls.event }}" aria-label="Learn more about {{ title }}">Learn more</a>
         </div>
       {% endif %}
 
@@ -134,8 +136,9 @@
     {% endif %}
     {% endif %}
     </div>
-    <div class="event_details_registration_wrapper">
+
       {% if registration.url %}
+        <div class="event_details_registration_wrapper">
         <h2>Registration</h2>
         <div class="event_details_registration">
           <p>Don’t miss the opportunity to connect, learn, and engage. Secure your spot by registering today!</p>
@@ -153,8 +156,8 @@
         <div class="event_details_registration">
           Registration for this event is now closed. Thank you for your interest! Stay tuned for future events and opportunities.
         </div>
+        </div>
       {% endif %}
-    </div>
 
   </div> {# .event_details_wrapper #}
 </div> {# .program_offering_blocks #}
