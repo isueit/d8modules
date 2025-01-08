@@ -1,0 +1,8 @@
+<?php
+/**
+* Implements hook_uninstall().
+*/
+
+function ts_forstaff_uninstall() {
+  ts_forstaff_delete_all_from_collection();
+}

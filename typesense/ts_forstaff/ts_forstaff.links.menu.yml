@@ -1,0 +1,6 @@
+ts_forstaff.primary_settings_form:
+  title: 'Typesense - For Staff Content'
+  route_name: ts_forstaff.primary_settings_form
+  description: 'Settings for the For Staff Typesense Indexer'
+  parent: system.admin_config_search
+  weight: 100
