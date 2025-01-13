@@ -41,19 +41,19 @@ class Typesense
   public static function searchCollection(string $collection, string $q = '*', string $query_by = '*', string $sort_by = '', int $per_page = 10, int $page = 1, string $filter_by = '', bool $exhaustive_search = false)
   {
     try {
-    $client = self::getClient();
-    if ($client) {
-    $query_array = [
-    'q' => $q,
-    'query_by' => $query_by,
-    'sort_by' => $sort_by,
-    'per_page' => $per_page,
-    'page' => $page,
-    'filter_by' => $filter_by,
-    'exhaustive_search' => $exhaustive_search,
-    ];
-    return($client->collections[$collection]->getDocuments()->search($query_array));
-    }
+      $client = self::getClient();
+      if ($client) {
+        $query_array = [
+          'q' => $q,
+          'query_by' => $query_by,
+          'sort_by' => $sort_by,
+          'per_page' => $per_page,
+          'page' => $page,
+          'filter_by' => $filter_by,
+          'exhaustive_search' => $exhaustive_search,
+        ];
+        return ($client->collections[$collection]->getDocuments()->search($query_array));
+      }
     } catch (Exception $e) {
       Drupal::logger('isueo_helpers')->info('Error in searchCollection: ' . $e->getMessage());
     }
@@ -64,11 +64,12 @@ class Typesense
   public static function index_node(EntityInterface $node, string $api_key, string $collection, string $site_name, string $base_url)
   {
     try {
-//      $node = Drupal::entityTypeManager()->getStorage('node')->load($nid);
+      //      $node = Drupal::entityTypeManager()->getStorage('node')->load($nid);
 
       if ($node) {
         $client = Typesense::getClient($api_key);
         $render_array = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, 'default');
+        $content = \Drupal::service('renderer')->renderPlain($render_array);
         $record = [
           'id' => $site_name . ':' . $node->id(),
           'title' => $node->getTitle(),
@@ -78,7 +79,8 @@ class Typesense
           'created' => date('c', $node->created->value),
           'content_type' => $node->bundle(),
           'summary' => empty($node->body->summary) ? '' : $node->body->summary,
-          'rendered_content' => \Drupal::service('renderer')->renderPlain($render_array),
+          'rendered_content' => $content,
+          'text_content' => static::clean_html_string(strip_tags($content)),
           'published' => $node->isPublished(),
         ];
         $client->collections[$collection]->documents->upsert($record);
@@ -86,5 +88,24 @@ class Typesense
     } catch (Exception $e) {
       Drupal::logger('ts_extension_content')->error('Saving a node: ' . $e->getMessage());
     }
+  }
+
+  private static function clean_html_string(string $mystring)
+  {
+    if (!empty($mystring)) {
+      $mystring = str_replace('&nbsp;', ' ', $mystring);
+      $mystring = str_replace(PHP_EOL, '<br>', $mystring);
+      $mystring = str_replace('EditDeleteManage', '', $mystring);
+      $mystring = str_replace('Add to Favorites', '', $mystring);
+      $mystring = str_replace('  display  ', '', $mystring);
+      while (str_contains($mystring, '  ')) {
+        $mystring = str_replace('  ', ' ', $mystring);
+      }
+      while (str_contains($mystring, '<br> ')) {
+        $mystring = str_replace('<br> ', '<br>', $mystring);
+      }
+    }
+
+    return $mystring;
   }
 }
