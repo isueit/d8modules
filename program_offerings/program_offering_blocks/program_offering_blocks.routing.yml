@@ -17,10 +17,3 @@ program_offering_blocks.event_details:
   requirements:
     _permission: 'access content'
 
-program_offering_blocks.ics_download:
-  path: '/event/{eventID}/download-ics'
-  defaults:
-    _controller: '\Drupal\program_offering_blocks\Controller\EventDetailsController::download_ics'
-    _title: 'Download ICS'
-  requirements:
-    _permission: 'access content'
