@@ -1,0 +1,6 @@
+name: 'Typesense - For Staff Search'
+type: module
+core_version_requirement: ^10
+description: 'Create Blocks for doing For Staff Searches'
+version: '8.x-1.1-dev'
+package: 'ISUEO'
