@@ -250,3 +250,12 @@ background-color: #fff;
 .plp-related-programs .views-field.views-field-nothing {
 	height: 100%;
 }
+
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 768px) {
+    .plp-related-programs {
+        margin-block-end: 0;
+    }
+}

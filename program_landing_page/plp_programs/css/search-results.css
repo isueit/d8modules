@@ -48,6 +48,21 @@
     font-weight: 700;
 }
 
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 768px) {
+    div#block-iastate-theme-content--2 h2.hit-name.card-title {
+        margin-left: 0;
+    }
+}
+
+@media screen and (min-width : 768px) {
+    #hits .col-md-4 {
+        flex: 0 0 25%;
+    }
+}
+
 /* ------------------------------------- */
 /* ## SEARCH HIGHLIGHT
 /* ------------------------------------- */
@@ -88,6 +103,15 @@
     color: #fff;
 }
 
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 768px) {
+    .search-results .card img {
+        max-width: 175px;
+    }
+    
+}
 /* ------------------------------------- */
 /* ## SEARCH BAR
 /* ------------------------------------- */
