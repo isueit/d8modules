@@ -40,3 +40,13 @@
 	padding-left: .5rem;
 	vertical-align: middle;
 }
+
+/* --------------------------------------  */
+/* ## RESPONSIVE
+/* --------------------------------------  */
+@media screen and (min-width : 576px) {
+	.card-deck {
+		margin-right: 0;
+		margin-left: 0;
+	}
+}
