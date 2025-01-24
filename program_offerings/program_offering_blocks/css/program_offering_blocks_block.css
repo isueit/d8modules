@@ -173,6 +173,19 @@ a#isu-horiz-events {
   #isu-horiz-events li.event {
     margin-bottom: .8rem;
   }
+
+  #plp-events .program_offering_blocks ul{
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .node--type-plp-program div.program_offering_blocks {
+     padding: 0;
+   }
+
+   .node--type-plp-program {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
 }
 @media screen and (max-width : 468px) {
   #isu-horiz-events ul.program_offering_blocks {
