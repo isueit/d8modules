@@ -258,4 +258,22 @@ background-color: #fff;
     .plp-related-programs {
         margin-block-end: 0;
     }
+    
+    #plp-events .program_offering_blocks ul{
+    	grid-template-columns: repeat(1, 1fr);
+    }
+	
+    .node--type-plp-program div.program_offering_blocks {
+	padding: 0;
+    }
+
+    .node--type-plp-program {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+    }
+   .node--type-plp-program .layout-content, .node--type-plp-program .layout__region--content {
+    	max-width: 85vw;
+   	 margin: 0 auto;
+   }
 }
