@@ -1,0 +1,22 @@
+<?php
+
+/*
+ * Implements hook_ENTITY_TYPE_update()
+ */
+function isueo_card_deck_block_content_update(Drupal\Core\Entity\EntityInterface $entity){
+	// Clear cache if BlockContent is of type
+  if ($entity->bundle() == 'isueo_card_deck') {
+	\Drupal::service('cache.render')->invalidateAll();
+  }
+}
+
+function isueo_card_deck_theme_suggestions_block_alter(&$suggestions, $variables) {
+  $content = $variables['elements']['content'];
+  if (isset($content['#block_content']) && $content['#block_content'] instanceof \Drupal\block_content\BlockContentInterface) {
+    $suggestions[] = 'block__' . $content['#block_content']->bundle();
+  }
+}
+
+function isueo_card_deck_preprocess_block(&$variables) {
+    $variables['#attached']['library'][] = 'isueo_card_deck/isueo_card_deck';
+}

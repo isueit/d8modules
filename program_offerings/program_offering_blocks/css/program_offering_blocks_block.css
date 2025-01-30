@@ -139,4 +139,72 @@ ul.program_offering_blocks {
  a#isu-horiz-events {
    text-decoration: underline;
    float: right;
- } 
+ }
+#isu-horiz-events li:hover {
+  border: 0.2rem solid var(--gold);
+  transition: opacity .2s ease-in-out;
+  cursor: pointer;
+  margin: -3px;
+}
+#isu-horiz-events span.event_time {
+  font-weight: normal;
+  font-size: clamp(.8rem, 1.2vw, .8rem);
+}
+#isu-horiz-events span.event_ampm {
+  font-size: clamp(.7rem, 1.1vw, .7rem);
+  font-weight: normal;
+}
+#isu-horiz-events div.event_venue {
+  font-size: clamp(.8rem, 1.2vw, .8rem);
+  margin-bottom: 1em;
+}
+#isu-horiz-events div.event_series {
+  font-size:clamp(.6rem, 1.1vw, .8rem);
+  color: #666;
+}
+#isu-horiz-events div.event_venue {
+  font-size: clamp(.6rem, 1.1vw, .8rem);
+}
+a#isu-horiz-events {
+  text-decoration: underline;
+  float: right;
+}
+#isu-horiz-events .program_offering_blocks a {
+  color: #000;
+}
+
+#isu-horiz-events + a.events_show_more {
+    all: revert;
+    float: right;
+    color: var(--burgundy);
+}
+
+#isu-horiz-events + a.events_show_more:hover, #isu-horiz-events + a.events_show_more:after {
+    all: revert;
+    float: right;
+    color: var(--cardinal);
+}
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 992px) {
+	#isu-horiz-events div.event_date {
+		width: 65px;
+	}
+  #isu-horiz-events li.event {
+    padding-right: .5rem;
+  }
+}
+@media screen and (max-width : 768px) {
+  #isu-horiz-events ul.program_offering_blocks {
+    grid-template-columns: repeat(2,1fr);
+  }
+  #isu-horiz-events li.event {
+    margin-bottom: .8rem;
+  }
+}
+@media screen and (max-width : 468px) {
+  #isu-horiz-events ul.program_offering_blocks {
+    grid-template-columns: repeat(1,1fr);
+  }
+}

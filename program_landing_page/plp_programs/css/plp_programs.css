@@ -9,6 +9,8 @@
 	--md-gray: #ebebeb;
 	--midnight: #003d4c;
 	--green: #008540;
+	--sans-font: 'Arial', 'Helvetica Neue', sans-serif;
+	--serif-font: 'Merriweather', serif;
   }
 
 /* ------------------------------------- */
@@ -128,7 +130,7 @@ background-color: #fff;
 }
 .ui-accordion .ui-accordion-header {
     color: var(--cardinal);
-    font-family: Nimbus Sans, sans-serif;
+    font-family: var(--sans-font);
     font-size: 1.3125rem;
     font-weight: 700;
     line-height: 1.42587;
@@ -216,7 +218,7 @@ background-color: #fff;
 /* Related Programs */
 .plp-related-title {
     font-size: clamp(1rem, 1.2vw, 1.5rem);
-    font-family: Merriweather, serif;
+    font-family: var(--serif-font);
     line-height: 1.4;
     font-weight: 700;
 }
@@ -247,4 +249,13 @@ background-color: #fff;
 }
 .plp-related-programs .views-field.views-field-nothing {
 	height: 100%;
+}
+
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
+@media screen and (max-width : 768px) {
+    .plp-related-programs {
+        margin-block-end: 0;
+    }
 }

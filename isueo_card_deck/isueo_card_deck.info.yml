@@ -1,0 +1,11 @@
+name: Card Deck
+description: A simply styled card with title, image, description and link field.
+package: Custom
+type: module
+version: 1.0
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - drupal:block
+  - drupal:block_content
+  - drupal:image
+  - drupal:allowed_formats

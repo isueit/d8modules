@@ -4408,7 +4408,7 @@ display:
         fields: false
       display_description: ''
       display_extenders: {  }
-      path: feeds/county
+      path: staff/feeds/county
     cache_metadata:
       max-age: -1
       contexts:
@@ -4474,7 +4474,7 @@ display:
       relationships: {  }
       display_description: ''
       display_extenders: {  }
-      path: feeds/full
+      path: staff/feeds/full
     cache_metadata:
       max-age: -1
       contexts:
@@ -6673,7 +6673,7 @@ display:
           required: false
       display_description: ''
       display_extenders: {  }
-      path: feeds/team
+      path: staff/feeds/team
     cache_metadata:
       max-age: -1
       contexts:

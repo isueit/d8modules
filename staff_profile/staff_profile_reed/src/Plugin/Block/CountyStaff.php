@@ -25,7 +25,10 @@ class CountyStaff extends BlockBase
   {
     $counties = \Drupal::service('staff_profile_reed.helper_functions')->getCountiesServed();
 
-    $result = [];
+    $result = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['isueo-dashboard']],
+    ];
 
     $result['#markup'] = '<p>These are the staff members housed in each county.</p>';
 

@@ -10,4 +10,3 @@ dependencies:
   - d8modules:program_offering_blocks
   - views_data_export:views_data_export
   - views_accordion:views_accordion
-  - search_api_typesense:search_api_typesense

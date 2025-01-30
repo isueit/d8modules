@@ -1,29 +1,34 @@
+/**
+ *
+ * @file
+ * CSS styles for Educational program field parent and child templates.
+ *
+*/
+
+:root {
+	--cardinal: #c8102e;
+	--gold: #f1be48;
+	--burgundy: #7c2529;
+	--dk-gray: #4a4a4a;
+	--lt-gray: #f5f5f5;
+	--md-gray: #ebebeb;
+	--midnight: #003d4c;
+	--green: #008540;
+  }
+
 div.educational_program {
   border-bottom: solid 1px #ccc;
   margin-bottom: 10px;
   padding-bottom: 20px;
 }
-
-div.educational_program div.educational_program_link {
-  margin:10px 0;
+/* --------------------------------------  */
+/* ## PARENT
+/* --------------------------------------  */
+.program-hero-image img {
+  width: 1140px;
+  object-fit: cover;
+  margin-bottom: 1.5rem;
 }
-
-img.educational_program_image {
-  max-width: 200px;
-  float:left;
-  margin: 0 8px 5px 0;
-}
-
-div.clearer {
-  clear:both;
-}
-
-div.educational_program_redirected {
-  border: solid 1px #aaaaaa;
-  background: #f1f1f1;
-  display: inline-block;
-  padding: 10px 10px 0 10px;
-  margin-bottom: 10px;
-}
-
-
+/* --------------------------------------  */
+/* ## CHILDREN
+/* --------------------------------------  */

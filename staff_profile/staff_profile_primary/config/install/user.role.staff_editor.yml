@@ -1,0 +1,61 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_creator
+    - filter.format.wysiwyg
+    - node.type.page
+    - node.type.staff_profile
+  module:
+    - block_content
+    - block_content_permissions
+    - contact_creator
+    - exclude_node_title
+    - file
+    - file_delete
+    - file_replace
+    - filter
+    - help
+    - node
+    - section_lib_importer
+    - siteimprove
+    - system
+    - toolbar
+id: staff_editor
+label: 'Staff Editor'
+weight: 4
+is_admin: null
+permissions:
+  - 'Update any basic_content block content'
+  - 'access administration pages'
+  - 'access content overview'
+  - 'access files overview'
+  - 'access help pages'
+  - 'access toolbar'
+  - 'create basic_content block content'
+  - 'create page content'
+  - 'create staff_contact_block block content'
+  - 'create staff_profile content'
+  - 'delete any basic_content block content'
+  - 'delete any contact_creator block content revisions'
+  - 'delete any page content'
+  - 'delete any staff_contact_block block content'
+  - 'delete files'
+  - 'delete own contact_creator block content'
+  - 'delete own files'
+  - 'delete own page content'
+  - 'edit any page content'
+  - 'edit any staff_profile content'
+  - 'edit own page content'
+  - 'import template from section_library'
+  - 'replace files'
+  - 'revert staff_profile revisions'
+  - 'use exclude node title'
+  - 'use siteimprove'
+  - 'use siteimprove prepublish'
+  - 'use text format wysiwyg'
+  - 'view all revisions'
+  - 'view own unpublished content'
+  - 'view page revisions'
+  - 'view section_library templates'
+  - 'view staff_profile revisions'

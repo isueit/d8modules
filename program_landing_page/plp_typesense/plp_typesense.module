@@ -1,0 +1,147 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\Taxonomy;
+use Drupal\isueo_helpers\ISUEOHelpers\Typesense;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_entity_delete().
+ */
+function plp_typesense_node_delete(Drupal\Core\Entity\EntityInterface $entity)
+{
+  $client = plp_typesense_get_typesense_client();
+  $collection_name = plp_typesense_get_typesense_collection_name();
+
+  try {
+    switch ($entity->bundle()) {
+      case 'plp_program':
+        $client->collections[$collection_name]->documents['plp_program:' . $entity->id()]->delete();
+        break;
+      default:
+        break;
+    }
+  } catch (Exception $e) {
+    Drupal::logger('plp_typesense')->info($e->getMessage());
+  }
+}
+
+/**
+* Implements hook_entity_presave().
+*/
+function plp_typesense_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+
+  $client = plp_typesense_get_typesense_client();
+  $collection_name = plp_typesense_get_typesense_collection_name();
+
+  try {
+    switch ($entity->bundle()) {
+      case 'plp_program':
+        if ($entity->isPublished()) {
+          plp_typesense_index_program($client, $collection_name, $entity);
+        } elseif ($entity->original->isPublished()) {
+          $client->collections[$collection_name]->documents['plp_program:' . $entity->id()]->delete();
+        }
+        break;
+      default:
+        break;
+    }
+  } catch (Exception $e) {
+    Drupal::logger('plp_typesense')->info($e->getMessage());
+  }
+}
+
+// Index all programs to typesense
+// Currently not used, but it could be, either in a cron command, hook_rebuild, and/or hook_cron
+function plp_typesense_index_all_programs()
+{
+  $client = plp_typesense_get_typesense_client();
+  $collection_name = plp_typesense_get_typesense_collection_name();
+
+  $client->collections[$collection_name]->documents->delete(['filter_by' => 'field_plp_program_sort_calc:>=0', ]);
+
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
+  $nodes =  Node::loadMultiple($nids);
+  foreach ($nodes as $node) {
+    plp_typesense_index_program($client, $collection_name, $node);
+  }
+}
+
+// Index a single program
+function plp_typesense_index_program($client, $collection_name, $node)
+{
+  // Handle the easy fields
+  $record = [
+    'id' => 'plp_program:' . $node->id(),
+    'title' => $node->getTitle(),
+    'field_plp_program_sort_calc' => intval($node->field_plp_program_sort_calc->value),
+    'field_plp_program_num_events' => intval($node->field_plp_program_num_events->value),
+    'field_plp_program_category' => intval($node->get('field_plp_program_category')->getString()),
+    'field_plp_program_smugmug' => $node->get('field_plp_program_smugmug')->getString(),
+    'field_plp_program_search_terms' => $node->get('field_plp_program_search_terms')->getString(),
+    'category_name' => Term::load(intval($node->get('field_plp_program_category')->getString()))->getName(),
+    'body' => empty($node->get('body')->value) ? 'N/A' : $node->get('body')->value,
+    'summary' => empty($node->get('body')->summary) ? 'N/A' : $node->get('body')->summary,
+    'program_area' => Term::load(intval($node->get('field_plp_program_program_area')->getString()))->getName(),
+    'url' => '/program' . \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id()),
+    'children_title' => [],
+    'children_body' => [],
+    'field_plp_program_topics' => [],
+    'topic_names' => [],
+    'audiences' => [],
+  ];
+
+  // Handle Topics
+  $topics = explode(', ', $node->get('field_plp_program_topics')->getString());
+  foreach ($topics as $topic_id) {
+    $record['field_plp_program_topics'][] = intval($topic_id);
+    $record['topic_names'][] = Term::load(intval($topic_id))->getName();
+  }
+
+  // Handle Children
+  $children = explode(', ', $node->get('field_plp_program_children')->getString());
+  foreach ($children as $child) {
+    $child_node = Node::load($child);
+    if ($child_node) {
+      $record['children_title'][] = $child_node->getTitle();
+      $record['children_body'][] = $child_node->get('body')->getString();
+    }
+  }
+
+  // Handle Audiences
+  $topics = explode(', ', $node->get('field_plp_program_audiences')->getString());
+  foreach ($topics as $topic_id) {
+    if (empty($topic_id)) {
+      continue;
+    }
+    $term_name = Term::load(intval($topic_id))->getName();
+    if (str_contains($term_name, 'Youth')) {
+      $record['audiences'][] = 'Youth';
+      if (str_contains(Term::load($node->get('field_plp_program_program_area')->getString())->getName(), '4-H')) {
+        $record['audiences'][] = '4-H Youth';
+      }
+    } else {
+      $record['audiences'][] = 'Adult';
+    }
+  }
+  if (empty($record['audiences'])) {
+    $record['audiences'][] = 'Adult';
+  } else {
+    $record['audiences'] = array_unique($record['audiences']);
+  }
+
+  $client->collections[$collection_name]->documents->upsert($record);
+}
+
+function plp_typesense_get_typesense_collection_name()
+{
+  return 'plp_programs';
+  //return 'deleteme_brian';
+}
+
+function plp_typesense_get_typesense_client()
+{
+  return Typesense::getClient('KPwl7XwGfNLPjKdRtZSL1H0Rb1YeApcD'); // plp_programs
+  //return Typesense::getClient('FcwLwSWecQh91ElQtZjm0lGRv8cW2t1T'); // deleteme_brian
+}

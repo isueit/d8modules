@@ -24,3 +24,4 @@ program_offering_blocks.ics_download:
     _title: 'Download ICS'
   requirements:
     _permission: 'access content'
+

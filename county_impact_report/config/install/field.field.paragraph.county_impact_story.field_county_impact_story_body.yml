@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_county_impact_story_body
+    - filter.format.impact_report
+    - paragraphs.paragraphs_type.county_impact_story
+  module:
+    - text
+id: paragraph.county_impact_story.field_county_impact_story_body
+field_name: field_county_impact_story_body
+entity_type: paragraph
+bundle: county_impact_story
+label: Story
+description: 'Your impact story should be 150 to 200 words (2-4 paragraphs) on average. <br>For tips on highlighting both the public and private value of your programs, view the <a href="https://iastate.app.box.com/s/5hny1edg8o9qwmr4d4hroedgi24dn5wf">Why we Share Impact</a> document.<br>Need hep getting started? Check out the pre-written <a href="https://iastate.app.box.com/s/ql6p1d7qeu2g70zbue8cazg3yhmo5n1l">story starters.</a>'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - impact_report
+field_type: text_long

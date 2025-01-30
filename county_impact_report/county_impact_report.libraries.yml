@@ -1,0 +1,5 @@
+county_impact_report:
+  version: 1.x
+  css:
+    layout:
+      css/county_impact_report.css: {}

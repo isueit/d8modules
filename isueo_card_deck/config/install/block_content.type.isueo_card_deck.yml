@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: isueo_card_deck
+label: "Card Deck"
+revision: false
+description: "A simply styled card with title, image, description and link field."

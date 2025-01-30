@@ -723,7 +723,7 @@ display:
         arguments: true
       display_description: ''
       display_extenders: {  }
-      path: feeds/cty-authors/%
+      path: staff/feeds/cty-authors/%
     cache_metadata:
       max-age: -1
       contexts:
@@ -821,7 +821,7 @@ display:
           required: false
       display_description: ''
       display_extenders: {  }
-      path: feeds/site-authors/%
+      path: staff/feeds/site-authors/%
     cache_metadata:
       max-age: -1
       contexts:
@@ -997,7 +997,7 @@ display:
       group_by: false
       display_description: ''
       display_extenders: {  }
-      path: feeds/cty-authors/all
+      path: staff/feeds/cty-authors/all
     cache_metadata:
       max-age: -1
       contexts:

@@ -717,7 +717,7 @@ display:
         filter_groups: false
       relationships: {  }
       display_extenders: {  }
-      path: mailman-list.csv
+      path: staff/mailman-list.csv
       filename: ''
       automatic_download: true
       store_in_public_file_directory: null
@@ -1010,7 +1010,7 @@ display:
         filter_groups: false
       display_description: ''
       display_extenders: {  }
-      path: county-editor.csv
+      path: staff/county-editor.csv
       filename: ''
       automatic_download: true
       store_in_public_file_directory: null
@@ -1398,7 +1398,7 @@ display:
         filter_groups: false
       display_description: ''
       display_extenders: {  }
-      path: county-editor
+      path: staff/county-editor
     cache_metadata:
       max-age: -1
       contexts:
@@ -1793,7 +1793,7 @@ display:
           required: true
       display_description: ''
       display_extenders: {  }
-      path: other-editor
+      path: staff/other-editor
     cache_metadata:
       max-age: -1
       contexts:
@@ -2207,7 +2207,7 @@ display:
       relationships: {  }
       display_description: ''
       display_extenders: {  }
-      path: all-editors
+      path: staff/all-editors
     cache_metadata:
       max-age: -1
       contexts:
