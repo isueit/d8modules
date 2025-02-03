@@ -133,12 +133,13 @@
       <div class="event_instructor_wrapper">
         <p class="font-italic"><span class="font-weight-bold">Instructor: </span><a href="mailto:{{ instructor.email }}">{{ instructor.name }}</a>
         {% if instructor.phone %}
-          <span>{{ instructor.phone }}</span></p>
+          <span>{{ instructor.phone }}</span>
         {% endif %}
+        </p>
       </div>
     {% endif %}
-    {% endif %}
     </div>
+    {% endif %}
 
     {# Only in Multi-session template #}
     <div class="event_details_session_registration">
@@ -148,6 +149,7 @@
         <div class="event_details_registration">
           <p>Don’t miss the opportunity to connect, learn, and engage. Secure your spot by registering today!</p>
           <a class="btn btn-secondary" href="{{ registration.url }}" aria-label="Register for {{ title }}">Register Online</a>
+        </div>
         </div>
       {% endif %}
       {% if registration.opens.date %}
@@ -160,7 +162,6 @@
         <h2>Registration</h2>
         <div class="event_details_registration">
           Registration for this event is now closed. Thank you for your interest! Stay tuned for future events and opportunities.
-        </div>
         </div>
       {% endif %}
       </div>
@@ -179,7 +180,6 @@
           </li>
         {% endfor %}
       </ol>
-    </div>
     </div>
 
   </div> {# .event_details_wrapper #}
