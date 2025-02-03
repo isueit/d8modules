@@ -145,15 +145,19 @@
         </div>
       {% endif %}
       {% if registration.opens.date %}
+      <div class="event_details_registration_wrapper">
         <h2>Registration</h2>
         <div class="event_details_registration">
           Registration for this event will open soon! Be ready to secure your spot when registration opens on {{ registration.opens.date }}.
         </div>
+        </div>
       {% endif %}
       {% if registration.closes.date %}
+      <div class="event_details_registration_wrapper">
         <h2>Registration</h2>
         <div class="event_details_registration">
           Registration for this event is now closed. Thank you for your interest! Stay tuned for future events and opportunities.
+        </div>
         </div>
       {% endif %}
 
