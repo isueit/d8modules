@@ -100,10 +100,8 @@
         {% if contact.phone %}
           <span>{{ contact.phone }}</span>
         {% endif %}
-      </div<
+      </div>
     {% endif %}
-  </div>
-  </div>
 
   {% if smugmug_id %}
     <img class="educational_program_image" src="https://photos.smugmug.com/photos/{{ smugmug_id }}/0/XL/{{ smugmug_id }}-XL.jpg" alt="" />
@@ -139,10 +137,11 @@
 
       {% if registration.url %}
         <div class="event_details_registration_wrapper">
-        <h2>Registration</h2>
-        <div class="event_details_registration">
-          <p>Don’t miss the opportunity to connect, learn, and engage. Secure your spot by registering today!</p>
-          <a class="btn btn-secondary" href="{{ registration.url }}" aria-label="Register for {{ title }}">Register</a>
+          <h2>Registration</h2>
+          <div class="event_details_registration">
+            <p>Don’t miss the opportunity to connect, learn, and engage. Secure your spot by registering today!</p>
+            <a class="btn btn-secondary" href="{{ registration.url }}" aria-label="Register for {{ title }}">Register</a>
+          </div>
         </div>
       {% endif %}
       {% if registration.opens.date %}
@@ -155,7 +154,6 @@
         <h2>Registration</h2>
         <div class="event_details_registration">
           Registration for this event is now closed. Thank you for your interest! Stay tuned for future events and opportunities.
-        </div>
         </div>
       {% endif %}
 
