@@ -30,18 +30,20 @@ class ExportLibTemplateForm extends FormBase {
         ];
 
         foreach ($layout->getComponents() as $component) {
-          $section['blocks'][] = [
-            'region' => $component->getRegion(),
-            
-            'id' => $component->get('configuration')['id'],
-            'label' => $component->get('configuration')['label'],
-            'provider' => $component->get('configuration')['provider'],
-            'label_display' => $component->get('configuration')['label_display'],
-            'view_mode' => $component->get('configuration')['view_mode'],
+          if (!empty($component) && $component->get('configuration')['block_serialized']) {
+            $section['blocks'][] = [
+              'region' => $component->getRegion(),
 
-            'info' => unserialize($component->get('configuration')['block_serialized'])->label(),
-            'body' => unserialize($component->get('configuration')['block_serialized'])->body->value
-          ];
+              'id' => $component->get('configuration')['id'],
+              'label' => $component->get('configuration')['label'],
+              'provider' => $component->get('configuration')['provider'],
+              'label_display' => $component->get('configuration')['label_display'],
+              'view_mode' => $component->get('configuration')['view_mode'],
+
+              'info' => unserialize($component->get('configuration')['block_serialized'])->label(),
+              'body' => unserialize($component->get('configuration')['block_serialized'])->body->value
+            ];
+          }
         }
         $temp['sections'][] = $section;
       }
