@@ -424,7 +424,7 @@ function section_lib_importer_install() {
 	]]
 ]];
 
-function section_lib_importer_update_8201() {
+function section_lib_importer_update_202502() {
   $templates = [
 [
   "label" => "VITA",
