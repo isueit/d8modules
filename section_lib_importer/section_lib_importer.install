@@ -351,30 +351,6 @@ function section_lib_importer_update_2025022() {
 addSectionTemplates($templates);
 }
 
-function addSectionTemplates($templates) {
-  foreach ($template['blocks'] as $block_data) {
-    $uuid_block = Drupal::service('uuid')->generate();
-    $block_content = BlockContent::create([
-      'info' => $block_data['info'],
-      'uuid' => $uuid_block,
-      'type' => 'basic_content'
-    ]);
-    $block_content->body->value = $block_data['body'];
-    $block_content->body->format = 'wysiwyg';
-    $config = [
-      'id' => $block_data['id'],
-      'label' => $block_data['label'],
-      'provider' => $block_data['provider'],
-      'label_display' => $block_data['label_display'],
-      'view_mode' => $block_data['view_mode'],
-      'block_serialized' => serialize($block_content)
-    ];
-    $uuid_sect = Drupal::service('uuid')->generate();
-    $section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
-
-    $components[] = $section_comp;
-  }
-
 
 function section_lib_importer_install() {
   // Set up permissions for content editors
@@ -832,6 +808,28 @@ function addSectionTemplates($templates) {
       if (count($lib_templates) == 0) {
         //Removed Create SectionComponents and their respective BlockComponents to prevent duplicated blocks in custom block library
         $components = [];
+        foreach ($template['blocks'] as $block_data) {
+          $uuid_block = Drupal::service('uuid')->generate();
+          $block_content = BlockContent::create([
+            'info' => $block_data['info'],
+            'uuid' => $uuid_block,
+            'type' => 'basic_content'
+          ]);
+          $block_content->body->value = $block_data['body'];
+          $block_content->body->format = 'wysiwyg';
+          $config = [
+            'id' => $block_data['id'],
+            'label' => $block_data['label'],
+            'provider' => $block_data['provider'],
+            'label_display' => $block_data['label_display'],
+            'view_mode' => $block_data['view_mode'],
+            'block_serialized' => serialize($block_content)
+          ];
+          $uuid_sect = Drupal::service('uuid')->generate();
+          $section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
+
+          $components[] = $section_comp;
+        }
         $section = new Section($template['section_id'], $template['section'], $components, []);
         $section->setLayoutSettings($template['section']);
 
@@ -860,5 +858,4 @@ function addSectionTemplates($templates) {
       $template_ent->save();
     }
   }
-}
 }
