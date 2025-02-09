@@ -15,7 +15,7 @@ use GuzzleHttp\Promise\Is;
 // function section_lib_importer_update_8001() {
 // }
 
-function section_lib_importer_update_202502() {
+function section_lib_importer_update_2025022() {
   $templates = [
 [
   "label" => "VITA",
@@ -350,6 +350,30 @@ function section_lib_importer_update_202502() {
 ];
 addSectionTemplates($templates);
 }
+
+function addSectionTemplates($templates) {
+  foreach ($template['blocks'] as $block_data) {
+    $uuid_block = Drupal::service('uuid')->generate();
+    $block_content = BlockContent::create([
+      'info' => $block_data['info'],
+      'uuid' => $uuid_block,
+      'type' => 'basic_content'
+    ]);
+    $block_content->body->value = $block_data['body'];
+    $block_content->body->format = 'wysiwyg';
+    $config = [
+      'id' => $block_data['id'],
+      'label' => $block_data['label'],
+      'provider' => $block_data['provider'],
+      'label_display' => $block_data['label_display'],
+      'view_mode' => $block_data['view_mode'],
+      'block_serialized' => serialize($block_content)
+    ];
+    $uuid_sect = Drupal::service('uuid')->generate();
+    $section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
+
+    $components[] = $section_comp;
+  }
 
 
 function section_lib_importer_install() {
@@ -836,4 +860,5 @@ function addSectionTemplates($templates) {
       $template_ent->save();
     }
   }
+}
 }
