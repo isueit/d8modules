@@ -825,11 +825,11 @@ function addSectionTemplates($templates) {
             //'view_mode' => $block_data['view_mode'],
             //'block_serialized' => serialize($block_content)
           //];
-          $uuid_sect = Drupal::service('uuid')->generate();
-          $section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
+          //$uuid_sect = Drupal::service('uuid')->generate();
+          //$section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
 
-          $components[] = $section_comp;
-        }
+          //$components[] = $section_comp;
+       // }
         $section = new Section($template['section_id'], $template['section'], $components, []);
         $section->setLayoutSettings($template['section']);
 
@@ -858,3 +858,4 @@ function addSectionTemplates($templates) {
       $template_ent->save();
     }
   }
+}
