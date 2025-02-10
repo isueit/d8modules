@@ -1,24 +1,26 @@
 (function ($, Drupal) {
-    Drupal.behaviors.dateDropdownLimitYears = {
-      attach: function (context, settings) {
-        // Get the current year.
+  Drupal.behaviors.dateDropdownLimitYears = {
+    attach: function (context, settings) {
+      $(document).ready(function () {
         var currentYear = new Date().getFullYear();
 
-        // Target the year dropdown in the form.
-        // Replace with the correct ID or class if necessary.
-        var yearDropdown = $('select[name="field_application_deadline_date[0][value][year]"]', context);
+        // Select all year dropdowns dynamically.
+        $('select[name$="[value][year]"]', context).each(function () {
+          var yearDropdown = $(this);
 
-        // If the year dropdown exists, modify the options.
-        if (yearDropdown.length > 0) {
-          yearDropdown.find('option').each(function () {
-            var optionValue = parseInt($(this).val());
+          if (yearDropdown.length > 0) {
+            yearDropdown.find('option').each(function () {
+              var optionValue = parseInt($(this).val(), 10);
 
-            // Remove options for years that are before the current year.
-            if (optionValue && optionValue < currentYear) {
-              $(this).remove();
-            }
-          });
-        }
-      }
-    };
-  })(jQuery, Drupal);
+              // Remove options for years before the current year.
+              if (!isNaN(optionValue) && optionValue < currentYear) {
+                $(this).remove();
+              }
+            });
+          }
+        });
+      });
+    }
+  };
+})(jQuery, Drupal);
+
