@@ -227,7 +227,7 @@ function section_lib_importer_update_2025022() {
                   "label_display" => 0,
                   "view_mode" => "full",
                   "info" => "Do It Yourself",
-                  "body" => "<ul><li>Free access to tax preparation software.</li><li>Phone\/email help for basic tax questions.</li></ul>"
+                  "body" => "<ul><li>Free access to tax preparation software.</li><li>Phone/email help for basic tax questions.</li></ul>"
               ]
           ]
       ],
@@ -284,7 +284,7 @@ function section_lib_importer_update_2025022() {
                   "label_display" => "visible",
                   "view_mode" => "full",
                   "info" => "Get Started!",
-                  "body" => "<dl class=\"ckeditor-accordion\"><dt><strong>1 \u2013 Find a Location Near You</strong></dt><dd><p>VITA sites are located throughout Iowa, including the Iowa State University Extension and Outreach offices listed below: </p><table><tbody><tr><td style=\"vertical-align:top;\"><ul><li><a href=\"https:\/\/www.extension.iastate.edu\/allamakee\/volunteer-income-tax-assistance-vita\">Allamakee</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/blackhawk\/\">Black Hawk</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/bremer\/\">Bremer</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/carroll\/\">Carroll</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/cass\/\">Cass</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/cerrogordo\/\">Cerro Gordo</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/chickasaw\/\">Chickasaw</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/clarke\/\">Clarke</a></li></ul></td><td style=\"vertical-align:top;\"><ul><li><a href=\"https:\/\/www.extension.iastate.edu\/clay\/volunteer-income-tax-assistance-vita\">Clay</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/dallas\/\">Dallas</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/floyd\/volunteer-income-tax-assistance-vita\">Floyd</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/fremont\/\">Fremont</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/hamilton\/\">Hamilton</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/jasper\/\">Jasper</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/kossuth\/volunteer-income-tax-assistance-vita\">Kossuth</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/madison\/\">Madison</a></li></ul></td><td style=\"vertical-align:top;\"><ul><li><a href=\"https:\/\/www.extension.iastate.edu\/mitchell\/\">Mitchell</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/paloalto\/\">Palo Alto</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/polk\/\">Polk</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/tama\/\">Tama</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/warren\/\">Warren</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/wayne\/\">Wayne</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/winneshiek\/\">Winneshiek</a></li><li><a href=\"https:\/\/www.extension.iastate.edu\/wright\/\">Wright</a></li></ul></td></tr></tbody></table><p><span>If a VITA site is not available in your county, enter your zip code on the </span><a href=\"https:\/\/irs.treasury.gov\/freetaxprep\/\" data-auth=\"NotApplicable\"><span style=\"color:#467886;\"><u>IRS Free Tax Prep site</u></span></a><span> or call the AARP volunteer tax preparers at 1-800-906-9887 to find a site near you. </span></p></dd><dt><strong>2 \u2013 Contact VITA Site</strong></dt><dd><p>Connect with the VITA location near you to:</p><ul><li>schedule an appointment for in-person tax preparation, or</li><li>schedule drop-off tax preparation, or</li><li>ask about access to tax software for do-it-yourself tax preparation.</li></ul></dd><dt><strong>3 \u2013 Gather Required Documents</strong></dt><dd><p>Collect documents and information to bring to your appointment or drop-off, including:</p><ul><li>Photo ID</li><li>Last year's tax return</li><li>Social Security cards or Individual Taxpayer Identification Numbers (ITIN) for all named on the return</li><li>Tax documents for income: W2s, 1099s, etc. </li></ul><p>Review the <a href=\"https:\/\/www.irs.gov\/individuals\/checklist-for-free-tax-return-preparation\">full list of materials</a> you may be asked to provide.</p><p>Missing materials? Get your <a href=\"https:\/\/www.irs.gov\/individuals\/get-transcript\">past tax records and transcripts directly from the IRS.</a></p></dd><dt><strong>4 \u2013 Attend your Appointment\/Drop-Off</strong></dt><dd><p>Here\u2019s what you can expect during your tax preparation appointment:<br><em>In-Person Option</em></p><ol><li>The taxpayer meets in-person with staff or volunteers who will verify your identification and help you complete the intake form and put your tax documents in order.</li><li>The taxpayer meets with the volunteer tax preparer who prepares the return during your appointment. Once the return is prepared, a second tax preparer conducts a quality review of the return for accuracy.</li><li>The tax preparer completes your tax return during the appointment. The process may take 2 hours, so please plan accordingly.</li><li>You will sign the tax return when it is complete. Once signed, the federal and state returns will be electronically filed for free.</li><li>The taxpayer leaves with a printed copy of their return and all of their tax documents. </li></ol><p><em>Drop-Off Option</em></p><ol><li>The taxpayer meets in-person with staff or volunteers who will verify your identification and help you complete the intake form and put your tax documents in order.</li><li>Your tax return will be prepared within two weeks. The tax preparer will contact you if they have questions and\/or when your tax return is complete and ready for review.</li><li>You will come in person (or electronically) to sign the return. Once signed, the federal and state returns will be electronically filed for free.</li><li>The taxpayer leaves with a printed copy of their return and all of their tax documents.<br> </li></ol></dd></dl>"
+                  "body" => "<dl class=\"ckeditor-accordion\"><dt><strong>1 – Find a Location Near You</strong></dt><dd><p>VITA sites are located throughout Iowa, including the Iowa State University Extension and Outreach offices listed below: </p><table><tbody><tr><td style=\"vertical-align:top;\"><ul><li><a href=\"https://www.extension.iastate.edu/allamakee/volunteer-income-tax-assistance-vita\">Allamakee</a></li><li><a href=\"https://www.extension.iastate.edu/blackhawk/\">Black Hawk</a></li><li><a href=\"https://www.extension.iastate.edu/bremer/\">Bremer</a></li><li><a href=\"https://www.extension.iastate.edu/carroll/\">Carroll</a></li><li><a href=\"https://www.extension.iastate.edu/cass/\">Cass</a></li><li><a href=\"https://www.extension.iastate.edu/cerrogordo/\">Cerro Gordo</a></li><li><a href=\"https://www.extension.iastate.edu/chickasaw/\">Chickasaw</a></li><li><a href=\"https://www.extension.iastate.edu/clarke/\">Clarke</a></li></ul></td><td style=\"vertical-align:top;\"><ul><li><a href=\"https://www.extension.iastate.edu/clay/volunteer-income-tax-assistance-vita\">Clay</a></li><li><a href=\"https://www.extension.iastate.edu/dallas/\">Dallas</a></li><li><a href=\"https://www.extension.iastate.edu/floyd/volunteer-income-tax-assistance-vita\">Floyd</a></li><li><a href=\"https://www.extension.iastate.edu/fremont/\">Fremont</a></li><li><a href=\"https://www.extension.iastate.edu/hamilton/\">Hamilton</a></li><li><a href=\"https://www.extension.iastate.edu/jasper/\">Jasper</a></li><li><a href=\"https://www.extension.iastate.edu/kossuth/volunteer-income-tax-assistance-vita\">Kossuth</a></li><li><a href=\"https://www.extension.iastate.edu/madison/\">Madison</a></li></ul></td><td style=\"vertical-align:top;\"><ul><li><a href=\"https://www.extension.iastate.edu/mitchell/\">Mitchell</a></li><li><a href=\"https://www.extension.iastate.edu/paloalto/\">Palo Alto</a></li><li><a href=\"https://www.extension.iastate.edu/polk/\">Polk</a></li><li><a href=\"https://www.extension.iastate.edu/tama/\">Tama</a></li><li><a href=\"https://www.extension.iastate.edu/warren/\">Warren</a></li><li><a href=\"https://www.extension.iastate.edu/wayne/\">Wayne</a></li><li><a href=\"https://www.extension.iastate.edu/winneshiek/\">Winneshiek</a></li><li><a href=\"https://www.extension.iastate.edu/wright/\">Wright</a></li></ul></td></tr></tbody></table><p><span>If a VITA site is not available in your county, enter your zip code on the </span><a href=\"https://irs.treasury.gov/freetaxprep/\"><span style=\"color:#467886;\"><u>IRS Free Tax Prep site</u></span></a><span> or call the AARP volunteer tax preparers at 1-800-906-9887 to find a site near you. </span></p></dd><dt><strong>2 - Contact VITA Site</strong></dt><dd><p>Connect with the VITA location near you to:</p><ul><li>schedule an appointment for in-person tax preparation, or</li><li>schedule drop-off tax preparation, or</li><li>ask about access to tax software for do-it-yourself tax preparation.</li></ul></dd><dt><strong>3 - Gather Required Documents</strong></dt><dd><p>Collect documents and information to bring to your appointment or drop-off, including:</p><ul><li>Photo ID</li><li>Last year's tax return</li><li>Social Security cards or Individual Taxpayer Identification Numbers (ITIN) for all named on the return</li><li>Tax documents for income: W2s, 1099s, etc. </li></ul><p>Review the <a href=\"https://www.irs.gov/individuals/checklist-for-free-tax-return-preparation\">full list of materials</a> you may be asked to provide.</p><p>Missing materials? Get your <a href=\"https://www.irs.gov/individuals/get-transcript\">past tax records and transcripts directly from the IRS.</a></p></dd><dt><strong>4 - Attend your Appointment/Drop-Off</strong></dt><dd><p>Here's what you can expect during your tax preparation appointment:<br><em>In-Person Option</em></p><ol><li>The taxpayer meets in-person with staff or volunteers who will verify your identification and help you complete the intake form and put your tax documents in order.</li><li>The taxpayer meets with the volunteer tax preparer who prepares the return during your appointment. Once the return is prepared, a second tax preparer conducts a quality review of the return for accuracy.</li><li>The tax preparer completes your tax return during the appointment. The process may take 2 hours, so please plan accordingly.</li><li>You will sign the tax return when it is complete. Once signed, the federal and state returns will be electronically filed for free.</li><li>The taxpayer leaves with a printed copy of their return and all of their tax documents. </li></ol><p><em>Drop-Off Option</em></p><ol><li>The taxpayer meets in-person with staff or volunteers who will verify your identification and help you complete the intake form and put your tax documents in order.</li><li>Your tax return will be prepared within two weeks. The tax preparer will contact you if they have questions and/or when your tax return is complete and ready for review.</li><li>You will come in person (or electronically) to sign the return. Once signed, the federal and state returns will be electronically filed for free.</li><li>The taxpayer leaves with a printed copy of their return and all of their tax documents.<br> </li></ol></dd></dl>"
               ]
           ]
       ],
@@ -336,12 +336,13 @@ function section_lib_importer_update_2025022() {
               [
                   "region" => "first",
                   "id" => "inline_block:basic_content",
+                  "layout_builder_styles_style_block_styles" => ["red_call_out" => "red_call_out"],
                   "label" => "Volunteer for VITA",
                   "provider" => "layout_builder",
                   "label_display" => "visible",
                   "view_mode" => "full",
                   "info" => "Volunteer for VITA",
-                  "body" => "<p>Volunteers...gain a skill. Help a neighbor!</p><p>Local volunteers are needed for the Volunteer Income Tax Assistance program. Students, adults, and retirees of all experience levels are welcome. No experience with taxes is required.</p><p>Pick the role that best matches your interests \u2013 greeter, tax preparer, tax form reviewer, interpreter, and more! Most volunteers serve three to five hours each week from early February through mid-April. Volunteer training occurs before the tax season, either in January or before the holidays. Hours are flexible and free training is provided.</p><p>Interested in volunteering? <a class=\"btn btn-primary\" href=\"mailto:vitastatewide@iastate.edu\">Contact us!</a></p>"
+                  "body" => "<p>Volunteers...gain a skill. Help a neighbor!</p><p>Local volunteers are needed for the Volunteer Income Tax Assistance program. Students, adults, and retirees of all experience levels are welcome. No experience with taxes is required.</p><p>Pick the role that best matches your interests - greeter, tax preparer, tax form reviewer, interpreter, and more! Most volunteers serve three to five hours each week from early February through mid-April. Volunteer training occurs before the tax season, either in January or before the holidays. Hours are flexible and free training is provided.</p><p>Interested in volunteering? <a class=\"btn btn-primary\" href=\"mailto:vitastatewide@iastate.edu\">Contact us!</a></p>"
               ]
           ]
       ]
@@ -808,28 +809,28 @@ function addSectionTemplates($templates) {
       if (count($lib_templates) == 0) {
       //Removed Create SectionComponents and their respective BlockComponents to prevent duplicated blocks in custom block library
         $components = [];
-         //foreach ($template['blocks'] as $block_data) {
-          //$uuid_block = Drupal::service('uuid')->generate();
-          //$block_content = BlockContent::create([
-            //'info' => $block_data['info'],
-            //'uuid' => $uuid_block,
-            //'type' => 'basic_content'
-          //]);
-          //$block_content->body->value = $block_data['body'];
-          //$block_content->body->format = 'wysiwyg';
-          //$config = [
-            //'id' => $block_data['id'],
-            //'label' => $block_data['label'],
-            //'provider' => $block_data['provider'],
-            //'label_display' => $block_data['label_display'],
-            //'view_mode' => $block_data['view_mode'],
-            //'block_serialized' => serialize($block_content)
-          //];
-          //$uuid_sect = Drupal::service('uuid')->generate();
-          //$section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
+         foreach ($template['blocks'] as $block_data) {
+          $uuid_block = Drupal::service('uuid')->generate();
+          $block_content = BlockContent::create([
+            'info' => $block_data['info'],
+            'uuid' => $uuid_block,
+            'type' => 'basic_content'
+          ]);
+          $block_content->body->value = $block_data['body'];
+          $block_content->body->format = 'wysiwyg';
+          $config = [
+            'id' => $block_data['id'],
+            'label' => $block_data['label'],
+            'provider' => $block_data['provider'],
+            'label_display' => $block_data['label_display'],
+            'view_mode' => $block_data['view_mode'],
+            'block_serialized' => serialize($block_content)
+          ];
+          $uuid_sect = Drupal::service('uuid')->generate();
+          $section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
 
-          //$components[] = $section_comp;
-       // }
+          $components[] = $section_comp;
+        }
         $section = new Section($template['section_id'], $template['section'], $components, []);
         $section->setLayoutSettings($template['section']);
 
