@@ -1,0 +1,9 @@
+ts_forstaff.primary_settings_form:
+  path: 'admin/config/ts_forstaff_settings'
+  defaults:
+    _form: '\Drupal\ts_forstaff\Form\SettingsForm'
+    _title: 'Typesense - ForStaff Collection'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE

@@ -16,3 +16,4 @@ program_offering_blocks.event_details:
     eventTitle: ''
   requirements:
     _permission: 'access content'
+

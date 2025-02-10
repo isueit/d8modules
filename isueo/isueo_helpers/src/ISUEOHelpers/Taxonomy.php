@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\isueo_helpers\ISUEOHelpers;
 
 use Drupal;
@@ -17,16 +18,21 @@ class Taxonomy
     return $found;
   }
 
-  public static function get_term_id(string $term, array &$taxonomy_array, string $taxonomy_id) {
+  public static function get_term_id(string $term, array &$taxonomy_array, string $taxonomy_id, bool $create_term = true)
+  {
     $result = 0;
 
     if (array_key_exists($term, $taxonomy_array)) {
       $result = $taxonomy_array[$term];
     } else {
-      $new = Term::create(['name' => $term, 'vid' => $taxonomy_id]);
-      $new->save();
-      $result = $new->id();
-      $taxonomy_array[$term] = $result;
+      if ($create_term) {
+        $new = Term::create(['name' => $term, 'vid' => $taxonomy_id]);
+        $new->save();
+        $result = $new->id();
+        $taxonomy_array[$term] = $result;
+      } else {
+        $result = 0;
+      }
     }
 
     return $result;

@@ -18,7 +18,7 @@ function ts_extension_content_node_delete(Drupal\Core\Entity\EntityInterface $en
       $client->collections[$config->get('collection')]->documents[$config->get('site_name') . ':' . $entity->id()]->delete();
     }
   } catch (Exception $e) {
-    Drupal::logger('ts_extension_content')->error('Deleting a node: ' . $e->getMessage());
+    Drupal::logger('ts_extension_content')->error('Deleting a node in Typesense: ' . $e->getMessage());
   }
 }
 
@@ -58,7 +58,7 @@ function ts_extension_content_index_all_nodes()
       }
     }
   } catch (Exception $e) {
-    Drupal::logger('ts_extension_content')->error('Indexing all nodes: ' . $e->getMessage());
+    Drupal::logger('ts_extension_content')->error('Indexing all nodes in Typesense: ' . $e->getMessage());
   }
 }
 

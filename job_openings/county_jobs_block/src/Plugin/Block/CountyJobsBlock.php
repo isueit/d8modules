@@ -46,7 +46,7 @@ class CountyJobsBlock extends BlockBase
     $results .= '<ul class="job-links">' . PHP_EOL;
     $results .= '  <li><a href="https://www.extension.iastate.edu/jobs/">County Job Openings</a></li>' . PHP_EOL;
     $results .= '  <li><a href="https://www.jobs.iastate.edu">ISU Job Openings</a></li>' . PHP_EOL;
-    $results .= '  <li><a href="https://www.extension.iastate.edu/diversity/">Diversity and Civil Rights</a></li>' . PHP_EOL;
+    $results .= '  <li><a href="https://www.extension.iastate.edu/legal/">Reasonable Accommodation</a></li>' . PHP_EOL;
     $results .= '</ul>' . PHP_EOL;
 
     if (empty($listings)) {

@@ -131,7 +131,7 @@ class ProgramOfferingBlocks extends BlockBase
     $json_events = json_decode($buffer, TRUE);
 
     // Show all upcoming events, not just the next one
-    $all_events = self::include_series_events($json_events, $is_county_site);
+    $all_events = static::include_series_events($json_events, $is_county_site);
 
     foreach ($all_events as $event) {
       $display_event = TRUE;
@@ -644,7 +644,7 @@ class ProgramOfferingBlocks extends BlockBase
     foreach ($json_events as $event) {
 
       // Set some variables, and handle the next event
-      $series_dates = self::get_series_dates($event);
+      $series_dates = static::get_series_dates($event);
       $series_length = count($series_dates);
       $next_session = $event['Next_Start_Date__c'];
       $event['series_info'] = $series_length > 1 ? sprintf('Session %d of %d', (array_search($event['Next_Start_Date__c'], $series_dates) + 1), $series_length) : '';
@@ -670,7 +670,7 @@ class ProgramOfferingBlocks extends BlockBase
       }
     }
 
-    usort($all_events, 'self::cmp_array');
+    usort($all_events, '\Drupal\program_offering_blocks\Plugin\Block\ProgramOfferingBlocks::cmp_array');
     return $all_events;
   }
 
@@ -679,7 +679,7 @@ class ProgramOfferingBlocks extends BlockBase
     $series_dates = [];
 
     // Set through the field names, if the field has a value, add that value to the $series_dates array
-    foreach (self::FIELD_NAMES as $field_name) {
+    foreach (static::FIELD_NAMES as $field_name) {
       if (!empty($event[$field_name])) {
         $series_dates[] = $event[$field_name];
       }

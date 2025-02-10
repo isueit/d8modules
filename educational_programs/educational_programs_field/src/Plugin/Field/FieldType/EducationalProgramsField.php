@@ -42,6 +42,12 @@ class EducationalProgramsField extends FieldItemBase {
         'size' => 'tiny',
         'not null' => true,
       ),
+      'hide_image' => array(
+        'description' => 'Hide image when selected',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => true,
+      ),
     );
 
     $schema = array(

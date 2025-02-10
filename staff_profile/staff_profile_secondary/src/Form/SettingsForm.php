@@ -51,5 +51,6 @@ class SettingsForm extends ConfigFormBase {
       $this->config('staff_profile_secondary.settings')
         ->set('sync_url', preg_replace('/\s+(?=[hw])/',',',trim($form_state->getValue('sync_url'))))
         ->save();
+      staff_profile_secondary_handle_feeds();
   }
 }

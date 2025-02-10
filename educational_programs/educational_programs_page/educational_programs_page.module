@@ -159,7 +159,10 @@ function educational_programs_page_check_published_nodes()
 	$taxonomyStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
 	$terms_raw = $taxonomyStorage->loadByProperties(['vid' => $vid]);
 	foreach ($terms_raw as $term) {
-		$description = trim(strip_tags($term->getDescription()));
+    $description = '';
+    if (!empty($term->getDescription()) && !empty(strip_tags($term->getDescription()))) {
+      $description = trim(strip_tags($term->getDescription()));
+    }
 		if (!empty($description)) {
 			// Description means it's a Program
 			$terms[$term->id()] = $term;
@@ -178,10 +181,24 @@ function educational_programs_page_check_published_nodes()
 				$node->save();
 			}
 
+			// Get the sessions from Layout Builder
+			$layout = $node->get('layout_builder__layout');
+			$sections = $layout->getSections();
+
+			// Check if node should be redirected because there is no local content
+			if ($node->field_educational_program->auto_redirect != null) {
+				if (count($sections) == 0 && empty($node->field_educational_program->auto_redirect)) {
+					$node->field_educational_program->auto_redirect = true;
+					$node->save();
+				}
+			}
+
 			// If the title needs changing, save the node, and the educational_programs_field will change the $node title
 			if ($node->getTitle() != $terms[$term_id]->getName()) {
 				$node->save();
 			}
+
+
 		} else {
 			// Shouldn't get here, but if the Taxonomy term doesn't exist, unpublish the node
 			$node->setUnpublished();

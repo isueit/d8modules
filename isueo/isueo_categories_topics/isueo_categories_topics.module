@@ -64,14 +64,14 @@ function isueo_categories_topics_build_taxonomy()
     // Get the category ID
     $category_name = $product['Program_landing_Page_Category__c'];
     if (!empty($category_name)) {
-      $category_id = ISUEOHelpers\Taxonomy::get_term_id($category_name, $categories_topics, 'categories_topics');
+      $category_id = ISUEOHelpers\Taxonomy::get_term_id($category_name, $categories_topics, 'categories_topics', true);
       $terms_used[$category_name] = $category_id;
 
       //Handle Topics
       if (!empty($product['Program_Landing_Page_Topic__c'])) {
         $topics = explode(';', $product['Program_Landing_Page_Topic__c']);
         foreach ($topics as $topic) {
-          $topic_id = ISUEOHelpers\Taxonomy::get_term_id($topic, $categories_topics, 'categories_topics');
+          $topic_id = ISUEOHelpers\Taxonomy::get_term_id($topic, $categories_topics, 'categories_topics', true);
           $terms_used[$topic] = $topic_id;
           if (!array_key_exists($topic_id, $desired_taxonomy) || !in_array($category_id, $desired_taxonomy[$topic_id])) {
             $desired_taxonomy[$topic_id][] = $category_id;

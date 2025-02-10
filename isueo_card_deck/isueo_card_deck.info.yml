@@ -9,4 +9,3 @@ dependencies:
   - drupal:block_content
   - drupal:image
   - drupal:allowed_formats
-  - drupal:pubs_entity_type

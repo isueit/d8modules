@@ -12,3 +12,15 @@ function staff_block_install()
     'update any staff_contact_block block content',
   ));
 }
+
+/**
+* Implements hook_uninstall().
+*/
+function staff_block_uninstall() {
+  // Set up permissions, allow editors to create, update and delete staff blocks
+  user_role_revoke_permissions('content_editor', array(
+    'create staff_contact_block block content',
+    'delete any staff_contact_block block content',
+    'update any staff_contact_block block content',
+  ));
+}

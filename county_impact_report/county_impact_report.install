@@ -1,0 +1,56 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\Role;
+use Drupal\path_alias\Entity\PathAlias;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+
+/**
+* Implements hook_install().
+*/
+
+function county_impact_report_install() {
+  $site_name = \Drupal::config('system.site')->get('name');
+
+  // Create County Impact Report Node
+  $mynode = Node::create([
+    'type' => 'county_impact_report',
+    'title' => '2024 ' . $site_name . ' Impact Report',
+    'status' => 0,
+    'path' => ['alias' => '/impact_report', 'pathauto' => 0,],
+  ]);
+  $mynode->save();
+
+
+  // Add a few permissions to Content Editor role
+  $role_object = Role::load('content_editor');
+  $role_object->grantPermission('edit any county_impact_report content');
+  $role_object->grantPermission('view any unpublished county_impact_report content');
+  $role_object->grantPermission('use text format impact_report');
+  $role_object->save();
+
+  // Create the menu link
+  $menu_tree = \Drupal::menuTree();
+  $menu_name = "main";
+
+  // Build the typical default set of menu tree parameters.
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
+
+  // Load the tree based on this set of parameters.
+  $tree = $menu_tree->load($menu_name, $parameters);
+
+  // Find the About Us menu, and add the link to it
+  foreach ($tree as $item) {
+    if ($item->link->getTitle() == "About Us") {
+      $menu_link = MenuLinkContent::create([
+        'title' => 'Impact Report',
+        'link' => ['uri' => 'entity:node/' . $mynode->id(),],
+        'menu_name' => 'main',
+        'expanded' => true,
+        'parent' => $item->link->getPluginId(),
+      ]);
+      $menu_link->save();
+      break;
+    }
+  }
+}

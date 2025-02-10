@@ -3,21 +3,34 @@
 /* --------------------------------------  */
 /* ## Events
 /* --------------------------------------  */
-
+.program_offering_blocks.ungerboeck_eventlist_details {
+    margin-top: 2.875rem;
+}
 .event_details_links {
-    padding-top: 20px;
+    margin-bottom: 3.875rem;
+    margin-top: 2.875rem;
 }
-
 .event_description {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    margin-bottom: 3rem;
+    font-weight: normal;
+    font-size: initial;
 }
-
-.event_details_dates {
-    font-style: italic;
-    padding-right: 5px;
+.event_details_wrapper {
+    margin-bottom: 1.75rem;
+    font-weight: 700;
+    font-size: 1.18rem;
 }
-
+p.event_details_next_session {
+    padding-left: 3rem;
+    font-weight: normal;
+}
+.event_address_wrapper {
+    margin-top: 1.5rem;
+}
+.event_contact_wrapper {
+    margin-top: 1.5rem;
+    padding-bottom: 3rem;
+}
 .events_show_more{
     background-color: #006BA6;
         border-color: #006BA6;
@@ -30,18 +43,62 @@
         color: #fff;
         text-decoration: none;
 }
-
+img.educational_program_image {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    object-fit: cover;
+    max-height: 50vh;
+    margin-bottom: 2.875rem;
+}
+.event_instructor_wrapper {
+    margin-top: 1.5rem;
+}
 .events_show_more:hover{
     background-color: #202124;
     color: #fff;
     text-decoration: none;
 }
-
-.event_sessions{padding-top:10px;}
+.event_sessions {
+    font-size: initial;
+    font-weight: normal;
+    padding: 1.5rem;
+}
+.event_details_session_registration {
+    display: grid;
+    grid-template-columns: auto auto;
+}
 .event_contact_label{padding-top:10px;}
-.event_contact_name, .event_contact_email, .event_contact_phone {padding-left: 15px;}
 
-img.educational_program_image {max-width: 200px; float:left; margin: 0 8px 5px 0;}
 div.clearer {clear:both;}
 
 .next_session{font-weight: bold;}
+.visible-for-screen-readers {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.event_details_wrapper .icon svg {
+    vertical-align: middle;
+    width: 2rem !important;
+    margin-right: 0.7rem;
+    color: var(--cardinal);
+}
+.event_details_wrapper .icon>svg path {
+    fill: #c8102e;
+}
+.event_details_registration_wrapper {
+    border: 1px solid var(--md-gray);
+    padding: 2rem;
+}
+.event_details_registration_wrapper h2 {
+    color: #000000;
+}
+.event_details_registration {
+    font-size: initial;
+    font-weight: normal;
+}

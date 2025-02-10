@@ -7,6 +7,8 @@
 	--md-gray: #ebebeb;
 	--midnight: #003d4c;
 	--green: #008540;
+	--sans-font: 'Arial', 'Helvetica Neue', sans-serif;
+	--serif-font: 'Merriweather', serif;
   }
 
 /* --------------------------------------  */
@@ -18,7 +20,7 @@
 }
 .isueo-card-deck-title.h3.card-title {
 	padding: 1.25rem;
-	font-family: Merriweather,serif;
+	font-family: var(--serif-font);
 	margin: 0;
 }
 .isueo-card-deck-body.card-body {
@@ -37,4 +39,14 @@
 	font-family: FontAwesome;
 	padding-left: .5rem;
 	vertical-align: middle;
+}
+
+/* --------------------------------------  */
+/* ## RESPONSIVE
+/* --------------------------------------  */
+@media screen and (min-width : 576px) {
+	.card-deck {
+		margin-right: 0;
+		margin-left: 0;
+	}
 }

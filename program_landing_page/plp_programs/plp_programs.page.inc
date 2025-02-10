@@ -2,6 +2,9 @@
 
 use Drupal\node\Entity\Node;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\Taxonomy;
+use Drupal\isueo_helpers\ISUEOHelpers\Typesense;
+use Drupal\taxonomy\Entity\Term;
 
 // Return an array of existing nodes with MyData ID as the array key
 function plp_programs_get_existing_nodes(string $content_type, string $mydata_id_field)
@@ -106,8 +109,8 @@ function plp_programs_handle_children(array $children, array $programs)
 
     foreach ($value as $child) {
       // Make sure the child should be shown
-      if (!$child['Show_on_Program_Catalog__c']) {
-      //if (!$child['Show_on_Program_Landing_Page__c']) {
+      //if (!$child['Show_on_Program_Catalog__c']) {
+      if (!$child['Show_on_Program_Landing_Page__c']) {
         continue;
       }
 
