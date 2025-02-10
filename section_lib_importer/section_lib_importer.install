@@ -15,7 +15,9 @@ use GuzzleHttp\Promise\Is;
 // function section_lib_importer_update_8001() {
 // }
 
-function section_lib_importer_update_2025022() {
+// If you want the VITA section on a site, run the following command on that site:
+// drush eval 'module_load_include("install", "section_lib_importer", "section_lib_importer"); section_lib_importer_create_VITA(); '
+function section_lib_importer_create_VITA() {
   $templates = [
 [
   "label" => "VITA",
@@ -349,7 +351,7 @@ function section_lib_importer_update_2025022() {
   ]
 ]
 ];
-addSectionTemplates($templates);
+addSectionTemplates($templates, true);
 }
 
 
@@ -791,7 +793,7 @@ function section_lib_importer_install() {
       $display_repository->getViewDisplay('block_content', $blockId)->setComponent('body', ['label' => 'hidden','type' => 'text_default'])->save();
     }
   }
-  addSectionTemplates($templates);
+  addSectionTemplates($templates, false);
 }
 
 /**
@@ -800,7 +802,7 @@ function section_lib_importer_install() {
  * Basic Content etc will be added when block is in layout
  * Blocks from custom block library can be added in the future using their uuid, only block type instances have duplication issue, look into deepcloningtrait from section library
  */
-function addSectionTemplates($templates) {
+function addSectionTemplates($templates, bool $create_blocks = false) {
   foreach ($templates as $sectlibtemplate) {
     $sections_for_data = [];
     foreach ($sectlibtemplate['sections'] as $template) {
@@ -809,27 +811,29 @@ function addSectionTemplates($templates) {
       if (count($lib_templates) == 0) {
       //Removed Create SectionComponents and their respective BlockComponents to prevent duplicated blocks in custom block library
         $components = [];
-         foreach ($template['blocks'] as $block_data) {
-          $uuid_block = Drupal::service('uuid')->generate();
-          $block_content = BlockContent::create([
-            'info' => $block_data['info'],
-            'uuid' => $uuid_block,
-            'type' => 'basic_content'
-          ]);
-          $block_content->body->value = $block_data['body'];
-          $block_content->body->format = 'wysiwyg';
-          $config = [
-            'id' => $block_data['id'],
-            'label' => $block_data['label'],
-            'provider' => $block_data['provider'],
-            'label_display' => $block_data['label_display'],
-            'view_mode' => $block_data['view_mode'],
-            'block_serialized' => serialize($block_content)
-          ];
-          $uuid_sect = Drupal::service('uuid')->generate();
-          $section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
+        if ($create_blocks) {
+          foreach ($template['blocks'] as $block_data) {
+            $uuid_block = Drupal::service('uuid')->generate();
+            $block_content = BlockContent::create([
+              'info' => $block_data['info'],
+              'uuid' => $uuid_block,
+              'type' => 'basic_content'
+            ]);
+            $block_content->body->value = $block_data['body'];
+            $block_content->body->format = 'wysiwyg';
+            $config = [
+              'id' => $block_data['id'],
+              'label' => $block_data['label'],
+              'provider' => $block_data['provider'],
+              'label_display' => $block_data['label_display'],
+              'view_mode' => $block_data['view_mode'],
+              'block_serialized' => serialize($block_content)
+            ];
+            $uuid_sect = Drupal::service('uuid')->generate();
+            $section_comp = new SectionComponent($uuid_sect, $block_data['region'], $config, []);
 
-          $components[] = $section_comp;
+            $components[] = $section_comp;
+          }
         }
         $section = new Section($template['section_id'], $template['section'], $components, []);
         $section->setLayoutSettings($template['section']);
@@ -837,6 +841,7 @@ function addSectionTemplates($templates) {
         $sections_for_data[] = $section;
       }
     }
+
     if (count($lib_templates) == 0) {
       //Load images and set them to be used as thumbnails
       $file_loc = \Drupal::service('file_system')->realpath(\Drupal::service('extension.list.module')->getPath('section_lib_importer')) . '/resources/' . $sectlibtemplate['filename'];
