@@ -33,3 +33,14 @@
 #search-bar-only input.ais-SearchBox-input:focus-visible {
     outline: 1px solid #f1be48;
 }
+
+/* --------------------------------------  */
+/* ## RESPONSIVE
+/* --------------------------------------  */
+@media screen and (max-width : 768px) {
+    #search-bar-only {
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
