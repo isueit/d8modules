@@ -15,8 +15,7 @@
     max-width: 245px;
     height: 100%;
     object-fit: cover;
-    border-top: 10px solid #fff;
-    border-bottom: 10px solid #fff;
+    border: 10px solid #fff;
 }
 .search-results .card .card-body {
     text-align: left;
@@ -51,6 +50,11 @@
 /* --------------------------------------  */
 /* ## Responsive
 /* --------------------------------------  */
+@media screen and (max-width : 1199px) {
+    .search-results .card-title {
+        margin-left: 0 !important;
+    }
+}
 @media screen and (max-width : 768px) {
     div#block-iastate-theme-content--2 h2.hit-name.card-title {
         margin-left: 0;
