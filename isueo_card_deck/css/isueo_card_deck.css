@@ -44,6 +44,13 @@
 /* --------------------------------------  */
 /* ## RESPONSIVE
 /* --------------------------------------  */
+@media screen and (max-width : 991px) {
+	.card-deck {
+		max-width: 95%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+}
 @media screen and (min-width : 576px) {
 	.card-deck {
 		margin-right: 0;
