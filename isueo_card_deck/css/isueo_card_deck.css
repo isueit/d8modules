@@ -22,6 +22,7 @@
 	padding: 1.25rem;
 	font-family: var(--serif-font);
 	margin: 0;
+	color: initial;
 }
 .isueo-card-deck-body.card-body {
 	padding: 0 1rem 1.25rem 1rem;
@@ -44,6 +45,13 @@
 /* --------------------------------------  */
 /* ## RESPONSIVE
 /* --------------------------------------  */
+@media screen and (max-width : 991px) {
+	.card-deck {
+		max-width: 95%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+}
 @media screen and (min-width : 576px) {
 	.card-deck {
 		margin-right: 0;
