@@ -158,9 +158,9 @@ class EventDetailsController extends ControllerBase
         $registration['closes']['day'] = date('l', $regenddate);
       } else {
         $registration['url'] = '';
-        $registration['opens']['date'] = date('F j, Y', $regenddate);
+        $registration['opens']['date'] = date('F j, Y', $regstartdate);
         $registration['opens']['time'] = '00:00 AM';
-        $registration['opens']['day'] = date('l', $regenddate);
+        $registration['opens']['day'] = date('l', $regstartdate);
       }
     }
 

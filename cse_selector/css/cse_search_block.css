@@ -40,7 +40,6 @@
 /* Search Results Page */
 form#cse-search-form {
 	display: flex;
-	justify-content: flex-start;
 }
 form#cse-search-form .form-group {
 	margin-bottom: 1.5rem;
