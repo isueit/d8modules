@@ -31,12 +31,6 @@ class TSForStaffSearchResults extends BlockBase
     $results = '
         <div class="row">
           <div class="ts-forstaff-search-results">
-            <div class="search-results-facets">
-              <h3>Content Types</h3>
-              <div id="content_types"></div>
-              <h3>Sites</h3>
-              <div id="sites"></div>
-            </div>
             <div class="search-results-snipets">
               <div id="search-results-bar"></div>
               <div class="isueo-searchall" id="isueo-searchall"><a href="https://www.extension.iastate.edu/search-results?search_broadness=wide">Search all of Extension</a></div>

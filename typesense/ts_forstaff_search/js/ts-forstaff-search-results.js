@@ -30,7 +30,6 @@ const { infiniteHits } = instantsearch.widgets;
 
 const searchResults = instantsearch({
   searchClient: searchClientResults,
-  //indexName: "plp_programs",
   indexName: "ForStaff",
   routing: true,
 });
@@ -46,7 +45,7 @@ searchResults.addWidgets([
     autofocus: true,
     showReset: false,
     searchAsYouType: false,
-    placeholder: "Search Programs",
+    placeholder: "Search ForStaff Info",
     queryHook(query, search) {
       document.getElementById("isueo-searchall").innerHTML='<a href="https://www.extension.iastate.edu/search-results?as_q=' + query + '">Search all of Extension</a>';
       search(query);
@@ -111,77 +110,5 @@ if (item._highlightResult.summary) {
   },
   }),
 ]);
-
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#content_types",
-    attribute: "content_type",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
-  }),
-]);
-
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#sites",
-    attribute: "site_name",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
-  }),
-]);
-
-/*
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#audiences",
-    attribute: "audiences",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
-  }),
-]);
-*/
-
-/*
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#program_area",
-    attribute: "program_area",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
-  }),
-]);
-*/
 
 searchResults.start();
