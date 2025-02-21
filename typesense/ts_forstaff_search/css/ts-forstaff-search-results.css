@@ -47,6 +47,13 @@
     padding: 0 0 0.8rem 0.5rem;
     font-weight: 700;
 }
+.ts-forstaff-search-results .col-md-4 {
+    flex: 0 1;
+}
+.ts-forstaff-search-results .row.no-gutters {
+    justify-content: flex-start;
+    width: 100%;
+}
 
 /* ------------------------------------- */
 /* ## SEARCH HIGHLIGHT
@@ -91,7 +98,7 @@
 /* ------------------------------------- */
 /* ## SEARCH BAR
 /* ------------------------------------- */
-#ts-forstaff-search-results-bar input.ais-SearchBox-input {
+.ts-forstaff-search-results #search-results-bar input.ais-SearchBox-input {
     margin-bottom: .5rem;
     width: 89%;
     height: 3rem;
@@ -106,7 +113,7 @@
     background-clip: padding-box;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-#ts-forstaff-search-results-bar button.ais-SearchBox-submit {
+.ts-forstaff-search-results #search-results-bar button.ais-SearchBox-submit {
     width: 2.5rem;
     height: 3rem;
     padding: 0;
@@ -118,12 +125,12 @@
     border-left: none;
     border-radius: 0 0.5rem 0.5rem 0;
 }
-#ts-forstaff-search-results-bar svg.ais-SearchBox-submitIcon {
+.ts-forstaff-search-results #search-results-bar svg.ais-SearchBox-submitIcon {
     height: 1em;
     vertical-align: -.125rem;
     width: 1.3rem;
 }
-#ts-forstaff-search-results-bar input.ais-SearchBox-input:focus-visible {
+.ts-forstaff-search-results #search-results-bar input.ais-SearchBox-input:focus-visible {
     outline: 1px solid #f1be48;
 }
 .isueo-searchall {
