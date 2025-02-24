@@ -50,6 +50,10 @@
 .ts-forstaff-search-results .col-md-4 {
     flex: 0 1;
 }
+.ts-forstaff-search-results .col-md-8 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
 .ts-forstaff-search-results .row.no-gutters {
     justify-content: flex-start;
     width: 100%;
