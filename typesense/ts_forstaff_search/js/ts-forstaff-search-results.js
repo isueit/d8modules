@@ -68,9 +68,18 @@ searchResults.addWidgets([
 //            '-XL.jpg" alt="" />';
 //        }
 
-summary = item.summary;
+// Get the regular summary
+summary = '';
+if (item.summary) {
+  summary = item.summary;
+}
+
+// Get the highlighted summary if there is one
 if (item._highlightResult.summary) {
-  summary = item._highlightResult.summary.value;
+  // HTML decode the summary before displaying it, using the DOM to decode it
+  var textArea = document.createElement('textarea');
+  textArea.innerHTML = item._highlightResult.summary.value;
+  summary = textArea.value
 }
         return `
           <div class="card mb-3">
