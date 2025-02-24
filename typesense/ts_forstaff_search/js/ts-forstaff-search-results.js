@@ -14,16 +14,17 @@ const typesenseInstantsearchAdapterResults = new TypesenseInstantSearchAdapter({
   //  queryBy is required.
   //  filterBy is managed and overridden by InstantSearch.js. To set it, you want to use one of the filter widgets like refinementList or use the `configure` widget.
   additionalSearchParameters: {
-    queryBy:
-      "title,text_content,rendered_content,summary",
+    queryBy: "title,text_content,rendered_content,summary",
   },
 });
 
 var objUrlParams = new URLSearchParams(window.location.search);
-if (objUrlParams.has('ForStaff[query]')) {
-  document.getElementById("isueo-searchall").innerHTML='<a href="https://www.extension.iastate.edu/search-results?as_q=' + objUrlParams.get('ForStaff[query]') + '">Search all of Extension</a>';
+if (objUrlParams.has("ForStaff[query]")) {
+  document.getElementById("isueo-searchall").innerHTML =
+    '<a href="https://www.extension.iastate.edu/search-results?as_q=' +
+    objUrlParams.get("ForStaff[query]") +
+    '">Search all of Extension</a>';
 }
-
 
 const searchClientResults = typesenseInstantsearchAdapterResults.searchClient;
 const { infiniteHits } = instantsearch.widgets;
@@ -35,7 +36,7 @@ const searchResults = instantsearch({
 });
 
 searchBoxID = "#search-results-bar";
-if (document.getElementById('ts-forstaff-search-bar')) {
+if (document.getElementById("ts-forstaff-search-bar")) {
   searchBoxID = "#ts-forstaff-search-bar";
 }
 
@@ -47,7 +48,10 @@ searchResults.addWidgets([
     searchAsYouType: false,
     placeholder: "Search ForStaff Info",
     queryHook(query, search) {
-      document.getElementById("isueo-searchall").innerHTML='<a href="https://www.extension.iastate.edu/search-results?as_q=' + query + '">Search all of Extension</a>';
+      document.getElementById("isueo-searchall").innerHTML =
+        '<a href="https://www.extension.iastate.edu/search-results?as_q=' +
+        query +
+        '">Search all of Extension</a>';
       search(query);
     },
   }),
@@ -59,28 +63,28 @@ searchResults.addWidgets([
     templates: {
       item(item) {
         imagelink = "";
-//        if (item.field_plp_program_smugmug) {
-//          imagelink =
-//            '<img src ="https://photos.smugmug.com/photos/' +
-//            item.field_plp_program_smugmug +
-//            "/10000/XL/" +
-//            item.field_plp_program_smugmug +
-//            '-XL.jpg" alt="" />';
-//        }
+        //        if (item.field_plp_program_smugmug) {
+        //          imagelink =
+        //            '<img src ="https://photos.smugmug.com/photos/' +
+        //            item.field_plp_program_smugmug +
+        //            "/10000/XL/" +
+        //            item.field_plp_program_smugmug +
+        //            '-XL.jpg" alt="" />';
+        //        }
 
-// Get the regular summary
-summary = '';
-if (item.summary) {
-  summary = item.summary;
-}
+        // Get the regular summary
+        summary = "";
+        if (item.summary) {
+          summary = item.summary;
+        }
 
-// Get the highlighted summary if there is one
-if (item._highlightResult.summary) {
-  // HTML decode the summary before displaying it, using the DOM to decode it
-  var textArea = document.createElement('textarea');
-  textArea.innerHTML = item._highlightResult.summary.value;
-  summary = textArea.value
-}
+        // Get the highlighted summary if there is one
+        if (item._highlightResult.summary) {
+          // HTML decode the summary before displaying it, using the DOM to decode it
+          var textArea = document.createElement("textarea");
+          textArea.innerHTML = item._highlightResult.summary.value;
+          summary = textArea.value;
+        }
         return `
           <div class="card mb-3">
             <div class="row no-gutters">
@@ -98,11 +102,8 @@ if (item._highlightResult.summary) {
         `;
       },
     },
-    cssClasses:{
-      loadMore: [
-        "btn-outline-danger",
-        "btn",
-      ],
+    cssClasses: {
+      loadMore: ["btn-outline-danger", "btn"],
     },
   }),
 
@@ -115,8 +116,8 @@ if (item._highlightResult.summary) {
         ${data.nbHits} result(s) found
         </div>
         `;
+      },
     },
-  },
   }),
 ]);
 
