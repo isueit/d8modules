@@ -131,7 +131,7 @@
       </span>
           {% if (instructor.name) and (instructor.name != contact.name) %}
       <div class="event_instructor_wrapper">
-        <p class="font-italic"><span class="font-weight-bold">Instructor: </span><a href="mailto:{{ instructor.email }}">{{ instructor.name }}</a>
+        <p><span class="font-weight-bold">Instructor: </span><a href="mailto:{{ instructor.email }}">{{ instructor.name }}</a>
         {% if instructor.phone %}
           <span>{{ instructor.phone }}</span></p>
         {% endif %}
