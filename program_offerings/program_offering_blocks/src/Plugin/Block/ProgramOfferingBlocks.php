@@ -71,6 +71,13 @@ class ProgramOfferingBlocks extends BlockBase
     $is_front_page = Drupal::service('path.matcher')->isFrontPage();
     $is_county_site = strpos($site_name, ' County') !== false;
 
+    // Human Sciences changed to Health and Human Sciences
+    if (!empty($config['program_area']) && $config['program_area'] == 'Human Sciences') {
+      Drupal::logger('program_offering_blocks')->info('Changing Human Sciences to Health and Human Sciences');
+      $config['program_area'] = 'Health and Human Sciences';
+      $this->setConfiguration($config);
+    }
+
     // Show annoncement if there is one
     if (!empty($config['announcement_text'])) {
       $results .= PHP_EOL . '<div class="program_offering_blocks_announcement_text">' . $config['announcement_text'] . '</div>' . PHP_EOL;
@@ -412,7 +419,7 @@ class ProgramOfferingBlocks extends BlockBase
         'Agriculture and Natural Resources' => $this->t('Agriculture and Natural Resources'),
         'Community and Economic Development' => $this->t('Community and Economic Development'),
         'County Services' => $this->t('County Services'),
-        'Human Sciences' => $this->t('Human Sciences'),
+        'Health and Human Sciences' => $this->t('Health and Human Sciences'),
         'Professional Development' => $this->t('Professional Development'),
       ],
       '#title' => t('Program Area'),
