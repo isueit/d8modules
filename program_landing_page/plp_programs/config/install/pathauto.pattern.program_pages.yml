@@ -3,22 +3,19 @@ status: true
 dependencies:
   module:
     - node
-  enforced:
-    config:
-      - node.type.plp_program
-id: children_of_programs
-label: 'Children of Programs'
+id: program_pages
+label: 'Program Pages'
 type: 'canonical_entities:node'
-pattern: 'program/child/[node:title]'
+pattern: 'program/[node:title]'
 selection_criteria:
-  2a0a5984-0028-41f6-b6dd-a7759688111e:
+  8646fb39-f3d6-46ea-bfac-b55af1a92bbc:
     id: 'entity_bundle:node'
     negate: false
-    uuid: 2a0a5984-0028-41f6-b6dd-a7759688111e
+    uuid: 8646fb39-f3d6-46ea-bfac-b55af1a92bbc
     context_mapping:
       node: node
     bundles:
-      plp_child: plp_child
+      plp_program: plp_program
 selection_logic: and
 weight: -5
 relationships: {  }
