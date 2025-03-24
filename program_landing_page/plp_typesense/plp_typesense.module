@@ -84,7 +84,7 @@ function plp_typesense_index_program($client, $collection_name, $node)
     'body' => empty($node->get('body')->value) ? 'N/A' : $node->get('body')->value,
     'summary' => empty($node->get('body')->summary) ? 'N/A' : $node->get('body')->summary,
     'program_area' => Term::load(intval($node->get('field_plp_program_program_area')->getString()))->getName(),
-    'url' => '/program' . \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id()),
+    'url' => \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id()),
     'children_title' => [],
     'children_body' => [],
     'field_plp_program_topics' => [],
