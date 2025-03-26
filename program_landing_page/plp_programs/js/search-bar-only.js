@@ -35,7 +35,7 @@ searchBar.addWidgets([
     searchAsYouType: false,
     placeholder: "Search Programs",
     queryHook(query, search) {
-      newurl = 'program-search?plp_programs[query]=' + query;
+      newurl = '/program/program-search?plp_programs[query]=' + query;
       window.location.href = newurl;
       //search(query);
     },
