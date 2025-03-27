@@ -24,34 +24,36 @@
 
 /* Hero Image & Title */
 .program-hero-wrapper {
-height: 100%;
-max-height: 50vh;
-min-height: 40vh;
-position: relative;
+    max-width: 100%;
+    position: relative;
+    box-sizing: border-box;
 }
 .program-hero-image img {
     width: 100%;
     max-height: 50vh;
     object-fit: cover;
-min-height: 1px;
+    min-height: 1px;
 }
-.program-hero-label-wrapper {
-bottom: 0;
-width: 100%;
-position: absolute;
-padding: 0.75rem 1rem;
-background: rgba(200, 0, 21, .7);
+.program-hero-overlay .program-hero-label-wrapper {
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+    padding: 0.75rem 1rem;
+    background: rgba(200, 0, 21, 1);
+    mix-blend-mode: hard-light;
+    opacity: .99;
 }
-.program-hero-label h1.isu-page-title {
+.program-hero-overlay .program-hero-label h1.isu-page-title {
     color: #fff;
-    font-size: clamp(1.2rem, 3.375vw - 1rem, 3.375rem);
-margin: 0;
+    font-size: clamp(1.8rem, 3.375vw - 1rem, 3.375rem);
+    margin: 0;
+    width: 100%;
 }
 
 /* Program Blocks */
 .plp-program-contact-blocks .isueo-box-shadow {
     padding: 1rem;
-background-color: #fff;
+    background-color: #fff;
 }
 .plp-program-contact-blocks a {
     text-decoration: none;
