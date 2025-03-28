@@ -1,117 +1,158 @@
 /* global algoliasearch instantsearch */
 
-import { createDropdown } from './Dropdown.js';
+import { createDropdown } from "./Dropdown.js";
 
-const searchClient = algoliasearch(
-  'latency',
-  '6be0576ff61c053d5f9a3225e2a90f76'
-);
-
-const search = instantsearch({
-  indexName: 'instant_search',
-  searchClient,
-  insights: true,
+const typesenseInstantsearchAdapterResults = new TypesenseInstantSearchAdapter({
+  server: {
+    apiKey: "bilLvsiWoO1EqcM21L8XrzofmVBYfyB9", // Be sure to use an API key that only allows searches, in production
+    nodes: [
+      {
+        host: "typesense.extension.iastate.edu",
+        port: "443",
+        protocol: "https",
+      },
+    ],
+  },
+  // The following parameters are directly passed to Typesense's search API endpoint.
+  //  So you can pass any parameters supported by the search endpoint below.
+  //  queryBy is required.
+  //  filterBy is managed and overridden by InstantSearch.js. To set it, you want to use one of the filter widgets like refinementList or use the `configure` widget.
+  additionalSearchParameters: {
+    queryBy:
+      "title,body,field_plp_program_search_terms,children_title,children_body,summary,category_name,topic_names",
+  },
 });
+
+var objUrlParams = new URLSearchParams(window.location.search);
+if (objUrlParams.has("plp_programs[query]")) {
+  document.getElementById("isueo-searchall").innerHTML =
+    '<a href="https://www.extension.iastate.edu/search-results?as_q=' +
+    objUrlParams.get("plp_programs[query]") +
+    '">Search all of Extension</a>';
+}
+
+const searchClientResults = typesenseInstantsearchAdapterResults.searchClient;
+const { infiniteHits } = instantsearch.widgets;
+
+const searchResults = instantsearch({
+  searchClient: searchClientResults,
+  indexName: "plp_programs",
+  routing: true,
+});
+
 const MOBILE_WIDTH = 375;
 
-const brandDropdown = createDropdown(instantsearch.widgets.refinementList, {
-  closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
-  cssClasses: { root: 'my-BrandDropdown' },
-});
-
-const refinementListDropdown = createDropdown(
+const programAreaDropdown = createDropdown(
   instantsearch.widgets.refinementList,
   {
     closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+    buttonText: "Program Area",
   }
 );
 
-const priceDropdown = createDropdown(instantsearch.widgets.rangeSlider, {
-  buttonText({ start }) {
-    const s = start && Number.isFinite(start[0]) ? start[0] : '';
-    const e = start && Number.isFinite(start[1]) ? start[1] : '';
-    return s || e ? `Price (${s}~${e})` : 'Price Slider';
-  },
-  buttonClassName({ start }) {
-    const isRefined =
-      Number.isFinite(start && start[0]) || Number.isFinite(start && start[1]);
-    return isRefined && 'ais-Dropdown-button--refined';
-  },
+const audienceDropdown = createDropdown(instantsearch.widgets.refinementList, {
+  closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+  buttonText: "Audience",
 });
 
-const priceMenuDropdown = createDropdown(instantsearch.widgets.numericMenu, {
-  buttonText({ items }) {
-    const refinedItem = (items || []).find(
-      item => item.label !== 'All' && item.isRefined
-    );
-    return refinedItem ? `Price (${refinedItem.label})` : 'Price Menu';
-  },
-  buttonClassName({ items }) {
-    const isRefined = (items || []).find(
-      item => item.label !== 'All' && item.isRefined
-    );
-    return isRefined && 'ais-Dropdown-button--refined';
-  },
-});
-
-const categoryDropdown = createDropdown(
-  instantsearch.widgets.hierarchicalMenu,
+const categoriesDropdown = createDropdown(
+  instantsearch.widgets.refinementList,
   {
-    buttonText: 'Category',
+    closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+    buttonText: "Category",
   }
 );
 
-search.addWidgets([
+const topicsDropdown = createDropdown(instantsearch.widgets.refinementList, {
+  closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+  buttonText: "Topics",
+});
+
+searchResults.addWidgets([
   instantsearch.widgets.searchBox({
-    container: '#searchbox',
-  }),
-  instantsearch.widgets.hits({
-    container: '#hits',
-    templates: {
-      item: (hit, { html, components }) => html`
-<article>
-  <h1>${components.Highlight({ hit, attribute: 'name' })}</h1>
-  <p>${components.Highlight({ hit, attribute: 'description' })}</p>
-</article>
-`,
+    container: "#search-results-bar",
+    autofocus: true,
+    showReset: false,
+    searchAsYouType: false,
+    placeholder: "Search Programs",
+    queryHook(query, search) {
+      document.getElementById("isueo-searchall").innerHTML='<a href="https://www.extension.iastate.edu/search-results?as_q=' + query + '">Search all of Extension</a>';
+      search(query);
     },
   }),
-  brandDropdown({
-    container: '#brand',
-    attribute: 'brand',
-    searchable: true,
+
+  instantsearch.widgets.configure({
+    hitsPerPage: 120,
   }),
-  refinementListDropdown({
-    container: '#type',
-    attribute: 'type',
-    searchable: true,
+  instantsearch.widgets.infiniteHits({
+    container: "#hits",
+    templates: {
+      item(item) {
+        var imagelink = "";
+        if (item.field_plp_program_smugmug) {
+          imagelink =
+            '<img src ="https://photos.smugmug.com/photos/' +
+            item.field_plp_program_smugmug +
+            "/10000/XL/" +
+            item.field_plp_program_smugmug +
+            '-XL.jpg" alt="" />';
+        }
+        return `
+          <div class="card mb-3">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                ${imagelink}
+              </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h2 class="hit-name card-title"><a href="${item.url}"> ${item._highlightResult.title.value}</a></h2>
+                <div class="hit-summary">${item._highlightResult.summary.value}</div>
+              </div>
+            </div>
+            </div>
+          </div>
+        `;
+      },
+    },
+    cssClasses:{
+      loadMore: [
+        "btn-outline-danger",
+        "btn",
+      ],
+    },
   }),
-  priceDropdown({
-    container: '#price',
-    attribute: 'price',
+
+
+
+  programAreaDropdown({
+    container: "#program_area",
+    attribute: "program_area",
   }),
-  priceMenuDropdown({
-    container: '#price2',
-    attribute: 'price',
-    items: [
-      { label: 'All' },
-      { end: 4, label: 'less than 4' },
-      { start: 4, end: 4, label: '4' },
-      { start: 5, end: 10, label: 'between 5 and 10' },
-      { start: 10, label: 'more than 10' },
-    ],
+  audienceDropdown({
+    container: "#audience",
+    attribute: "audiences",
   }),
-  categoryDropdown({
-    container: '#category',
-    attributes: [
-      'hierarchicalCategories.lvl0',
-      'hierarchicalCategories.lvl1',
-      'hierarchicalCategories.lvl2',
-    ],
+  categoriesDropdown({
+    container: "#categories",
+    attribute: "category_name",
   }),
-  instantsearch.widgets.pagination({
-    container: '#pagination',
+  topicsDropdown({
+    container: "#topics",
+    attribute: "topic_names",
+  }),
+
+  instantsearch.widgets.stats({
+    container: "#stats",
+    templates: {
+      text(data) {
+        return `
+        <div class="search-stats-number">
+        ${data.nbHits} result(s) found
+        </div>
+        `;
+    },
+  },
   }),
 ]);
 
-search.start();
+searchResults.start();
