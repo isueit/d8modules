@@ -29,41 +29,36 @@ class PLPProgramsSearchResults extends BlockBase
     //\Drupal::service('page_cache_kill_switch')->trigger();
 
     $results = '
-        <div class="row">
-          <div class="search-results">
-            <div class="search-results-facets">
-              <h3>Program Area</h3>
-              <div id="program_area"></div>
-              <h3>Audiences</h3>
-              <div id="audiences"></div>
-              <h3>Categories</h3>
-              <div id="category_name"></div>
-              <h3>Topics</h3>
-              <div id="topic_names"></div>
-            </div>
-            <div class="search-results-snipets">
-              <div id="search-results-bar"></div>
-              <div class="isueo-searchall" id="isueo-searchall"><a href="https://www.extension.iastate.edu/search-results?search_broadness=wide">Search all of Extension</a></div>
-              <div id="stats"></div>
-              <div id="hits"></div>
-            </div>
+        <div class="container">
+          <div id="searchbox"></div>
+
+          <div class="search-panel__filters">
+            <div id="brand"></div>
+            <div id="type"></div>
+            <div id="price"></div>
+            <div id="price2"></div>
+            <div id="category"></div>
           </div>
 
+          <div id="hits"></div>
+          <div id="pagination"></div>
         </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.44.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+        <script src="/modules/custom/d8modules/program_landing_page/plp_programs/js/app.js" type="module"></script>
+        <link href="/modules/custom/d8modules/program_landing_page/plp_programs/css/Dropdown.css" media="all" rel="stylesheet" />
+        <link href="/modules/custom/d8modules/program_landing_page/plp_programs/css/app.css" media="all" rel="stylesheet" />
     ';
 
     //Add allowed tags for svg map
     $tags = FieldFilteredMarkup::allowedTags();
-    array_push($tags, 'script', 'div', 'img', 'src', 'h3',);
+    array_push($tags, 'script', 'div', 'img', 'src', 'h3', 'link');
 
     $block = [];
     $block['#allowed_tags'] = $tags;
     $block['#markup'] = $results;
-    $block['#attached']['library'][] = 'plp_programs/plp_programs_search_results';
+  //  $block['#attached']['library'][] = 'plp_programs/plp_programs_search_results';
     return $block;
   }
 
