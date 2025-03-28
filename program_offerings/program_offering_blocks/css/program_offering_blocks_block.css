@@ -194,8 +194,6 @@ a#isu-horiz-events {
   #isu-horiz-events li.event {
     padding-right: .5rem;
   }
-}
-@media screen and (max-width : 768px) {
   #isu-horiz-events ul.program_offering_blocks {
     grid-template-columns: repeat(2,1fr);
   }
