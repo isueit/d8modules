@@ -31,11 +31,15 @@ class PLPProgramsSearchResults extends BlockBase
     $results = '
         <div class="row">
           <div class="search-results">
+          <div class="search-results-facets-outer_wrapper">
+          <div class="search-results-facets-inner_wrapper">
             <div class="search-results-facets">
               <div id="program_area"></div>
               <div id="audience"></div>
               <div id="categories"></div>
               <div id="topics"></div>
+            </div>
+            </div>
             </div>
             <div class="search-results-snipets">
               <div id="search-results-bar"></div>

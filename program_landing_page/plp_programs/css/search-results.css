@@ -1,10 +1,6 @@
 /* ------------------------------------- */
 /* ## RESULTS
 /* ------------------------------------- */
-.search-results-snipets {
-    float: right;
-    max-width: 67%;
-}
 .search-results .ais-InfiniteHits li {
     list-style: none;
 }
@@ -91,9 +87,18 @@
 /* ------------------------------------- */
 /* ## FACETS
 /* ------------------------------------- */
+.search-results-facets-outer_wrapper {
+    padding: 1rem 0 3rem 0;
+}
+.search-results-facets-inner_wrapper {
+    display: grid;
+    grid-gap: 16px;
+    grid-template-columns: 12fr 3fr;
+}
 .search-results-facets {
-    float: left;
-    max-width: 33%;
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 16px;
 }
 .search-results .ais-RefinementList ul {
     padding-left: 0;
