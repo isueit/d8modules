@@ -1,3 +1,7 @@
+/* global algoliasearch instantsearch */
+
+import { createDropdown } from "./Dropdown.js";
+
 const typesenseInstantsearchAdapterResults = new TypesenseInstantSearchAdapter({
   server: {
     apiKey: "bilLvsiWoO1EqcM21L8XrzofmVBYfyB9", // Be sure to use an API key that only allows searches, in production
@@ -20,10 +24,12 @@ const typesenseInstantsearchAdapterResults = new TypesenseInstantSearchAdapter({
 });
 
 var objUrlParams = new URLSearchParams(window.location.search);
-if (objUrlParams.has('plp_programs[query]')) {
-  document.getElementById("isueo-searchall").innerHTML='<a href="https://www.extension.iastate.edu/search-results?as_q=' + objUrlParams.get('plp_programs[query]') + '">Search all of Extension</a>';
+if (objUrlParams.has("plp_programs[query]")) {
+  document.getElementById("isueo-searchall").innerHTML =
+    '<a href="https://www.extension.iastate.edu/search-results?as_q=' +
+    objUrlParams.get("plp_programs[query]") +
+    '">Search all of Extension</a>';
 }
-
 
 const searchClientResults = typesenseInstantsearchAdapterResults.searchClient;
 const { infiniteHits } = instantsearch.widgets;
@@ -34,14 +40,37 @@ const searchResults = instantsearch({
   routing: true,
 });
 
-searchBoxID = "#search-results-bar";
-if (document.getElementById('search-bar')) {
-  searchBoxID = "#search-bar";
-}
+const MOBILE_WIDTH = 375;
+
+const programAreaDropdown = createDropdown(
+  instantsearch.widgets.refinementList,
+  {
+    closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+    buttonText: "Program Area",
+  }
+);
+
+const audienceDropdown = createDropdown(instantsearch.widgets.refinementList, {
+  closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+  buttonText: "Audience",
+});
+
+const categoriesDropdown = createDropdown(
+  instantsearch.widgets.refinementList,
+  {
+    closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+    buttonText: "Category",
+  }
+);
+
+const topicsDropdown = createDropdown(instantsearch.widgets.refinementList, {
+  closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+  buttonText: "Topics",
+});
 
 searchResults.addWidgets([
   instantsearch.widgets.searchBox({
-    container: searchBoxID,
+    container: "#search-results-bar",
     autofocus: true,
     showReset: false,
     searchAsYouType: false,
@@ -51,6 +80,7 @@ searchResults.addWidgets([
       search(query);
     },
   }),
+
   instantsearch.widgets.configure({
     hitsPerPage: 120,
   }),
@@ -58,7 +88,7 @@ searchResults.addWidgets([
     container: "#hits",
     templates: {
       item(item) {
-        imagelink = "";
+        var imagelink = "";
         if (item.field_plp_program_smugmug) {
           imagelink =
             '<img src ="https://photos.smugmug.com/photos/' +
@@ -92,6 +122,25 @@ searchResults.addWidgets([
     },
   }),
 
+
+
+  programAreaDropdown({
+    container: "#program_area",
+    attribute: "program_area",
+  }),
+  audienceDropdown({
+    container: "#audience",
+    attribute: "audiences",
+  }),
+  categoriesDropdown({
+    container: "#categories",
+    attribute: "category_name",
+  }),
+  topicsDropdown({
+    container: "#topics",
+    attribute: "topic_names",
+  }),
+
   instantsearch.widgets.stats({
     container: "#stats",
     templates: {
@@ -103,74 +152,6 @@ searchResults.addWidgets([
         `;
     },
   },
-  }),
-]);
-
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#category_name",
-    attribute: "category_name",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
-  }),
-]);
-
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#topic_names",
-    attribute: "topic_names",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
-  }),
-]);
-
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#audiences",
-    attribute: "audiences",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
-  }),
-]);
-
-searchResults.addWidgets([
-  instantsearch.widgets.refinementList({
-    container: "#program_area",
-    attribute: "program_area",
-    templates: {
-      item(item) {
-        const { url, label, count, isRefined } = item;
-      return `
-        <a href="${url}">
-          <span class="btn btn-outline-primary">${label} (${count})</span>
-        </a>
-      `;
-      },
-    },
   }),
 ]);
 

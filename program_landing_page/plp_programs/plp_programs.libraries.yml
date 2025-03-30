@@ -7,10 +7,14 @@ plp_programs:
 
 plp_programs_search_results:
   js:
-    js/search-results.js: {}
+    js/search-results.js: {attributes: { type: module }}
+    js/Dropdown.js: {attributes: { type: module }}
+    js/util.js: {attributes: { type: module }}
   css:
     theme:
       css/search-results.css: {}
+      css/Dropdown.css: {}
+      css/app.css: {}
 
 plp_programs_search_bar_only:
   js:

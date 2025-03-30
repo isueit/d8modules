@@ -49,10 +49,6 @@ class PLPProgramsSearchResults extends BlockBase
 
         <script src="https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
-        <script src="/modules/custom/d8modules/program_landing_page/plp_programs/js/app.js" type="module"></script>
-        <link href="/modules/custom/d8modules/program_landing_page/plp_programs/css/Dropdown.css" media="all" rel="stylesheet" />
-        <link href="/modules/custom/d8modules/program_landing_page/plp_programs/css/app.css" media="all" rel="stylesheet" />
-        <link href="/modules/custom/d8modules/program_landing_page/plp_programs/css/search-results.css" media="all" rel="stylesheet" />
     ';
 
     //Add allowed tags for svg map
@@ -62,7 +58,7 @@ class PLPProgramsSearchResults extends BlockBase
     $block = [];
     $block['#allowed_tags'] = $tags;
     $block['#markup'] = $results;
-  //  $block['#attached']['library'][] = 'plp_programs/plp_programs_search_results';
+    $block['#attached']['library'][] = 'plp_programs/plp_programs_search_results';
     return $block;
   }
 
