@@ -1,6 +1,6 @@
 .ais-Dropdown-button {
-  border: 1px solid #d6d6e7;
-  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--midnight);
+  padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   cursor: pointer;
   font-family: var(--sans-font);
@@ -8,52 +8,63 @@
   line-height: 1.5;
   background-color: transparent;
 }
-
 .ais-Dropdown-button--refined {
   font-weight: bold;
 }
-
-.ais-Dropdown-button:hover {
-  background-color: #f5f5fa;
+button.ais-Dropdown-button:after {
+  content: "\f078";
+  font-family: 'FontAwesome';
+  margin-left: .5rem;
 }
-
 .ais-Dropdown .ais-Panel-body > div > div[class^='ais-'] {
   position: absolute;
   border: 1px solid #ccc;
   border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  margin-top: 0.5rem;
+  padding: 0.75rem;
   background-color: #fff;
+  z-index: 250;
+  min-width: 300px;
+  max-height: 500px;
+  overflow: auto;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  scrollbar-width: thin;
+  scrollbar-color: #EBEBEB #F5F5F5;
 }
-
 .ais-Dropdown .ais-Panel-header {
   margin-bottom: 0;
   padding-bottom: 0;
   border-bottom: 0;
 }
-
 .ais-Dropdown .ais-Panel-body {
   display: none;
 }
-
 .ais-Dropdown--opened .ais-Panel-body {
   display: block;
 }
-
 .ais-Dropdown .ais-Panel-body {
   position: relative;
 }
-
 .ais-Dropdown-close {
   display: none;
 }
-
-/* mobile */
+input.ais-RefinementList-checkbox {
+  margin-right: .5rem;
+}
+input[type=checkbox].ais-RefinementList-checkbox {
+  transform: scale(1.4);
+  vertical-align: middle;
+  transition: box-shadow 150ms ease-out;
+}
+.ais-RefinementList-labelText {
+  margin-right: .5rem;
+}
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */
 @media only screen and (max-width: 375px) {
   body {
     overflow: hidden;
   }
-
   .ais-Dropdown--opened .ais-Panel-body {
     position: absolute;
     top: 0;
@@ -62,7 +73,6 @@
     bottom: 0;
     background: #fff;
   }
-
   .ais-Dropdown--opened .ais-Panel-body > div > div[class^='ais-'] {
     margin-top: 0;
     top: 0;
@@ -71,7 +81,6 @@
     height: 85vh;
     border: 0;
   }
-
   .ais-Dropdown--opened .ais-Panel-footer {
     position: absolute;
     top: 85vh;
@@ -79,7 +88,6 @@
     left: 0;
     bottom: 0;
   }
-
   .ais-Dropdown-close {
     border: 1px solid #d6d6e7;
     background: #fff;
@@ -91,11 +99,9 @@
     height: 3rem;
     font-size: 1rem;
   }
-
   .ais-Dropdown-close:hover {
     background-color: #f5f5fa;
   }
-
   .ais-Dropdown--opened .ais-Dropdown-close {
     display: inline;
   }

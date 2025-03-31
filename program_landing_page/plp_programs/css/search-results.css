@@ -3,13 +3,14 @@
 /* ------------------------------------- */
 .search-results .ais-InfiniteHits li {
     list-style: none;
+    max-width: 80%;
 }
 .search-results .ais-InfiniteHits ol {
     padding-left: 0;
 }
 .search-results .card img {
-    max-width: 245px;
-    height: 100%;
+    width: 250px;
+    height: 180px;
     object-fit: cover;
     border: 10px solid #fff;
 }
@@ -108,6 +109,7 @@
     list-style: none;
     display: inline-block;
     margin: 0.3rem;
+    width: 100%;
 }
 .search-results-facets .btn-outline-primary {
     font-size: .8rem;
