@@ -1,9 +1,13 @@
 /* ------------------------------------- */
 /* ## RESULTS
 /* ------------------------------------- */
+.search-results {
+    max-width: 1140px;
+    margin: 1.125rem 1.1rem .5rem;
+}
 .search-results .ais-InfiniteHits li {
     list-style: none;
-    max-width: 80%;
+    margin: 1.125rem 1.1rem 0.5rem 0;
 }
 .search-results .ais-InfiniteHits ol {
     padding-left: 0;
@@ -12,7 +16,8 @@
     width: 250px;
     height: 180px;
     object-fit: cover;
-    border: 10px solid #fff;
+    border-top: 10px solid #fff;
+    border-bottom: 10px solid #fff;
 }
 .search-results .card .card-body {
     text-align: left;
@@ -26,7 +31,6 @@
     text-decoration: underline;
 }
 .search-results .card-title {
-    margin-bottom: 0;
     line-height: 1;
 }
 .search-results h2 {
@@ -43,7 +47,9 @@
     padding: 0 0 0.8rem 0.5rem;
     font-weight: 700;
 }
-
+.search-results-snipets #stats {
+    margin: 1.125rem 1.1rem 0.5rem 0;
+}
 /* --------------------------------------  */
 /* ## Responsive
 /* --------------------------------------  */
@@ -89,17 +95,17 @@
 /* ## FACETS
 /* ------------------------------------- */
 .search-results-facets-outer_wrapper {
-    padding: 1rem 0 3rem 0;
+    margin: 1.125rem 1.1rem .5rem 0;
 }
 .search-results-facets-inner_wrapper {
     display: grid;
-    grid-gap: 16px;
-    grid-template-columns: 12fr 3fr;
+    grid-template-columns: 11fr 10fr;
 }
 .search-results-facets {
     display: flex;
     flex-wrap: wrap;
-    grid-gap: 16px;
+    grid-gap: 10px;
+    justify-content: flex-end;
 }
 .search-results .ais-RefinementList ul {
     padding-left: 0;
@@ -132,14 +138,13 @@
     .search-results .card img {
         max-width: 175px;
     }
-    
 }
 /* ------------------------------------- */
 /* ## SEARCH BAR
 /* ------------------------------------- */
 #search-results-bar input.ais-SearchBox-input {
     margin-bottom: .5rem;
-    width: 89%;
+    width: 90%;
     height: 3rem;
     border-radius: 0.5rem 0 0 0.5rem;
     border-top: 1px solid;
@@ -151,6 +156,9 @@
     font-size: 1rem;
     background-clip: padding-box;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.search-results-snipets #search-results-bar {
+    margin: 3.125rem 1.1rem 0;
 }
 #search-results-bar button.ais-SearchBox-submit {
     width: 2.5rem;
@@ -173,7 +181,12 @@
     outline: 1px solid #f1be48;
 }
 .isueo-searchall {
-    padding-left: 1.5rem;
+    padding-left: 1rem;
     font-size: .8rem;
     padding-bottom: 2rem;
 }
+
+
+/* --------------------------------------  */
+/* ## Responsive
+/* --------------------------------------  */

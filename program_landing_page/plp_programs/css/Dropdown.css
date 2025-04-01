@@ -1,12 +1,13 @@
 .ais-Dropdown-button {
   border: 1px solid var(--midnight);
-  padding: 0.5rem 1rem;
+  padding: 0.375rem 0.75rem;
   border-radius: 0.25rem;
   cursor: pointer;
   font-family: var(--sans-font);
   font-size: clamp(1rem, 1vw, 1rem);
   line-height: 1.5;
   background-color: transparent;
+  height: 3rem;
 }
 .ais-Dropdown-button--refined {
   font-weight: bold;
@@ -57,6 +58,15 @@ input[type=checkbox].ais-RefinementList-checkbox {
 }
 .ais-RefinementList-labelText {
   margin-right: .5rem;
+}
+li.ais-RefinementList-item.ais-RefinementList-item--selected input[type=checkbox].ais-RefinementList-checkbox {
+  accent-color: var(--cardinal);
+}
+.ais-RefinementList-count:before {
+  content: "(";
+}
+.ais-RefinementList-count:after {
+  content: ")";
 }
 /* --------------------------------------  */
 /* ## Responsive
