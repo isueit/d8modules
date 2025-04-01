@@ -150,9 +150,12 @@ searchResults.addWidgets([
         ${data.nbHits} result(s) found
         </div>
         `;
+      },
     },
-  },
   }),
+  instantsearch.widgets.currentRefinements({
+    container: "#current-refinements",
+  })
 ]);
 
 searchResults.start();
