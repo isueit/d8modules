@@ -29,7 +29,6 @@ class PLPProgramsSearchResults extends BlockBase
     //\Drupal::service('page_cache_kill_switch')->trigger();
 
     $results = '
-        <div class="row">
           <div class="search-results">
           <div class="search-results-facets-outer_wrapper">
           <div class="search-results-facets-inner_wrapper">
@@ -50,8 +49,6 @@ class PLPProgramsSearchResults extends BlockBase
               <div id="hits"></div>
             </div>
           </div>
-
-        </div>
 
         <script src="https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>

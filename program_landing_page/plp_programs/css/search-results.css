@@ -50,6 +50,9 @@
 .search-results-snipets #stats {
     margin: 1.125rem 1.1rem 0.5rem 0;
 }
+button.ais-InfiniteHits-loadMore.btn-outline-danger.btn {
+    margin: 1.125rem 1.1rem 0.5rem;
+}
 /* --------------------------------------  */
 /* ## Responsive
 /* --------------------------------------  */
@@ -57,14 +60,21 @@
     .search-results .card-title {
         margin-left: 0 !important;
     }
+    .search-results-facets-inner_wrapper {
+        grid-template-columns: 9fr 11fr;
+    }
+    .search-results .card img {
+        border-left: 10px solid #fff;
+    }
 }
 @media screen and (max-width : 768px) {
     div#block-iastate-theme-content--2 h2.hit-name.card-title {
         margin-left: 0;
+        margin-right: 0;
     }
 }
 
-@media screen and (min-width : 768px) {
+@media screen and (min-width : 575px) {
     #hits .col-md-4 {
         flex: 0 0 25%;
     }
@@ -76,8 +86,27 @@
         max-width: 33.333333%;
     }
     #hits .col-md-8 {
-        flex: 0 0 66.666667%;
-        max-width: 66.666667%;
+        flex: 0 0 75%;
+        max-width: 75%;
+    }
+    .search-results {
+        margin: 0;
+    }
+    .search-results .card img {
+        height: 100%;
+    }
+    .search-results h2 {
+        padding-bottom: 0;
+        margin-right: 0;
+    }
+    .search-results .card .card-body {
+        padding: 0.75rem;
+    }
+    .search-results .ais-InfiniteHits li {
+        margin: 0;
+    }
+    #search-results-bar input.ais-SearchBox-input {
+        width: 85%;
     }
 }
 
@@ -99,7 +128,7 @@
 }
 .search-results-facets-inner_wrapper {
     display: grid;
-    grid-template-columns: 11fr 10fr;
+    grid-template-columns: 1fr 1fr;
 }
 .search-results-facets {
     display: flex;
@@ -134,11 +163,46 @@
 /* --------------------------------------  */
 /* ## Responsive
 /* --------------------------------------  */
-@media screen and (max-width : 768px) {
-    .search-results .card img {
-        max-width: 175px;
+@media screen and (max-width : 375px) {
+    #hits .col-md-4 {
+        display: none;
+    }
+    #hits .col-md-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .search-results-facets #program_area, .search-results-facets #audience, .search-results-facets #categories, .search-results-facets #topics {
+        flex: 0 0 48% !important;
     }
 }
+@media screen and (max-width : 575px) {
+    .search-results .card img {
+        max-width: 140px;
+    }
+    .search-results-facets #program_area, .search-results-facets #audience, .search-results-facets #categories, .search-results-facets #topics {
+        flex: 0 0 40%;
+    }
+
+}
+@media screen and (max-width : 768px) {
+    .search-results .card img {
+        max-width: 100%;
+    }
+}
+@media screen and (max-width : 1099px) {
+    .search-results-facets-inner_wrapper {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    .search-results-facets {
+        justify-content: flex-start;
+        padding-bottom: 2.5rem;
+    }
+    .isueo-searchall {
+        padding-bottom: 1rem;
+    }
+}
+    
 /* ------------------------------------- */
 /* ## SEARCH BAR
 /* ------------------------------------- */
