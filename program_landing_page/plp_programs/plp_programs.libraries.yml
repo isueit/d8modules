@@ -14,7 +14,6 @@ plp_programs_search_results:
     theme:
       css/search-results.css: {}
       css/Dropdown.css: {}
-      css/app.css: {}
 
 plp_programs_search_bar_only:
   js:

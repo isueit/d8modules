@@ -32,7 +32,7 @@ class PLPProgramsSearchResults extends BlockBase
           <div class="search-results">
           <div class="search-results-facets-outer_wrapper">
           <div class="search-results-facets-inner_wrapper">
-          <div class="search-results-bar-wrapper"> 
+          <div class="search-results-bar-wrapper">
           <div id="search-results-bar"></div>
             <div class="isueo-searchall" id="isueo-searchall"><a href="https://www.extension.iastate.edu/search-results?search_broadness=wide">Search all of Extension</a></div>
           </div>
@@ -42,6 +42,7 @@ class PLPProgramsSearchResults extends BlockBase
               <div id="categories"></div>
               <div id="topics"></div>
             </div>
+            <div id="current-refinements"></div>
             </div>
             </div>
             <div class="search-results-snipets">
