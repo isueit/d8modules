@@ -1,7 +1,7 @@
 /* Styles for the home page search bar go here */
 #search-bar-only input.ais-SearchBox-input {
     margin-bottom: .5rem;
-    width: 89%;
+    width: 85%;
     height: 3rem;
     border-radius: 0.5rem 0 0 0.5rem;
     border-top: 1px solid;

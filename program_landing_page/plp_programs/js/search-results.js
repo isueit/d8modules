@@ -155,7 +155,35 @@ searchResults.addWidgets([
   }),
   instantsearch.widgets.currentRefinements({
     container: "#current-refinements",
-  })
-]);
+    transformItems(items) {
+      return items.map(item => ({
+        ...item,
+        refinements: item.refinements.map(refinement => ({
+          ...refinement,
+          label: refinement.label, // Keep the label intact for rendering later
+        }))
+      }));
+    },
+  }), 
+  ]);
+  searchResults.on('render', function () {
+    const refinementsList = document.querySelector('#current-refinements .ais-CurrentRefinements-list');
+    
+    if (refinementsList) {
+      const refinementItems = refinementsList.querySelectorAll('.ais-CurrentRefinements-item');
+  
+      refinementItems.forEach(item => {
+        const categoryLabel = item.querySelector('.ais-CurrentRefinements-categoryLabel');
+        const deleteButton = item.querySelector('.ais-CurrentRefinements-delete');
+  
+        // Move the category label inside the delete button
+        if (categoryLabel && deleteButton) {
+          deleteButton.innerHTML = categoryLabel.innerHTML; // Adding label inside the button
+          deleteButton.classList.add('btn', 'btn-outline-primary');
+          categoryLabel.style.display = 'none'; // Hide the categoryLabel span
+        }
+      });
+    }
+  });
 
 searchResults.start();

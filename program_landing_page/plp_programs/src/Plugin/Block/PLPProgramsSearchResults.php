@@ -42,8 +42,8 @@ class PLPProgramsSearchResults extends BlockBase
               <div id="categories"></div>
               <div id="topics"></div>
             </div>
-            <div id="current-refinements"></div>
             </div>
+            <div id="current-refinements"></div>
             </div>
             <div class="search-results-snipets">
               <div id="stats"></div>

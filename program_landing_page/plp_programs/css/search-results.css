@@ -161,6 +161,41 @@ button.ais-InfiniteHits-loadMore.btn-outline-danger.btn {
 }
 
 /* --------------------------------------  */
+/* ## Current Refinements
+/* --------------------------------------  */
+ul.ais-CurrentRefinements-list {
+    padding-left: 0;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: repeat(5, 1fr);
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+li.ais-CurrentRefinements-item {
+    list-style: none;
+}
+span.ais-CurrentRefinements-label {
+    display: none;
+}
+div#current-refinements {
+    padding: 0 0 0.8rem 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+button.ais-CurrentRefinements-delete.btn.btn-outline-primary {
+    font-size: .8rem;
+}
+button.ais-CurrentRefinements-delete.btn.btn-outline-primary::after {
+    content: "\f00d";
+    font-family: 'FontAwesome';
+    display: inline;
+    margin-left: .7rem;
+    vertical-align: middle;
+}
+button.ais-CurrentRefinements-delete.btn.btn-outline-primary:hover::after {
+    background: transparent;
+}
+/* --------------------------------------  */
 /* ## Responsive
 /* --------------------------------------  */
 @media screen and (max-width : 375px) {
@@ -174,19 +209,35 @@ button.ais-InfiniteHits-loadMore.btn-outline-danger.btn {
     .search-results-facets #program_area, .search-results-facets #audience, .search-results-facets #categories, .search-results-facets #topics {
         flex: 0 0 48% !important;
     }
+    #search-results-bar input.ais-SearchBox-input {
+        width: 85%;
+    }
+}
+@media screen and (max-width : 425px) {
+    ul.ais-CurrentRefinements-list {
+        grid-template-columns: 1fr;
+    }
 }
 @media screen and (max-width : 575px) {
     .search-results .card img {
         max-width: 140px;
     }
     .search-results-facets #program_area, .search-results-facets #audience, .search-results-facets #categories, .search-results-facets #topics {
-        flex: 0 0 40%;
+        flex: 0 0 45%;
     }
-
+    ul.ais-CurrentRefinements-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 @media screen and (max-width : 768px) {
     .search-results .card img {
         max-width: 100%;
+    }
+    ul.ais-CurrentRefinements-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    div#current-refinements {
+        padding: 0 0 0.8rem 0;
     }
 }
 @media screen and (max-width : 1099px) {
@@ -200,6 +251,11 @@ button.ais-InfiniteHits-loadMore.btn-outline-danger.btn {
     }
     .isueo-searchall {
         padding-bottom: 1rem;
+    }
+}
+@media screen and (max-width : 1199px) {
+    ul.ais-CurrentRefinements-list {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
     
@@ -247,7 +303,7 @@ button.ais-InfiniteHits-loadMore.btn-outline-danger.btn {
 .isueo-searchall {
     padding-left: 1rem;
     font-size: .8rem;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 
 
