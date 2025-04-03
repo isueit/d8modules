@@ -71,6 +71,11 @@ function plp_typesense_index_all_programs()
 // Index a single program
 function plp_typesense_index_program($client, $collection_name, $node)
 {
+  // An empty id means it's a new program, and we don't yet have all the info we need yet
+  // Don't worry, it will get saved again with the correct info almost immediately
+  if (empty($node->id())) {
+    return;
+  }
   // Handle the easy fields
   $record = [
     'id' => 'plp_program:' . $node->id(),
