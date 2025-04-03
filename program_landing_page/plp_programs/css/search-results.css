@@ -90,7 +90,7 @@ button.ais-InfiniteHits-loadMore.btn-outline-danger.btn {
         max-width: 75%;
     }
     .search-results {
-        margin: 0;
+        margin: .7rem;
     }
     .search-results .card img {
         height: 100%;
@@ -209,13 +209,16 @@ button.ais-CurrentRefinements-delete.btn.btn-outline-primary:hover::after {
     .search-results-facets #program_area, .search-results-facets #audience, .search-results-facets #categories, .search-results-facets #topics {
         flex: 0 0 48% !important;
     }
-    #search-results-bar input.ais-SearchBox-input {
-        width: 85%;
-    }
 }
 @media screen and (max-width : 425px) {
     ul.ais-CurrentRefinements-list {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
+    }
+    .search-results-facets-outer_wrapper {
+        margin: 1.125rem 1.1rem .5rem;
+    }
+    #search-results-bar input.ais-SearchBox-input {
+        width: 85%;
     }
 }
 @media screen and (max-width : 575px) {
@@ -226,7 +229,7 @@ button.ais-CurrentRefinements-delete.btn.btn-outline-primary:hover::after {
         flex: 0 0 45%;
     }
     ul.ais-CurrentRefinements-list {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 }
 @media screen and (max-width : 768px) {
@@ -234,7 +237,7 @@ button.ais-CurrentRefinements-delete.btn.btn-outline-primary:hover::after {
         max-width: 100%;
     }
     ul.ais-CurrentRefinements-list {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 1fr) !important;
     }
     div#current-refinements {
         padding: 0 0 0.8rem 0;
