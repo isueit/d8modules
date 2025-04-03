@@ -239,6 +239,10 @@
         font-size: 1.1rem;
         padding: 1rem 2rem 1.3rem 1rem;
     }
+    .plp-category-cards .col-md-6 {
+        flex: 0 0 85%;
+        margin: auto;
+    }
 }
 @media screen and (max-width : 768px) {
     .plp-related-programs {
