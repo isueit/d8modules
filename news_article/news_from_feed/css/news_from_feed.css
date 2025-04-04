@@ -9,8 +9,7 @@
 
 #news_from_feed img {
 	object-fit: cover;
-	width: 480px;
-	height: 320px;
+	aspect-ratio: 3 / 2;
 }
 
 .more-news a {
