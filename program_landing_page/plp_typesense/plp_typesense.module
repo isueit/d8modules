@@ -2,6 +2,7 @@
 
 use Drupal\node\Entity\Node;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\General;
 use Drupal\isueo_helpers\ISUEOHelpers\Taxonomy;
 use Drupal\isueo_helpers\ISUEOHelpers\Typesense;
 use Drupal\taxonomy\Entity\Term;
@@ -11,6 +12,11 @@ use Drupal\taxonomy\Entity\Term;
  */
 function plp_typesense_node_delete(Drupal\Core\Entity\EntityInterface $entity)
 {
+  // Only do this from the production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
 
@@ -31,6 +37,10 @@ function plp_typesense_node_delete(Drupal\Core\Entity\EntityInterface $entity)
 * Implements hook_entity_presave().
 */
 function plp_typesense_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  // Only do this from the production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
 
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
@@ -56,6 +66,11 @@ function plp_typesense_entity_presave(Drupal\Core\Entity\EntityInterface $entity
 // Currently not used, but it could be, either in a cron command, hook_rebuild, and/or hook_cron
 function plp_typesense_index_all_programs()
 {
+  // Only do this from the production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
 
@@ -71,6 +86,11 @@ function plp_typesense_index_all_programs()
 // Index a single program
 function plp_typesense_index_program($client, $collection_name, $node)
 {
+  // Only do this from the production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   // An empty id means it's a new program, and we don't yet have all the info we need yet
   // Don't worry, it will get saved again with the correct info almost immediately
   if (empty($node->id())) {

@@ -67,4 +67,8 @@ class General
   {
     return 'https://photos.smugmug.com/photos/' . $id . '/10000/' . $size . '/' . $id . '-' . $size . '.jpg';
   }
+
+  public static function is_production_server() {
+    return str_starts_with(DRUPAL_ROOT, '/var/www/websites');
+  }
 }
