@@ -92,6 +92,7 @@ function plp_programs_getprograms()
       $mynode = $nodes[$program['Id']];
     } else {
       $mynode = Node::create(array('type' => 'plp_program', 'title' => html_entity_decode($program['Name']), 'field_plp_program_mydata_id' => $program['Id'],));
+      $mynode->save();
       $save = true;
     }
 
