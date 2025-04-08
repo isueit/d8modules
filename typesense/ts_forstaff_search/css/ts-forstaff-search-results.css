@@ -63,7 +63,7 @@
 /* ## SEARCH HIGHLIGHT
 /* ------------------------------------- */
 .ts-forstaff-search-results mark {
-    background-color: #c8102e;
+    background-color: var(--primary-color);
     color: #fff;
     padding: 0;
     font-weight: bold;
@@ -95,7 +95,7 @@
     background: none;
 }
 .ts-forstaff-search-results li.ais-RefinementList-item.ais-RefinementList-item--selected .btn-outline-primary {
-    background-color: #003d4c;
+    background-color: var(--tertiary-color);
     color: #fff;
 }
 
@@ -135,7 +135,7 @@
     width: 1.3rem;
 }
 .ts-forstaff-search-results #search-results-bar input.ais-SearchBox-input:focus-visible {
-    outline: 1px solid #f1be48;
+    outline: 1px solid var(--primary-accent-color);
 }
 .isueo-searchall {
     padding-left: 1.5rem;

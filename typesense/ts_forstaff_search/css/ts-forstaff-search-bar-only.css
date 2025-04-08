@@ -31,5 +31,5 @@
     width: 1.3rem;
 }
 #ts-forstaff-search-bar-only input.ais-SearchBox-input:focus-visible {
-    outline: 1px solid #f1be48;
+    outline: 1px solid var(--primary-accent-color);
 }

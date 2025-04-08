@@ -11,7 +11,7 @@ div.staff_profile_counties_served div.staff_profile_counties_served {width:80%; 
 p.address span.country {display:none;}
 
 /* Custodian of Public Records Styles */
-.isu-custodian-records:before { content: "\f46c"; font-family: FontAwesome; color: var(--cardinal); font-size: 1.3rem; padding-right: 5px; }
+.isu-custodian-records:before { content: "\f46c"; font-family: FontAwesome; color: var(--primary-color); font-size: 1.3rem; padding-right: 5px; }
 .isu-custodian-records { float: right; font-size: 0.9rem; }
 
 /* Responsive Styles */
