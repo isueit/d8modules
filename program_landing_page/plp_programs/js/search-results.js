@@ -170,7 +170,7 @@ searchResults.addWidgets([
     const refinementsList = document.querySelector('#current-refinements .ais-CurrentRefinements-list');
     
     if (refinementsList) {
-      const refinementItems = refinementsList.querySelectorAll('.ais-CurrentRefinements-item');
+      const refinementItems = refinementsList.querySelectorAll('.ais-CurrentRefinements-category');
   
       refinementItems.forEach(item => {
         const categoryLabel = item.querySelector('.ais-CurrentRefinements-categoryLabel');
