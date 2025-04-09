@@ -25,7 +25,7 @@ ul.program_offering_blocks {
  
  div.event_date {float:left;
    margin:0 5px 35px 0;
-   border-right: 2px solid #f1be47;
+   border-right: 2px solid var(--primary-accent-color);
    padding-right: 5px;
    min-width: 50px;
  }
@@ -80,7 +80,7 @@ ul.program_offering_blocks {
  #isu-horiz-events div.event_date {
    border-right: none;
    height: 100%;
-   background-color: var(--cardinal);
+   background-color: var(--primary-color);
    line-height: 1.2;
    width: 82px;
    font-size: 1.6rem;
@@ -108,11 +108,11 @@ ul.program_offering_blocks {
    line-height: 1.2;
    margin-top: 1em;
    font-size: clamp(.9rem, 1.1vw, .8rem);
-   color: var(--cardinal);
+   color: var(--primary-color);
    font-weight: 600;
  }
  #isu-horiz-events li:hover {
-   border: 0.2rem solid var(--gold);
+   border: 0.2rem solid var(--primary-accent-color);
    transition: opacity .2s ease-in-out;
    cursor: pointer;
    margin: -3px;
@@ -141,7 +141,7 @@ ul.program_offering_blocks {
    float: right;
  }
 #isu-horiz-events li:hover {
-  border: 0.2rem solid var(--gold);
+  border: 0.2rem solid var(--primary-accent-color);
   transition: opacity .2s ease-in-out;
   cursor: pointer;
   margin: -3px;
@@ -176,13 +176,13 @@ a#isu-horiz-events {
 #isu-horiz-events + a.events_show_more {
     all: revert;
     float: right;
-    color: var(--burgundy);
+    color: var(--link-color);
 }
 
 #isu-horiz-events + a.events_show_more:hover, #isu-horiz-events + a.events_show_more:after {
     all: revert;
     float: right;
-    color: var(--cardinal);
+    color: var(--primary-color);
 }
 /* --------------------------------------  */
 /* ## Responsive

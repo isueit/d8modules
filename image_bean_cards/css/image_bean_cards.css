@@ -1,285 +1,114 @@
-/* -------------------------------------- */
-
-/* ## Bean Cards
-
-/* -------------------------------------- */
-
+/* --------------------------------------  */
+/* ## BEAN CARDS
+/* --------------------------------------  */
 .bean-card {
-
     position: relative;
-
     justify-content: center;
-
     border-radius: 3px;
-
     color: #ffffff;
-
     margin-bottom: 1rem;
-
-    }
-
-    /* Old bean-card body css
-
-    .bean-card_text {
-
-    position: relative;
-
-    color: #ffffff;
-
-    padding-top: 22%;
-
-    border: 1px solid #eee;
-
-    height: 180px;
-
-    margin-bottom: 25px;
-
-    margin-right: 25px;
-
-    } */
-
-    .bean-card.bean-card_width_full {
-
+}
+.bean-card.bean-card_width_full {
     display: block;
-
-    }
-
-    a.bean-card_link {
-
+}
+a.bean-card_link {
     display: block;
-
     position: relative;
-
     color: #ffffff;
-
     text-decoration: none;
-
     border-radius: 3px;
-
     overflow: hidden;
-
-    }
-
-
-
-    .bean-card a:hover {
-
+}
+.bean-card a:hover {
     box-shadow: 0 0 5px 1px #7a99ac;
-
-    }
-
-
-
-    /* Used for image card */
-
-    .bean-card_img img {
-
+}
+/* Used for image card */
+.bean-card_img img {
     width: 100%;
-
-    }
-
-    .bean-card_label {
-
+}
+.bean-card_label {
     display: flex;
-
     padding: 0.75rem 1rem;
-
     justify-content: center;
-
-    background: #c8102e;
-
+    background: var(--btn-danger-color);
     font-size: 1.5rem;
-
-    }
-
-    .bean-card_label p {
-
+}
+.bean-card_label p {
     margin: 0;
-
     line-height: 1.45;
-
-    }
-
-
-
-    .bean-card_label div {
-
+}
+.bean-card_label div {
     margin: 0;
-
-    }
-
-
-
-    /* Used for content card */
-
-    .bean-card_body {
-
+}
+/* Used for content card */
+.bean-card_body {
     color: black;
-
     padding: 0.5rem 0.5rem 0 0.5rem;
-
-    border: 3px solid #c8102e;
-
-    }
-
-
-
-    /* Fontawesome icons - this isn't being used (used declaration on line: 842)
-
-    .fontawesome-icons {
-
+    border: 3px solid var(--btn-danger-color);
+}
+/* Fontawesome icons - this isn't being used (used declaration on line: 842)
+.fontawesome-icons {
     font-family: 'FontAwesome';
-
-    } */
-
-
-
-    div.fontawesome-icon i {
-
+} */
+div.fontawesome-icon i {
     font-style: normal;
+}
+/* Colors */
+.bean-card_label.Blue { background: #006ba6; }
+.bean-card_label.Green { background: var(--btn-success-color); }
+.bean-card_label.Dark-Red { background: var(--btn-secondary-color); }
+.bean-card_label.Dark-Blue { background: var(--btn-primary-color); }
+.bean-card_label.Dark-Green { background: #3E4827; }
+.bean-card_label.Brown { background: #8b5b29; }
+.bean-card_label.Grey { background: #707372; }
 
-    }
+/* Changes color of border depending on selected label color (content cards) */
+.bean-card_body.Blue { border-color: #006ba6; }
+.bean-card_body.Green { border-color: var(--btn-success-color); }
+.bean-card_body.Dark-Red { border-color: var(--btn-secondary-color); }
+.bean-card_body.Dark-Blue { border-color: var(--btn-primary-color); }
+.bean-card_body.Dark-Green { border-color: #3E4827; }
+.bean-card_body.Brown { border-color: #8b5b29; }
+.bean-card_body.Grey { border-color: #707372; }
 
-    /* Colors */
-
-    .bean-card_label.Blue { background: #006ba6; }
-
-    .bean-card_label.Green { background: #00854d; }
-
-    .bean-card_label.Dark-Red { background: #7C2529; }
-
-    .bean-card_label.Dark-Blue { background: #003D4C; }
-
-    .bean-card_label.Dark-Green { background: #3E4827; }
-
-    .bean-card_label.Brown { background: #8b5b29; }
-
-    .bean-card_label.Grey { background: #707372; }
-
-
-
-    /* Changes color of border depending on selected label color (content cards) */
-
-    .bean-card_body.Blue { border-color: #006ba6; }
-
-    .bean-card_body.Green { border-color: #00854d; }
-
-    .bean-card_body.Dark-Red { border-color: #7C2529; }
-
-    .bean-card_body.Dark-Blue { border-color: #003D4C; }
-
-    .bean-card_body.Dark-Green { border-color: #3E4827; }
-
-    .bean-card_body.Brown { border-color: #8b5b29; }
-
-    .bean-card_body.Grey { border-color: #707372; }
-
-    /* Overlay */
-
-    /* Overlay needs a minimum height in case there is no image. */
-
-    .bean-card_label.Dark-Overlay_Left,
-
-    .bean-card_label.Dark-Overlay_Bottom {
-
+/* Overlay */
+/* Overlay needs a minimum height in case there is no image. */
+.bean-card_label.Dark-Overlay_Left, .bean-card_label.Dark-Overlay_Bottom {
     min-height: 100px;
-
     background: #efefef;
-
-    }
-
-    .bean-card_label.Dark-Overlay_Left,
-
-    .bean-card_label.Dark-Overlay_Bottom {
-
+}
+.bean-card_label.Dark-Overlay_Left, .bean-card_label.Dark-Overlay_Bottom {
     position: absolute;
-
     text-align: left;
-
     background: rgba(0, 0, 0, 0.75);
-
-    }
-
-    .bean-card_label.Dark-Overlay_Left {
-
+}
+.bean-card_label.Dark-Overlay_Left {
     left: 0; bottom: 20%;
-
     max-width: 90%;
-
-    }
-
-    .bean-card_label.Dark-Overlay_Bottom {
-
+}
+.bean-card_label.Dark-Overlay_Bottom {
     left: 0; bottom: 0; right: 0;
-
     width: 100%;
+}
 
-    }
-
-    /* Text Size */
-
-    .fontawesome-icons {
-
+/* Text Size */
+.fontawesome-icons {
     font-family: FontAwesome;
-
-    }
-
-    .bean-card_label.Small {
-
+}
+.bean-card_label.Small {
     font-size: 1rem !important;
-
-    }
-
-
-
-    .bean-card_label.Medium {
-
+}
+.bean-card_label.Medium {
     font-size: 1.5rem !important;
-
-    }
-
-    .bean-card_label.Large {
-
+}
+.bean-card_label.Large {
     font-size: 2rem !important;
+}
 
-    }
+/* Kill external link icon */
+#section-content .bean-card a.external:after { display: none; }
 
-    /*.bean-card_label.Small div.fontawesome-icons {
-
-    margin-right: 0.5rem;
-
-    padding-right: 5px;
-
-    }
-
-    .bean-card_label.Medium div.fontawesome-icons {
-
-    margin-right: 1rem;
-
-    padding-right: 5px;
-
-    }
-
-    .bean-card_label.Large div.fontawesome-icons {
-
-    margin-right: 1.25rem;
-
-    padding-right: 5px;
-
-    }
-*/
-
-
-    /* Kill external link icon */
-
-    #section-content .bean-card a.external:after { display: none; }
-
-
-
-    /* Hamburger Menu */
-
-    .navbar-toggler:not(:disabled):not(.disabled) {
-
+/* Hamburger Menu */
+.navbar-toggler:not(:disabled):not(.disabled) {
     margin-top: -23px;
-
-    }
+}

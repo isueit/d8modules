@@ -86,7 +86,7 @@ div.clearer {clear:both;}
     vertical-align: middle;
     width: 2rem !important;
     margin-right: 0.7rem;
-    color: var(--cardinal);
+    color: var(--primary-color);
 }
 .event_details_wrapper .icon>svg path {
     fill: #c8102e;
