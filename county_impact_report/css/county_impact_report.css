@@ -1,12 +1,7 @@
 :root {
-	--cardinal: #c8102e;
-	--gold: #f1be48;
-	--burgundy: #7c2529;
 	--dk-gray: #4a4a4a;
 	--lt-gray: #f5f5f5;
 	--md-gray: #ebebeb;
-	--midnight: #003d4c;
-	--green: #008540;
 	--sans-font: 'Arial', 'Helvetica Neue', sans-serif;
 	--serif-font: 'Merriweather', serif;
   }
@@ -60,7 +55,7 @@ div#block-iastate-theme-content--2 .paragraph {
 
 /* Statistics */
 .impact_statistic__title {
-	color: var(--gold);
+	color: var(--primary-accent-color);
 	font-family: var(--serif-font);
 	font-weight: 700;
 	font-size: 3.4375rem;
@@ -125,7 +120,7 @@ div#block-iastate-theme-content--2 .paragraph {
 		font-weight: normal;
 	}
 	div.isueo-callout-stat svg {
-		color: var(--cardinal);
+		color: var(--primary-color);
 	}
 	.county-impact-hero.d-print-block img {
 		max-width: 60%;
@@ -138,7 +133,7 @@ div#block-iastate-theme-content--2 .paragraph {
 		font-family: var(--serif-font);
 		letter-spacing: 0;
 		margin: 2rem 0 0.625rem;
-		color: var(--cardinal);
+		color: var(--primary-color);
 		width: 100%;
 		clear: both;
 	}

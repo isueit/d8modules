@@ -1,12 +1,7 @@
 :root {
-	--cardinal: #c8102e;
-	--gold: #f1be48;
-	--burgundy: #7c2529;
 	--dk-gray: #4a4a4a;
 	--lt-gray: #f5f5f5;
 	--md-gray: #ebebeb;
-	--midnight: #003d4c;
-	--green: #008540;
 	--sans-font: 'Arial', 'Helvetica Neue', sans-serif;
 	--serif-font: 'Merriweather', serif;
 }
@@ -19,7 +14,7 @@
 	display: flex;
 	padding: 0.75rem 1rem;
 	justify-content: center;
-	background: var(--cardinal);
+	background: var(--btn-danger-color);
 	font-size: 1.5rem;
 	position: relative;
 	left: 0;
@@ -37,7 +32,7 @@
 .bean-card_body {
 	color: black;
 	padding: 0.5rem 0.5rem 0 0.5rem;
-	border: 3px solid var(--cardinal);
+	border: 3px solid var(--btn-danger-color);
 }
 
 /* --------------------------------------  */
@@ -53,30 +48,30 @@
 /* ## CARD COLORS
 /* -------------------------------------- */
 .bean-card-content_label.Blue {
-	background: var(--midnight);
+	background: var(--btn-primary-color);
 }
 .bean-card-content_label.Green {
-	background: var(--green);
+	background: var(--btn-primary-color);
 }
 .bean-card-content_label.Dark.Red {
-	background: var(--burgundy);
+	background: var(--btn-secondary-color);
 }
 .bean-card-content_label.Dark.Blue {
-	background: var(--midnight);
+	background: var(--btn-primary-color);
 }
 
 /* Border Color based on Label Color */
 .bean-card-content_body.Blue { 
-	border-color: var(--midnight);
+	border-color: var(--btn-primary-color);
 }
 .bean-card-content_body.Green { 
-	border-color: var(--green); 
+	border-color: var(--btn-primary-color); 
 }
 .bean-card-content_body.Dark.Red { 
-	border-color: var(--burgundy); 
+	border-color: var(--btn-secondary-color); 
 }
 .bean-card-content_body.Dark.Blue { 
-	border-color: var(--midnight); 
+	border-color: var(--btn-primary-color); 
 }
 
 /* -------------------------------------- */

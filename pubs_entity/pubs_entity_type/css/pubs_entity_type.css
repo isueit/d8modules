@@ -57,7 +57,7 @@ button.slick-next.slick-arrow {
 	border-radius: 50%;
 	cursor: pointer;
 	pointer-events: auto;
-	background-color: var(--burgundy);
+	background-color: var(--secondary-color);
 	width: 3.75rem;
 	height: 3.75rem;
 }
@@ -67,7 +67,7 @@ button.slick-prev.slick-arrow {
 	border-radius: 50%;
 	cursor: pointer;
 	pointer-events: auto;
-	background-color: var(--burgundy);
+	background-color: var(--secondary-color);
 	transition: background-color .3s ease-in-out;
 	width: 3.75rem;
 	height: 3.75rem;
