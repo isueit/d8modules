@@ -1,5 +1,5 @@
 .views-field-field-publication-date {
-	font-size: 14px;
+	font-size: clamp(.9rem, 1.2vw, 1.125rem);
 	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
 	padding: 1.75rem 1rem 0.25rem 1rem;
 	background-color: var(--tertiary-color);
@@ -104,3 +104,9 @@ button.slick-next, button.slick-prev {
 /* --------------------------------------  */
 /* ## Responsive
 /* --------------------------------------  */
+@media screen and (max-width : 768px) {
+	.views-field-field-publication-date {
+		position: static;
+		padding: .75rem 1rem 0.25rem 1rem;
+	  }
+}
