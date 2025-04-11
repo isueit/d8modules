@@ -623,6 +623,7 @@ display:
         type: mini
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 16
           total_pages: null
           id: 0
@@ -939,13 +940,13 @@ display:
           entity_type: pubs_entity
           entity_field: name
           plugin_id: field
-          label: Name
-          exclude: true
+          label: ''
+          exclude: false
           alter:
             alter_text: false
             text: ''
-            make_link: false
-            path: ''
+            make_link: true
+            path: 'https://store.extension.iastate.edu/product/{{ field_product_id }}'
             absolute: false
             external: false
             replace_spaces: false
@@ -958,21 +959,21 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: 0
+            max_length: 50
             word_boundary: true
             ellipsis: true
             more_link: false
             more_link_text: ''
             more_link_path: ''
             strip_tags: false
-            trim: false
+            trim: true
             preserve_tags: ''
             html: false
           element_type: ''
-          element_class: ''
+          element_class: publication-title
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -1007,7 +1008,7 @@ display:
           label: ''
           exclude: false
           alter:
-            alter_text: true
+            alter_text: false
             text: '<b> <a href="https://store.extension.iastate.edu/product/{{ field_product_id }}" class="publication-title">{{ name }} </a></b>'
             make_link: false
             path: ''
@@ -1060,6 +1061,55 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: custom
+          label: ''
+          exclude: false
+          alter:
+            alter_text: true
+            text: " <div class=\"isueo-pubs-download\"><a href= \"https://store.extension.iastate.edu/{{  field_product_id }}\" aria-label=\"Download {{ field_product }}\" >\r\n<i class=\"fa-solid fa-cloud-arrow-down\"></i><span class=\"isueo-pubs-download-text\"> Download</span>\r\n</a>\r\n</div>"
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
       pager:
         type: some
         options:
@@ -1136,7 +1186,6 @@ display:
             field_publication_date: '0'
           optionset: publication_carousel
           class: ''
-          id: ''
           image: ''
           link: ''
           overlay: ''
@@ -1144,11 +1193,12 @@ display:
           vanilla: true
           layout: ''
           cache: 0
-          skin: ''
           grid: '4'
           grid_medium: '2'
           grid_small: '1'
           current_view_mode: block_1
+          id: ''
+          skin: ''
           overridables:
             arrows: '0'
             autoplay: '0'
@@ -1172,6 +1222,7 @@ display:
         options: {  }
       defaults:
         title: false
+        css_class: false
         pager: false
         style: false
         row: false
@@ -1179,6 +1230,7 @@ display:
         sorts: false
         filters: false
         filter_groups: false
+      css_class: pubs_entity_carousel
       display_description: ''
       display_extenders:
         matomo:
@@ -1192,6 +1244,7 @@ display:
           category_fallback: ''
           category_facets: {  }
           category_facets_concat_separator: ', '
+        simple_sitemap_display_extender: {  }
       block_description: 'Featured Resources'
     cache_metadata:
       max-age: -1
