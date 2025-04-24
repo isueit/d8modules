@@ -4,7 +4,12 @@ div.staff_profile_counties_served div.font-weight-bold {float:left;}
 div.staff_profile_counties_served div.staff_profile_counties_served {width:80%; padding-left:5px;}
 
 /* SmugMug image styles */
-.node-type_staff-profile img.staff_profile_smugmug {max-width:200px;  margin: 10px 0px; margin-right: 50px; }
+.node-type_staff-profile img.staff_profile_smugmug {
+  width: 300px;
+  height: 400px;  
+  object-fit: cover;
+  margin: 10px 0px; 
+}
 .node-type_staff-profile img.staff_profile_blank_image {display:none; }
 
 /* Don't need to display country */
@@ -18,4 +23,118 @@ p.address span.country {display:none;}
 @media screen and (max-width : 768px) {
   fieldset div.font-weight-bold {width:25%;}
   div.staff_profile_counties_served div.staff_profile_counties_served {width:75%;}
+}
+
+/* New Styles */
+.personal-profile-info-card {
+	display: flex;
+	align-items: flex-start;
+  -webkit-box-align: start;
+}
+.personal-profile-info-card__media {
+	margin: 0 auto;
+  -webkit-box-flex: 0;
+  flex: 0 0 auto;
+  width: 19rem;
+}
+.personal-profile-info-card__content {
+	padding: 0 2.375rem 2.375rem;
+  -webkit-box-flex: 1;
+  flex: 1 1 0;
+}
+.personal-profile-info-card--no-image .personal-profile-info-card__content {
+	padding-left: 0;
+}
+.personal-profile-info-card__name {
+	position: relative;
+	font-size: 2.875rem;
+	padding-bottom: 1.25rem;
+	margin-top: 0;
+	margin-bottom: 1.375rem;
+	font-family: var(--serif-font);
+	color: var(--primary-color);
+	font-weight: 800;
+}
+.personal-profile-info-card__name::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 3.125rem;
+	border-bottom: 0.125rem solid var(--gold);
+}
+.personal-profile-info-card__titles {
+	margin-bottom: 30px;
+}
+.personal-profile-info-card__titles li {
+	margin-bottom: 12px;
+}
+.personal-profile-info-card__contact-box {
+	background-color: var(--lt-gray);
+	margin: 20px 0 0;
+	padding: 3.125rem 3.75rem;
+	width: 22.75rem;
+  position: relative;
+}
+.personal-profile-info-card__contact-box::before {
+	content: "";
+	border-bottom: 8px solid var(--gold);
+	top: -4px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 56px;
+	height: 8px;
+	position: absolute;
+}
+.personal-profile-info-card__contact-box h2 {
+	font-size: 1.3125rem;
+	padding-bottom: 0;
+	font-family: var(--sans-font);
+}
+.personal-profile-info-card__contact-box p {
+	font-weight: 700;
+	color: var(--dk-gray);
+  margin: 0;
+}
+.personal-profile-info-card__contact-box p a {
+	color: var(--dk-gray);
+	text-decoration: underline;
+	text-underline-offset: .0625rem;
+	transition: color 0.2s ease-in-out;
+  text-decoration-thickness: .0625rem;
+  -webkit-transition: color .2s ease-in-out;
+}
+.personal-profile-info-card__contact-box p a:hover {
+	color: var(--primary-color);
+}
+.personal-profile-info-card__contact-box-columns-wrap {
+  display: block;
+  max-width: none;
+}
+.personal-profile-info-card__contact-box-column {
+	padding-bottom: .875rem;
+}
+.personal-profile-info-card__contact-box-social {
+	display: flex;
+	flex-wrap: wrap;
+}
+.personal-profile-info-card__contact-box-social li {
+	margin-right: 10px;
+}
+.personal-profile-info-card__contact-box-social li a {
+	border-radius: 50%;
+	border: 2px solid var(--cardinal);
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--cardinal);
+	font-size: 13px;
+	transition: border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.personal-profile-info-card__contact-box-social li a:hover {
+	border-color: var(--burgundy);
+	color: var(--burgundy);
 }

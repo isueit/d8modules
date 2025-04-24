@@ -1,0 +1,92 @@
+{% if node.field_staff_profile_smugmug.value  %}
+  <div class="personal-profile-info-card">
+{% else %}
+  <div class="personal-profile-info-card--noimage">
+{% endif %}
+  <div class="personal-profile-info-card__media">
+    <img class="staff_profile_smugmug" src="https://photos.smugmug.com/photos/{{ node.field_staff_profile_smugmug.value }}/10000/XL/{{ node.field_staff_profile_smugmug.value }}-XL.jpg" alt="{{ node.label }}">
+  </div>
+
+  <div class="personal-profile-info-card__content">
+    <h1 class="personal-profile-info-card__name">{{ node.label }}</h1>
+    <p class="personal-profile-info-card__titles">
+        {{ node.field_staff_profile_job_title.0.value }}
+    </p>
+    {% if link_set %}
+    {% include "@link-set" with link_set %}
+    {% endif %}
+  </div>
+  <div class="personal-profile-info-card__contact-box">
+  <h2>Contact</h2>
+    <div class="personal-profile-info-card__contact-box-columns-wrap">
+      <div class="personal-profile-info-card__contact-box-column">
+        {% if node.field_staff_profile_email.0.value  %}<p><a href="mailto:{{ node.field_staff_profile_email.0.value }}">{{ node.field_staff_profile_email.0.value }}</a></p>{% endif %}
+        {% if node.field_staff_profile_phone.0.value %}<p>{{ node.field_staff_profile_phone.0.value  }}</p>{% endif %}
+      </div>
+      <div class="personal-profile-info-card__contact-box-column">
+        {% set address = node.field_staff_profile_addr.0 %}
+            <p>
+                {{ address.address_line1 }} <br>
+                {{ address.address_line2 }} <br>
+                {{ address.locality }}
+                {{ address.administrative_area }}
+                {{ address.postal_code }}
+            </p>
+      </div>
+    </div>
+    {% if field.field.node.staff_profile.social_links %}
+    <ul class="personal-profile-info-card__contact-box-social">
+      {% if field.field.node.staff_profile.social_links.instagram %}
+      <li>
+        <a href="{{ field.field.node.staff_profile.social_links.instagram }}" target="_blank">
+          <i class="fak fa-iastate22-instagram" aria-hidden="true"></i>
+          <span class="visible-for-screen-readers">Instagram</span>
+        </a>
+      </li>
+      {% endif %}
+      {% if field.field.node.staff_profile.social_links.youtube %}
+      <li>
+        <a href="{{ field.field.node.staff_profile.social_links.youtube }}" target="_blank">
+          <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+          <span class="visible-for-screen-readers">YouTube</span>
+        </a>
+      </li>
+      {% endif %}
+      {% if field.field.node.staff_profile.social_links.facebook %}
+      <li>
+        <a href="{{ field.field.node.staff_profile.social_links.facebook }}" target="_blank">
+          <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+          <span class="visible-for-screen-readers">Facebook</span>
+        </a>
+      </li>
+      {% endif %}
+      {% if field.field.node.staff_profile.social_links.twitter %}
+      <li>
+        <a href="{{ field.field.node.staff_profile.social_links.twitter }}" target="_blank">
+          <i class="fa-brands fa-twitter" aria-hidden="true"></i>
+          <span class="visible-for-screen-readers">Twitter</span>
+        </a>
+      </li>
+      {% endif %}
+      {% if field.field.node.staff_profile.social_links.linkedin %}
+      <li>
+        <a href="{{ field.field.node.staff_profile.social_links.linkedin }}" target="_blank">
+          <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+          <span class="visible-for-screen-readers">LinkedIn</span>
+        </a>
+      </li>
+      {% endif %}
+      {% if field.field.node.staff_profile.social_links.flickr %}
+      <li>
+        <a href="{{ field.field.node.staff_profile.social_links.flickr }}" target="_blank">
+          <i class="fak fa-iastate22-flickr" aria-hidden="true"></i>
+          <span class="visible-for-screen-readers">Flickr</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+    {% endif %}
+
+    
+  </div>
+</div>
