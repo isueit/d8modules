@@ -7,6 +7,9 @@
 	bottom:0;
 	width:100%;
 }
+.pubs-entity-carousel {
+	position: relative;
+}
 
 /* Fix for just homepage */
 .isu-page-column {
@@ -60,11 +63,11 @@ button.slick-next, button.slick-prev {
 	font-size: 0;
 	line-height: 0;
 	position: absolute;
-	top: 50%;
+	top: 75%;
 	width: 3.75rem;
 	height: 3.75rem;
 	padding: 0;
-	transform: translate(0, -50%);
+	transform: translate(0, -215%);
 	cursor: pointer;
 	color: transparent;
 	border: none;
