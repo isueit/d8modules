@@ -4,6 +4,7 @@ namespace Drupal\program_offering_blocks\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides route responses for the program_offering_blocks  module.
@@ -21,7 +22,7 @@ class EventDetailsController extends ControllerBase
     // Do NOT cache the events details page
     \Drupal::service('page_cache_kill_switch')->trigger();
 
-    $title = 'Sorry, event not found';
+    $title = '';
 
     $module_config = \Drupal::config('program_offering_blocks.settings');
     $buffer = ISUEOHelpers\Files::fetch_url($module_config->get('url'), true);
@@ -61,6 +62,11 @@ class EventDetailsController extends ControllerBase
         // We've found the correct event, quit looking for the right event
         break;
       }
+    }
+
+    // If we don't have a title, then throw a 404 exception
+    if (empty($title)) {
+      throw new NotFoundHttpException();
     }
 
     $element = array(
