@@ -1,64 +1,54 @@
-.views-field-field-publication-date {
+.pubs-entity-carousel .views-field-field-publication-date {
 	font-size: clamp(.9rem, 1.2vw, 1.125rem);
-	border-radius: 0 0 calc(.25rem - 1px) calc(.25rem - 1px);
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	color: var(--dk-gray);
 	padding: 1.75rem 1rem 0.25rem 1rem;
-	background-color: var(--tertiary-color);
-	position:absolute;
-	bottom:0;
-	width:100%;
 }
-.pubs-entity-carousel {
-	position: relative;
+.pubs-entity-carousel .views-field-name a {
+	display: block;
+	font-weight: 600;
+	text-decoration: none;
+	padding: 0.5rem 1rem 0.25rem 1rem;
 }
-
-/* Fix for just homepage */
-.isu-page-column {
-	max-width: 90%;
-}
-
-.slick__slide {
+.pubs-entity-carousel .slick__slide {
 	margin-left: 10px;
 	margin-right: 10px;
 	width: 250px;
 	float: left;
 	position:relative;
+	height: 100%;
+	transition: ease .25s;
+	border: 2px solid #ddd;
 }
-
-.slick__slide img {
+.pubs-entity-carousel .slick__slide img {
 	margin-left: auto;
 	margin-right: auto;
-	border: solid 2px var(--tertiary-color);
+	padding: 1rem 1rem 0 1rem;
 }
-
-.slick-list {
-	margin-top:10px;
-}
-
-a.publication-title {
+.pubs-entity-carousel .publication-title a {
 	display: block;
-	min-height: 58px;
-	color: #ffffff;
-	border-bottom: 2px solid var(--primary-accent-color);
-	text-align: center;
-	text-decoration: none;
-	margin-bottom: 10%;
-}
-
-a.publication-title:hover {
-	color: #f1be48;
+	min-height: 8rem;
 	text-decoration: none;
 }
-
+.pubs-entity-carousel .isueo-pubs-download {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 1.75rem 1rem 0.25rem 1rem;
+}
+.pubs-entity-carousel .isueo-pubs-download a {
+	text-decoration: none;
+}
 button.slick-next.slick-arrow {
 	right: -25px;
 	display: block;
 }
-
 button.slick-prev.slick-arrow {
 	left: -25px;
 	display: block;
 }
-
 button.slick-next, button.slick-prev {
 	font-size: 0;
 	line-height: 0;
@@ -108,8 +98,15 @@ button.slick-next, button.slick-prev {
 /* ## Responsive
 /* --------------------------------------  */
 @media screen and (max-width : 768px) {
-	.views-field-field-publication-date {
+	.pubs-entity-carousel .views-field-field-publication-date {
 		position: static;
-		padding: .75rem 1rem 0.25rem 1rem;
-	  }
+		padding: 0.75rem 1rem 0.25rem 1rem;
+		margin-bottom: 1.9rem;
+	}
+	.pubs-entity-carousel .publication-title a {
+		height: 6.5rem;
+	}
+	.pubs-entity-carousel .isueo-pubs-download {
+		right: unset;
+	}
 }
