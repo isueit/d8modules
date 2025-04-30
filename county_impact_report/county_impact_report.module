@@ -359,6 +359,7 @@ function county_impact_report_build_params($node)
 
 function county_impact_report_send_mail($params)
 {
+return;
   try {
     $mailManager = \Drupal::service('plugin.manager.mail');
 
