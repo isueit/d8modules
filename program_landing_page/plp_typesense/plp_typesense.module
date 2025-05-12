@@ -49,7 +49,7 @@ function plp_typesense_entity_presave(Drupal\Core\Entity\EntityInterface $entity
     switch ($entity->bundle()) {
       case 'plp_program':
         if ($entity->isPublished()) {
-          plp_typesense_index_program($client, $collection_name, $entity);
+          plp_typesense_index_node($client, $collection_name, $entity, 'Program');
         } elseif ($entity->original->isPublished()) {
           $client->collections[$collection_name]->documents['plp_program:' . $entity->id()]->delete();
         }
@@ -79,12 +79,12 @@ function plp_typesense_index_all_programs()
   $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
   $nodes =  Node::loadMultiple($nids);
   foreach ($nodes as $node) {
-    plp_typesense_index_program($client, $collection_name, $node);
+    plp_typesense_index_node($client, $collection_name, $node, 'Program');
   }
 }
 
-// Index a single program
-function plp_typesense_index_program($client, $collection_name, $node)
+// Index a single node
+function plp_typesense_index_node($client, $collection_name, $node, $type = 'Program')
 {
   // Only do this from the production server
   if (!ISUEOHelpers\General::is_production_server()) {
@@ -100,6 +100,7 @@ function plp_typesense_index_program($client, $collection_name, $node)
   $record = [
     'id' => 'plp_program:' . $node->id(),
     'title' => $node->getTitle(),
+    'type' => $type,
     'field_plp_program_sort_calc' => intval($node->field_plp_program_sort_calc->value),
     'field_plp_program_num_events' => intval($node->field_plp_program_num_events->value),
     'field_plp_program_category' => intval($node->get('field_plp_program_category')->getString()),
