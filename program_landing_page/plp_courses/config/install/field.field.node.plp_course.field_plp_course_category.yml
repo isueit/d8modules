@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_course_category
+    - node.type.plp_course
+    - taxonomy.vocabulary.categories_topics
+id: node.plp_course.field_plp_course_category
+field_name: field_plp_course_category
+entity_type: node
+bundle: plp_course
+label: 'Course Category'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      categories_topics: categories_topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
