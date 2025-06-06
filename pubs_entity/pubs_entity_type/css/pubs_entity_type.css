@@ -42,22 +42,21 @@
 	text-decoration: none;
 }
 button.slick-next.slick-arrow {
-	right: -25px;
+	right: 10%;
 	display: block;
 }
 button.slick-prev.slick-arrow {
-	left: -25px;
+	left: 10%;
 	display: block;
 }
 button.slick-next, button.slick-prev {
 	font-size: 0;
 	line-height: 0;
 	position: absolute;
-	top: 75%;
 	width: 3.75rem;
 	height: 3.75rem;
 	padding: 0;
-	transform: translate(0, -215%);
+	transform: translate(0, -430%);
 	cursor: pointer;
 	color: transparent;
 	border: none;
