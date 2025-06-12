@@ -13,7 +13,8 @@ class AutocompleteController extends ControllerBase {
     $string = $request->query->get('q');
     if ($string) {
       $matches = array();
-      $query = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->condition('status', 1)->condition('field_staff_profile_netid', '%'.db_like($string).'%', 'LIKE');
+      $database_replica = \Drupal::service('database.replica');
+      $query = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->condition('status', 1)->condition('field_staff_profile_netid', '%'.$database_replica->escapeLike($string).'%', 'LIKE');
       $nids = $query->execute();
       $result = entity_load_multiple('node', $nids);
       foreach ($result as $row) {
