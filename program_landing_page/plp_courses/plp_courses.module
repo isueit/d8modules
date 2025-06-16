@@ -1,0 +1,301 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\isueo_helpers\ISUEOHelpers;
+
+//include_once('plp_courses.page.inc');
+
+/**
+ * Implements hook_rebuild().
+ */
+function plp_courses_rebuild()
+{
+  plp_courses_getcourses();
+  //plp_typesense_index_all_courses();
+}
+
+/**
+ * Implements hook_cron().
+ */
+function plp_courses_cron()
+{
+  plp_courses_getcourses();
+}
+
+function plp_courses_getcourses()
+{
+
+  $raw = ISUEOHelpers\Files::fetch_url('modules/custom/d8modules/program_landing_page/plp_courses/OnlineCourseOfferingExample.json');
+  $courses = json_decode($raw, true);
+  echo 'Num Courses: ' . count($courses) . PHP_EOL;
+
+  /*
+  $config = Drupal::config('plp_courses.settings');
+
+  // Get the products/courses feed, if it's empty, wait 1 second and try again
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Educationalcourses.json', true);
+  if ($raw === false || strlen($raw) < 100000) {
+    sleep(1);
+    Drupal::logger('plp_courses')->info('Empty feed: wait 1 second and try again');
+    $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Educationalcourses.json', true);
+  }
+
+  $products = json_decode($raw, true);
+  $courses = [];
+  $children = [];
+  $programIds = [];
+  $nodeIds = [];
+  $min_courses = 100;
+  if (!is_array($products) || count($products) < $min_courses) {
+    Drupal::logger('plp_courses')->info('Less than ' . $min_courses . ' courses, exiting');
+    return;
+  }
+
+  // Record types to include in the catalog
+  // 0128Z000000yeo8QAA = Product Family Record Type
+  // 012460000012EiaAAE = Educational Program Record Type
+  $types = ['0128Z000000yeo8QAA', '012460000012EiaAAE',];
+
+  // Step through products, looking for courses that should be included
+  foreach ($products as $product) {
+    if (!in_array($product['RecordTypeId'], $types)) {
+      continue;
+    }
+    // Should it be included as a product, or as the child of a product
+    if (empty($product['Related_Program__c'])) {
+      if ($product['Show_on_Program_Landing_Page__c']) {
+        $courses[$product['Id']] = $product;
+      }
+    } else {
+      $children[$product['Related_Program__c']][] = $product;
+    }
+  }
+
+  $events = plp_courses_get_related_items('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json', 'Planned_Program__c', $courses);
+  $measurements = plp_courses_get_related_items('https://datastore.exnet.iastate.edu/mydata/IndicatorMeasures.json', 'Planned_Program__c', $courses);
+  $indicators = plp_courses_get_related_items('https://datastore.exnet.iastate.edu/mydata/EducationalcoursesIndicatorConnectors.json', 'Related_Extension_Product__c', $courses);
+  $counties = plp_courses_get_related_items('https://datastore.exnet.iastate.edu/mydata/CountyEducationalcourses.json', 'mydataID', $courses);
+
+  $intended_audiences = ISUEOHelpers\Taxonomy::get_terms('intended_audiences');
+  $program_areas = ISUEOHelpers\Taxonomy::get_terms('program_areas');
+  $critical_issues = ISUEOHelpers\Taxonomy::get_terms('critical_issues');
+  $interest_areas = ISUEOHelpers\Taxonomy::get_terms('interest_areas');
+  $categories_topics = ISUEOHelpers\Taxonomy::get_terms('categories_topics');
+
+  // Get all existing program and child nodes
+  $nodes = plp_courses_get_existing_nodes('plp_program', 'field_plp_program_mydata_id');
+  $nodeIds = array_keys($nodes);
+  $child_nodes = plp_courses_handle_children($children, $courses);
+
+  // Step through the courses feed
+  foreach ($courses as $program) {
+
+    $programIds[] = $program['Id'];
+    $mynode = null;
+    $save = false;
+
+    if (!empty($nodes[$program['Id']])) {
+      $mynode = $nodes[$program['Id']];
+    } else {
+      $mynode = Node::create(array('type' => 'plp_program', 'title' => html_entity_decode($program['Name']), 'field_plp_program_mydata_id' => $program['Id'],));
+      $mynode->save();
+      $save = true;
+    }
+
+    // Handle Title
+    if ($mynode->getTitle() != html_entity_decode($program['Name'])) {
+      $mynode->setTitle(html_entity_decode($program['Name']));
+      $save = true;
+    }
+
+    // Handle Body
+    $body = plp_courses_generate_body($program);
+    if ($mynode->body->value != $body) {
+      $mynode->body->value = $body;
+      $mynode->body->format = 'basic';
+      $save = true;
+    }
+
+    if ($mynode->body->summary != $program['hed__Description__c']) {
+      $mynode->body->summary = $program['hed__Description__c'];
+      $save = true;
+    }
+
+    // Handle the text fields using an array and a loop
+    $fields = [
+      //'field_plp_program_contact_name' => 'Contact_Information_Name__c',
+      'field_plp_program_contact_phone' => 'Primary_Contact__r.Phone',
+      'field_plp_program_search_terms' => 'Search_Terms__c',
+      'field_plp_program_title_filter' => 'Name',
+      'field_plp_program_smugmug' => 'Smugmug_ID__c',
+      //'field_event_program_name' => '',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->getString() != $program[$value]) {
+        $mynode->set($key, $program[$value]);
+        $save = true;
+      }
+    }
+
+    // Handle website link
+    $website = empty($program['Planned_Program_Website__c']) ? '' : plp_courses_fix_url($program['Planned_Program_Website__c']);
+    if ($mynode->get('field_plp_program_website')->uri != $website) {
+      $mynode->set('field_plp_program_website', ['uri' => $website, 'title' => 'More about ' . $program['Name']]);
+      $save = true;
+    }
+
+    // Handle taxonomy lookup fields
+    $fields_single_entity_reference = [
+      'field_plp_program_audiences' => ['taxonomy_array' => &$intended_audiences, 'taxonomy_id' => 'intended_audiences', 'json_element' => 'Intended_Audiences__c'],
+      'field_plp_program_critical_issue' => ['taxonomy_array' => &$critical_issues, 'taxonomy_id' => 'critical_issues', 'json_element' => 'Critical_Issue__c'],
+      'field_plp_program_interest_areas' => ['taxonomy_array' => &$interest_areas, 'taxonomy_id' => 'interest_areas', 'json_element' => 'Related_Interest_Areas__c'],
+      'field_plp_program_program_area' => ['taxonomy_array' => &$program_areas, 'taxonomy_id' => 'program_areas', 'json_element' => 'hed__Account__r.Name'],
+      'field_plp_program_category' => ['taxonomy_array' => &$categories_topics, 'taxonomy_id' => 'categories_topics', 'json_element' => 'Program_landing_Page_Category__c'],
+      'field_plp_program_topics' => ['taxonomy_array' => &$categories_topics, 'taxonomy_id' => 'categories_topics', 'json_element' => 'Program_Landing_Page_Topic__c'],
+    ];
+    foreach ($fields_single_entity_reference as $key => $value) {
+      $terms = [];
+      if (!empty($program[$value['json_element']])) {
+        foreach (explode(';', $program[$value['json_element']]) as $new_term) {
+          $term_id = ISUEOHelpers\Taxonomy::get_term_id($new_term, $value['taxonomy_array'], $value['taxonomy_id']);
+          $terms[] = $term_id;
+        }
+      }
+      if ($mynode->get($key)->getString() != implode(', ', $terms)) {
+        $mynode->set($key, $terms);
+        $save = true;
+      }
+    }
+
+    // Handle number fields
+    $number_fields = [
+      'field_plp_program_num_events' => $events,
+      'field_plp_program_num_indicators' => $indicators,
+      'field_plp_program_num_measures' => $measurements,
+    ];
+    foreach ($number_fields as $key => $value) {
+      $num = plp_courses_get_number_of_items($program['Id'], $value, $children);
+      if ($mynode->get($key)->getString() != $num) {
+        $mynode->set($key, $num);
+        $save = true;
+      }
+    }
+
+    // Get list of programID's that should be include in event list
+    $event_courses = [$program['Id']];
+    if (array_key_exists($program['Id'], $children)) {
+      ksort($children[$program['Id']]);
+      foreach ($children[$program['Id']] as $child) {
+        $event_courses[] = $child['Id'];
+      }
+    }
+    $tmpstring = serialize($event_courses);
+    if ($mynode->field_plp_program_event_pgm_ids->value != $tmpstring) {
+      $mynode->set('field_plp_program_event_pgm_ids', $tmpstring);
+      $save = true;
+    }
+
+    // Handle counties, use the same list of courses as events
+    $tmpstring = plp_courses_get_counties($counties, $event_courses);
+    if ($mynode->field_plp_program_on_counties->value != $tmpstring) {
+      $mynode->set('field_plp_program_on_counties', $tmpstring);
+      $save = true;
+    }
+
+    // Handle when a program shouldn't have children
+    if (!array_key_exists($program['Id'], $child_nodes) && !empty($mynode->field_plp_program_children[0])) {
+      $mynode->set('field_plp_program_children', []);
+      $save = true;
+    }
+
+    // Handle Program Children
+    if (array_key_exists($program['Id'], $child_nodes)) {
+      $tmp_existing_children = explode(', ', $mynode->field_plp_program_children->getString());
+      sort($tmp_existing_children);
+      $tmp_new_children = $child_nodes[$program['Id']];
+      sort($tmp_new_children);
+
+      if ($tmp_existing_children != $tmp_new_children) {
+        $mynode->set('field_plp_program_children', $tmp_new_children);
+        $save = true;
+      }
+    }
+
+    // Calculate the sort number
+    $tmpnum = plp_courses_sort_calculator($mynode, $child_nodes, $program['Id'], $config);
+    if ($mynode->field_plp_program_sort_calc->value != $tmpnum) {
+      $mynode->set('field_plp_program_sort_calc', $tmpnum);
+      $save = true;
+    }
+
+    // Publish the node if it's unpublished
+    if (!$mynode->isPublished()) {
+      $mynode->setPublished();
+      $save = true;
+    }
+
+    // Only save if there has been a changed, this saves a ton of time
+    if ($save) {
+      $mynode->save();
+    }
+  }
+
+  // Find and unpublish deleted courses
+  $nodes_to_unpublish = array_diff($nodeIds, $programIds);
+  if (!empty($nodes_to_unpublish)) {
+    $nids = Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', 1)->condition('field_plp_program_mydata_id', $nodes_to_unpublish, 'IN')->execute();
+
+    $tmpnodes =  Node::loadMultiple($nids);
+    foreach ($tmpnodes as $node) {
+      $node->setUnpublished()->save();
+    }
+  }
+  plp_courses_handle_topic_hierarchy($categories_topics, $courses);
+  */
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+
+function plp_courses_preprocess_page_title(&$variables)
+{
+  // Try to put the program name into the title on the events page
+  $referring_node_id = intval(Drupal::request()->query->get('referring_nid'));
+  $current_node = \Drupal::request()->attributes->get('node');
+
+  if ($referring_node_id && $current_node && $current_node->bundle() == 'page') {
+    $referring_node = Node::load($referring_node_id);
+    if ($referring_node) {
+      $variables['title'] = 'Events for "' . $referring_node->getTitle() . '"';
+      $variables['#cache']['max-age'] = 0;
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+
+function plp_courses_theme($existing, $type, $theme, $path)
+{
+  return [
+    'page__type__plp_program__canonical' => [
+      'template' => 'page--type--plp-program--canonical',
+      'base hook' => 'node',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+
+function plp_courses_preprocess_node(&$variables)
+{
+  // Add the css file if we're on content type of plp_program
+  $node = $variables['node'];
+  if ($node->getType() == 'plp_program') {
+    $variables['#attached']['library'][] = 'plp_courses/plp_courses';
+  }
+}

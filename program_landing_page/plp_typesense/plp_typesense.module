@@ -83,7 +83,7 @@ function plp_typesense_index_all_programs()
   }
 }
 
-// Index a single node
+// Index a single program
 function plp_typesense_index_node($client, $collection_name, $node, $type = 'Program')
 {
   // Only do this from the production server
