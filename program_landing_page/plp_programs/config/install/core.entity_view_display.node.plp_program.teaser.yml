@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.plp_program.field_plp_program_critical_issue
     - field.field.node.plp_program.field_plp_program_event_pgm_ids
     - field.field.node.plp_program.field_plp_program_interest_areas
+    - field.field.node.plp_program.field_plp_program_main_audience
     - field.field.node.plp_program.field_plp_program_mydata_id
     - field.field.node.plp_program.field_plp_program_num_events
     - field.field.node.plp_program.field_plp_program_num_indicators
@@ -49,6 +50,7 @@ content:
     weight: 100
     region: content
 hidden:
+  breadcrumbs: true
   field_plp_program_audiences: true
   field_plp_program_category: true
   field_plp_program_children: true
@@ -58,6 +60,7 @@ hidden:
   field_plp_program_critical_issue: true
   field_plp_program_event_pgm_ids: true
   field_plp_program_interest_areas: true
+  field_plp_program_main_audience: true
   field_plp_program_mydata_id: true
   field_plp_program_num_events: true
   field_plp_program_num_indicators: true
