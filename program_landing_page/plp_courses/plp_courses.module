@@ -25,50 +25,30 @@ function plp_courses_cron()
 function plp_courses_getcourses()
 {
 
+  // Get the courses feed, if it's empty, wait 1 second and try again
   $raw = ISUEOHelpers\Files::fetch_url('modules/custom/d8modules/program_landing_page/plp_courses/OnlineCourseOfferingExample.json');
+  if ($raw === false || strlen($raw) < 10000) {
+    sleep(1);
+    echo 'Sleeping...' . PHP_EOL;
+    Drupal::logger('plp_courses')->info('Empty feed: wait 1 second and try again');
+    $raw = ISUEOHelpers\Files::fetch_url('modules/custom/d8modules/program_landing_page/plp_courses/OnlineCourseOfferingExample.json');
+  }
   $courses = json_decode($raw, true);
-  echo 'Num Courses: ' . count($courses) . PHP_EOL;
+
+  // Record type(s) for courses
+  $types = ['012UO000002XNXlYAO'];
+
+  //$config = Drupal::config('plp_courses.settings');
 
   /*
-  $config = Drupal::config('plp_courses.settings');
-
-  // Get the products/courses feed, if it's empty, wait 1 second and try again
-  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Educationalcourses.json', true);
-  if ($raw === false || strlen($raw) < 100000) {
-    sleep(1);
-    Drupal::logger('plp_courses')->info('Empty feed: wait 1 second and try again');
-    $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Educationalcourses.json', true);
-  }
-
   $products = json_decode($raw, true);
   $courses = [];
   $children = [];
-  $programIds = [];
   $nodeIds = [];
   $min_courses = 100;
   if (!is_array($products) || count($products) < $min_courses) {
     Drupal::logger('plp_courses')->info('Less than ' . $min_courses . ' courses, exiting');
     return;
-  }
-
-  // Record types to include in the catalog
-  // 0128Z000000yeo8QAA = Product Family Record Type
-  // 012460000012EiaAAE = Educational Program Record Type
-  $types = ['0128Z000000yeo8QAA', '012460000012EiaAAE',];
-
-  // Step through products, looking for courses that should be included
-  foreach ($products as $product) {
-    if (!in_array($product['RecordTypeId'], $types)) {
-      continue;
-    }
-    // Should it be included as a product, or as the child of a product
-    if (empty($product['Related_Program__c'])) {
-      if ($product['Show_on_Program_Landing_Page__c']) {
-        $courses[$product['Id']] = $product;
-      }
-    } else {
-      $children[$product['Related_Program__c']][] = $product;
-    }
   }
 
   $events = plp_courses_get_related_items('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json', 'Planned_Program__c', $courses);
@@ -81,40 +61,60 @@ function plp_courses_getcourses()
   $critical_issues = ISUEOHelpers\Taxonomy::get_terms('critical_issues');
   $interest_areas = ISUEOHelpers\Taxonomy::get_terms('interest_areas');
   $categories_topics = ISUEOHelpers\Taxonomy::get_terms('categories_topics');
+  */
 
+  $programIds = [];
   // Get all existing program and child nodes
-  $nodes = plp_courses_get_existing_nodes('plp_program', 'field_plp_program_mydata_id');
+  $nodes = plp_courses_get_existing_nodes('plp_course', 'field_plp_course_mydata_id');
   $nodeIds = array_keys($nodes);
-  $child_nodes = plp_courses_handle_children($children, $courses);
 
-  // Step through the courses feed
-  foreach ($courses as $program) {
+  echo 'Nodes: ' . count($nodeIds) . PHP_EOL;
 
-    $programIds[] = $program['Id'];
+  foreach ($courses as $course) {
+    if (!in_array($course['RecordTypeId'], $types)) {
+      continue;
+    }
+
+    $programIds[] = $course['Id'];
     $mynode = null;
     $save = false;
 
-    if (!empty($nodes[$program['Id']])) {
-      $mynode = $nodes[$program['Id']];
+    // Check for existing node, create one if needed
+    if (!empty($nodes[$course['Id']])) {
+      $mynode = $nodes[$course['Id']];
     } else {
-      $mynode = Node::create(array('type' => 'plp_program', 'title' => html_entity_decode($program['Name']), 'field_plp_program_mydata_id' => $program['Id'],));
+      $mynode = Node::create(array('type' => 'plp_course', 'title' => html_entity_decode($course['Name']), 'field_plp_course_mydata_id' => $course['Id'],));
       $mynode->save();
       $save = true;
     }
 
     // Handle Title
-    if ($mynode->getTitle() != html_entity_decode($program['Name'])) {
-      $mynode->setTitle(html_entity_decode($program['Name']));
+    if ($mynode->getTitle() != html_entity_decode($course['Name'])) {
+      $mynode->setTitle(html_entity_decode($course['Name']));
       $save = true;
     }
 
     // Handle Body
-    $body = plp_courses_generate_body($program);
+    //$body = plp_courses_generate_body($course);
+    $body = $course['Offering_Description__c'];
     if ($mynode->body->value != $body) {
       $mynode->body->value = $body;
       $mynode->body->format = 'basic';
       $save = true;
     }
+
+    /* Insert lines here */
+
+    // Only save if there has been a changed, this saves a ton of time
+    if ($save) {
+      $mynode->save();
+    }
+  }
+
+  /*
+
+  // Step through the courses feed
+  foreach ($courses as $program) {
 
     if ($mynode->body->summary != $program['hed__Description__c']) {
       $mynode->body->summary = $program['hed__Description__c'];
@@ -233,11 +233,6 @@ function plp_courses_getcourses()
       $mynode->setPublished();
       $save = true;
     }
-
-    // Only save if there has been a changed, this saves a ton of time
-    if ($save) {
-      $mynode->save();
-    }
   }
 
   // Find and unpublish deleted courses
@@ -298,4 +293,17 @@ function plp_courses_preprocess_node(&$variables)
   if ($node->getType() == 'plp_program') {
     $variables['#attached']['library'][] = 'plp_courses/plp_courses';
   }
+}
+
+// Return an array of existing nodes with MyData ID as the array key
+function plp_courses_get_existing_nodes(string $content_type, string $mydata_id_field)
+{
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', $content_type)->execute();
+  $tmpnodes =  Node::loadMultiple($nids);
+  $nodes = [];
+  foreach ($tmpnodes as $node) {
+    $nodes[$node->get($mydata_id_field)->getString()] = $node;
+  }
+
+  return $nodes;
 }
