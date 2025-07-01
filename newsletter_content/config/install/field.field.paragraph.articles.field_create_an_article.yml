@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_create_an_article
+    - filter.format.wysiwyg
+    - paragraphs.paragraphs_type.articles
+  module:
+    - text
+id: paragraph.articles.field_create_an_article
+field_name: field_create_an_article
+entity_type: paragraph
+bundle: articles
+label: 'Create an Article'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - wysiwyg
+field_type: text_long

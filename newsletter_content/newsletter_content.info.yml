@@ -1,0 +1,19 @@
+name: Newsletter Content
+description: Creates an online Newsletter implementation with content type and feature sets.
+package: Custom
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - drupal:node
+  - drupal:path
+  - drupal:text
+  - drupal:ds
+  - drupal:layout_builder
+  - drupal:layout_builder_base
+  - drupal:layout_builder_base_library
+  - layout_builder_restrictions
+  - drupal:block
+  - drupal:block_content
+  - drupal:image
+  - drupal:allowed_formats
+  - drupal:paragraphs

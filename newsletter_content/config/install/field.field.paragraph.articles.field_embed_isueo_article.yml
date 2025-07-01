@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_embed_isueo_article
+    - paragraphs.paragraphs_type.articles
+  module:
+    - news_embed_field
+id: paragraph.articles.field_embed_isueo_article
+field_name: field_embed_isueo_article
+entity_type: paragraph
+bundle: articles
+label: 'Embed ISUEO Article'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: news_embed_field

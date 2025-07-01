@@ -1,0 +1,72 @@
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.node.staff_contact
+    - field.field.node.newsletter.body
+    - field.field.node.newsletter.field_add_articles
+    - field.field.node.newsletter.field_feature
+    - field.field.node.newsletter.field_thumbnail
+    - field.field.node.newsletter.layout_builder__layout
+    - node.type.newsletter
+  module:
+    - entity_reference_revisions
+    - layout_builder
+    - layout_builder_restrictions
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories: {  }
+id: node.newsletter.staff_contact
+targetEntityType: node
+bundle: newsletter
+mode: staff_contact
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_add_articles:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_featured_article:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_thumbnail:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_feature: true
+  layout_builder__layout: true

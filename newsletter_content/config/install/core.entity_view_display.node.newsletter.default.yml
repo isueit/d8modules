@@ -1,0 +1,485 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.basic_content
+    - field.field.node.newsletter.body
+    - field.field.node.newsletter.field_add_articles
+    - field.field.node.newsletter.field_feature
+    - field.field.node.newsletter.field_thumbnail
+    - field.field.node.newsletter.layout_builder__layout
+    - node.type.newsletter
+    - views.view.featured_article_card
+  module:
+    - entity_reference_revisions
+    - layout_builder
+    - layout_builder_base_library
+    - layout_builder_restrictions
+    - layout_discovery
+    - program_offering_blocks
+    - text
+    - user
+    - views
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: true
+    sections:
+      -
+        layout_id: layout_base_twocol
+        layout_settings:
+          label: '2 Column Layout'
+          context_mapping: {  }
+          column_widths: null
+          id: ''
+          classes: ''
+          column_gap: layout--column-gap--default
+          row_gap: layout--row-gap--none
+          column_width: layout--column-width--67-33
+          column_breakpoint: layout--column-breakpoint--medium
+          align_items: layout--align-items--normal
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout-height-default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+          layout_builder_styles_style: {  }
+        components:
+          4a853f6e-af9a-4b46-bb06-0ec16da815af:
+            uuid: 4a853f6e-af9a-4b46-bb06-0ec16da815af
+            region: first
+            configuration:
+              id: 'field_block:node:newsletter:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 0
+            additional:
+              hidden: false
+          639cda3c-387b-4757-91a2-42001f09ccbe:
+            uuid: 639cda3c-387b-4757-91a2-42001f09ccbe
+            region: second
+            configuration:
+              id: 'program_offering_blocks:1'
+              label: 'Upcoming Events'
+              label_display: visible
+              provider: program_offering_blocks
+              context_mapping: {  }
+              event_details_page: 1
+              max_events: '6'
+              no_upcoming_events: 'There are no upcoming events scheduled. Please check back later for updates.'
+              format_with_time: 'M j, Y, g:i a'
+              format_without_time: 'M j, Y'
+              title_search: ''
+              show_more_page: /events
+              show_more_text: 'More Events'
+              announcement_text: ''
+              show_nonpublic_events: 0
+              only_planned_programs: 0
+              only_statewide_campus: 0
+              program_ids_field: ''
+              program_area: '4-H Youth Development'
+              county: Fayette
+              placement: ''
+              horizontal_display: 0
+            weight: 0
+            additional:
+              layout_builder_styles_style: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_onecol
+        layout_settings:
+          label: '1 Column Layout'
+          column_widths: null
+          id: ''
+          classes: ''
+          column_gap: ''
+          row_gap: ''
+          column_width: ''
+          column_breakpoint: ''
+          align_items: ''
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout--height--default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+        components:
+          8a7a7858-b172-4b8e-8f0f-644abf97bedb:
+            uuid: 8a7a7858-b172-4b8e-8f0f-644abf97bedb
+            region: content
+            configuration:
+              id: 'views_block:featured_article_card-block_1'
+              label: ''
+              label_display: '0'
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: none
+            weight: 0
+            additional:
+              layout_builder_styles_style: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_onecol
+        layout_settings:
+          label: '1 Column Layout'
+          context_mapping: {  }
+          column_widths: null
+          id: ''
+          classes: ''
+          column_gap: ''
+          row_gap: ''
+          column_width: ''
+          column_breakpoint: ''
+          align_items: ''
+          background: layout--background--gray
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout-height-default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+          layout_builder_styles_style: {  }
+        components:
+          b64506f4-c1ee-41a0-82c1-fee7e2a870e1:
+            uuid: b64506f4-c1ee-41a0-82c1-fee7e2a870e1
+            region: content
+            configuration:
+              id: 'views_block:featured_article_card-block_2'
+              label: ''
+              label_display: visible
+              provider: views
+              context_mapping: {  }
+              views_label: ''
+              items_per_page: '48'
+            weight: 0
+            additional:
+              layout_builder_styles_style: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_onecol
+        layout_settings:
+          label: '1 Column Layout'
+          column_widths: null
+          id: ''
+          classes: ''
+          column_gap: ''
+          row_gap: ''
+          column_width: ''
+          column_breakpoint: ''
+          align_items: ''
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout--height--default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+        components:
+          56a4d70a-abeb-4f55-b66b-1e5eca4ae3f7:
+            uuid: 56a4d70a-abeb-4f55-b66b-1e5eca4ae3f7
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:field_add_articles'
+              label: 'Add Articles'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: entity_reference_revisions_entity_view
+                label: hidden
+                settings:
+                  view_mode: default
+                third_party_settings:
+                  field_delimiter:
+                    delimiter: ''
+                  field_formatter_class:
+                    class: ''
+            weight: 1
+            additional:
+              hidden: false
+              layout_builder_styles_style: {  }
+          87b3e6fa-5377-4cd8-addf-1f1f755ae7b6:
+            uuid: 87b3e6fa-5377-4cd8-addf-1f1f755ae7b6
+            region: content
+            configuration:
+              id: 'inline_block:basic_content'
+              label: "This Month's News"
+              label_display: visible
+              provider: layout_builder
+              view_mode: full
+              context_mapping: {  }
+              block_id: 11
+              block_revision_id: 13
+              block_serialized: null
+            weight: 0
+            additional:
+              layout_builder_styles_style: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_twocol
+        layout_settings:
+          label: '2 Column Layout'
+          context_mapping: {  }
+          column_widths: null
+          id: ''
+          classes: ''
+          column_gap: layout--column-gap--default
+          row_gap: layout--row-gap--none
+          column_width: layout--column-width--67-33
+          column_breakpoint: layout--column-breakpoint--medium
+          align_items: layout--align-items--normal
+          background: layout--background--none
+          background_image: '19'
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout-height-default
+          color: layout--color--white
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+          layout_builder_styles_style:
+            vertical_alignment: vertical_alignment
+        components:
+          07c3492c-41be-431d-9589-1de290966316:
+            uuid: 07c3492c-41be-431d-9589-1de290966316
+            region: first
+            configuration:
+              id: 'inline_block:basic_content'
+              label: Description
+              label_display: '0'
+              provider: layout_builder
+              view_mode: full
+              context_mapping: {  }
+              block_id: 12
+              block_revision_id: 14
+              block_serialized: null
+            weight: 0
+            additional:
+              layout_builder_styles_style: {  }
+          929f6c60-da05-4911-82de-f22535436d48:
+            uuid: 929f6c60-da05-4911-82de-f22535436d48
+            region: second
+            configuration:
+              id: 'inline_block:basic_content'
+              label: Description
+              label_display: '0'
+              provider: layout_builder
+              view_mode: full
+              context_mapping: {  }
+              block_id: 13
+              block_revision_id: 15
+              block_serialized: null
+            weight: 0
+            additional:
+              layout_builder_styles_style: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          fec5cf44-7bc7-41c1-ba78-aedfbc2b096a:
+            uuid: fec5cf44-7bc7-41c1-ba78-aedfbc2b096a
+            region: content
+            configuration:
+              id: 'extra_field_block:node:newsletter:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+          8ee3b8b4-4cab-4c1a-9f39-91e618b300fd:
+            uuid: 8ee3b8b4-4cab-4c1a-9f39-91e618b300fd
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:field_featured_article'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 2
+            additional:
+              hidden: true
+          65b13b91-a1a9-488c-896a-e9011dfb17dd:
+            uuid: 65b13b91-a1a9-488c-896a-e9011dfb17dd
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:field_thumbnail'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: hidden
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 4
+            additional:
+              hidden: true
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories: {  }
+id: node.newsletter.default
+targetEntityType: node
+bundle: newsletter
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_add_articles:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_featured_article:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_thumbnail:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_feature: true
+  layout_builder__layout: true

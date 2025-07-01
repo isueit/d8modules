@@ -1,0 +1,42 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.featured_article.field_embed_isueo_article
+    - field.field.paragraph.featured_article.field_featured_body
+    - field.field.paragraph.featured_article.field_title
+    - paragraphs.paragraphs_type.featured_article
+  module:
+    - field_formatter_class
+    - news_embed_field
+    - text
+id: paragraph.featured_article.default
+targetEntityType: paragraph
+bundle: featured_article
+mode: default
+content:
+  field_embed_isueo_article:
+    type: news_embed_field_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_featured_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      field_formatter_class:
+        class: h2
+    weight: 0
+    region: content
+hidden: {  }

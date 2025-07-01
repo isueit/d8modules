@@ -1,0 +1,170 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.basic_content
+    - field.field.paragraph.articles.field_create_an_article
+    - field.field.paragraph.articles.field_embed_isueo_article
+    - field.field.paragraph.articles.field_existing_article
+    - field.field.paragraph.articles.field_title
+    - field.field.paragraph.articles.layout_builder__layout
+    - paragraphs.paragraphs_type.articles
+  module:
+    - field_formatter_class
+    - layout_builder
+    - layout_builder_restrictions
+    - layout_discovery
+    - news_embed_field
+    - text
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          f69c5797-c291-458d-9048-f37835c2fc50:
+            uuid: f69c5797-c291-458d-9048-f37835c2fc50
+            region: content
+            configuration:
+              id: 'field_block:paragraph:articles:field_title'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: hidden
+                settings:
+                  link_to_entity: false
+                third_party_settings:
+                  field_formatter_class:
+                    class: h2
+            weight: 0
+            additional: {  }
+          7416fa44-2106-46fc-b4cd-630d33bb9b70:
+            uuid: 7416fa44-2106-46fc-b4cd-630d33bb9b70
+            region: content
+            configuration:
+              id: 'field_block:paragraph:articles:field_existing_article'
+              label: 'Existing Article'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: staff_contact
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+            weight: 1
+            additional:
+              layout_builder_styles_style: {  }
+          d49e59d4-b2da-467d-a895-bca626e713c7:
+            uuid: d49e59d4-b2da-467d-a895-bca626e713c7
+            region: content
+            configuration:
+              id: 'field_block:paragraph:articles:field_embed_isueo_article'
+              label: 'Embed ISUEO Article'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: news_embed_field_default
+                label: hidden
+                settings: {  }
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+            weight: 2
+            additional:
+              layout_builder_styles_style: {  }
+          38be175f-c482-4ad9-a545-a52f8f56f8aa:
+            uuid: 38be175f-c482-4ad9-a545-a52f8f56f8aa
+            region: content
+            configuration:
+              id: 'inline_block:basic_content'
+              label: Description
+              label_display: '0'
+              provider: layout_builder
+              view_mode: full
+              context_mapping: {  }
+              block_id: 9
+              block_revision_id: 11
+              block_serialized: null
+            weight: 5
+            additional:
+              layout_builder_styles_style: {  }
+          c6b62404-3161-4f6b-9e3f-e529adcbddf0:
+            uuid: c6b62404-3161-4f6b-9e3f-e529adcbddf0
+            region: content
+            configuration:
+              id: 'field_block:paragraph:articles:field_create_an_article'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 4
+            additional: {  }
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories: {  }
+id: paragraph.articles.default
+targetEntityType: paragraph
+bundle: articles
+mode: default
+content:
+  field_create_an_article:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_embed_isueo_article:
+    type: news_embed_field_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_existing_article:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: full
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 2
+    region: content
+  field_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      field_formatter_class:
+        class: h2
+    weight: 0
+    region: content
+hidden:
+  layout_builder__layout: true

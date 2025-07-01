@@ -1,0 +1,47 @@
+<?php
+/**
+ * Implements hook_install().
+ *
+ * We don't want users to be able to delete our locked_content_type content
+ * type. So therefore we have to tell Drupal that this is the case. This
+ * can't be done in the content type's configuration YAML file, so we have to
+ * do it in code, here.
+ *
+ */
+function newsletter_content_install() {
+  // Do not allow the locked content type to be deleted.
+  $locked = Drupal::state()->get('node.type.locked');
+  $locked['newsletter'] = 'newsletter';
+  Drupal::state()->set('node.type.locked', $locked);
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Our content types will live on in the Drupal installation, even after this
+ * module is uninstalled. This is a good thing, since it allows the user to
+ * make decisions about their fate. Therefore we should give the user the
+ * option of deleting them.
+ *
+ * Since we told Drupal that our locked_content_type is locked, we now have
+ * to tell it to unlock.
+ *
+ * @ingroup layout_content_type
+ */
+function newsletter_content_uninstall() {
+  // Allow locked_content_type to be deleted.
+  $locked = Drupal::state()->get('node.type.locked');
+  unset($locked['newsletter']);
+  Drupal::state()->set('node.type.locked', $locked);
+
+  $storage_handler = \Drupal::entityTypeManager()
+    ->getStorage('node');
+  $nodes = $storage_handler->loadByProperties(['type' => 'newsletter']);
+  $storage_handler->delete($nodes);
+  // Delete content type.
+  $content_type = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->load('newsletter');
+  $content_type->delete();
+}
+

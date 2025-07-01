@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: '-fy8x0_ITQe-mgHobuhpB6FPKQUDIwdzznPxZ46RbdI'
+name: news_article_grid_
+label: 'News Article (Grid)'
+effects:
+  3ef76939-28f2-4537-8c45-467b5e143352:
+    uuid: 3ef76939-28f2-4537-8c45-467b5e143352
+    id: image_scale
+    weight: 1
+    data:
+      width: 220
+      height: 220
+      upscale: false
+  4a8bfc87-ab2c-4ea2-860b-e560fc1f2011:
+    uuid: 4a8bfc87-ab2c-4ea2-860b-e560fc1f2011
+    id: image_convert
+    weight: 2
+    data:
+      extension: webp

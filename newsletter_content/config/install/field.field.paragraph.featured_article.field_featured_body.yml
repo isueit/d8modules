@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_featured_body
+    - filter.format.wysiwyg
+    - paragraphs.paragraphs_type.featured_article
+  module:
+    - text
+id: paragraph.featured_article.field_featured_body
+field_name: field_featured_body
+entity_type: paragraph
+bundle: featured_article
+label: 'Featured body'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - wysiwyg
+field_type: text_long

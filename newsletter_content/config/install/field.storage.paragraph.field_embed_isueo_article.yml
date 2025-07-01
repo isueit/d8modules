@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - news_embed_field
+    - paragraphs
+id: paragraph.field_embed_isueo_article
+field_name: field_embed_isueo_article
+entity_type: paragraph
+type: news_embed_field
+settings: {  }
+module: news_embed_field
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

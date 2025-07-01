@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic_content:854b9861-54da-4d31-84f5-1797b9436db4'
+  module:
+    - block_content
+    - node
+  theme:
+    - iastate_theme
+id: iastate_theme_newsletterheaderimage
+theme: iastate_theme
+region: content
+weight: -9
+provider: null
+plugin: 'block_content:854b9861-54da-4d31-84f5-1797b9436db4'
+settings:
+  id: 'block_content:854b9861-54da-4d31-84f5-1797b9436db4'
+  label: 'Newsletter Header Image'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      newsletter: newsletter

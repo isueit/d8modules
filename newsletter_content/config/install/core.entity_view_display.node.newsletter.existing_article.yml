@@ -1,0 +1,138 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.existing_article
+    - field.field.node.newsletter.body
+    - field.field.node.newsletter.field_add_articles
+    - field.field.node.newsletter.field_feature
+    - field.field.node.newsletter.field_thumbnail
+    - field.field.node.newsletter.layout_builder__layout
+    - node.type.newsletter
+  module:
+    - entity_reference_revisions
+    - layout_builder
+    - layout_builder_restrictions
+    - layout_discovery
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          2e62cef1-fb19-40ff-8c65-538009f47912:
+            uuid: 2e62cef1-fb19-40ff-8c65-538009f47912
+            region: content
+            configuration:
+              id: 'extra_field_block:node:newsletter:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+          1cb82f68-e89b-4f5d-b330-95f1c490336a:
+            uuid: 1cb82f68-e89b-4f5d-b330-95f1c490336a
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+          c0f96dcf-2056-4d49-b7ca-eda5cbb70bf4:
+            uuid: c0f96dcf-2056-4d49-b7ca-eda5cbb70bf4
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:field_thumbnail'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: hidden
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+          5298de70-4d36-4f05-9862-4c37849e667a:
+            uuid: 5298de70-4d36-4f05-9862-4c37849e667a
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:field_add_articles'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_revisions_entity_view
+                label: hidden
+                settings:
+                  view_mode: default
+                  link: ''
+                third_party_settings: {  }
+            weight: 3
+            additional: {  }
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories: {  }
+id: node.newsletter.existing_article
+targetEntityType: node
+bundle: newsletter
+mode: existing_article
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_add_articles:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_featured_article:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_thumbnail:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_feature: true
+  layout_builder__layout: true

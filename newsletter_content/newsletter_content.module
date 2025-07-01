@@ -1,0 +1,11 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_preprocess_HOOK()
+ */
+function newsletter_content_preprocess_node(&$variables){
+    $variables['#attached']['library'][] = 'newsletter_content/newsletter_content';
+  }
