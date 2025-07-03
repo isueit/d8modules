@@ -103,6 +103,17 @@ function plp_courses_getcourses()
       $save = true;
     }
 
+    // Handle the text fields using an array and a loop
+    $fields = [
+      'field_plp_course_program_id' => 'hed__Course__c',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->getString() != $course[$value]) {
+        $mynode->set($key, $course[$value]);
+        $save = true;
+      }
+    }
+
     /* Insert lines here */
 
     // Only save if there has been a changed, this saves a ton of time
@@ -119,22 +130,6 @@ function plp_courses_getcourses()
     if ($mynode->body->summary != $program['hed__Description__c']) {
       $mynode->body->summary = $program['hed__Description__c'];
       $save = true;
-    }
-
-    // Handle the text fields using an array and a loop
-    $fields = [
-      //'field_plp_program_contact_name' => 'Contact_Information_Name__c',
-      'field_plp_program_contact_phone' => 'Primary_Contact__r.Phone',
-      'field_plp_program_search_terms' => 'Search_Terms__c',
-      'field_plp_program_title_filter' => 'Name',
-      'field_plp_program_smugmug' => 'Smugmug_ID__c',
-      //'field_event_program_name' => '',
-    ];
-    foreach ($fields as $key => $value) {
-      if ($mynode->get($key)->getString() != $program[$value]) {
-        $mynode->set($key, $program[$value]);
-        $save = true;
-      }
     }
 
     // Handle website link

@@ -5,7 +5,9 @@ dependencies:
     - field.field.node.plp_course.body
     - field.field.node.plp_course.field_plp_course_audiences
     - field.field.node.plp_course.field_plp_course_category
+    - field.field.node.plp_course.field_plp_course_mydata_id
     - field.field.node.plp_course.field_plp_course_program_area
+    - field.field.node.plp_course.field_plp_course_program_id
     - field.field.node.plp_course.field_plp_course_reg_link
     - field.field.node.plp_course.field_plp_course_reg_text
     - field.field.node.plp_course.field_plp_course_search_terms
@@ -52,6 +54,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 108
+    region: content
+  field_plp_course_program_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 111
     region: content
   field_plp_course_reg_link:
     type: link
@@ -114,3 +124,4 @@ content:
     region: content
 hidden:
   breadcrumbs: true
+  field_plp_course_mydata_id: true
