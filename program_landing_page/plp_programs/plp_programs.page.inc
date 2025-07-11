@@ -38,7 +38,7 @@ function plp_programs_get_related_items(string $json_url, string $field_name, ar
   return $my_array;
 }
 
-// Returns the number of item related to the program and it's childres, could be indicators, measurements, events, etc
+// Returns the number of item related to the program and it's children, could be indicators, measurements, events, etc
 function plp_programs_get_number_of_items(string $programid, array $items, array $children)
 {
   $value = 0;
@@ -233,6 +233,11 @@ function plp_programs_sort_calculator($mynode, array $child_nodes, string $progr
   // Handle children
   if (array_key_exists($program_id, $child_nodes)) {
     $tmpnum += $config->get('children.child_boost') + ($config->get('children.child_multiplier') * intval(count($child_nodes[$program_id]) / $config->get('children.child_interval')));
+  }
+
+  $num_courses = count($mynode->get('field_plp_program_courses'));
+  if ($num_courses > 0) {
+    $tmpnum += $config->get('courses.course_boost') + ($config->get('courses.course_multiplier') * intval($num_courses / $config->get('courses.course_interval')));
   }
 
   return $tmpnum;

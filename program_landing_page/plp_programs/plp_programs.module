@@ -89,7 +89,6 @@ function plp_programs_getprograms()
   foreach ($tmpnodes as $node) {
     $course_nodes[$node->get('field_plp_course_program_id')->getString()][] = $node->id();
   }
-  echo json_encode($course_nodes) . PHP_EOL;
 
   // Step through the programs feed
   foreach ($programs as $program) {
