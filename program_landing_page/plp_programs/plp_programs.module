@@ -81,6 +81,16 @@ function plp_programs_getprograms()
   $nodeIds = array_keys($nodes);
   $child_nodes = plp_programs_handle_children($children, $programs);
 
+  // Get array with key of program/child mydata ID's, and value of an array of course node id numbers
+  // Only really used if plp_courses module is enabled
+  $course_nodes = [];
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_course')->execute();
+  $tmpnodes =  Node::loadMultiple($nids);
+  foreach ($tmpnodes as $node) {
+    $course_nodes[$node->get('field_plp_course_program_id')->getString()][] = $node->id();
+  }
+
+
   // Step through the programs feed
   foreach ($programs as $program) {
 
