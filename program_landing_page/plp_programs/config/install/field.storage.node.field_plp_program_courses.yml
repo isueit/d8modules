@@ -5,7 +5,7 @@ dependencies:
     - node
   enforced:
     config:
-      - node.type.plp_course
+      - node.type.plp_program
 id: node.field_plp_program_courses
 field_name: field_plp_program_courses
 entity_type: node

@@ -3,7 +3,6 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_plp_program_courses
-    - node.type.plp_course
     - node.type.plp_program
 id: node.plp_program.field_plp_program_courses
 field_name: field_plp_program_courses
