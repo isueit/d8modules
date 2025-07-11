@@ -84,7 +84,7 @@ function plp_programs_getprograms()
   // Get array with key of program/child mydata ID's, and value of an array of course node id numbers
   // Only really used if plp_courses module is enabled
   $course_nodes = [];
-  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_course')->execute();
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_course')->condition('status', 1)->execute();
   $tmpnodes =  Node::loadMultiple($nids);
   foreach ($tmpnodes as $node) {
     $course_nodes[$node->get('field_plp_course_program_id')->getString()][] = $node->id();
@@ -224,6 +224,26 @@ function plp_programs_getprograms()
         $save = true;
       }
     }
+
+    // Handle Courses
+    $tmp_new_courses = [];
+    $event_pgm_ids = unserialize($mynode->get('field_plp_program_event_pgm_ids')->getString());
+    $tmp_existing_courses = explode(', ', $mynode->field_plp_program_courses->getString());
+    if ($tmp_existing_courses == ['']) {
+      $tmp_existing_courses = [];
+    }
+    foreach ($event_pgm_ids as $pgm_id) {
+      if (array_key_exists($pgm_id, $course_nodes)) {
+        $tmp_new_courses = array_merge($tmp_new_courses, $course_nodes[$pgm_id]);
+      }
+    }
+    sort($tmp_new_courses);
+    sort($tmp_existing_courses);
+    if ($tmp_existing_courses != $tmp_new_courses){
+      $mynode->set('field_plp_program_courses', $tmp_new_courses);
+      $save = true;
+    }
+
 
     // Calculate the sort number
     $tmpnum = plp_programs_sort_calculator($mynode, $child_nodes, $program['Id'], $config);
