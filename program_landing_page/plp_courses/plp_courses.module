@@ -25,13 +25,15 @@ function plp_courses_cron()
 function plp_courses_getcourses()
 {
 
+  //$feed_url = 'modules/custom/d8modules/program_landing_page/plp_courses/OnlineCourseOfferingExample.json';
+  $feed_url = 'https://datastore.exnet.iastate.edu/mydata/ProductOfferingsAll.json';
   // Get the courses feed, if it's empty, wait 1 second and try again
-  $raw = ISUEOHelpers\Files::fetch_url('modules/custom/d8modules/program_landing_page/plp_courses/OnlineCourseOfferingExample.json');
+  $raw = ISUEOHelpers\Files::fetch_url($feed_url);
   if ($raw === false || strlen($raw) < 10000) {
     sleep(1);
     echo 'Sleeping...' . PHP_EOL;
     Drupal::logger('plp_courses')->info('Empty feed: wait 1 second and try again');
-    $raw = ISUEOHelpers\Files::fetch_url('modules/custom/d8modules/program_landing_page/plp_courses/OnlineCourseOfferingExample.json');
+    $raw = ISUEOHelpers\Files::fetch_url($feed_url);
   }
   $courses = json_decode($raw, true);
 
