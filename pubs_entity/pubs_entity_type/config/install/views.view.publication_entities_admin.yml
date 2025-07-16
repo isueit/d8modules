@@ -1073,7 +1073,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: " <div class=\"isueo-pubs-download\"><a href= \"https://store.extension.iastate.edu/{{  field_product_id }}\" aria-label=\"Download {{ field_product }}\" >\r\n<i class=\"fa-solid fa-cloud-arrow-down\"></i><span class=\"isueo-pubs-download-text\"> Download</span>\r\n</a>\r\n</div>"
+            text: " <div class=\"isueo-pubs-download\"><a href= \"https://store.extension.iastate.edu/product/{{  field_product_id }}\" aria-label=\"Download {{ field_product }}\" >\r\n<i class=\"fa-solid fa-cloud-arrow-down\"></i><span class=\"isueo-pubs-download-text\"> Download</span>\r\n</a>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
