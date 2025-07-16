@@ -7,5 +7,5 @@ package: 'ISUEO'
 dependencies:
   - staff_profile:staff_profile
   - metatag:metatag
-  - twig_tweaks:twig_tweaks
+  - twig_tweak:twig_tweak
   - d8modules:isueo_helpers
