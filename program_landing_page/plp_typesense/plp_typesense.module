@@ -136,25 +136,15 @@ function plp_typesense_index_node($client, $collection_name, $node, $type = 'Pro
   }
 
   // Handle Audiences
-  $topics = explode(', ', $node->get('field_plp_program_audiences')->getString());
-  foreach ($topics as $topic_id) {
-    if (empty($topic_id)) {
-      continue;
-    }
-    $term_name = Term::load(intval($topic_id))->getName();
-    if (str_contains($term_name, 'Youth')) {
-      $record['audiences'][] = 'Youth';
-      if (str_contains(Term::load($node->get('field_plp_program_program_area')->getString())->getName(), '4-H')) {
-        $record['audiences'][] = '4-H Youth';
-      }
-    } else {
-      $record['audiences'][] = 'Adult';
-    }
-  }
-  if (empty($record['audiences'])) {
-    $record['audiences'][] = 'Adult';
-  } else {
-    $record['audiences'] = array_unique($record['audiences']);
+  $main_audience = $node->get('field_plp_program_main_audience')->getString();
+  //$record['audiences'][] = $main_audience;
+  $record['audiences'][] = $main_audience . ' Programs';
+  if ($main_audience == 'Youth' && str_contains($record['program_area'], '4-H')) {
+    //$record['audiences'][] = '4-H Youth';
+    $record['audiences'][] = 'Youth - 4-H Programs';
+  } elseif ($main_audience == 'Youth') {
+    //$record['audiences'][] = 'Other Youth';
+    $record['audiences'][] = 'Youth - Other Programs';
   }
 
   $client->collections[$collection_name]->documents->upsert($record);
