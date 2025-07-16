@@ -21,6 +21,7 @@
     "drupal/section_library": "^1.0",
     "drupal/slick": "^2.1",
     "drupal/slick_views": "^2.2",
+    "drupal/twig_tweak": "^3.4",
     "drupal/view_unpublished": "^1.0",
     "drupal/views_accordion": "^2.0",
     "drupal/views_data_export": "^1.4",

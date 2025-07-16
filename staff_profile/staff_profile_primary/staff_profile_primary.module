@@ -134,6 +134,18 @@ function staff_profile_primary_profile_from_database()
       $save = true;
     }
 
+    // Clean up the preferred phone field
+    $phone_feed = $node->get('field_staff_profile_phone')->value;
+    $phone_pref = $node->get('field_staff_profile_pref_phone')->value;
+    $phone_feed_stripted = str_replace(['(', ')', ' ', '-'], '', $phone_feed);
+    $phone_pref_stripted = str_replace(['(', ')', ' ', '-'], '', $phone_pref);
+    if ($phone_feed != $phone_pref) {
+      if ($phone_feed_stripted == $phone_pref_stripted) {
+        $node->set('field_staff_profile_pref_phone', $phone_feed);
+        $save = true;
+      }
+    }
+
     // Handle a bunch of fields in a foreach loop
     $fields_all = [
       ['FIRST NAME', 'field_staff_profile_first_name', 'field_staff_profile_pref_name',],
