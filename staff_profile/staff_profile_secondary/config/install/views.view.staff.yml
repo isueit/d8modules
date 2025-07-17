@@ -8,14 +8,10 @@ dependencies:
     - field.storage.node.field_staff_profile_pref_title
     - field.storage.node.field_staff_profile_smugmug
     - node.type.staff_profile
-    - taxonomy.vocabulary.staff_positions
-  content:
-    - 'taxonomy_term:staff_positions:73f1f2ed-c4c4-414f-81f1-8f093eceaf95'
   module:
     - node
     - options
     - staff_profile
-    - taxonomy
     - telephone
     - user
 id: staff
@@ -1934,6 +1930,7 @@ display:
           plugin_id: bundle
           value:
             staff_profile: staff_profile
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
@@ -1978,18 +1975,17 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-        field_staff_profile_position_target_id:
-          id: field_staff_profile_position_target_id
-          table: node__field_staff_profile_position
-          field: field_staff_profile_position_target_id
+        field_staff_profile_job_title_value_1:
+          id: field_staff_profile_job_title_value_1
+          table: node__field_staff_profile_job_title
+          field: field_staff_profile_job_title_value
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: or
-          value:
-            507: 507
-          group: 1
+          plugin_id: string
+          operator: '='
+          value: 'Associate Director Extension and Outreach Services'
+          group: 2
           exposed: false
           expose:
             operator_id: ''
@@ -2005,7 +2001,7 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -2018,16 +2014,50 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: false
-          vid: staff_positions
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
+        field_staff_profile_job_title_value:
+          id: field_staff_profile_job_title_value
+          table: node__field_staff_profile_job_title
+          field: field_staff_profile_job_title_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: '='
+          value: 'Assistant Director County Services'
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
           1: AND
+          2: OR
       style:
         type: html_list
         options:
@@ -2589,6 +2619,7 @@ display:
           plugin_id: bundle
           value:
             staff_profile: staff_profile
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
@@ -2633,18 +2664,17 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-        field_staff_profile_position_target_id:
-          id: field_staff_profile_position_target_id
-          table: node__field_staff_profile_position
-          field: field_staff_profile_position_target_id
+        field_staff_profile_job_title_value_1:
+          id: field_staff_profile_job_title_value_1
+          table: node__field_staff_profile_job_title
+          field: field_staff_profile_job_title_value
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: taxonomy_index_tid
-          operator: not
-          value:
-            507: 507
-          group: 1
+          plugin_id: string
+          operator: '!='
+          value: 'Associate Director Extension and Outreach Services'
+          group: 2
           exposed: false
           expose:
             operator_id: ''
@@ -2660,7 +2690,7 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -2673,16 +2703,50 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          reduce_duplicates: false
-          vid: staff_positions
-          type: select
-          hierarchy: false
-          limit: true
-          error_message: true
+        field_staff_profile_job_title_value:
+          id: field_staff_profile_job_title_value
+          table: node__field_staff_profile_job_title
+          field: field_staff_profile_job_title_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: '!='
+          value: 'Assistant Director County Services'
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:
           1: AND
+          2: AND
       defaults:
         title: false
         css_class: false
