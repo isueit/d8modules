@@ -19,7 +19,18 @@ class PubsEntityForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // Begin Hack - this feature is broken
+    $form['introduction'] = [
+      '#type' => 'markup',
+      '#markup' => '<p>When the new Extension Store launched, this feature stopped working — not on purpose, of course, but the result is the same. Since it\'s not currently working, we\'ve hidden the configuration options for now to save you the frustration.</p>
+
+<p>We\'re teaming up with the Extension Store crew to get it sorted out as soon as possible. Check back later for updates — and thanks for hanging in there with us while we untangle the mess.</p>',
+    ];
+    return $form;
+    // End Hack
+
     $form = parent::buildForm($form, $form_state);
+
     $entity = $this->entity;
     $form['revision_log_message']['#access'] = false;
     if ($entity->field_from_feed->value != 0) {
