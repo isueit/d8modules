@@ -81,8 +81,8 @@ class EventDetailsController extends ControllerBase
       '#instructor' => $instructor,
       '#sessions' => $sessions,
       '#urls' => [
-        'event' => $event['Program_Offering_Website__c'],
-        'program' => $event['Planned_Program_Website__c'],
+        'event' => trim($event['Program_Offering_Website__c'], '\/'),
+        'program' => trim($event['Planned_Program_Website__c'], '\/'),
       ],
       '#registration' => $this->get_registration_info($event),
       '#attached' => ['library' => ['program_offering_blocks/program_offering_blocks_details']],
