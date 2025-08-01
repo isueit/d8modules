@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.embed_block
+    - field.storage.block_content.body
+    - filter.format.code_embed
+  module:
+    - text
+id: block_content.embed_block.body
+field_name: body
+entity_type: block_content
+bundle: embed_block
+label: Body
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats:
+    - code_embed
+field_type: text_with_summary

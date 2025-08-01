@@ -1,0 +1,18 @@
+<?php
+
+/*
+ * Implements hook_ENTITY_TYPE_update()
+ */
+function embed_block_block_content_update(Drupal\Core\Entity\EntityInterface $entity){
+	// Clear cache if BlockContent is of type
+  if ($entity->bundle() == 'embed_block') {
+	\Drupal::service('cache.render')->invalidateAll();
+  }
+}
+
+function embed_block_theme_suggestions_block_alter(&$suggestions, $variables) {
+  $content = $variables['elements']['content'];
+  if (isset($content['#block_content']) && $content['#block_content'] instanceof \Drupal\block_content\BlockContentInterface) {
+    $suggestions[] = 'block__' . $content['#block_content']->bundle();
+  }
+}

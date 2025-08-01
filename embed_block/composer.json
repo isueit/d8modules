@@ -1,0 +1,5 @@
+{
+  "name": "isueit/embed_block",
+  "type": "drupal-custom-module",
+  "description": "Creates a block type for embedding code."
+}

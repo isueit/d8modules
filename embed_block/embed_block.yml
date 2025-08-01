@@ -1,0 +1,10 @@
+name: Embed Block
+description: Creates a block type used for embedding code.
+package: Custom
+type: module
+version: 1.0
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - drupal:block
+  - drupal:block_content
+  - drupal:allowed_formats
