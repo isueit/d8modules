@@ -34,7 +34,6 @@ dependencies:
     - field.field.node.staff_profile.field_staff_profile_staffid
     - field.field.node.staff_profile.field_staff_profile_stale
     - field.field.node.staff_profile.field_staff_profile_teams_groups
-    - field.field.node.staff_profile.field_staff_profile_web_amb
     - node.type.staff_profile
   module:
     - field_group
@@ -42,16 +41,15 @@ dependencies:
     - user
   enforced:
     module:
-      - staff_block
+      - staff_profile
 third_party_settings:
   field_group:
     group_contact_:
-      children:
-        - field_staff_profile_addr
+      children: {  }
       label: 'Contact Information'
-      parent_name: group_location_information
+      parent_name: ''
       region: hidden
-      weight: 4
+      weight: 2
       format_type: fieldset
       format_settings:
         classes: ''
@@ -59,18 +57,22 @@ third_party_settings:
         description: ''
     group_location_information:
       children:
-        - group_contact_
-        - field_staff_profile_region
-        - field_staff_profile_college
-        - field_staff_profile_pgm_areas
-        - field_staff_profile_location
+        - body
+        - field_custodian_of_public_record
+        - field_staff_profile_addr
         - field_staff_profile_base_county
+        - field_staff_profile_college
+        - field_staff_profile_cty_dept
         - field_staff_profile_cty_served
+        - field_staff_profile_pgm_areas
+        - field_staff_profile_pref_title
+        - field_staff_profile_region
+        - field_staff_profile_smugmug
         - field_staff_profile_teams_groups
       label: 'Location Information'
       parent_name: ''
       region: hidden
-      weight: 7
+      weight: 23
       format_type: fieldset
       format_settings:
         classes: ''
@@ -129,5 +131,5 @@ hidden:
   field_staff_profile_staffid: true
   field_staff_profile_stale: true
   field_staff_profile_teams_groups: true
-  field_staff_profile_web_amb: true
   links: true
+  search_api_excerpt: true

@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.node.staff_contact_image
     - field.field.node.staff_profile.body
     - field.field.node.staff_profile.field_custodian_of_public_record
     - field.field.node.staff_profile.field_staff_profile_addr
@@ -35,13 +36,9 @@ dependencies:
     - field.field.node.staff_profile.field_staff_profile_teams_groups
     - node.type.staff_profile
   module:
-    - address
-    - field_delimiter
-    - field_formatter_class
     - field_group
-    - options
+    - layout_builder
     - staff_profile
-    - text
     - user
   enforced:
     module:
@@ -51,12 +48,10 @@ third_party_settings:
     group_contact_:
       children:
         - field_staff_profile_addr
-        - field_staff_profile_email
-        - field_staff_profile_pref_phone
       label: 'Contact Information'
-      parent_name: ''
-      region: content
-      weight: 4
+      parent_name: group_location_information
+      region: hidden
+      weight: 6
       format_type: fieldset
       format_settings:
         classes: ''
@@ -64,6 +59,10 @@ third_party_settings:
         description: ''
     group_location_information:
       children:
+        - body
+        - field_staff_profile_pref_phone
+        - field_staff_profile_email
+        - group_contact_
         - field_staff_profile_region
         - field_staff_profile_college
         - field_staff_profile_pgm_areas
@@ -73,106 +72,21 @@ third_party_settings:
         - field_custodian_of_public_record
       label: 'Location Information'
       parent_name: ''
-      region: content
-      weight: 5
+      region: hidden
+      weight: 3
       format_type: fieldset
       format_settings:
         classes: ''
         id: sp_location
         description: ''
-id: node.staff_profile.default
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.staff_profile.staff_contact_image
 targetEntityType: node
 bundle: staff_profile
-mode: default
+mode: staff_contact_image
 content:
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_custodian_of_public_record:
-    type: boolean
-    label: hidden
-    settings:
-      format: custom
-      format_custom_false: ''
-      format_custom_true: 'Custodian of Public Record'
-    third_party_settings:
-      field_formatter_class:
-        class: isu-custodian-records
-    weight: 18
-    region: content
-  field_staff_profile_addr:
-    type: address_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_staff_profile_base_county:
-    type: entity_reference_label
-    label: inline
-    settings:
-      link: false
-    third_party_settings: {  }
-    weight: 15
-    region: content
-  field_staff_profile_college:
-    type: list_default
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-    weight: 12
-    region: content
-  field_staff_profile_cty_dept:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 0
-    region: content
-  field_staff_profile_cty_served:
-    type: entity_reference_label
-    label: inline
-    settings:
-      link: false
-    third_party_settings:
-      field_delimiter:
-        delimiter: ','
-      field_formatter_class:
-        class: staff_profile_counties_served
-    weight: 16
-    region: content
-  field_staff_profile_email:
-    type: email_mailto
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_staff_profile_pgm_areas:
-    type: entity_reference_label
-    label: inline
-    settings:
-      link: false
-    third_party_settings:
-      field_delimiter:
-        delimiter: ','
-      field_formatter_class:
-        class: ''
-    weight: 13
-    region: content
-  field_staff_profile_pref_phone:
-    type: string
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 4
-    region: content
   field_staff_profile_pref_title:
     type: string
     label: hidden
@@ -181,51 +95,42 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_staff_profile_region:
-    type: number_integer
-    label: inline
-    settings:
-      thousand_separator: ''
-      prefix_suffix: true
-    third_party_settings: {  }
-    weight: 11
-    region: content
   field_staff_profile_smugmug:
     type: smugmug_id_formatter
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 2
-    region: content
-  field_staff_profile_teams_groups:
-    type: entity_reference_label
-    label: inline
-    settings:
-      link: false
-    third_party_settings:
-      field_delimiter:
-        delimiter: ','
-      field_formatter_class:
-        class: staff_profile_teams_groups
-    weight: 17
+    weight: 0
     region: content
 hidden:
+  body: true
+  field_custodian_of_public_record: true
+  field_staff_profile_addr: true
+  field_staff_profile_base_county: true
   field_staff_profile_canonical: true
+  field_staff_profile_college: true
   field_staff_profile_cty_author: true
+  field_staff_profile_cty_dept: true
+  field_staff_profile_cty_served: true
   field_staff_profile_departmentid: true
+  field_staff_profile_email: true
   field_staff_profile_fax: true
   field_staff_profile_first_name: true
   field_staff_profile_job_title: true
   field_staff_profile_last_name: true
   field_staff_profile_location: true
   field_staff_profile_netid: true
+  field_staff_profile_pgm_areas: true
   field_staff_profile_phone: true
   field_staff_profile_position: true
   field_staff_profile_pref_name: true
+  field_staff_profile_pref_phone: true
   field_staff_profile_quals: true
+  field_staff_profile_region: true
   field_staff_profile_site_author: true
   field_staff_profile_sort_order: true
   field_staff_profile_staffid: true
   field_staff_profile_stale: true
+  field_staff_profile_teams_groups: true
   links: true
   search_api_excerpt: true
