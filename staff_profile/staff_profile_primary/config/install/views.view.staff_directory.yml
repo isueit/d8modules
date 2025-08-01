@@ -353,6 +353,7 @@ display:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 25
           total_pages: null
           id: 0
@@ -614,7 +615,7 @@ display:
           exposed: true
           expose:
             operator_id: term_node_tid_depth_op
-            label: Team
+            label: 'Team:'
             description: ''
             use_operator: false
             operator: term_node_tid_depth_op
@@ -628,7 +629,9 @@ display:
               authenticated: authenticated
               anonymous: '0'
               content_editor: '0'
+              staff_editor: '0'
               regional_director: '0'
+              administrator: '0'
             reduce: false
           is_grouped: false
           group_info:
@@ -644,7 +647,7 @@ display:
             group_items: {  }
           reduce_duplicates: false
           vid: teams_groups
-          type: select
+          type: shs
           hierarchy: true
           limit: true
           error_message: true
@@ -944,7 +947,447 @@ display:
     display_plugin: block
     position: 2
     display_options:
-      display_extenders: {  }
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            staff_profile: staff_profile
+          group: 1
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        populate:
+          id: populate
+          table: views_filters_populate
+          field: populate
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: views_filters_populate
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: ''
+            label: 'Name:'
+            description: ''
+            use_operator: false
+            operator: populate_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: populate
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              regional_director: '0'
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          filters:
+            field_staff_profile_email_value: field_staff_profile_email_value
+            field_staff_profile_first_name_value: field_staff_profile_first_name_value
+            field_staff_profile_pref_name_value: field_staff_profile_pref_name_value
+            field_staff_profile_last_name_value: field_staff_profile_last_name_value
+            title: title
+        field_staff_profile_base_county_target_id:
+          id: field_staff_profile_base_county_target_id
+          table: node__field_staff_profile_base_county
+          field: field_staff_profile_base_county_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_staff_profile_base_county_target_id_op
+            label: 'Base County:'
+            description: ''
+            use_operator: false
+            operator: field_staff_profile_base_county_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_staff_profile_base_county_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: counties_in_iowa
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+        field_staff_profile_cty_served_target_id:
+          id: field_staff_profile_cty_served_target_id
+          table: node__field_staff_profile_cty_served
+          field: field_staff_profile_cty_served_target_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_staff_profile_cty_served_target_id_op
+            label: 'Counties Served:'
+            description: ''
+            use_operator: false
+            operator: field_staff_profile_cty_served_target_id_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_staff_profile_cty_served_target_id
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: counties_in_iowa
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+        term_node_tid_depth:
+          id: term_node_tid_depth
+          table: node_field_data
+          field: term_node_tid_depth
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: taxonomy_index_tid_depth
+          operator: or
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: term_node_tid_depth_op
+            label: 'Team:'
+            description: ''
+            use_operator: false
+            operator: term_node_tid_depth_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: term_node_tid_depth
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              staff_editor: '0'
+              regional_director: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          vid: teams_groups
+          type: shs
+          hierarchy: true
+          limit: true
+          error_message: true
+          depth: 1
+        field_staff_profile_email_value:
+          id: field_staff_profile_email_value
+          table: node__field_staff_profile_email
+          field: field_staff_profile_email_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_staff_profile_first_name_value:
+          id: field_staff_profile_first_name_value
+          table: node__field_staff_profile_first_name
+          field: field_staff_profile_first_name_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: field_staff_profile_first_name_value_op
+            label: 'First Name:'
+            description: ''
+            use_operator: false
+            operator: field_staff_profile_first_name_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_staff_profile_first_name_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_staff_profile_pref_name_value:
+          id: field_staff_profile_pref_name_value
+          table: node__field_staff_profile_pref_name
+          field: field_staff_profile_pref_name_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        field_staff_profile_last_name_value:
+          id: field_staff_profile_last_name_value
+          table: node__field_staff_profile_last_name
+          field: field_staff_profile_last_name_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: field_staff_profile_last_name_value_op
+            label: 'Last Name:'
+            description: ''
+            use_operator: false
+            operator: field_staff_profile_last_name_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_staff_profile_last_name_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 2
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+          2: OR
+      defaults:
+        filters: false
+        filter_groups: false
+      display_extenders:
+        matomo:
+          enabled: false
+          keyword_gets: ''
+          keyword_behavior: first
+          keyword_concat_separator: ' '
+          category_behavior: none
+          category_gets: ''
+          category_concat_separator: ' '
+          category_fallback: ''
+          category_facets: {  }
+          category_facets_concat_separator: ', '
       block_description: 'Staff Search'
     cache_metadata:
       max-age: -1

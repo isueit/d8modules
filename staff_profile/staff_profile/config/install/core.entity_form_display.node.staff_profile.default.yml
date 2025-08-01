@@ -39,6 +39,7 @@ dependencies:
     - address
     - field_group
     - path
+    - shs
     - telephone
     - text
     - weight
@@ -347,10 +348,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_staff_profile_site_author:
-    type: options_select
+    type: options_shs
     weight: 17
     region: content
-    settings: {  }
+    settings:
+      display_node_count: false
+      create_new_items: false
+      create_new_levels: false
+      force_deepest: false
     third_party_settings: {  }
   field_staff_profile_smugmug:
     type: string_textfield
@@ -374,10 +379,14 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_staff_profile_teams_groups:
-    type: options_select
+    type: options_shs
     weight: 131
     region: content
-    settings: {  }
+    settings:
+      display_node_count: false
+      create_new_items: false
+      create_new_levels: false
+      force_deepest: false
     third_party_settings: {  }
   field_staff_profile_web_amb:
     type: options_select
@@ -397,6 +406,16 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap_index_now:
+    weight: 130
+    region: content
+    settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
