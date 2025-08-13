@@ -34,11 +34,11 @@ dependencies:
     - field.field.node.staff_profile.field_staff_profile_staffid
     - field.field.node.staff_profile.field_staff_profile_stale
     - field.field.node.staff_profile.field_staff_profile_teams_groups
-    - field.field.node.staff_profile.field_staff_profile_web_amb
     - node.type.staff_profile
   module:
     - text
     - user
+    - staff_profile
   enforced:
     module:
       - staff_profile
@@ -91,4 +91,3 @@ hidden:
   field_staff_profile_staffid: true
   field_staff_profile_stale: true
   field_staff_profile_teams_groups: true
-  field_staff_profile_web_amb: true
