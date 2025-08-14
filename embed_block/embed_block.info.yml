@@ -8,3 +8,4 @@ dependencies:
   - drupal:block
   - drupal:block_content
   - drupal:allowed_formats
+  - ckeditor_html_embed:ckeditor_html_embed

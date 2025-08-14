@@ -6,6 +6,7 @@
     "drupal/address": "^2.0",
     "drupal/allowed_formats": "^1.2 || ^3.0",
     "drupal/block_content_permissions": "^1.10",
+    "drupal/ckeditor_html_embed": "^2.0",
     "drupal/ds": "^3.9",
     "drupal/field_delimiter": "^1.0 || ^2.0",
     "drupal/field_formatter_class": "^1.1",
