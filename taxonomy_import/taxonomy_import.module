@@ -1,4 +1,42 @@
 <?php
+
 /**
  * Empty
  */
+
+use Drupal\salesforce\SelectQuery;
+//use Drupal\salesforce\SelectQueryResult;
+
+/**
+ * Implements hook_rebuild().
+ */
+
+function taxonomy_import_rebuild()
+{
+
+  echo 'I am here' . PHP_EOL;
+
+  $query = new SelectQuery('hed__Course__c');
+  $query->fields = [
+    'Id',
+    'Name',
+    //'Description',
+    //'Company'
+  ];
+  $sfResponse = \Drupal::service('salesforce.client')->query($query);
+  echo get_class($sfResponse) . PHP_EOL;
+
+  if (!empty($sfResponse)) {
+    echo 'Size: ' . $sfResponse->size() . PHP_EOL;
+    //echo json_encode($sfResponse->records()) . PHP_EOL;
+
+    if (key_exists('a058Z0000141rNPQAY', $sfResponse->records())) {
+
+      echo json_encode($sfResponse->records()['a058Z0000141rNPQAY']->fields()) . PHP_EOL;
+      echo $sfResponse->records()['a058Z0000141rNPQAY']->fields()['Name'] . PHP_EOL;
+    }
+    //foreach ($sfResponse->records() as $lead) {
+      //echo json_encode($lead->fields()) . PHP_EOL;
+    //}
+  }
+}
