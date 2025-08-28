@@ -84,6 +84,8 @@ function county_impact_report_theme($existing, $type, $theme, $path)
 
 function county_impact_report_preprocess_paragraph__county_impact_story(&$variables)
 {
+  $countyImpactsAll = county_impact_report_find_county_impacts();
+
   $site_name = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
   $data = county_impact_report_impact_data();
 
@@ -252,4 +254,36 @@ function county_impact_report_form_alter(&$form, \Drupal\Core\Form\FormStateInte
       '#weight' => 10
     );
   }
+}
+
+/*
+ * Read the county's data from the data file
+ */
+function county_impact_report_find_county_impacts() {
+  $impacts = [];
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    // We have the node, now initiate some more variables
+    $title = $node->getTitle();
+    $year = intval($title);
+    $filename = getcwd() . '/' . \Drupal::service('extension.list.module')->getPath('county_impact_report') . '/assets/' . $year . '_impact_data.csv';
+    $countyName = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
+
+    $handle = fopen($filename, 'r');
+    while (($row = fgetcsv($handle)) !== FALSE) {
+      // Get the header row, should start with 'County'
+      if ($row[0] == 'County') {
+        $impacts[] = $row;
+      }
+
+      // Get the county data
+      if ($row[0] == $countyName) {
+        $impacts[] = $row;
+        break;
+      }
+    }
+    fclose($handle);
+  }
+  return $impacts;
 }
