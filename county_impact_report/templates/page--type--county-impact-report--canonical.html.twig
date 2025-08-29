@@ -141,28 +141,27 @@
           <div class="layout__region layout__region--first">
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
-                <p class="d-print-none"><img loading="lazy" src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="4-H clover emblem" style="height:4.5rem"></p>
-                <p class="d-none d-print-block"><img loading="lazy" src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/Green/No-Border/High-Res/i-4XFdgtJ/0/LRjBkvb7ZT7bGSzTT4rms9FgQLpnX4J8VXqP6Zd55/D/Clover_NoBorder1080-D.png" alt="4-H clover emblem" style="height:4.5rem"></p>
-                <h3 class="impact_statistic__title">{{ youth }}</h3>
-                <p class="impact_statistic__text">Youth reached</p>
+                <p class="d-print-none">{{ bottom_impact_data[0]['icon']|raw }}</p>
+                <h3 class="impact_statistic__title">{{ bottom_impact_data[0]['value'] }}</h3>
+                <p class="impact_statistic__text">{{ bottom_impact_data[0]['label']|raw }}</p>
               </div>
             </div>
           </div>
           <div class="layout__region layout__region--second">
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
-                   <p><svg class="svg-inline--fa fa-person-circle-question fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="person-circle-question" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M208 48c0 26.5-21.5 48-48 48s-48-21.5-48-48s21.5-48 48-48s48 21.5 48 48zM152 352V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V256.9L59.4 304.5c-9.1 15.1-28.8 20-43.9 10.9s-20-28.8-10.9-43.9l58.3-97c17.4-28.9 48.6-46.6 82.3-46.6h29.7c33.7 0 64.9 17.7 82.3 46.6l44.9 74.7c-16.1 17.6-28.6 38.5-36.6 61.5c-1.9-1.8-3.5-3.9-4.9-6.3L232 256.9V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V352H152zM432 512c-79.5 0-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144s-64.5 144-144 144zm0-48c13.3 0 24-10.7 24-24s-10.7-24-24-24s-24 10.7-24 24s10.7 24 24 24zM368 321.6V328c0 8.8 7.2 16 16 16s16-7.2 16-16v-6.4c0-5.3 4.3-9.6 9.6-9.6h40.5c7.7 0 13.9 6.2 13.9 13.9c0 5.2-2.9 9.9-7.4 12.3l-32 16.8c-5.3 2.8-8.6 8.2-8.6 14.2V384c0 8.8 7.2 16 16 16s16-7.2 16-16v-5.1l23.5-12.3c15.1-7.9 24.5-23.6 24.5-40.6c0-25.4-20.6-45.9-45.9-45.9H409.6c-23 0-41.6 18.6-41.6 41.6z"></path></svg></p>
-                <h3 class="impact_statistic__title">{{ volunteer_hours }}</h3>
-                <p class="impact_statistic__text">Volunteer hours</p>
+                   <p>{{ bottom_impact_data[1]['icon']|raw }}</p>
+                <h3 class="impact_statistic__title">{{ bottom_impact_data[1]['value'] }}</h3>
+                <p class="impact_statistic__text">{{ bottom_impact_data[1]['label']|raw }}</p>
               </div>
             </div>
           </div>
           <div class="layout__region layout__region--third">
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
-                <p><svg class="svg-inline--fa fa-clock fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="clock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path></svg></p>
-                <h3 class="impact_statistic__title">${{ volunteer_value }}</h3>
-                <p class="impact_statistic__text">Value of volunteer time</p>
+                <p>{{ bottom_impact_data[2]['icon']|raw }}</p>
+                <h3 class="impact_statistic__title">{{ bottom_impact_data[2]['value'] }}</h3>
+                <p class="impact_statistic__text">{{ bottom_impact_data[2]['label']|raw }}</p>
               </div>
             </div>
           </div>
