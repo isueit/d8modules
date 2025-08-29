@@ -743,7 +743,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"card\">\r\n  <a href=\"{{ view_node }}\">\r\n    {{ field_thumbnail }}\r\n    <div class=\"card-body\">\r\n      <h3 class=\"card-title\">{{ title }}</h3>\r\n      <div>{{ field_teaser }}</div>\r\n    </div>\r\n  </a>\r\n  <div class=\"card-footer\">\r\n    <a href=\"{{ view_node }}\" class=\"btn btn-outline-danger\" aria-label=\"{{ nothing_1 }}\">Read More</a>\r\n  </div>\r\n</div>"
+            text: "<div class=\"card\">\r\n    {{ field_thumbnail }}\r\n    <div class=\"card-body\">\r\n      <h3 class=\"card-title\">{{ title }}</h3>\r\n      <div>{{ field_teaser }}</div>\r\n    </div>\r\n  <div class=\"card-footer\">\r\n    <a href=\"{{ view_node }}\" class=\"btn btn-outline-danger\" aria-label=\"{{ nothing_1 }}\">Read More</a>\r\n  </div>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -1077,6 +1077,7 @@ display:
         type: full
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 10
           total_pages: null
           id: 0
@@ -1116,7 +1117,15 @@ display:
         fields: false
         footer: false
       footer: {  }
-      display_extenders: {  }
+      display_extenders:
+        simple_sitemap_display_extender:
+          variants:
+            sitemap-views:
+              index: true
+              priority: '0.5'
+              changefreq: daily
+              arguments: {  }
+              max_links: 100
       path: news
     cache_metadata:
       max-age: -1

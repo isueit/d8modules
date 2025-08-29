@@ -33,7 +33,7 @@ searchBar.addWidgets([
     autofocus: true,
     showReset: false,
     searchAsYouType: false,
-    placeholder: "Search ForStaff Info",
+    placeholder: "Search for Staff Only Content",
     queryHook(query, search) {
       newurl = 'search-results-0?ForStaff[query]=' + query;
       window.location.href = newurl;
