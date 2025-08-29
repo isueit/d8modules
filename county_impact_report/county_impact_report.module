@@ -57,12 +57,6 @@ function county_impact_report_theme($existing, $type, $theme, $path)
     'paragraph__county_impact_story' => [
       'variables' => [
         'top_impact_data' => [],
-        'direct_contacts' => 0,
-        'volunteer_hours' => 0,
-        'youth' => 0,
-        'partners' => 0,
-        'certifications' => 0,
-        'volunteer_value' => 0,
       ],
       'template' => 'paragraph--county-impact-story',
       'base hook' => 'paragraph',
@@ -90,16 +84,6 @@ function county_impact_report_theme($existing, $type, $theme, $path)
 
 function county_impact_report_preprocess_paragraph__county_impact_story(&$variables)
 {
-  //$countyImpactsAll = county_impact_report_find_county_impacts();
-
-  $site_name = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
-  $data = county_impact_report_impact_data();
-
-
-  $variables['volunteer_hours'] = number_format($data[$site_name][1]);
-  $variables['youth'] = number_format($data[$site_name][2]);
-  $variables['volunteer_value'] = number_format($data[$site_name][5]);
-
   // Get the impact data
   $impactData = county_impact_report_find_county_impacts();
   $impacts = [];
