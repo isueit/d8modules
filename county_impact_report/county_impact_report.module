@@ -186,7 +186,7 @@ function county_impact_report_find_county_impacts() {
 /*
  * Get the icon code for different lables
  */
-function county_impact_report_find_icon(string $label) {
+function county_impact_report_find_icon($label) {
   $icon = 'not found';
   $label = str_replace('<br>', ' ', $label);
   $label = str_replace(' ', ' ', $label);
@@ -223,4 +223,26 @@ function county_impact_report_format_value($value, $label) {
     $value = '$' . $value;
   }
   return $value;
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+
+function county_impact_report_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context)
+{
+  if (isset($element['#paragraph_type']) && $element['#paragraph_type'] === 'data_points_selector') {
+    $impactData = county_impact_report_find_county_impacts();
+    for ($i = 1; $i < 11; $i = $i + 1) {
+      if (array_key_exists($i, $impactData[0])) {
+        $element['subform']['field_data_point_1']['widget']['#options'][$i] = str_replace('<br>', ' ', $impactData[0][$i]) . ' (' . county_impact_report_format_value($impactData[1][$i], $impactData[0][$i]) . ')';
+        $element['subform']['field_data_point_2']['widget']['#options'][$i] = str_replace('<br>', ' ', $impactData[0][$i]) . ' (' . county_impact_report_format_value($impactData[1][$i], $impactData[0][$i]) . ')';
+        $element['subform']['field_data_point_3']['widget']['#options'][$i] = str_replace('<br>', ' ', $impactData[0][$i]) . ' (' . county_impact_report_format_value($impactData[1][$i], $impactData[0][$i]) . ')';
+      } else {
+        unset($element['subform']['field_data_point_1']['widget']['#options'][$i]);
+        unset($element['subform']['field_data_point_2']['widget']['#options'][$i]);
+        unset($element['subform']['field_data_point_3']['widget']['#options'][$i]);
+      }
+    }
+  }
 }

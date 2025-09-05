@@ -2,7 +2,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.county_impact_report.field_bottom_data_points
     - field.field.node.county_impact_report.field_impact_story
+    - field.field.node.county_impact_report.field_top_data_points
     - node.type.county_impact_report
   module:
     - entity_reference_revisions
@@ -52,6 +54,15 @@ targetEntityType: node
 bundle: county_impact_report
 mode: default
 content:
+  field_bottom_data_points:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 103
+    region: content
   field_impact_story:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -60,6 +71,15 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 101
+    region: content
+  field_top_data_points:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 102
     region: content
   links:
     settings: {  }

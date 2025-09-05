@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_data_point_1
+    - paragraphs.paragraphs_type.data_points_selector
+  module:
+    - options
+id: paragraph.data_points_selector.field_data_point_1
+field_name: field_data_point_1
+entity_type: paragraph
+bundle: data_points_selector
+label: 'Data Point'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_integer
