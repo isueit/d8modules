@@ -81,9 +81,9 @@ function county_impact_report_preprocess_paragraph__county_impact_story(&$variab
 {
   $node = \Drupal::routeMatch()->getParameter('node');
   $top_data_points = $node->get('field_top_data_points')[0]->entity;
-  $data_point_1 = $top_data_points ->get('field_data_point_1')->value;
-  $data_point_2 = $top_data_points ->get('field_data_point_2')->value;
-  $data_point_3 = $top_data_points ->get('field_data_point_3')->value;
+  $data_point_1 = $top_data_points->get('field_data_point_1')->value;
+  $data_point_2 = $top_data_points->get('field_data_point_2')->value;
+  $data_point_3 = $top_data_points->get('field_data_point_3')->value;
 
   // Get the impact data
   $impactData = county_impact_report_find_county_impacts();
@@ -122,9 +122,9 @@ function county_impact_report_preprocess_page__type__county_impact_report__canon
 {
   $node = \Drupal::routeMatch()->getParameter('node');
   $bottom_data_points = $node->get('field_bottom_data_points')[0]->entity;
-  $data_point_1 = $bottom_data_points ->get('field_data_point_1')->value;
-  $data_point_2 = $bottom_data_points ->get('field_data_point_2')->value;
-  $data_point_3 = $bottom_data_points ->get('field_data_point_3')->value;
+  $data_point_1 = $bottom_data_points->get('field_data_point_1')->value;
+  $data_point_2 = $bottom_data_points->get('field_data_point_2')->value;
+  $data_point_3 = $bottom_data_points->get('field_data_point_3')->value;
 
   // Get the impact data
   $impactData = county_impact_report_find_county_impacts();
@@ -144,39 +144,49 @@ function county_impact_report_preprocess_page__type__county_impact_report__canon
 /*
  * Read the county's data from the data file
  */
-function county_impact_report_find_county_impacts() {
-  $impacts = [];
+function county_impact_report_find_county_impacts()
+{
+  $impacts = [0 => [], 1 => []];
+  $year = 0;
 
   $node = \Drupal::routeMatch()->getParameter('node');
   if ($node instanceof \Drupal\node\NodeInterface) {
     // We have the node, now initiate some more variables
     $title = $node->getTitle();
-    $year = intval($title);
-    $filename = getcwd() . '/' . \Drupal::service('extension.list.module')->getPath('county_impact_report') . '/assets/' . $year . '_impact_data.csv';
-    $countyName = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
-
-    $handle = fopen($filename, 'r');
-    while (($row = fgetcsv($handle)) !== FALSE) {
-      // Get the header row, should start with 'County'
-      if ($row[0] == 'County') {
-        $impacts[] = $row;
-      }
-
-      // Get the county data
-      if ($row[0] == $countyName) {
-        $impacts[] = $row;
-        break;
-      }
-    }
-    fclose($handle);
+    $year = empty($title) ? 2025 : intval($title);
+  } else {
+    $year = 2025;
   }
+  if ($year == 0) {
+    $year = date('Y');
+  }
+
+  $filename = getcwd() . '/' . \Drupal::service('extension.list.module')->getPath('county_impact_report') . '/assets/' . $year . '_impact_data.csv';
+  $countyName = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
+
+  $handle = fopen($filename, 'r');
+  while (($row = fgetcsv($handle)) !== FALSE) {
+    // Get the header row, should start with 'County'
+    if ($row[0] == 'County') {
+      $impacts[0] = $row;
+    }
+
+    // Get the county data
+    if ($row[0] == $countyName) {
+      $impacts[1] = $row;
+      break;
+    }
+  }
+  fclose($handle);
+
   return $impacts;
 }
 
 /*
  * Get the icon code for different lables
  */
-function county_impact_report_find_icon($label) {
+function county_impact_report_find_icon($label)
+{
   $icon = 'not found';
   $label = str_replace('<br>', ' ', $label);
   $label = str_replace(' ', ' ', $label);
@@ -206,7 +216,8 @@ function county_impact_report_find_icon($label) {
   return $icon;
 }
 
-function county_impact_report_format_value($value, $label) {
+function county_impact_report_format_value($value, $label)
+{
   $label = trim(strtolower($label));
   $value = number_format($value);
   if (str_starts_with($label, 'value')) {
