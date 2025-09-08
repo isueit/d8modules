@@ -141,28 +141,6 @@ function county_impact_report_preprocess_page__type__county_impact_report__canon
   $variables['bottom_impact_data'] = $impacts;
 }
 
-/**
- * Implements hook_form_alter().
- */
-
-function county_impact_report_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
-{
-  if ($form_id == 'node_county_impact_report_edit_form') {
-
-    $form['actions']['save_review'] = array(
-      '#type' => 'submit',
-      '#value' => 'Save & Submit for Review',
-      '#name' => 'op',
-      //'#submit' => ['county_impact_report_form_submit'], /* NEED this */
-      '#submit' => array_merge(
-        $form['actions']['submit']['#submit'],
-        ['county_impact_report_form_submit']
-      ),
-      '#weight' => 10
-    );
-  }
-}
-
 /*
  * Read the county's data from the data file
  */
