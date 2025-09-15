@@ -1,0 +1,73 @@
+<?php
+
+use Drupal\isueo_helpers\ISUEOHelpers;
+
+/**
+* Implements hook_rebuild().
+*/
+
+function ts_events_collection_rebuild() {
+  ts_events_collection_build();
+}
+
+/**
+* Implements hook_cron().
+*/
+
+function ts_events_collection_cron() {
+  ts_events_collection_build();
+}
+
+function ts_events_collection_build() {
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
+  $events = json_decode($raw, true);
+  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
+  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+
+  foreach ($events as $event) {
+    $tmp = [];
+    $tmp['title'] = $event['Name_Placeholder__c'];
+    $tmp['id'] = $event['Id'];
+    $tmp['description'] = ts_events_collection_get_description($event);
+    $tmp['next_start_date'] = $event['Next_Start_Date__c'];
+    $tmp['county'] = ts_events_collection_get_counties($event);
+    $tmp['sessions'] = ts_events_collection_get_sessions($event);
+
+    $client->collections['events']->documents->upsert($tmp);
+  }
+}
+
+function ts_events_collection_get_description($event) {
+  $tmpstr = 'N/A';
+
+  if (!empty($event['Program_Description__c'])) {
+    $tmpstr = $event['Program_Description__c'];
+  } elseif (!empty($event['Program_Offering_Description__c'])) {
+    $tmpstr = $event['Program_Offering_Description__c'];
+  } elseif (!empty($event['Planned_Program__r.Web_Description__c'])) {
+    $tmpstr = $event['Planned_Program__r.Web_Description__c'];
+  }
+  return $tmpstr;
+}
+
+function ts_events_collection_get_counties($event) {
+  $tmpcounties = [];
+
+  if (str_ends_with($event['Account__c.Name'], ' County Extension')) {
+    $tmpcounties[] =  str_replace(' County Extension', '', $event['Account__c.Name']);
+  }
+  if (!empty($event['Additional_Counties__c'])) {
+    $additionalCounties = explode(';', $event['Additional_Counties__c']);
+    foreach ($additionalCounties as $additionalCounty) {
+      $tmpcounties[] = str_replace(' County', '', $additionalCounty);
+    }
+  }
+  sort($tmpcounties);
+  return $tmpcounties;
+}
+
+function ts_events_collection_get_sessions($event) {
+  $tmpstr = '';
+
+  return $tmpstr;
+}
