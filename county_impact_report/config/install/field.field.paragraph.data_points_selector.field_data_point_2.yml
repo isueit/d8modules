@@ -12,7 +12,7 @@ entity_type: paragraph
 bundle: data_points_selector
 label: 'Data Point'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
