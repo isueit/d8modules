@@ -101,7 +101,6 @@
       {% if page.content|render %}
 <div class="d-none d-print-block impact-print-wrapper">
 <div class="county-impact-hero d-none d-print-block"><img src="{{ theme_path }}/images/real-impact-print-banner.png" alt="{{ site_name }}'s Real Impact - a report for stakeholders"></div>
-<h1 class="d-none d-print-block">{{ node.label }}</h1>
 </div>
 <div class="county-impact-hero d-print-none"><img src="{{ theme_path }}/images/real-impact-banner.png" alt="{{ site_name }}'s Real Impact - a report for stakeholders"></div>
 <div class="isu-region isu-region_content">
@@ -112,6 +111,7 @@
         <div class="layout-content">
           <div class="layout__region layout__region--first">
             <div class="isu-block">
+            <h1 class="h3">{{ node.label }}</h1>
               <div><p>Iowa State University Extension and Outreach delivers education, facilitates collaboration, and sparks action for Iowans. This report shares examples of ISU Extension and Outreach making a difference and creating real impact in {{ site_name }}.</p></div>
             </div>
           </div>
