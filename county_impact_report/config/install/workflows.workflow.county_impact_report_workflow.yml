@@ -1,0 +1,69 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.county_impact_report
+  module:
+    - content_moderation
+id: county_impact_report_workflow
+label: 'County Impact Report Workflow'
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Draft
+      weight: -2
+      published: false
+      default_revision: false
+    in_progress:
+      label: 'In Progress'
+      weight: -1
+      published: false
+      default_revision: false
+    needs_reviewed:
+      label: 'Needs Reviewed'
+      weight: 0
+      published: false
+      default_revision: false
+    published:
+      label: Published
+      weight: 1
+      published: true
+      default_revision: true
+  transitions:
+    draft:
+      label: 'Submit for Review'
+      from:
+        - draft
+        - in_progress
+      to: needs_reviewed
+      weight: -2
+    needs_reviewed:
+      label: Publish
+      from:
+        - needs_reviewed
+      to: published
+      weight: -1
+    save:
+      label: Save
+      from:
+        - draft
+        - in_progress
+      to: in_progress
+      weight: 1
+    save_published:
+      label: 'Save Published'
+      from:
+        - published
+      to: published
+      weight: 2
+    send_back_for_revisions:
+      label: 'Send Back for Revisions'
+      from:
+        - needs_reviewed
+      to: in_progress
+      weight: 0
+  entity_types:
+    node:
+      - county_impact_report
+  default_moderation_state: draft

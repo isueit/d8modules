@@ -1,0 +1,7 @@
+county_impact_report.custom_page:
+  path: '/impact-report'
+  defaults:
+    _controller: '\Drupal\county_impact_report\Controller\RedirectController::content'
+    _title: 'Redirect To Current Impact Report'
+  requirements:
+    _permission: 'access content' # Or a more specific permission
