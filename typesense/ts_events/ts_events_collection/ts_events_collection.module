@@ -3,22 +3,24 @@
 use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
-* Implements hook_rebuild().
-*/
-
-function ts_events_collection_rebuild() {
+ * Implements hook_rebuild().
+ */
+function ts_events_collection_rebuild()
+{
   ts_events_collection_build();
 }
-
 /**
-* Implements hook_cron().
-*/
+ * Implements hook_cron().
+ */
 
-function ts_events_collection_cron() {
+function ts_events_collection_cron()
+{
   ts_events_collection_build();
 }
 
-function ts_events_collection_build() {
+function ts_events_collection_build()
+{
+  $now = time();
   $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
   $events = json_decode($raw, true);
   $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
@@ -29,15 +31,26 @@ function ts_events_collection_build() {
     $tmp['title'] = $event['Name_Placeholder__c'];
     $tmp['id'] = $event['Id'];
     $tmp['description'] = ts_events_collection_get_description($event);
-    $tmp['next_start_date'] = $event['Next_Start_Date__c'];
+    $tmp['Next_Start_Date__c'] = strtotime($event['Next_Start_Date__c']);
     $tmp['county'] = ts_events_collection_get_counties($event);
     $tmp['sessions'] = ts_events_collection_get_sessions($event);
+    $tmp['last_updated_time'] = $now;
+    $tmp['sort_order'] = $tmp['Next_Start_Date__c'] - strtotime('yesterday midnight');
+    $tmp['Program_State__c'] = $event['Program_State__c'];
+    $tmp['Event_Location__c'] = $event['Event_Location__c'];
 
     $client->collections['events']->documents->upsert($tmp);
   }
+
+  $oldevents = ISUEOHelpers\Typesense::searchCollection('events', '*', '*', '', 250, 1, 'last_updated_time:<' . $now);
+
+  foreach ($oldevents['hits'] as $oldevent) {
+    $client->collections['events']->documents[$oldevent['document']['id']]->delete();
+  }
 }
 
-function ts_events_collection_get_description($event) {
+function ts_events_collection_get_description($event)
+{
   $tmpstr = 'N/A';
 
   if (!empty($event['Program_Description__c'])) {
@@ -50,7 +63,8 @@ function ts_events_collection_get_description($event) {
   return $tmpstr;
 }
 
-function ts_events_collection_get_counties($event) {
+function ts_events_collection_get_counties($event)
+{
   $tmpcounties = [];
 
   if (str_ends_with($event['Account__c.Name'], ' County Extension')) {
@@ -66,8 +80,30 @@ function ts_events_collection_get_counties($event) {
   return $tmpcounties;
 }
 
-function ts_events_collection_get_sessions($event) {
-  $tmpstr = '';
+function ts_events_collection_get_sessions($event)
+{
+  $tmparray = [];
+  $session_names = [
+    'Start_Time_and_Date__c',
+    'Second_Session_Date_Time__c',
+    'Third_Session_Begining_Date_and_Time__c',
+    'Fourth_Session_Beginning_Date_and_Time__c',
+    'Fifth_Session_Beginning_Date_and_Time__c',
+    'Sixth_Session_Beginning_Date_and_Time__c',
+    'Seventh_Session_Beginning_Date_and_Time__c',
+    'Eighth_Session_Beginning_Date_and_Time__c',
+    'Ninth_Session_Beginning_Date_and_Time__c',
+    'Tenth_Session_Beginning_Date_and_Time__c',
+    'Eleventh_Session_Start_Date__c',
+    'Twelfth_Session_Start_Date__c',
+  ];
 
-  return $tmpstr;
+  foreach ($session_names as $session) {
+    if (!empty($event[$session])) {
+      $tmparray[] = strtotime($event[$session]);
+    }
+  }
+
+  sort($tmparray);
+  return $tmparray;
 }
