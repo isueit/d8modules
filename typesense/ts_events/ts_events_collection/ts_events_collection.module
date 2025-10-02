@@ -27,6 +27,9 @@ function ts_events_collection_build()
   $client = ISUEOHelpers\Typesense::getClient($apiKey);
 
   foreach ($events as $event) {
+    if ($event['Cancelled_Program__c'] || !$event['Public_Event__c']) {
+      continue;
+    }
     $tmp = [];
     $tmp['title'] = $event['Name_Placeholder__c'];
     $tmp['id'] = $event['Id'];
@@ -38,6 +41,8 @@ function ts_events_collection_build()
     $tmp['sort_order'] = $tmp['Next_Start_Date__c'] - strtotime('yesterday midnight');
     $tmp['Program_State__c'] = $event['Program_State__c'];
     $tmp['Event_Location__c'] = $event['Event_Location__c'];
+    $tmp['PrimaryProgramUnit__c'] = $event['PrimaryProgramUnit__c'];
+    $tmp['Program_Category__c'] = $event['Planned_Program__r.Program_Category__c'];
 
     $client->collections['events']->documents->upsert($tmp);
   }
