@@ -75,22 +75,20 @@ const programUnitDropdown = createDropdown(instantsearch.widgets.refinementList,
 });
 
 searchResults.addWidgets([
-  /*
   instantsearch.widgets.searchBox({
     container: "#search-results-bar",
     autofocus: true,
     showReset: false,
     searchAsYouType: false,
     placeholder: "Search Programs",
-    queryHook(query, search) {
-      document.getElementById("isueo-searchall").innerHTML =
-        '<a href="https://www.extension.iastate.edu/search-results?as_q=' +
-        query +
-        '">Search all of Extension</a>';
-      search(query);
-    },
+    //queryHook(query, search) {
+    //  document.getElementById("isueo-searchall").innerHTML =
+    //    '<a href="https://www.extension.iastate.edu/search-results?as_q=' +
+    //    query +
+    //    '">Search all of Extension</a>';
+    //  search(query);
+    //},
   }),
-  */
 
   instantsearch.widgets.configure({
     hitsPerPage: 120,
