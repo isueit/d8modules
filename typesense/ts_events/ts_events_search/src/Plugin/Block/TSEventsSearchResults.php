@@ -37,8 +37,8 @@ class TSEventsSearchResults extends BlockBase
           </div>
             <div class="search-results-facets">
               <div id="county"></div>
-              <div id="audience"></div>
               <div id="program-unit"></div>
+              <div id="delivery-method"></div>
               <div id="categories"></div>
               <div id="topics"></div>
             </div>

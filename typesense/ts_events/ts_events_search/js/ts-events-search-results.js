@@ -51,9 +51,9 @@ const countyDropdown = createDropdown(
   }
 );
 
-const audienceDropdown = createDropdown(instantsearch.widgets.refinementList, {
+const deliveryMethodDropdown = createDropdown(instantsearch.widgets.refinementList, {
   closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
-  buttonText: "Audience",
+  buttonText: "Delivery Method",
 });
 
 const categoriesDropdown = createDropdown(
@@ -163,12 +163,12 @@ searchResults.addWidgets([
     attribute: "PrimaryProgramUnit__c",
     sortBy: ['name:asc'],
   }),
-  /*
-  audienceDropdown({
-    container: "#audience",
-    attribute: "audiences",
+
+  deliveryMethodDropdown({
+    container: "#delivery-method",
+    attribute: "delivery_method",
   }),
-  */
+
   categoriesDropdown({
     container: "#categories",
     attribute: "category",

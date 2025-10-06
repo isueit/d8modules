@@ -44,6 +44,7 @@ function ts_events_collection_build()
     $tmp['PrimaryProgramUnit__c'] = $event['PrimaryProgramUnit__c'];
     $tmp['category'] = $event['Planned_Program__r.Program_landing_Page_Category__c'];
     $tmp['topics'] = explode(';', $event['Planned_Program__r.Program_Landing_Page_Topic__c']);
+    $tmp['delivery_method'] = $event['Event_Location__c'] == 'Online' ? 'Online' : 'In Person';
 
     $client->collections['events']->documents->upsert($tmp);
   }
