@@ -171,7 +171,7 @@ searchResults.addWidgets([
   */
   categoriesDropdown({
     container: "#categories",
-    attribute: "Program_Category__c",
+    attribute: "category",
     sortBy: ['name:asc'],
     limit: 3000,
   }),
