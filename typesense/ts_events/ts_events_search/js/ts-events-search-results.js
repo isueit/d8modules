@@ -175,12 +175,12 @@ searchResults.addWidgets([
     sortBy: ['name:asc'],
     limit: 3000,
   }),
-  /*
   topicsDropdown({
     container: "#topics",
-    attribute: "topic_names",
+    attribute: "topics",
+    sortBy: ['name:asc'],
+    limit: 3000,
   }),
-  */
 
   instantsearch.widgets.stats({
     container: "#stats",
