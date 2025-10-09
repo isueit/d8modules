@@ -91,7 +91,7 @@ searchResults.addWidgets([
   }),
 
   instantsearch.widgets.configure({
-    hitsPerPage: 120,
+    hitsPerPage: 25,
   }),
 
   instantsearch.widgets.infiniteHits({
