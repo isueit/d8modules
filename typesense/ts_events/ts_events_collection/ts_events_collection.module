@@ -44,8 +44,8 @@ function ts_events_collection_index_events()
     $tmp['End_Date_and_Time__c'] = strtotime($event['End_Date_and_Time__c']);
     $tmp['Next_Start_Date__c'] = strtotime($event['Next_Start_Date__c']);
     $tmp['sort_order'] = $tmp['Next_Start_Date__c'] - strtotime('yesterday midnight');
-    //    $tmp['Registration_Opens__c'] =
-    //    $tmp['Registration_Deadline__c'] =
+    $tmp['Registration_Opens__c'] = ts_events_collection_get_registration_opens($event);
+    $tmp['Registration_Deadline__c'] = ts_events_collection_get_registration_deadline($event);
 
     // Handle fields that get copied straight over using the same field name
     $field_names = [
@@ -265,4 +265,24 @@ function ts_events_collection_delete_collection()
     $client->collections['events']->delete();
   } catch (Exception $e) {
   }
+}
+
+function ts_events_collection_get_registration_opens($event)
+{
+  $open = time();
+  if (!empty($event['Registration_Opens__c'])) {
+    $open = strtotime($event['Registration_Opens__c']);
+  }
+
+  return $open;
+}
+
+function ts_events_collection_get_registration_deadline($event)
+{
+  $open = strtotime($event['Start_Time_and_Date__c']);
+  if (!empty($event['Registration_Deadline__c'])) {
+    $open = strtotime($event['Registration_Deadline__c']);
+  }
+
+  return $open;
 }
