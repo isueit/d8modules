@@ -33,7 +33,6 @@ function staff_profile_form_node_form_alter(&$form, &$form_state, $form_id) {
     $userid = \Drupal::currentUser()->id();
     if ($userid != 1) {
       $form['field_staff_profile_cty_author']['widget']['#disabled'] = TRUE;
-      $form['field_staff_profile_web_amb']['widget']['#disabled'] = TRUE;
       $form['field_staff_profile_site_author']['widget']['#disabled'] = TRUE;
       $form['field_staff_profile_quals']['widget']['#disabled'] = TRUE;
     }

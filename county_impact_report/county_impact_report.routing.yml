@@ -1,15 +1,7 @@
-county_impact_report.regional_director:
-  path: '/regional_director_approval'
+county_impact_report.custom_page:
+  path: '/impact-report'
   defaults:
-    _controller: '\Drupal\county_impact_report\Controller\ApprovalController::regional_director'
-    _title: 'Regional Director Approval'
+    _controller: '\Drupal\county_impact_report\Controller\RedirectController::content'
+    _title: 'Redirect To Current Impact Report'
   requirements:
-    _permission: 'access content'
-
-county_impact_report.advancement_specialist:
-  path: '/advancement_specialist_approval'
-  defaults:
-    _controller: '\Drupal\county_impact_report\Controller\ApprovalController::advancement_specialist'
-    _title: 'Advancement Specialist Approval'
-  requirements:
-    _permission: 'access content'
+    _permission: 'access content' # Or a more specific permission

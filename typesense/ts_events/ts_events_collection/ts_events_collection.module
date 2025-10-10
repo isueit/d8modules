@@ -1,0 +1,288 @@
+<?php
+
+use Drupal\isueo_helpers\ISUEOHelpers;
+
+/**
+ * Implements hook_rebuild().
+ */
+function ts_events_collection_rebuild()
+{
+  ts_events_collection_index_events();
+}
+/**
+ * Implements hook_cron().
+ */
+
+function ts_events_collection_cron()
+{
+  ts_events_collection_index_events();
+}
+
+function ts_events_collection_index_events()
+{
+  $now = time();
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
+  $events = json_decode($raw, true);
+  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
+  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+
+  foreach ($events as $event) {
+    if ($event['Cancelled_Program__c'] || !$event['Public_Event__c']) {
+      continue;
+    }
+    $tmp = [];
+    $tmp['title'] = $event['Name_Placeholder__c'];
+    $tmp['id'] = $event['Id'];
+    $tmp['last_updated_time'] = $now;
+    $tmp['description'] = ts_events_collection_get_description($event);
+    $tmp['county'] = ts_events_collection_get_counties($event);
+    $tmp['sessions'] = ts_events_collection_get_sessions($event);
+    $tmp['category'] = $event['Planned_Program__r.Program_landing_Page_Category__c'];
+    $tmp['topics'] = empty($event['Planned_Program__r.Program_Landing_Page_Topic__c']) ? [] : explode(';', $event['Planned_Program__r.Program_Landing_Page_Topic__c']);
+    $tmp['delivery_method'] = $event['Event_Location__c'] == 'Online' ? 'Online' : 'In Person';
+    $tmp['Start_Time_and_Date__c'] = strtotime($event['Start_Time_and_Date__c']);
+    $tmp['End_Date_and_Time__c'] = strtotime($event['End_Date_and_Time__c']);
+    $tmp['Next_Start_Date__c'] = strtotime($event['Next_Start_Date__c']);
+    $tmp['sort_order'] = $tmp['Next_Start_Date__c'] - strtotime('yesterday midnight');
+    $tmp['Registration_Opens__c'] = ts_events_collection_get_registration_opens($event);
+    $tmp['Registration_Deadline__c'] = ts_events_collection_get_registration_deadline($event);
+
+    // Handle fields that get copied straight over using the same field name
+    $field_names = [
+      'Program_State__c',
+      'Event_Location__c',
+      'PrimaryProgramUnit__c',
+      'Contact_Information_Name__c',
+      'Contact_Information_Email__c',
+      'Contact_Information_Phone__c',
+      'Delivery_Language__c',
+      'Instructor_Information_Name__c',
+      'Instructor_Information_Email__c',
+      'Instructor_Information_Phone__c',
+      'Event_Location_Site_Building__c',
+      'Event_Location_Street_Address__c',
+      'Event_Location_Zip_Code__c',
+      'Planned_Program__r.Smugmug_ID__c',
+      'Planned_Program_Website__c',
+      'Registration_Link__c',
+    ];
+    foreach ($field_names as $field_name) {
+      $tmp[$field_name] = $event[$field_name];
+    }
+
+    $client->collections['events']->documents->upsert($tmp);
+  }
+
+  $oldevents = ISUEOHelpers\Typesense::searchCollection('events', '*', '*', '', 250, 1, 'last_updated_time:<' . $now);
+
+  foreach ($oldevents['hits'] as $oldevent) {
+    $client->collections['events']->documents[$oldevent['document']['id']]->delete();
+  }
+}
+
+function ts_events_collection_get_description($event)
+{
+  $tmpstr = 'N/A';
+
+  if (!empty($event['Program_Description__c'])) {
+    $tmpstr = $event['Program_Description__c'];
+  } elseif (!empty($event['Program_Offering_Description__c'])) {
+    $tmpstr = $event['Program_Offering_Description__c'];
+  } elseif (!empty($event['Planned_Program__r.Web_Description__c'])) {
+    $tmpstr = $event['Planned_Program__r.Web_Description__c'];
+  }
+  return $tmpstr;
+}
+
+function ts_events_collection_get_counties($event)
+{
+  $tmpcounties = [];
+
+  if (str_ends_with($event['Account__c.Name'], ' County Extension')) {
+    $tmpcounties[] =  str_replace(' County Extension', '', $event['Account__c.Name']);
+  }
+  if (!empty($event['Additional_Counties__c'])) {
+    $additionalCounties = explode(';', $event['Additional_Counties__c']);
+    foreach ($additionalCounties as $additionalCounty) {
+      $tmpcounties[] = str_replace(' County', '', $additionalCounty);
+    }
+  }
+  sort($tmpcounties);
+  return $tmpcounties;
+}
+
+function ts_events_collection_get_sessions($event)
+{
+  $tmparray = [];
+  $session_names = [
+    'Start_Time_and_Date__c',
+    'Second_Session_Date_Time__c',
+    'Third_Session_Begining_Date_and_Time__c',
+    'Fourth_Session_Beginning_Date_and_Time__c',
+    'Fifth_Session_Beginning_Date_and_Time__c',
+    'Sixth_Session_Beginning_Date_and_Time__c',
+    'Seventh_Session_Beginning_Date_and_Time__c',
+    'Eighth_Session_Beginning_Date_and_Time__c',
+    'Ninth_Session_Beginning_Date_and_Time__c',
+    'Tenth_Session_Beginning_Date_and_Time__c',
+    'Eleventh_Session_Start_Date__c',
+    'Twelfth_Session_Start_Date__c',
+  ];
+
+  foreach ($session_names as $session) {
+    if (!empty($event[$session])) {
+      $tmparray[] = strtotime($event[$session]);
+    }
+  }
+
+  sort($tmparray);
+  return $tmparray;
+}
+
+function ts_events_collection_create_collection()
+{
+  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
+  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+
+  // Start with the base schema
+  $schema = [
+    "name" => "events",
+    "fields" => [],
+    "default_sorting_field" => "sort_order",
+    "enable_nested_fields" => false,
+    "symbols_to_index" => [],
+    "token_separators" => []
+  ];
+
+  // Define the fields
+  $fields = [
+    'title' => 'string',
+    'description' => 'string',
+    'delivery_method' => 'string',
+    'Program_State__c' => 'string',
+    'Event_Location__c' => 'string',
+    'PrimaryProgramUnit__c' => 'string',
+    'category' => 'string',
+    'topics' => 'string[]',
+    'county' => 'string[]',
+    'sort_order' => 'int32',
+    'last_updated_time' => 'int32',
+    'Next_Start_Date__c' => 'int64',
+    'sessions' => 'int64[]',
+    'Contact_Information_Name__c' => 'string',
+    'Contact_Information_Email__c' => 'string',
+    'Contact_Information_Phone__c' => 'string',
+    'Delivery_Language__c' => 'string',
+    'Instructor_Information_Name__c' => 'string',
+    'Instructor_Information_Email__c' => 'string',
+    'Instructor_Information_Phone__c' => 'string',
+    'End_Date_and_Time__c' => 'int64',
+    'Start_Time_and_Date__c' => 'int64',
+    'Event_Location_Site_Building__c' => 'string',
+    'Event_Location_Street_Address__c' => 'string',
+    'Event_Location_Zip_Code__c' => 'string',
+    'Planned_Program__r.Smugmug_ID__c' => 'string',
+    'Planned_Program_Website__c' => 'string',
+    'Registration_Opens__c' => 'int64',
+    'Registration_Deadline__c' => 'int64',
+    'Registration_Link__c' => 'string',
+  ];
+
+  // Fields that are facets
+  $facets = [
+    'delivery_method',
+    'PrimaryProgramUnit__c',
+    'category',
+    'topics',
+    'county',
+  ];
+
+  // Optional fields
+  $optional = [
+    'Program_State__c',
+    'category',
+    'topics',
+    'county',
+    'Contact_Information_Name__c',
+    'Contact_Information_Email__c',
+    'Contact_Information_Phone__c',
+    'Delivery_Language__c',
+    'Instructor_Information_Name__c',
+    'Instructor_Information_Email__c',
+    'Instructor_Information_Phone__c',
+    'End_Date_and_Time__c',
+    'Start_Time_and_Date__c',
+    'Event_Location_Site_Building__c',
+    'Event_Location_Street_Address__c',
+    'Event_Location_Zip_Code__c',
+    'Planned_Program__r.Smugmug_ID__c',
+    'Planned_Program_Website__c',
+    'Registration_Opens__c',
+    'Registration_Deadline__c',
+    'Registration_Link__c',
+  ];
+
+  // Sort fields
+  $sort = [
+    'sort_order',
+  ];
+
+  // Add the fields to the schema
+  foreach ($fields as $field => $type) {
+    $schema['fields'][] =
+      [
+        "name" => $field,
+        "type" => $type,
+        "facet" => in_array($field, $facets),
+        "optional" => in_array($field, $optional),
+        "index" => true,
+        "sort" => in_array($field, $sort),
+        "infix" => false,
+        "locale" => "",
+        "stem" => false,
+        "stem_dictionary" => "",
+        "store" => true
+      ];
+  }
+
+  ts_events_collection_delete_collection();
+
+  try {
+    $client->collections->create($schema);
+    ts_events_collection_index_events();
+  } catch (Exception $e) {
+    echo $e->getMessage();
+  }
+}
+
+
+function ts_events_collection_delete_collection()
+{
+  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
+  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+
+  try {
+    $client->collections['events']->delete();
+  } catch (Exception $e) {
+  }
+}
+
+function ts_events_collection_get_registration_opens($event)
+{
+  $open = time();
+  if (!empty($event['Registration_Opens__c'])) {
+    $open = strtotime($event['Registration_Opens__c']);
+  }
+
+  return $open;
+}
+
+function ts_events_collection_get_registration_deadline($event)
+{
+  $open = strtotime($event['Start_Time_and_Date__c']);
+  if (!empty($event['Registration_Deadline__c'])) {
+    $open = strtotime($event['Registration_Deadline__c']);
+  }
+
+  return $open;
+}

@@ -33,3 +33,8 @@
 #ts-forstaff-search-bar-only input.ais-SearchBox-input:focus-visible {
     outline: 1px solid var(--primary-accent-color);
 }
+.gin-layer-wrapper.dashboard-gin-panel.gin-layer-wrapper.flip_cards.block.block-ts-forstaff-search.block-ts-forstaff-search-search-bar-only {
+        background: none;
+        border: none;
+        box-shadow: none;
+}

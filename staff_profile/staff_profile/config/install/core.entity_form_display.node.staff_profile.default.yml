@@ -33,7 +33,6 @@ dependencies:
     - field.field.node.staff_profile.field_staff_profile_staffid
     - field.field.node.staff_profile.field_staff_profile_stale
     - field.field.node.staff_profile.field_staff_profile_teams_groups
-    - field.field.node.staff_profile.field_staff_profile_web_amb
     - node.type.staff_profile
   module:
     - address
@@ -42,6 +41,7 @@ dependencies:
     - telephone
     - text
     - weight
+    - staff_profile
   enforced:
     module:
       - staff_profile
@@ -151,7 +151,6 @@ third_party_settings:
     group_web_author_info_fold:
       children:
         - field_staff_profile_cty_author
-        - field_staff_profile_web_amb
         - field_staff_profile_site_author
         - field_staff_profile_quals
       label: 'Web Author Info'
@@ -379,12 +378,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_staff_profile_web_amb:
-    type: options_select
-    weight: 16
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   path:
     type: path
     weight: 9
@@ -397,6 +390,16 @@ content:
     region: content
     settings:
       display_label: true
+    third_party_settings: {  }
+  simple_sitemap:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  simple_sitemap_index_now:
+    weight: 130
+    region: content
+    settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox

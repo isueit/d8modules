@@ -10,9 +10,21 @@ editor: ckeditor5
 settings:
   toolbar:
     items:
+      - bold
+      - '|'
+      - bulletedList
+      - numberedList
+      - '|'
+      - link
+      - '|'
       - findAndReplace
       - wproofreader
   plugins:
+    ckeditor5_list:
+      properties:
+        reversed: true
+        startIndex: true
+      multiBlock: true
     ckeditor5_plugin_pack_find_and_replace__find_and_replace:
       ui_type: dialog
     ckeditor5_plugin_pack_text_transformation__text_transformation:
@@ -82,5 +94,7 @@ settings:
     ckeditor5_plugin_pack_word_count__word_count:
       word_count_enabled: true
       word_count_mode: words_only
+    ckeditor_link_styles_linkStyles:
+      styles: {  }
 image_upload:
   status: false

@@ -3,7 +3,9 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.county_impact_report.field_bottom_data_points
     - field.field.node.county_impact_report.field_impact_story
+    - field.field.node.county_impact_report.field_top_data_points
     - node.type.county_impact_report
   module:
     - user
@@ -18,4 +20,6 @@ content:
     weight: 100
     region: content
 hidden:
+  field_bottom_data_points: true
   field_impact_story: true
+  field_top_data_points: true

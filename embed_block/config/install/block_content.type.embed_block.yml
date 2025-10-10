@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: embed_block
+label: 'Embed Block'
+revision: false
+description: 'Used to embed widgets or other embed code for things like eNewsletter archives, Cybox folders, podcasts, etc.'

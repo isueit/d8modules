@@ -17,3 +17,11 @@ program_offering_blocks.event_details:
   requirements:
     _permission: 'access content'
 
+program_offering_blocks.event-details:
+  path: '/event-details/{eventID}/{eventTitle}'
+  defaults:
+    _controller: '\Drupal\program_offering_blocks\Controller\EventDetailsController::event_details'
+    _title: 'Details of Event'
+    eventTitle: ''
+  requirements:
+    _permission: 'access content'
