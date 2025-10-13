@@ -4,3 +4,5 @@ core_version_requirement: ^10
 description: 'Create Blocks for doing Events Searches'
 version: '8.x-1.1-dev'
 package: 'ISUEO'
+dependencies:
+  - d8modules:ts_events_details

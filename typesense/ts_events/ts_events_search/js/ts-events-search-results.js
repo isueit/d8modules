@@ -134,7 +134,7 @@ searchResults.addWidgets([
               ${months[date.getMonth()]}
               ${String(date.getDate()).padStart(2,'0')}
               ${timeFormatter.format(date)}
-                <h2 class="hit-name card-title"><a href="event-details/${item.id}/${item.title.replaceAll('/', '-')}"> ${item._highlightResult.title.value}</a></h2>
+                <h2 class="hit-name card-title"><a href="ts-event-details/${item.id}/${item.title.replaceAll('/', '-')}"> ${item._highlightResult.title.value}</a></h2>
                 ${sessionString}
                 ${location}
               </div>

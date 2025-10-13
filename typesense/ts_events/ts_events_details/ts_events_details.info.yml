@@ -1,0 +1,8 @@
+name: 'Typesense Events Details'
+type: module
+core_version_requirement: ^10 || ^11
+description: 'Creates an Events Details page for events from Typesense'
+version: '8.x-1.0-dev'
+package: 'ISUEO'
+dependencies:
+  - d8modules:isueo_helpers

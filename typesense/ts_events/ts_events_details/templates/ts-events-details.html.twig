@@ -1,0 +1,219 @@
+{#
+/**
+ * @file
+ * Default template for educational_programs_field
+ *
+ * Available variables:
+ *   - title
+ *   - event
+ *     - title
+ *   - smugmug_id
+ *   - date
+ *     - start_date: Start date for the event
+ *     - start_time
+ *     - start_day
+ *     - end_date
+ *     - end_time
+ *     - end_day
+ *     - next_date
+ *     - next_time
+ *     - next_day
+ *   - online: True/False
+ *   - address
+ *     - building
+ *     - street
+ *     - city
+ *     - state
+ *     - zip
+ *   - description
+ *   - contact
+ *     - name
+ *     - email
+ *     - phone
+ *   - instructor
+ *     - name
+ *     - email
+ *     - phone
+ *   - sessions
+ *     -
+ *       - date
+ *       - time
+ *       - day
+ *       - is_next
+ *   - registration
+ *     - opens
+ *       - date
+ *       - time
+ *       - day
+ *     - closes
+ *       - date
+ *       - time
+ *       - day
+ *     -
+ *     -
+ */
+#}
+<div class="program_offering_blocks ungerboeck_eventlist_details">
+
+  <div class="event_details_wrapper">
+    <div class="event_details_dates">
+      <span class="icon">
+        <svg id="SVG_Time_Icon" xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304"><path id="Oval_27_-_Outline" data-name="Oval 27 - Outline" d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z" transform="translate(0)"></path><path id="Path_3472" data-name="Path 3472" d="M5756.131,1591.968a1,1,0,0,1-1-1v-13.16a1,1,0,1,1,2,0V1589.5l8.839-3.465a1,1,0,1,1,.729,1.862l-10.2,4A1,1,0,0,1,5756.131,1591.968Z" transform="translate(-5735 -1567.816)"></path></svg>
+      </span>
+      <span class="visible-for-screen-readers">Time</span>
+
+      {# Handle Dates Ranges #}
+      {% if event.sessions|length == 1 %}
+        {# Handle date range for single session events #}
+        {{ event.Start_Time_and_Date__c|date('l, F j, Y') }}
+        {% if event.Start_Time_and_Date__c|date('Hi') != '0000' %}
+          {{ event.Start_Time_and_Date__c|date('g:i A') }}
+        {% endif %}
+        {% if event.Start_Time_and_Date__c|date('z') == event.End_Date_and_Time__c|date('z') %}
+          {% if event.Start_Time_and_Date__c|date('Hi') != event.End_Date_and_Time__c|date('Hi') %}
+            - {{event.End_Date_and_Time__c|date('g:i A') }}
+          {% endif %}
+        {% else %}
+          - {{event.End_Date_and_Time__c|date('l, F j, Y') }}
+          {% if event.Start_Time_and_Date__c|date('Hi') != event.End_Date_and_Time__c|date('Hi') %}
+            {{event.End_Date_and_Time__c|date('g:i A') }}
+          {% endif %}
+        {% endif %}
+      {% else %}
+        {# Finish date range for multi session events #}
+        {{ event.Start_Time_and_Date__c|date('F j, Y') }}
+        {% if event.Start_Time_and_Date__c|date('z') != event.End_Date_and_Time__c|date('z') %}
+          - {{event.End_Date_and_Time__c|date('F j, Y') }}
+        {% endif %}
+      {% endif %}
+    </div>
+
+    {# Handle next session for multi session events #}
+    {% if event.sessions|length > 1 %}
+      <p class="event_details_next_session">
+        <em>
+          Next Session:
+          <span class="event_details_next_dates">
+            {{ event.Next_Start_Date__c|date('l, F j, Y g:i A') }}
+          </span>
+        </em>
+      </p>
+    {% endif %}
+
+    <div class="event_address_wrapper">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304"><g id="SVG_Location_Icon" transform="translate(7.5 8.5)"><path id="Oval_27_-_Outline" data-name="Oval 27 - Outline" d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z" transform="translate(-7.5 -8.5)"></path><path id="Path_3472" data-name="Path 3472" d="M13.5.7a9.811,9.811,0,0,1,9.8,9.8,12.133,12.133,0,0,1-1.495,5.507,24.387,24.387,0,0,1-3.2,4.639,35.36,35.36,0,0,1-4.616,4.486.8.8,0,0,1-.982,0,35.36,35.36,0,0,1-4.616-4.486,24.387,24.387,0,0,1-3.2-4.639A12.133,12.133,0,0,1,3.7,10.5,9.811,9.811,0,0,1,13.5.7Zm0,22.764c1.838-1.557,8.2-7.354,8.2-12.964a8.2,8.2,0,1,0-16.4,0C5.3,16.117,11.661,21.908,13.5,23.464Z"></path><path id="Path_3473" data-name="Path 3473" d="M16.5,9.7a3.8,3.8,0,1,1-3.8,3.8A3.8,3.8,0,0,1,16.5,9.7Zm0,6a2.2,2.2,0,1,0-2.2-2.2A2.2,2.2,0,0,0,16.5,15.7Z" transform="translate(-3 -3)"></path></g></svg>
+      </span>
+      <span class="visible-for-screen-readers">Location</span>
+      {% if event.Event_Location__c == 'Online' %}
+        Online
+      {% else %}
+        {% if event.Event_Location_Site_Building__c %}
+          {{ event.Event_Location_Site_Building__c }},
+        {% endif %}
+        {{ event.Event_Location_Street_Address__c }}
+        {{ event.Event_Location__c }},
+        {{ event.Program_State__c }}
+        {{ event.Event_Location_Zip_Code__c }}
+      {% endif %}
+    </div>
+
+    {% if (event.Contact_Information_Name__c) %}
+      <div class="event_contact_wrapper">
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304"><ellipse data-name="Oval 27" cx="21.131" cy="21.152" rx="21.131" ry="21.152" transform="translate(0)" fill="none"></ellipse><path data-name="Oval 27 - Outline" d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z" transform="translate(0)"></path><path data-name="Path 3229" d="M9.239,9.1a.748.748,0,0,1-.5-.188L1,2.062A.75.75,0,1,1,2,.938L9.239,7.345,16.482.938a.75.75,0,1,1,.994,1.123L9.736,8.908A.748.748,0,0,1,9.239,9.1Z" transform="translate(11.527 13.102)"></path><path data-name="Line 28" d="M0,5.756a.748.748,0,0,1-.53-.22.75.75,0,0,1,0-1.061L4.476-.53a.75.75,0,0,1,1.061,0,.75.75,0,0,1,0,1.061L.53,5.537A.748.748,0,0,1,0,5.756Z" transform="translate(28.506 21.512) rotate(45)"></path><path data-name="Path 3231" d="M3.894,4.644a.75.75,0,0,1-.75-.75V.75H0A.75.75,0,0,1-.75,0,.75.75,0,0,1,0-.75H3.894a.75.75,0,0,1,.53.22.75.75,0,0,1,.22.53V3.894A.75.75,0,0,1,3.894,4.644Z" transform="translate(29.292 22.3) rotate(45)"></path><path data-name="Path 3232" d="M14.316,16.383H3.09A3.114,3.114,0,0,1,0,13.252V3.131A3.114,3.114,0,0,1,3.09,0H15.374a3.114,3.114,0,0,1,3.09,3.131V5.964a.75.75,0,0,1-1.5,0V3.131A1.613,1.613,0,0,0,15.374,1.5H3.09A1.613,1.613,0,0,0,1.5,3.131v10.12a1.613,1.613,0,0,0,1.59,1.631H14.316a.75.75,0,1,1,0,1.5Z" transform="translate(11.385 12.958)"></path></svg>
+        </span>
+        <span class="visible-for-screen-readers">Contact</span>
+        <a href="mailto:{{ event.Contact_Information_Email__c }}">{{ event.Contact_Information_Name__c }}</a>
+        {% if event.Contact_Information_Phone__c %}
+          <span>{{ event.Contact_Information_Phone__c }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if event.smugmug_id%}
+      <img class="educational_program_image" src="https://photos.smugmug.com/photos/{{ event.smugmug_id }}/0/XL/{{ event.smugmug_id }}-XL.jpg" alt="" />
+      <div class="clearer"></div>
+    {% endif %}
+
+    <div class="event_description">
+      {{ event.description }}
+      <span class="event_details_links">
+        {% if (event.Program_Offering_Website__c) and (event.Program_Offering_Website__c != event.Registration_Link__c) %}
+          <div class="event_details_more_information">
+            <a href="{{ event.Program_Offering_Website__c }}">Learn more about this event<span class="visually-hidden">: {{title }}</span></a>
+          </div>
+        {% endif %}
+
+        {% if (event.Planned_Program_Website__c) and (event.Planned_Program_Website__c != event.Registration_Link__c) and (event.Planned_Program_Website__c != event.Program_Offering_Website__c) %}
+          <div class="event_details_more_information">
+            <a href="{{ event.Planned_Program_Website__c }}">Learn more about this program<span class="visually-hidden">: {{title }}</span></a>
+          </div>
+        {% endif %}
+      </span>
+      {% if (event.Instructor_Information_Name__c) and (event.Instructor_Information_Name__c != event.Contact_Information_Name__c) %}
+        <div class="event_instructor_wrapper">
+          <p>
+            <span class="font-weight-bold">Instructor: </span>
+            <a href="mailto:{{ event.Instructor_Information_Email__c }}">{{ event.Instructor_Information_Name__c }}</a>
+            {% if event.Instructor_Information_Phone__c %}
+              <span>{{ event.Instructor_Information_Phone__c }}</span>
+            {% endif %}
+          </p>
+        </div>
+      {% endif %}
+    </div>
+
+    {% set now = 'now'|date('U') %}
+    {% if ( event.Registration_Link__c) %}
+      <div class="event_details_session_registration">
+        {% if (event.Registration_Opens__c <= now and event.Registration_Deadline__c >= event.Start_Time_and_Date__c) %}
+          <div class="event_details_registration_wrapper">
+            <h2>Registration</h2>
+            <div class="event_details_registration">
+              <p>Don’t miss the opportunity to connect, learn, and engage. Secure your spot by registering today!</p>
+              <a class="btn btn-secondary" href="{{ event.Registration_Link__c }}" aria-label="Register online for {{ title }}">Register Online</a>
+            </div>
+          </div>
+        {% endif %}
+        {% if (event.Registration_Opens__c > now) %}
+          <div class="event_details_registration_wrapper">
+            <h2>Registration</h2>
+            <div class="event_details_registration">
+              Registration for this event will open soon! Be ready to secure your spot when registration opens on {{ event.Registration_Opens__c|date('F j, Y') }}.
+            </div>
+          </div>
+        {% endif %}
+        {% if (event.Registration_Deadline__c < now) %}
+          <div class="event_details_registration_wrapper">
+            <h2>Registration</h2>
+            <div class="event_details_registration">
+              Registration for this event is now closed. Thank you for your interest! Stay tuned for future events and opportunities.
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {# Only in Multi-session template #}
+    {% if (event.sessions|length > 1) %}
+      <div class="event_sessions">
+        All Sessions:<br/>
+        <ol>
+          {% for session in event.sessions %}
+            <li>
+              {% if (event.Next_Start_Date__c == session) %}
+                <span class="next_session">
+              {% endif %}
+              {{ session|date('l, F j, Y') }}
+              {% if (event.Next_Start_Date__c == session) %}
+                </span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+    {% endif %}
+  </div> {# .event_details_wrapper #}
+</div> {# .program_offering_blocks #}
+

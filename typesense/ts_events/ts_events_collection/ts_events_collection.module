@@ -46,6 +46,7 @@ function ts_events_collection_index_events()
     $tmp['sort_order'] = $tmp['Next_Start_Date__c'] - strtotime('yesterday midnight');
     $tmp['Registration_Opens__c'] = ts_events_collection_get_registration_opens($event);
     $tmp['Registration_Deadline__c'] = ts_events_collection_get_registration_deadline($event);
+    $tmp['smugmug_id'] = $event['Planned_Program__r.Smugmug_ID__c'];
 
     // Handle fields that get copied straight over using the same field name
     $field_names = [
@@ -62,8 +63,8 @@ function ts_events_collection_index_events()
       'Event_Location_Site_Building__c',
       'Event_Location_Street_Address__c',
       'Event_Location_Zip_Code__c',
-      'Planned_Program__r.Smugmug_ID__c',
       'Planned_Program_Website__c',
+      'Program_Offering_Website__c',
       'Registration_Link__c',
     ];
     foreach ($field_names as $field_name) {
@@ -165,6 +166,7 @@ function ts_events_collection_create_collection()
     'category' => 'string',
     'topics' => 'string[]',
     'county' => 'string[]',
+    'smugmug_id' => 'string',
     'sort_order' => 'int32',
     'last_updated_time' => 'int32',
     'Next_Start_Date__c' => 'int64',
@@ -181,8 +183,8 @@ function ts_events_collection_create_collection()
     'Event_Location_Site_Building__c' => 'string',
     'Event_Location_Street_Address__c' => 'string',
     'Event_Location_Zip_Code__c' => 'string',
-    'Planned_Program__r.Smugmug_ID__c' => 'string',
     'Planned_Program_Website__c' => 'string',
+    'Program_Offering_Website__c' => 'string',
     'Registration_Opens__c' => 'int64',
     'Registration_Deadline__c' => 'int64',
     'Registration_Link__c' => 'string',
@@ -215,8 +217,9 @@ function ts_events_collection_create_collection()
     'Event_Location_Site_Building__c',
     'Event_Location_Street_Address__c',
     'Event_Location_Zip_Code__c',
-    'Planned_Program__r.Smugmug_ID__c',
+    'smugmug_id',
     'Planned_Program_Website__c',
+    'Program_Offering_Website__c',
     'Registration_Opens__c',
     'Registration_Deadline__c',
     'Registration_Link__c',

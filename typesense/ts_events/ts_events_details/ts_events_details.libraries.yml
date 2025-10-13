@@ -1,0 +1,6 @@
+ts_events_details:
+  version: 1.x
+  css:
+    layout:
+      css/ts-events-details.css: {}
+
