@@ -39,6 +39,7 @@ class TSEventsSearchResults extends BlockBase
               <div id="county"></div>
               <div id="program-unit"></div>
               <div id="delivery-method"></div>
+              <div id="delivery-language"></div>
               <div id="categories"></div>
               <div id="topics"></div>
             </div>

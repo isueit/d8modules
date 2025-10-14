@@ -32,6 +32,9 @@ function ts_events_collection_index_events()
     }
     $tmp = [];
     $tmp['title'] = $event['Name_Placeholder__c'];
+    if ($event['Delivery_Language__c'] != 'English') {
+      $tmp['title'] = $tmp['title'] . ' - ' . $event['Delivery_Language__c'];
+    }
     $tmp['id'] = $event['Id'];
     $tmp['last_updated_time'] = $now;
     $tmp['description'] = ts_events_collection_get_description($event);
@@ -193,6 +196,7 @@ function ts_events_collection_create_collection()
   // Fields that are facets
   $facets = [
     'delivery_method',
+    'Delivery_Language__c',
     'PrimaryProgramUnit__c',
     'category',
     'topics',

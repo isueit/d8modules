@@ -56,6 +56,11 @@ const deliveryMethodDropdown = createDropdown(instantsearch.widgets.refinementLi
   buttonText: "Delivery Method",
 });
 
+const deliveryLanguageDropdown = createDropdown(instantsearch.widgets.refinementList, {
+  closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+  buttonText: "Delivery Language",
+});
+
 const categoriesDropdown = createDropdown(
   instantsearch.widgets.refinementList,
   {
@@ -167,6 +172,11 @@ searchResults.addWidgets([
   deliveryMethodDropdown({
     container: "#delivery-method",
     attribute: "delivery_method",
+  }),
+
+  deliveryLanguageDropdown({
+    container: "#delivery-language",
+    attribute: "Delivery_Language__c",
   }),
 
   categoriesDropdown({
