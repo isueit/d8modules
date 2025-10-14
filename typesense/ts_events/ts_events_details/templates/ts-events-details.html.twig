@@ -167,7 +167,7 @@
     {% set now = 'now'|date('U') %}
     {% if ( event.Registration_Link__c) %}
       <div class="event_details_session_registration">
-        {% if (event.Registration_Opens__c <= now and event.Registration_Deadline__c >= event.Start_Time_and_Date__c) %}
+        {% if (event.Registration_Opens__c <= now and event.Registration_Deadline__c >= now ) %}
           <div class="event_details_registration_wrapper">
             <h2>Registration</h2>
             <div class="event_details_registration">
@@ -176,7 +176,8 @@
             </div>
           </div>
         {% endif %}
-        {% if (event.Registration_Opens__c > now) %}
+
+        {% if (event.Registration_Opens__c >= now) %}
           <div class="event_details_registration_wrapper">
             <h2>Registration</h2>
             <div class="event_details_registration">
@@ -184,7 +185,8 @@
             </div>
           </div>
         {% endif %}
-        {% if (event.Registration_Deadline__c < now) %}
+
+        {% if (event.Registration_Deadline__c <= now) %}
           <div class="event_details_registration_wrapper">
             <h2>Registration</h2>
             <div class="event_details_registration">
