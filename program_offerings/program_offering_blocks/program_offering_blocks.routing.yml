@@ -8,15 +8,6 @@ program_offering_blocks.admin_settings_form:
   options:
     _admin_route: TRUE
 
-program_offering_blocks.event_details:
-  path: '/event_details/{eventID}/{eventTitle}'
-  defaults:
-    _controller: '\Drupal\program_offering_blocks\Controller\EventDetailsController::event_details'
-    _title: 'Details of Event'
-    eventTitle: ''
-  requirements:
-    _permission: 'access content'
-
 program_offering_blocks.event-details:
   path: '/event-details/{eventID}/{eventTitle}'
   defaults:
