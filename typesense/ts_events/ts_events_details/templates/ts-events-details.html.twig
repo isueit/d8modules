@@ -131,10 +131,12 @@
       </div>
     {% endif %}
 
+{#
     {% if event.smugmug_id%}
       <img class="educational_program_image" src="https://photos.smugmug.com/photos/{{ event.smugmug_id }}/0/XL/{{ event.smugmug_id }}-XL.jpg" alt="" />
       <div class="clearer"></div>
     {% endif %}
+#}
 
     <div class="event_description">
       {{ event.description }}
@@ -172,7 +174,7 @@
             <h2>Registration</h2>
             <div class="event_details_registration">
               <p>Don’t miss the opportunity to connect, learn, and engage. Secure your spot by registering today!</p>
-              <a class="btn btn-secondary" href="{{ event.Registration_Link__c }}" aria-label="Register online for {{ title }}">Register Online</a>
+              <a class="btn btn-secondary" href="{{ event.Registration_Link__c }}" aria-label="Register for {{ title }}">Register</a>
             </div>
           </div>
         {% endif %}
