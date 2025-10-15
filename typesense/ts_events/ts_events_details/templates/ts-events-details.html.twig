@@ -209,7 +209,7 @@
               {% if (event.Next_Start_Date__c == session) %}
                 <span class="next_session">
               {% endif %}
-              {{ session|date('l, F j, Y') }}
+              {{ session|date('l, F j, Y g:i A') }}
               {% if (event.Next_Start_Date__c == session) %}
                 </span>
               {% endif %}

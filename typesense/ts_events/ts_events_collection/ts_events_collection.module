@@ -286,7 +286,7 @@ function ts_events_collection_get_registration_opens($event)
 
 function ts_events_collection_get_registration_deadline($event)
 {
-  $open = strtotime($event['Start_Time_and_Date__c']);
+  $open = strtotime($event['End_Date_and_Time__c']);
   if (!empty($event['Registration_Deadline__c'])) {
     $open = strtotime($event['Registration_Deadline__c']);
   }
