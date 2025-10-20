@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.staff_information.field_staff_selector
+    - paragraphs.paragraphs_type.staff_information
+  module:
+    - field_formatter_class
+id: paragraph.staff_information.default
+targetEntityType: paragraph
+bundle: staff_information
+mode: default
+content:
+  field_staff_selector:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: staff_author
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 0
+    region: content
+hidden: {  }

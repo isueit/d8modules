@@ -1,0 +1,80 @@
+{#
+/**
+ * @file
+ * Theme override for a field.
+ *
+ * To override output, copy the "field.html.twig" from the templates directory
+ * to your theme's directory and customize it, just like customizing other
+ * Drupal templates such as page.html.twig or node.html.twig.
+ *
+ * Instead of overriding the theming for all fields, you can also just override
+ * theming for a subset of fields using
+ * @link themeable Theme hook suggestions. @endlink For example,
+ * here are some theme hook suggestions that can be used for a field_foo field
+ * on an article node type:
+ * - field--node--field-foo--article.html.twig
+ * - field--node--field-foo.html.twig
+ * - field--node--article.html.twig
+ * - field--field-foo.html.twig
+ * - field--text-with-summary.html.twig
+ * - field.html.twig
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - label_hidden: Whether to show the field label or not.
+ * - title_attributes: HTML attributes for the title.
+ * - label: The label for the field.
+ * - multiple: TRUE if a field can contain multiple items.
+ * - items: List of all the field items. Each item contains:
+ *   - attributes: List of HTML attributes for each item.
+ *   - content: The field item's content.
+ * - entity_type: The entity type to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
+ *
+ * @see template_preprocess_field()
+ */
+#}
+
+{% 
+  set label_classes = [
+    label_display == 'inline' ? 'd-inline-block',
+    label_display == 'visually_hidden' ? 'sr-only',
+    'font-weight-bold',
+  ]
+%}
+
+{% 
+  set field_classes = [
+    label_display == 'inline' ? 'd-inline-block',
+  ]
+%}
+
+{# Get the featured image entity 
+{% set featured_image_entity = content.field_newsletter_featured_image['#items']|first.entity ?? null %} #}
+
+{# Determine if we should show the clover based on machine name 
+{% set show_logo = featured_image_entity and (featured_image_entity.filename|replace({'.png':''}) in ['4h_dark', '4h_light']) %} #}
+
+<div{{ attributes }}>
+  {# Optional label #}
+  {% if not label_hidden %}
+    <div{{ title_attributes.addClass(label_classes) }}>{{ label }}</div>
+  {% endif %}
+
+  {# Loop through all items #}
+  {% for item in items %}
+    <div class="newsletter-section-heading-wrapper">
+      {# Show logo only if featured image matches #}
+        <div class="logo-circle">
+          <img loading="lazy" src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="4-H clover emblem">
+        </div>
+
+      <h2{{ item.attributes.addClass('section-title').addClass('newsletter-section-heading').addClass(field_name) }}>
+        {{ item.content }}
+      </h2>
+    </div>
+  {% endfor %}
+</div>
+

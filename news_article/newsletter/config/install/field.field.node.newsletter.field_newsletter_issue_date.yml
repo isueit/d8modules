@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_newsletter_issue_date
+    - node.type.newsletter
+id: node.newsletter.field_newsletter_issue_date
+field_name: field_newsletter_issue_date
+entity_type: node
+bundle: newsletter
+label: 'Issue Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

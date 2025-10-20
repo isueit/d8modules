@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.section_heading.field_section_heading
+    - paragraphs.paragraphs_type.section_heading
+id: paragraph.section_heading.default
+targetEntityType: paragraph
+bundle: section_heading
+mode: default
+content:
+  field_section_heading:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

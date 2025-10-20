@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies: {  }
+id: featured
+label: Featured
+description:
+  value: '<p>One time use per node featured pieces.</p>'
+  format: wysiwyg
+weight: 0

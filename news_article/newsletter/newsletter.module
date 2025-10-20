@@ -1,0 +1,115 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+
+function newsletter_preprocess_node(&$variables)
+{
+  // Add the css file if we're on content type
+  $node = $variables['node'];
+  if ($node->getType() == 'newsletter') {
+    $variables['#attached']['library'][] = 'newsletter/newsletter';
+  }
+}
+
+function newsletter_preprocess_paragraph(&$variables) {
+  $paragraph = $variables['paragraph'];
+  
+  // Handle featured_image paragraph type
+  if ($paragraph->bundle() == 'featured_image' && $paragraph->hasField('field_newsletter_featured_image')) {
+    $image_value = $paragraph->field_newsletter_featured_image->value;
+    
+    if ($image_value) {
+      $module_handler = \Drupal::service('extension.list.module');
+      $module_path = $module_handler->getPath('newsletter');
+      
+      // Find the actual file with any supported extension
+      $extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
+      $image_url = NULL;
+      
+      foreach ($extensions as $ext) {
+        $file_path = DRUPAL_ROOT . '/' . $module_path . '/images/' . $image_value . '.' . $ext;
+        if (file_exists($file_path)) {
+          $image_url = base_path() . $module_path . '/images/' . $image_value . '.' . $ext;
+          break;
+        }
+      }
+      
+      // Add to variables
+      $variables['featured_image_url'] = $image_url;
+      $variables['featured_image_name'] = $image_value;
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+
+function newsletter_theme($existing, $type, $theme, $path)
+{
+   return [
+    'paragraph__featured_content' => [
+      'template' => 'paragraph--featured-content',
+      'base hook' => 'paragraph',
+    ],
+    'paragraph__featured_image' => [
+      'template' => 'paragraph--featured-image',
+      'base hook' => 'paragraph',
+    ],
+    'paragraph__create_content' => [
+      'template' => 'paragraph--create-content',
+      'base hook' => 'paragraph',
+    ],
+    
+    'node__newsletter' => [
+      'template' => 'node--newsletter',
+      'base hook' => 'node',
+    ],
+
+    'field__paragraph__field_section_heading' => [
+      'template' => 'field--paragraph--field-section-heading',
+      'base hook' => 'field',
+    ],
+  ];
+}
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function newsletter_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'node_newsletter_edit_form' || $form_id == 'node_newsletter_form') {
+    
+    if (isset($form['field_newsletter_exclude']['widget']['value'])) {
+      // Move to options group
+      $form['field_newsletter_exclude']['#group'] = 'options';
+      $form['field_newsletter_exclude']['#weight'] = 10;
+      
+      // Modify the display but keep the structure intact
+      $form['field_newsletter_exclude']['widget']['value']['#type'] = 'checkbox';
+      $form['field_newsletter_exclude']['widget']['value']['#title'] = t('Exclude from homepage');
+      
+      // Hide the wrapper label since checkbox has its own title
+      $form['field_newsletter_exclude']['widget']['#title_display'] = 'invisible';
+    }
+    
+    if (isset($form['field_newsletter_archive_exclude']['widget']['value'])) {
+      // Move to options group
+      $form['field_newsletter_archive_exclude']['#group'] = 'options';
+      $form['field_newsletter_archive_exclude']['#weight'] = 11;
+      
+      // Modify the display but keep the structure intact
+      $form['field_newsletter_archive_exclude']['widget']['value']['#type'] = 'checkbox';
+      $form['field_newsletter_archive_exclude']['widget']['value']['#title'] = t('Do not auto archive');
+      
+      // Hide the wrapper label since checkbox has its own title
+      $form['field_newsletter_archive_exclude']['widget']['#title_display'] = 'invisible';
+    }
+  }
+}

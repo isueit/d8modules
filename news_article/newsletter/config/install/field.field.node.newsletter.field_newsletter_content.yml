@@ -1,0 +1,60 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_newsletter_content
+    - node.type.newsletter
+    - paragraphs.paragraphs_type.create_content
+    - paragraphs.paragraphs_type.existing_content
+    - paragraphs.paragraphs_type.section_heading
+    - paragraphs.paragraphs_type.staff_information
+  module:
+    - entity_reference_revisions
+id: node.newsletter.field_newsletter_content
+field_name: field_newsletter_content
+entity_type: node
+bundle: newsletter
+label: 'Add Content'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      create_content: create_content
+      existing_content: existing_content
+      section_heading: section_heading
+      staff_information: staff_information
+    negate: 0
+    target_bundles_drag_drop:
+      county_impact_story:
+        weight: 10
+        enabled: false
+      create_content:
+        weight: 7
+        enabled: true
+      data_points_selector:
+        weight: 12
+        enabled: false
+      embed_content:
+        weight: 8
+        enabled: false
+      existing_content:
+        weight: 9
+        enabled: true
+      featured_content:
+        weight: 10
+        enabled: false
+      featured_image:
+        weight: 12
+        enabled: false
+      section_heading:
+        weight: 11
+        enabled: true
+      staff_information:
+        weight: 12
+        enabled: true
+field_type: entity_reference_revisions

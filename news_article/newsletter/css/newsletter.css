@@ -1,0 +1,69 @@
+/* --------------------------------------  */
+/* ## NEWSLETTER EDIT
+/* --------------------------------------  */
+.node-newsletter-form .js .paragraph-type-label {
+    display: none;
+}
+.js .paragraph-type-icon {
+	height: auto;
+	width: 2.5rem;
+}
+tr.paragraph-type--featured-image td.field-multiple-drag:after {
+    display: none;
+}
+
+/* --------------------------------------  */
+/* ## NEWSLETTER PAGE
+/* --------------------------------------  */
+.newsletter-issue-wrapper hr {
+    border-top: 2px solid var(--primary-color);
+}
+.newsletter-issue-wrapper p {
+    margin-bottom: 0;
+}
+.newsletter-issue-wrapper hr {
+    margin-top: 0.2rem;
+}
+/* Section Header */
+.newsletter-section-heading-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 20px 0;
+    background: var(--primary-color);
+}
+h2.newsletter-section-heading {
+    color: #fff;
+    margin-top: .4rem;
+    padding-bottom: 0;
+    padding-left: .4rem;
+}
+.logo-circle img {
+    object-fit: contain;
+    height: 2.6rem;
+    width: auto;
+}
+.logo-circle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    border: 3px solid #f1be48;
+    z-index: 2;
+    flex-shrink: 0;
+    margin-left: -28px;
+}
+/* Existing Content */
+.newsletter.col-1 {
+    max-width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+}
+.field-content.newsletter-page-thumbnail {
+    float: right;
+    padding-left: .8rem;
+}

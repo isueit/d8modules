@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: newsletter
+label: Newsletter
+type: 'canonical_entities:node'
+pattern: 'newsetter/[node:title]'
+selection_criteria:
+  b02292e2-2f52-4aa1-9cec-cad7fadae6a3:
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: b02292e2-2f52-4aa1-9cec-cad7fadae6a3
+    context_mapping:
+      node: node
+    bundles:
+      newsletter: newsletter
+selection_logic: and
+weight: -5
+relationships: {  }

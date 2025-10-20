@@ -1,0 +1,23 @@
+name: Newsletter
+description: Creates an online Newsletter implementation with content type, feature sets and a thumbnail image picker widget.
+package: ISUEO
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - drupal:node
+  - drupal:path
+  - drupal:text
+  - drupal:ds
+  - drupal:layout_builder
+  - drupal:layout_builder_base
+  - drupal:layout_builder_base_library
+  - layout_builder_restrictions
+  - drupal:block
+  - drupal:block_content
+  - drupal:image
+  - drupal:allowed_formats
+  - drupal:paragraphs
+  - drupal:paragraphs_ee
+  - drupal:paragraphs_features
+  - news_embed_field:news_embed_field
+  - isueo_news_article:isueo_news_article
