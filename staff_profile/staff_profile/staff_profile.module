@@ -107,3 +107,17 @@ function staff_profile_mark_database_fields_readonly(&$form) {
   $form['field_staff_profile_addr']['widget'][0]['address']['#disabled'] = TRUE;
   $form['field_staff_profile_stale']['widget']['value']['#disabled'] = TRUE;
 }
+
+/**
+ * Implements hook_theme().
+ */
+
+function staff_profile_theme($existing, $type, $theme, $path)
+{
+   return [
+    'node__staff_profile__staff_author' => [
+      'template' => 'node--staff-profile--staff-author',
+      'base hook' => 'node',
+    ],
+  ];
+}
