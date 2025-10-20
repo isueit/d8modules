@@ -7,3 +7,17 @@ function isueo_news_article_preprocess_node(&$variables) {
     $variables['#attached']['library'][] = 'isueo_news_article/isueo_news_article';
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+
+function isueo_news_article_theme($existing, $type, $theme, $path)
+{
+   return [
+      'node__news_article__teaser' => [
+      'template' => 'node--news-article--teaser',
+      'base hook' => 'node',
+    ],
+  ];
+}
