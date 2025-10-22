@@ -17,21 +17,22 @@ function newsletter_preprocess_node(&$variables)
   }
 }
 
-function newsletter_preprocess_paragraph(&$variables) {
+function newsletter_preprocess_paragraph(&$variables)
+{
   $paragraph = $variables['paragraph'];
-  
+
   // Handle featured_image paragraph type
   if ($paragraph->bundle() == 'featured_image' && $paragraph->hasField('field_newsletter_featured_image')) {
     $image_value = $paragraph->field_newsletter_featured_image->value;
-    
+
     if ($image_value) {
       $module_handler = \Drupal::service('extension.list.module');
       $module_path = $module_handler->getPath('newsletter');
-      
+
       // Find the actual file with any supported extension
       $extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
       $image_url = NULL;
-      
+
       foreach ($extensions as $ext) {
         $file_path = DRUPAL_ROOT . '/' . $module_path . '/images/' . $image_value . '.' . $ext;
         if (file_exists($file_path)) {
@@ -39,7 +40,7 @@ function newsletter_preprocess_paragraph(&$variables) {
           break;
         }
       }
-      
+
       // Add to variables
       $variables['featured_image_url'] = $image_url;
       $variables['featured_image_name'] = $image_value;
@@ -53,7 +54,7 @@ function newsletter_preprocess_paragraph(&$variables) {
 
 function newsletter_theme($existing, $type, $theme, $path)
 {
-   return [
+  return [
     'paragraph__featured_content' => [
       'template' => 'paragraph--featured-content',
       'base hook' => 'paragraph',
@@ -66,7 +67,7 @@ function newsletter_theme($existing, $type, $theme, $path)
       'template' => 'paragraph--create-content',
       'base hook' => 'paragraph',
     ],
-    
+
     'node__newsletter' => [
       'template' => 'node--newsletter',
       'base hook' => 'node',
@@ -83,33 +84,71 @@ function newsletter_theme($existing, $type, $theme, $path)
 /**
  * Implements hook_form_alter().
  */
-function newsletter_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function newsletter_form_alter(&$form, FormStateInterface $form_state, $form_id)
+{
   if ($form_id == 'node_newsletter_edit_form' || $form_id == 'node_newsletter_form') {
-    
     if (isset($form['field_newsletter_exclude']['widget']['value'])) {
       // Move to options group
       $form['field_newsletter_exclude']['#group'] = 'options';
       $form['field_newsletter_exclude']['#weight'] = 10;
-      
+
       // Modify the display but keep the structure intact
       $form['field_newsletter_exclude']['widget']['value']['#type'] = 'checkbox';
       $form['field_newsletter_exclude']['widget']['value']['#title'] = t('Exclude from homepage');
-      
+
       // Hide the wrapper label since checkbox has its own title
       $form['field_newsletter_exclude']['widget']['#title_display'] = 'invisible';
     }
-    
+
     if (isset($form['field_newsletter_archive_exclude']['widget']['value'])) {
       // Move to options group
       $form['field_newsletter_archive_exclude']['#group'] = 'options';
       $form['field_newsletter_archive_exclude']['#weight'] = 11;
-      
+
       // Modify the display but keep the structure intact
       $form['field_newsletter_archive_exclude']['widget']['value']['#type'] = 'checkbox';
       $form['field_newsletter_archive_exclude']['widget']['value']['#title'] = t('Do not auto archive');
-      
+
       // Hide the wrapper label since checkbox has its own title
       $form['field_newsletter_archive_exclude']['widget']['#title_display'] = 'invisible';
+    }
+  }
+}
+
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ */
+
+function newsletter_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context)
+{
+  // Want to alert the featured image paragraph type
+  if (isset($element['#paragraph_type']) && $element['#paragraph_type'] === 'featured_image') {
+    // Initialize some variables
+    $image_files = [];
+    $module_path = \Drupal::service('module_handler')->getModule('newsletter')->getPath();
+    $images_path = DRUPAL_ROOT . '/' . $module_path . '/images';
+
+    // Build the array of filenames and image urls
+    foreach (glob($images_path . '/*.*') as $file) {
+      $path_info = pathinfo($file);
+      $image_files[$path_info['filename']] = '<img src="' . htmlspecialchars(base_path() . $module_path . '/images/' . $path_info['basename']) . '" ' .
+
+        //'alt="' . $path_info['basename'] . '" ' .
+        'alt="replace me" ' .
+        'class="module-image-thumbnail" ' .
+        'width="100" ' .
+        'height="25" ' .
+        ' />';
+    }
+
+    // Replace the $labels in the radio buttons
+    foreach ($element['subform']['field_newsletter_featured_image']['widget']['#options'] as $value => $label) {
+      if ($value == '_none') {
+        $element['subform']['field_newsletter_featured_image']['widget']['#options']['_none'] = 'None';
+      } elseif (array_key_exists($value, $image_files)) {
+        $element['subform']['field_newsletter_featured_image']['widget']['#options'][$value] = str_replace('replace me', $label, $image_files[$value]) . ' ' . $label;
+      }
     }
   }
 }
