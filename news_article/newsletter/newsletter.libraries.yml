@@ -4,14 +4,8 @@ newsletter:
     theme:
       css/newsletter.css: {}
 
-module_image_widget:
+image_widget:
   version: 1.x
   css:
     theme:
       css/image_widget.css: {}
-  js:
-    js/image_widget.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/once

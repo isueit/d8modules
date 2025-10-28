@@ -4,20 +4,16 @@ dependencies:
   config:
     - field.field.paragraph.featured_image.field_newsletter_featured_image
     - paragraphs.paragraphs_type.featured_image
-  module:
-    - newsletter
 id: paragraph.featured_image.default
 targetEntityType: paragraph
 bundle: featured_image
 mode: default
 content:
   field_newsletter_featured_image:
-    type: module_image_widget
+    type: options_buttons
     weight: 0
     region: content
-    settings:
-      thumbnail_width: 150
-      thumbnail_height: 150
+    settings: {  }
     third_party_settings: {  }
 hidden:
   created: true

@@ -50,4 +50,18 @@
       {% endif %}
     {% endblock %}
   </div>
+        {% if section_headings is defined and section_headings|length > 0 %}
+        <div class="newsletter-index-wrapper">
+          <h3 class="newsletter-index-title">In This Issue</h3>
+          <ul class="newsletter-section-index">
+            {% for heading in section_headings %}
+              <li>
+                <a href="#{{ heading.id }}" class="newsletter-index-link">
+                  {{ heading.text }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
 {% endblock %}

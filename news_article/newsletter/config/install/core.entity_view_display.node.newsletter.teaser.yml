@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.newsletter.field_newsletter_hero
     - field.field.node.newsletter.field_newsletter_issue_date
     - field.field.node.newsletter.field_newsletter_issue_number
+    - field.field.node.newsletter.field_newsletter_save_the_date
     - field.field.node.newsletter.field_newsletter_thumbnail
     - node.type.newsletter
   module:
@@ -32,4 +33,5 @@ hidden:
   field_newsletter_hero: true
   field_newsletter_issue_date: true
   field_newsletter_issue_number: true
+  field_newsletter_save_the_date: true
   field_newsletter_thumbnail: true

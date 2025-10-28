@@ -13,30 +13,138 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
 }
 
 /* --------------------------------------  */
-/* ## NEWSLETTER PAGE
+/* ## PAGE LAYOUT
 /* --------------------------------------  */
-.newsletter-issue-wrapper hr {
-    border-top: 2px solid var(--primary-color);
+.isueo-newsletter .row {
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
 }
-.newsletter-issue-wrapper p {
+/* Archive Message */
+.archive-message.alert.alert-warning {
     margin-bottom: 0;
+    display: flex;
 }
-.newsletter-issue-wrapper hr {
-    margin-top: 0.2rem;
+
+/* --------------------------------------  */
+/* ## HERO IMAGE AND TITLE
+/* --------------------------------------  */
+.newsletter-hero-wrapper {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  min-height: 200px;
+  position: relative;
 }
-/* Section Header */
+.newsletter-hero-wrapper h1.isu-page-title {
+  color: #fff;
+  font-size: clamp(3rem,4.2vw,4.375rem);
+  line-height: 1.24528;
+  font-weight: 700;
+  margin: 0;
+}
+.newsletter-hero-label-wrapper {
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+}
+.newsletter-hero-label.container h1.isu-page-title img {
+    max-width: 6rem;
+    margin-right: 1rem;
+}
+.newsletter-date-wrapper p {
+    color: #fff;
+    font-size: 1.5rem;
+}
+.newsletter-hero-label .newsletter-issue-wrapper, .newsletter-hero-label .newsletter-date-wrapper {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-left: 10%;
+}
+
+/* --------------------------------------  */
+/* ## FEATURED CONTENT
+/* --------------------------------------  */
+.paragraph--type--featured-content h2.isu-block-title.h4 {
+    margin-bottom: 1.3rem;
+    line-height: 1.4;
+    color: var(--primary-color);
+    position: relative;
+    font-size: 1.7rem;
+}
+
+/* --------------------------------------  */
+/* ## CREATE CONTENT PARAGRAPH
+/* --------------------------------------  */
+.paragraph--type--create-content hr {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.paragraph--type--create-content h2.isu-block-title.h4, .paragraph--type--existing-content h3.isu-block-title.h4 {
+    margin-bottom: 1.3rem;
+    font-size: 1.7rem;
+}
+
+/* --------------------------------------  */
+/* ## INDEX SECTION
+/* --------------------------------------  */
+.newsletter-index-wrapper {
+    background-color: var(--lt-gray);
+    padding: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+}
+
+h3.newsletter-index-title {
+    color: #000;
+    margin: 1rem .5rem 0.825rem;
+}
+
+ul.newsletter-section-index {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0.7rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 0.4rem 2rem; /* row gap, column gap */
+}
+
+ul.newsletter-section-index li {
+    padding-bottom: 0;
+}
+
+ul.newsletter-section-index li::before {
+    content: "\f061";
+    font-family: FontAwesome;
+    margin-right: 6px;
+    color: var(--secondary-color);   
+    vertical-align: top;
+}
+
+/* Responsive - single column on mobile */
+@media (max-width: 768px) {
+    ul.newsletter-section-index {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------  */
+/* ## SECTION HEADER
+/* --------------------------------------  */
 .newsletter-section-heading-wrapper {
     display: flex;
     align-items: center;
     position: relative;
-    margin: 20px 0;
-    background: var(--primary-color);
+    margin: 2.5rem 0;
+    background: #008540;
 }
 h2.newsletter-section-heading {
     color: #fff;
     margin-top: .4rem;
     padding-bottom: 0;
     padding-left: .4rem;
+    font-size: 2.2rem;
 }
 .logo-circle img {
     object-fit: contain;
@@ -51,13 +159,16 @@ h2.newsletter-section-heading {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--primary-color);
-    border: 3px solid #f1be48;
+    background-color: #fff;
+    border: 3px solid #008540;
     z-index: 2;
     flex-shrink: 0;
     margin-left: -28px;
 }
-/* Existing Content */
+
+/* --------------------------------------  */
+/* ## EXISTING CONTENT PARAGRAPH
+/* --------------------------------------  */
 .newsletter.col-1 {
     max-width: 100%;
     padding-right: 0;
@@ -66,4 +177,83 @@ h2.newsletter-section-heading {
 .field-content.newsletter-page-thumbnail {
     float: right;
     padding-left: .8rem;
+}
+
+/* --------------------------------------  */
+/* ## SAVE THE DATE BLOCK
+/* --------------------------------------  */
+.block-save-the-date {
+  margin-bottom: 2rem;
+}
+.block-save-the-date h2.isu-block-title.h4 {
+    margin-bottom: 1.3rem;
+    line-height: 1.4;
+    color: var(--primary-color);
+    position: relative;
+    font-size: 1.7rem;
+}
+.save-the-date-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.save-the-date-item {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--lt-gray);
+}
+.save-the-date-date {
+  flex-shrink: 0;
+  width: 60px;
+  text-align: center;
+  background: var(--primary-color);
+  color: #fff;
+  padding: 0.3rem;
+  border-radius: 4px;
+}
+.save-the-date-date .date-month {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.save-the-date-date .date-day {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.save-the-date-title {
+  flex: 1;
+}
+.save-the-date-title .event-link {
+  color: var(--secondary-color);
+  transition: color 0.2s ease;
+}
+.save-the-date-title .event-link:hover {
+  color: #c8102e;
+  text-decoration: underline;
+}
+span.save-the-date-location {
+    font-style: italic;
+    font-size: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+  .save-the-date-item {
+    gap: 1rem;
+  }
+  
+  .save-the-date-date {
+    width: 60px;
+  }
+  
+  .date-day {
+    font-size: 1.5rem;
+  }
+  
+  .save-the-date-title {
+    font-size: 1rem;
+  }
 }

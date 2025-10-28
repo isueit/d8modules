@@ -51,30 +51,22 @@
   ]
 %}
 
-{# Get the featured image entity 
-{% set featured_image_entity = content.field_newsletter_featured_image['#items']|first.entity ?? null %} #}
-
-{# Determine if we should show the clover based on machine name 
-{% set show_logo = featured_image_entity and (featured_image_entity.filename|replace({'.png':''}) in ['4h_dark', '4h_light']) %} #}
-
 <div{{ attributes }}>
   {# Optional label #}
   {% if not label_hidden %}
     <div{{ title_attributes.addClass(label_classes) }}>{{ label }}</div>
   {% endif %}
 
-  {# Loop through all items #}
+  {# Loop through all items (the title field) #}
   {% for item in items %}
-    <div class="newsletter-section-heading-wrapper" {% if background_image_url %}style="background-image: url('{{ background_image_url }}'); background-size: cover; background-position: center;"{% endif %}>
-      {# Show logo only if featured image matches #}
-        <div class="logo-circle">
-          <img loading="lazy" src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/Green/No-Border/High-Res/i-4XFdgtJ/0/LRjBkvb7ZT7bGSzTT4rms9FgQLpnX4J8VXqP6Zd55/D/Clover_NoBorder1080-D.png" alt="4-H clover emblem">
-        </div>
+      {# Show logo only if featured image exists #}
+      {% if featured_image_url %}
+      <div class="newsletter-hero-wrapper" style="background-image: url('{{ featured_image_url }}');">
+        <h1 class="isu-page-title">{{ item.content }}</h1>
+      </div>
+      {% else %}
 
-      <h2{{ item.attributes.addClass('section-title').addClass('newsletter-section-heading').addClass(field_name) }}>
-        {{ item.content }}
-      </h2>
-    </div>
+      <h1 class="isu-page-title">{{ item.content }}</h1>
+      {% endif %}
   {% endfor %}
 </div>
-

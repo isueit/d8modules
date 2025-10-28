@@ -1,0 +1,79 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+
+{%
+  set block_classes = [
+    is_front ? 'isu-block-front' : '',
+    'isu-block'
+  ]
+%}
+
+<div{{ attributes.addClass('block', 'block-save-the-date') }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2 class="isu-block-title h4">{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  
+  {% block content %}
+    <div class="save-the-date-wrapper">
+      
+      {% if events %}
+        {% for event in events %}
+          
+          <div class="save-the-date-item">
+            {# Left side - Date #}
+            <div class="save-the-date-date">
+              <div class="date-month">{{ event.month }}</div>
+              <div class="date-day">{{ event.day }}</div>
+            </div>
+            
+            {# Right side - Title (with optional link) #}
+            <div class="save-the-date-title">
+              {% if event.link %}
+                <a href="{{ event.link }}" class="event-link">
+                  {{ event.title }}
+                </a>
+                {% if event.location %}
+                  <br><span class="save-the-date-location">{{ event.location }}</span>
+                {% endif %}
+              {% else %}
+                {{ event.title }}
+                {% if event.location %}
+                  <br><span class="save-the-date-location">{{ event.location }}</span>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+          
+        {% endfor %}
+      {% endif %}
+      
+    </div>
+  {% endblock %}
+</div>

@@ -15,38 +15,7 @@ function newsletter_preprocess_node(&$variables)
   if ($node->getType() == 'newsletter') {
     $variables['#attached']['library'][] = 'newsletter/newsletter';
   }
-}
-
-function newsletter_preprocess_paragraph(&$variables)
-{
-  $paragraph = $variables['paragraph'];
-
-  // Handle featured_image paragraph type
-  if ($paragraph->bundle() == 'featured_image' && $paragraph->hasField('field_newsletter_featured_image')) {
-    $image_value = $paragraph->field_newsletter_featured_image->value;
-
-    if ($image_value) {
-      $module_handler = \Drupal::service('extension.list.module');
-      $module_path = $module_handler->getPath('newsletter');
-
-      // Find the actual file with any supported extension
-      $extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
-      $image_url = NULL;
-
-      foreach ($extensions as $ext) {
-        $file_path = DRUPAL_ROOT . '/' . $module_path . '/images/' . $image_value . '.' . $ext;
-        if (file_exists($file_path)) {
-          $image_url = base_path() . $module_path . '/images/' . $image_value . '.' . $ext;
-          break;
-        }
-      }
-
-      // Add to variables
-      $variables['featured_image_url'] = $image_url;
-      $variables['featured_image_name'] = $image_value;
-    }
-  }
-}
+} 
 
 /**
  * Implements hook_theme().
@@ -59,23 +28,24 @@ function newsletter_theme($existing, $type, $theme, $path)
       'template' => 'paragraph--featured-content',
       'base hook' => 'paragraph',
     ],
-    'paragraph__featured_image' => [
-      'template' => 'paragraph--featured-image',
-      'base hook' => 'paragraph',
-    ],
     'paragraph__create_content' => [
       'template' => 'paragraph--create-content',
       'base hook' => 'paragraph',
     ],
 
-    'node__newsletter' => [
-      'template' => 'node--newsletter',
-      'base hook' => 'node',
-    ],
-
     'field__paragraph__field_section_heading' => [
       'template' => 'field--paragraph--field-section-heading',
       'base hook' => 'field',
+    ],
+
+    'page__type__newsletter__canonical' => [
+      'template' => 'page--type--newsletter--canonical',
+      'base hook' => 'node',
+    ],
+
+    'block__field_block__node__newsletter__field_newsletter_save_the_date' => [
+      'template' => 'block--field-block--node--newsletter--field-newsletter-save-the-date',
+      'base hook' => 'block',
     ],
   ];
 }
@@ -133,12 +103,10 @@ function newsletter_field_widget_single_element_form_alter(array &$element, Form
     foreach (glob($images_path . '/*.*') as $file) {
       $path_info = pathinfo($file);
       $image_files[$path_info['filename']] = '<img src="' . htmlspecialchars(base_path() . $module_path . '/images/' . $path_info['basename']) . '" ' .
-
-        //'alt="' . $path_info['basename'] . '" ' .
-        'alt="replace me" ' .
+        'alt="' . htmlspecialchars($path_info['filename']) . '" ' .
         'class="module-image-thumbnail" ' .
-        'width="100" ' .
-        'height="25" ' .
+        'width="300px" ' .
+        'height="auto" ' .
         ' />';
     }
 
@@ -147,7 +115,226 @@ function newsletter_field_widget_single_element_form_alter(array &$element, Form
       if ($value == '_none') {
         $element['subform']['field_newsletter_featured_image']['widget']['#options']['_none'] = 'None';
       } elseif (array_key_exists($value, $image_files)) {
-        $element['subform']['field_newsletter_featured_image']['widget']['#options'][$value] = str_replace('replace me', $label, $image_files[$value]) . ' ' . $label;
+        $element['subform']['field_newsletter_featured_image']['widget']['#options'][$value] = 
+          '<span class="featured-image-option">' .
+            '<span class="featured-image-label">' . $label . '</span>' .
+            '<span class="featured-image-preview">' . $image_files[$value] . '</span>' .
+          '</span>';
+      }
+    }
+      $element['subform']['field_newsletter_featured_image']['widget']['#attached']['library'][] = 'newsletter/image_widget';
+
+  }
+}
+/**
+ * Implements hook_preprocess_paragraph().
+ */
+function newsletter_preprocess_paragraph(&$variables) {
+  $paragraph = $variables['paragraph'];
+  
+  // For section heading paragraphs, add the ID
+  if ($paragraph->bundle() == 'section_heading') {
+    $heading_text = $paragraph->field_section_heading->value;
+    $heading_slug = _newsletter_create_slug($heading_text);
+    $heading_id = $heading_slug . '-' . $paragraph->id();
+    
+    $variables['heading_id'] = $heading_id;
+    $variables['attributes']['id'] = $heading_id;
+  }
+  
+  // Pass section_headings to featured content paragraph
+  if ($paragraph->bundle() == 'featured_content') {
+    // Get parent node to access section_headings
+    $parent = $paragraph->getParentEntity();
+    if ($parent && $parent->hasField('field_newsletter_content')) {
+      $section_headings = [];
+      
+      foreach ($parent->field_newsletter_content as $paragraph_item) {
+        $p = $paragraph_item->entity;
+        
+        if ($p && $p->bundle() == 'section_heading') {
+          $heading_text = $p->field_section_heading->value;
+          $heading_slug = _newsletter_create_slug($heading_text);
+          $heading_id = $heading_slug . '-' . $p->id();
+          
+          $section_headings[] = [
+            'id' => $heading_id,
+            'text' => $heading_text,
+          ];
+        }
+      }
+      
+      $variables['section_headings'] = $section_headings;
+    }
+  }
+}
+
+/**
+ * Helper function to create URL-friendly slug.
+ */
+function _newsletter_create_slug($text) {
+  $slug = strtolower(trim($text));
+  $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
+  $slug = preg_replace('/[\s_]+/', '-', $slug);
+  return preg_replace('/-+/', '-', $slug);
+}
+
+function newsletter_preprocess_page(&$variables) {
+  // Only for newsletter content type
+  if (isset($variables['node']) && $variables['node']->bundle() == 'newsletter') {
+    $node = $variables['node'];
+    
+    if ($node->hasField('field_newsletter_hero') && !$node->get('field_newsletter_hero')->isEmpty()) {
+      $first_paragraph = $node->get('field_newsletter_hero')->first()->entity;
+      
+      if ($first_paragraph && $first_paragraph->hasField('field_newsletter_featured_image')) {
+        $image_value = $first_paragraph->get('field_newsletter_featured_image')->value;
+        
+        if ($image_value) {
+          $module_handler = \Drupal::service('extension.list.module');
+          $module_path = $module_handler->getPath('newsletter');
+          
+          $extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
+          $image_url = NULL;
+          
+          foreach ($extensions as $ext) {
+            $file_path = DRUPAL_ROOT . '/' . $module_path . '/images/' . $image_value . '.' . $ext;
+            if (file_exists($file_path)) {
+              $image_url = base_path() . $module_path . '/images/' . $image_value . '.' . $ext;
+              break;
+            }
+          }
+          
+          $variables['featured_image_url'] = $image_url;
+          $variables['featured_image_name'] = $image_value;
+        }
+      }
+    }
+ // Check if the archive exclude checkbox is NOT checked
+    $exclude_from_archive = $node->hasField('field_newsletter_archive_exclude') 
+      ? $node->field_newsletter_archive_exclude->value 
+      : false;
+    
+    if (!$exclude_from_archive) {
+      
+      // Get the creation/publication date
+      $created_timestamp = $node->getCreatedTime();
+      $current_timestamp = time();
+      
+      // Calculate if it's been 1 year (365 days)
+      $one_year_seconds = 365 * 24 * 60 * 60;
+      $age_seconds = $current_timestamp - $created_timestamp;
+      
+      if ($age_seconds >= $one_year_seconds) {
+        // Show archive message
+        $variables['show_archive_message'] = true;
+        }
+      }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function newsletter_preprocess_block(&$variables) {
+  
+ // Check if this is the save the date field block
+  if ($variables['plugin_id'] == 'field_block:node:newsletter:field_newsletter_save_the_date') {
+    
+    $events = [];
+    
+    // Access the field render array at key 0
+    if (isset($variables['content'][0])) {
+      $field_render_array = $variables['content'][0];
+      
+      // Loop through the numeric keys in this field render array
+      foreach ($field_render_array as $key => $item) {
+        if (is_numeric($key)) {
+          
+          // Access paragraph
+          if (isset($item['#paragraph'])) {
+            $paragraph = $item['#paragraph'];
+            
+            // Get values
+            $date_value = $paragraph->field_newsletter_event_date->value ?? '';
+            $title = $paragraph->field_newsletter_event_title->value ?? '';
+            $location = $paragraph->field_newsletter_event_location->value ?? '';
+            
+            // Format date
+            $month = '';
+            $day = '';
+            if ($date_value) {
+              try {
+                $date_object = new \DateTime($date_value);
+                $month = $date_object->format('M');
+                $day = $date_object->format('j');
+              } catch (\Exception $e) {
+                // Log error but continue
+                \Drupal::logger('newsletter')->error('Date parse error: @error', ['@error' => $e->getMessage()]);
+              }
+            }
+            
+            // Get link
+            $link_url = '';
+            if (!$paragraph->field_newsletter_event_link->isEmpty()) {
+              $link_url = $paragraph->field_newsletter_event_link->uri;
+            }
+            
+            $events[] = [
+              'month' => $month,
+              'day' => $day,
+              'title' => $title,
+              'link' => $link_url,
+              'location' => $location,
+            ];
+          }
+        }
+      }
+    }
+    
+    $variables['events'] = $events;
+  }
+}
+
+/**
+ * Implements hook_preprocess_field().
+ */
+function newsletter_preprocess_field(&$variables) {
+  if ($variables['field_name'] == 'field_section_heading' && 
+      isset($variables['element']['#bundle']) && 
+      $variables['element']['#bundle'] == 'section_heading') {
+    
+    // Get the section heading paragraph
+    $section_paragraph = $variables['element']['#object'];
+    
+    // Get the parent entity (the node)
+    $parent = $section_paragraph->getParentEntity();
+    
+    if ($parent && $parent->hasField('field_newsletter_hero')) {
+      
+      // Get the hero/featured image paragraph
+      if (!$parent->field_newsletter_hero->isEmpty()) {
+        $hero_paragraph = $parent->field_newsletter_hero->entity;
+        
+        if ($hero_paragraph && $hero_paragraph->hasField('field_newsletter_featured_image')) {
+          $image_value = $hero_paragraph->get('field_newsletter_featured_image')->value;
+          
+          if ($image_value) {
+            $module_handler = \Drupal::service('extension.list.module');
+            $module_path = $module_handler->getPath('newsletter');
+            
+            $extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
+            
+            foreach ($extensions as $ext) {
+              $file_path = DRUPAL_ROOT . '/' . $module_path . '/images/' . $image_value . '.' . $ext;
+              
+              if (file_exists($file_path)) {
+                $variables['background_image_url'] = base_path() . $module_path . '/images/' . $image_value . '.' . $ext;
+                break;
+              }
+            }
+          }
+        }
       }
     }
   }

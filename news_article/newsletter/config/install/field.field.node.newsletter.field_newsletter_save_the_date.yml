@@ -1,0 +1,54 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_newsletter_save_the_date
+    - node.type.newsletter
+    - paragraphs.paragraphs_type.save_the_date
+  module:
+    - entity_reference_revisions
+id: node.newsletter.field_newsletter_save_the_date
+field_name: field_newsletter_save_the_date
+entity_type: node
+bundle: newsletter
+label: 'Date List'
+description: 'This is not a replacement for events that should be entered into MyData. See a <a href="/events">full list of the events</a> listed on your site.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      save_the_date: save_the_date
+    negate: 0
+    target_bundles_drag_drop:
+      county_impact_story:
+        weight: 10
+        enabled: false
+      create_content:
+        weight: 11
+        enabled: false
+      data_points_selector:
+        weight: 12
+        enabled: false
+      existing_content:
+        weight: 13
+        enabled: false
+      featured_content:
+        weight: 14
+        enabled: false
+      featured_image:
+        weight: 15
+        enabled: false
+      save_the_date:
+        weight: 16
+        enabled: true
+      section_heading:
+        weight: 17
+        enabled: false
+      staff_information:
+        weight: 18
+        enabled: false
+field_type: entity_reference_revisions

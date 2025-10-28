@@ -9,89 +9,19 @@ dependencies:
     - field.field.node.newsletter.field_newsletter_hero
     - field.field.node.newsletter.field_newsletter_issue_date
     - field.field.node.newsletter.field_newsletter_issue_number
+    - field.field.node.newsletter.field_newsletter_save_the_date
     - field.field.node.newsletter.field_newsletter_thumbnail
     - node.type.newsletter
   module:
     - entity_reference_revisions
     - layout_builder
     - layout_builder_base_library
-    - program_offering_blocks
     - user
 third_party_settings:
   layout_builder:
     enabled: true
     allow_custom: false
     sections:
-      -
-        layout_id: layout_base_onecol
-        layout_settings:
-          label: '1 Column Layout'
-          context_mapping: {  }
-          column_widths: null
-          id: ''
-          classes: ''
-          column_gap: ''
-          row_gap: ''
-          column_width: ''
-          column_breakpoint: ''
-          align_items: ''
-          background: layout--background--none
-          background_image: ''
-          background_image_style: ''
-          background_attachment: layout--background-attachment--default
-          background_position: layout--background-position--center
-          background_size: layout--background-size--cover
-          background_overlay: layout--background-overlay--none
-          equal_top_bottom_margins: ''
-          equal_left_right_margins: ''
-          top_margin: ''
-          right_margin: ''
-          bottom_margin: ''
-          left_margin: ''
-          equal_top_bottom_paddings: layout--top-bottom-padding--small
-          equal_left_right_paddings: layout--left-right-padding--small
-          top_padding: ''
-          right_padding: ''
-          bottom_padding: ''
-          left_padding: ''
-          container: layout--container--none
-          content_container: layout--content-container--default
-          height: layout-height-default
-          color: layout--color--default
-          alignment: ''
-          modifier: ''
-          customizable_columns: ''
-          modifiers: ''
-          layout_builder_styles_style: {  }
-        components:
-          49c02ad5-0af9-469a-8b1e-1945666b469a:
-            uuid: 49c02ad5-0af9-469a-8b1e-1945666b469a
-            region: content
-            configuration:
-              id: 'field_block:node:newsletter:field_newsletter_hero'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              formatter:
-                type: entity_reference_revisions_entity_view
-                label: hidden
-                settings:
-                  view_mode: default
-                  link: ''
-                third_party_settings: {  }
-            weight: 1
-            additional: {  }
-          6be8d287-0fa4-4004-b471-7b7609f5e429:
-            uuid: 6be8d287-0fa4-4004-b471-7b7609f5e429
-            region: content
-            configuration:
-              id: 'extra_field_block:node:newsletter:links'
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-            weight: 0
-            additional: {  }
-        third_party_settings: {  }
       -
         layout_id: layout_base_twocol
         layout_settings:
@@ -100,7 +30,7 @@ third_party_settings:
           column_widths: null
           id: ''
           classes: ''
-          column_gap: layout--column-gap--default
+          column_gap: layout--column-gap--big
           row_gap: layout--row-gap--none
           column_width: layout--column-width--67-33
           column_breakpoint: layout--column-breakpoint--medium
@@ -134,35 +64,6 @@ third_party_settings:
           modifiers: ''
           layout_builder_styles_style: {  }
         components:
-          01ad138b-0de3-4e43-8596-53967ef510c9:
-            uuid: 01ad138b-0de3-4e43-8596-53967ef510c9
-            region: second
-            configuration:
-              id: 'program_offering_blocks:1'
-              label: 'Save the Date'
-              label_display: visible
-              provider: program_offering_blocks
-              context_mapping: {  }
-              event_details_page: 1
-              max_events: '5'
-              no_upcoming_events: 'There are no upcoming events scheduled. Please check back later for updates.'
-              format_with_time: 'M j, Y, g:i a'
-              format_without_time: 'M j, Y'
-              title_search: ''
-              show_more_page: /events
-              show_more_text: 'More Events'
-              announcement_text: ''
-              show_nonpublic_events: 0
-              only_planned_programs: 0
-              only_statewide_campus: 0
-              program_ids_field: ''
-              program_area: '4-H Youth Development'
-              county: Guthrie
-              placement: ''
-              horizontal_display: 0
-            weight: 0
-            additional:
-              layout_builder_styles_style: {  }
           9c56e6a1-3ba8-405d-a944-ed385277804d:
             uuid: 9c56e6a1-3ba8-405d-a944-ed385277804d
             region: first
@@ -178,54 +79,62 @@ third_party_settings:
                   view_mode: default
                   link: ''
                 third_party_settings: {  }
+            weight: -1
+            additional: {  }
+          6be8d287-0fa4-4004-b471-7b7609f5e429:
+            uuid: 6be8d287-0fa4-4004-b471-7b7609f5e429
+            region: first
+            configuration:
+              id: 'extra_field_block:node:newsletter:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: -2
+            additional: {  }
+          72689b39-5b99-45d8-8279-5247d09c2691:
+            uuid: 72689b39-5b99-45d8-8279-5247d09c2691
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:field_newsletter_save_the_date'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_revisions_entity_view
+                label: above
+                settings:
+                  view_mode: default
+                  link: ''
+                third_party_settings: {  }
             weight: 0
             additional: {  }
-        third_party_settings: {  }
-      -
-        layout_id: layout_base_onecol
-        layout_settings:
-          label: '1 Column Layout'
-          context_mapping: {  }
-          column_widths: null
-          id: ''
-          classes: ''
-          column_gap: ''
-          row_gap: ''
-          column_width: ''
-          column_breakpoint: ''
-          align_items: ''
-          background: layout--background--none
-          background_image: ''
-          background_image_style: ''
-          background_attachment: layout--background-attachment--default
-          background_position: layout--background-position--center
-          background_size: layout--background-size--cover
-          background_overlay: layout--background-overlay--none
-          equal_top_bottom_margins: ''
-          equal_left_right_margins: ''
-          top_margin: ''
-          right_margin: ''
-          bottom_margin: ''
-          left_margin: ''
-          equal_top_bottom_paddings: layout--top-bottom-padding--small
-          equal_left_right_paddings: layout--left-right-padding--none
-          top_padding: ''
-          right_padding: ''
-          bottom_padding: ''
-          left_padding: ''
-          container: layout--container--none
-          content_container: layout--content-container--default
-          height: layout-height-default
-          color: layout--color--default
-          alignment: ''
-          modifier: ''
-          customizable_columns: ''
-          modifiers: ''
-          layout_builder_styles_style: {  }
-        components:
+          c6fd4a8f-9feb-4a14-bdf9-4461ca4ceb5b:
+            uuid: c6fd4a8f-9feb-4a14-bdf9-4461ca4ceb5b
+            region: second
+            configuration:
+              id: 'field_block:node:newsletter:field_newsletter_save_the_date'
+              label: 'Save the Date'
+              label_display: visible
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: entity_reference_revisions_entity_view
+                label: above
+                settings:
+                  view_mode: default
+                third_party_settings:
+                  field_delimiter:
+                    delimiter: ''
+                  field_formatter_class:
+                    class: ''
+            weight: 0
+            additional:
+              layout_builder_styles_style: {  }
           d2388f6f-9af9-4d1f-a539-dda51905a663:
             uuid: d2388f6f-9af9-4d1f-a539-dda51905a663
-            region: content
+            region: first
             configuration:
               id: 'field_block:node:newsletter:field_newsletter_content'
               label_display: '0'
@@ -288,6 +197,15 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_newsletter_save_the_date:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 6
     region: content
   links:
     settings: {  }
