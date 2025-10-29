@@ -13,6 +13,18 @@ function newsletter_install() {
   $locked = Drupal::state()->get('node.type.locked');
   $locked['newsletter'] = 'newsletter';
   Drupal::state()->set('node.type.locked', $locked);
+
+  // Set up permissions for content editors
+  user_role_grant_permissions('content_editor', [
+    'clone newsletter content',
+    'create newsletter content',
+    'delete any newsletter content',
+    'edit any newsletter content',
+    'override newsletter authored on option',
+    'override newsletter published option',
+    'override newsletter sticky option',
+    'view any unpublished newsletter content',
+  ]);
 }
 
 /**
