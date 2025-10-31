@@ -1,0 +1,62 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.county_impact_report
+  module:
+    - eca_workflow
+id: process_xakruia
+modeller: bpmn_io
+label: 'Impact Report Workflow'
+version: ''
+weight: 0
+events:
+  Event_0stoc6n:
+    plugin: 'workflow:transition'
+    label: 'Needs Reviewed'
+    configuration:
+      type: 'node county_impact_report'
+      from_state: in_progress
+      to_state: needs_reviewed
+    successors:
+      -
+        id: Activity_1ngtlaz
+        condition: ''
+  Event_0xto2el:
+    plugin: 'workflow:transition'
+    label: Approved
+    configuration:
+      type: 'node county_impact_report'
+      from_state: needs_reviewed
+      to_state: published
+    successors:
+      -
+        id: Activity_1pjox2z
+        condition: ''
+conditions: {  }
+gateways: {  }
+actions:
+  Activity_1ngtlaz:
+    plugin: action_send_email_action
+    label: 'Send email for review'
+    configuration:
+      replace_tokens: false
+      recipient: 'jolene@iastate.edu, cgannon@iastate.edu, kkaufman@iastate.edu'
+      subject: '[site:name] Impact Report is ready for review.'
+      message: |-
+        [site:name] has indicated that their county impact report is ready for your review. 
+        [node:url]
+
+        Please login to view the page: [site:login-url]. 
+
+        Update the status to "Send Back for Revisions" or "Publish" if the impact report is approved.
+    successors: {  }
+  Activity_1pjox2z:
+    plugin: action_send_email_action
+    label: 'Send notice'
+    configuration:
+      replace_tokens: false
+      recipient: '[node:author]@iastate.edu'
+      subject: 'Your Impact Report is Published!'
+      message: 'Your Impact Report was approved and published!'
+    successors: {  }

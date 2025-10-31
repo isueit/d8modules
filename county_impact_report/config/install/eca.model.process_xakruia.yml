@@ -1,0 +1,130 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - eca.eca.process_xakruia
+id: process_xakruia
+label: 'Impact Report Workflow'
+tags:
+  - untagged
+documentation: ''
+filename: ''
+modeldata: |
+  <?xml version="1.0" encoding="UTF-8"?>
+  <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:qa="http://some-company/schema/bpmn/qa" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+    <bpmn2:process id="Process_xAkruIa" name="Impact Report Workflow" isExecutable="true">
+      <bpmn2:startEvent id="Event_0stoc6n" name="Needs Reviewed" camunda:modelerTemplate="org.drupal.event.workflow:transition">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="workflow:transition" />
+          </camunda:properties>
+          <camunda:field name="type">
+            <camunda:string>node county_impact_report</camunda:string>
+          </camunda:field>
+          <camunda:field name="from_state">
+            <camunda:string>in_progress</camunda:string>
+          </camunda:field>
+          <camunda:field name="to_state">
+            <camunda:string>needs_reviewed</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_1czsdx3</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:task id="Activity_1ngtlaz" name="Send email for review" camunda:modelerTemplate="org.drupal.action.action_send_email_action">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="action_send_email_action" />
+          </camunda:properties>
+          <camunda:field name="recipient">
+            <camunda:string>jolene@iastate.edu, cgannon@iastate.edu, kkaufman@iastate.edu</camunda:string>
+          </camunda:field>
+          <camunda:field name="subject">
+            <camunda:string>[site:name] Impact Report is ready for review.</camunda:string>
+          </camunda:field>
+          <camunda:field name="message">
+            <camunda:string>[site:name] has indicated that their county impact report is ready for your review. 
+  [node:url]
+
+  Please login to view the page: [site:login-url]. 
+
+  Update the status to "Send Back for Revisions" or "Publish" if the impact report is approved.</camunda:string>
+          </camunda:field>
+          <camunda:field name="replace_tokens">
+            <camunda:string>no</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_1czsdx3</bpmn2:incoming>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_1czsdx3" sourceRef="Event_0stoc6n" targetRef="Activity_1ngtlaz" />
+      <bpmn2:startEvent id="Event_0xto2el" name="Approved" camunda:modelerTemplate="org.drupal.event.workflow:transition">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="workflow:transition" />
+          </camunda:properties>
+          <camunda:field name="type">
+            <camunda:string>node county_impact_report</camunda:string>
+          </camunda:field>
+          <camunda:field name="from_state">
+            <camunda:string>needs_reviewed</camunda:string>
+          </camunda:field>
+          <camunda:field name="to_state">
+            <camunda:string>published</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_1e12g8b</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:task id="Activity_1pjox2z" name="Send notice" camunda:modelerTemplate="org.drupal.action.action_send_email_action">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="action_send_email_action" />
+          </camunda:properties>
+          <camunda:field name="recipient">
+            <camunda:string>[node:author]@iastate.edu</camunda:string>
+          </camunda:field>
+          <camunda:field name="subject">
+            <camunda:string>Your Impact Report is Published!</camunda:string>
+          </camunda:field>
+          <camunda:field name="message">
+            <camunda:string>Your Impact Report was approved and published!</camunda:string>
+          </camunda:field>
+          <camunda:field name="replace_tokens">
+            <camunda:string>no</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_1e12g8b</bpmn2:incoming>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_1e12g8b" sourceRef="Event_0xto2el" targetRef="Activity_1pjox2z" />
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="sid-e4e726f4-4ca8-4609-98e7-84a8fe3bbe1c">
+      <bpmndi:BPMNPlane id="sid-429da703-0e03-471a-a14d-e0ae8d425db3" bpmnElement="Process_xAkruIa">
+        <bpmndi:BPMNShape id="Event_142tqs0_di" bpmnElement="Event_0stoc6n">
+          <dc:Bounds x="222" y="102" width="36" height="36" />
+          <bpmndi:BPMNLabel>
+            <dc:Bounds x="198" y="145" width="84" height="14" />
+          </bpmndi:BPMNLabel>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_1ngtlaz_di" bpmnElement="Activity_1ngtlaz">
+          <dc:Bounds x="310" y="80" width="100" height="80" />
+          <bpmndi:BPMNLabel />
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Event_0xto2el_di" bpmnElement="Event_0xto2el">
+          <dc:Bounds x="222" y="292" width="36" height="36" />
+          <bpmndi:BPMNLabel>
+            <dc:Bounds x="216" y="335" width="48" height="14" />
+          </bpmndi:BPMNLabel>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_1pjox2z_di" bpmnElement="Activity_1pjox2z">
+          <dc:Bounds x="310" y="270" width="100" height="80" />
+          <bpmndi:BPMNLabel />
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNEdge id="Flow_1czsdx3_di" bpmnElement="Flow_1czsdx3">
+          <di:waypoint x="258" y="120" />
+          <di:waypoint x="310" y="120" />
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_1e12g8b_di" bpmnElement="Flow_1e12g8b">
+          <di:waypoint x="258" y="310" />
+          <di:waypoint x="310" y="310" />
+        </bpmndi:BPMNEdge>
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn2:definitions>

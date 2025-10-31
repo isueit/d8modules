@@ -15,5 +15,11 @@ dependencies:
   - drupal:layout_builder_base
   - drupal:layout_builder_base_library
   - diff:diff
+  - bpmn_io:bpmn_io
+  - eca:eca
+  - eca:eca_base
+  - eca:eca_modeller_bpmn
+  - eca:eca_ui
+  - eca:eca_workflow
   - layout_builder_restrictions
   - drupal:paragraphs
