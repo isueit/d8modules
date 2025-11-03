@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: news_articles_home_column
+label: 'News Articles (Home Column)'
+effects:
+  39d87e51-aa7d-42e9-8b63-aeb8edca723e:
+    uuid: 39d87e51-aa7d-42e9-8b63-aeb8edca723e
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 200
+      height: 115
+      anchor: center-center
