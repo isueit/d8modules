@@ -51,7 +51,7 @@
 	background: var(--btn-primary-color);
 }
 .bean-card-content_label.Green {
-	background: var(--btn-primary-color);
+	background: var(--btn-success-color);
 }
 .bean-card-content_label.Dark.Red {
 	background: var(--btn-secondary-color);
@@ -65,7 +65,7 @@
 	border-color: var(--btn-primary-color);
 }
 .bean-card-content_body.Green { 
-	border-color: var(--btn-primary-color); 
+	border-color: var(--btn-success-color); 
 }
 .bean-card-content_body.Dark.Red { 
 	border-color: var(--btn-secondary-color); 

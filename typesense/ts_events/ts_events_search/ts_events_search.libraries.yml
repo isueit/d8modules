@@ -1,0 +1,16 @@
+ts_events_search_results:
+  js:
+    js/ts-events-search-results.js: {attributes: { type: module }}
+    js/Dropdown.js: {attributes: { type: module }}
+    js/util.js: {attributes: { type: module }}
+  css:
+    theme:
+      css/ts-events-search-results.css: {}
+      css/Dropdown.css: {}
+
+ts_events_search_bar_only:
+  js:
+    js/search-bar-only.js: {}
+  css:
+    theme:
+      css/search-bar-only.css: {}

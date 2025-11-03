@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_staff_selector
+    - node.type.staff_profile
+    - paragraphs.paragraphs_type.staff_information
+id: paragraph.staff_information.field_staff_selector
+field_name: field_staff_selector
+entity_type: paragraph
+bundle: staff_information
+label: 'Select Staff'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      staff_profile: staff_profile
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

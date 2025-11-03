@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_newsletter_event_date
+    - paragraphs.paragraphs_type.save_the_date
+  module:
+    - datetime
+id: paragraph.save_the_date.field_newsletter_event_date
+field_name: field_newsletter_event_date
+entity_type: paragraph
+bundle: save_the_date
+label: Date
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

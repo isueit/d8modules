@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies: {  }
+id: content
+label: Content
+description:
+  value: '<p>Paragraphs based on normal content editing.</p>'
+  format: wysiwyg
+weight: 0

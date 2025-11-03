@@ -33,7 +33,6 @@ function staff_profile_form_node_form_alter(&$form, &$form_state, $form_id) {
     $userid = \Drupal::currentUser()->id();
     if ($userid != 1) {
       $form['field_staff_profile_cty_author']['widget']['#disabled'] = TRUE;
-      $form['field_staff_profile_web_amb']['widget']['#disabled'] = TRUE;
       $form['field_staff_profile_site_author']['widget']['#disabled'] = TRUE;
       $form['field_staff_profile_quals']['widget']['#disabled'] = TRUE;
     }
@@ -107,4 +106,18 @@ function staff_profile_mark_database_fields_readonly(&$form) {
 
   $form['field_staff_profile_addr']['widget'][0]['address']['#disabled'] = TRUE;
   $form['field_staff_profile_stale']['widget']['value']['#disabled'] = TRUE;
+}
+
+/**
+ * Implements hook_theme().
+ */
+
+function staff_profile_theme($existing, $type, $theme, $path)
+{
+   return [
+    'node__staff_profile__staff_author' => [
+      'template' => 'node--staff-profile--staff-author',
+      'base hook' => 'node',
+    ],
+  ];
 }

@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_existing_content_search
+    - node.type.news_article
+    - paragraphs.paragraphs_type.existing_content
+id: paragraph.existing_content.field_existing_content_search
+field_name: field_existing_content_search
+entity_type: paragraph
+bundle: existing_content
+label: 'Search Content'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      news_article: news_article
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

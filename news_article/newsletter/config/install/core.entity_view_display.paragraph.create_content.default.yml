@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.create_content.field_create_content_body
+    - field.field.paragraph.create_content.field_create_content_title
+    - paragraphs.paragraphs_type.create_content
+  module:
+    - text
+id: paragraph.create_content.default
+targetEntityType: paragraph
+bundle: create_content
+mode: default
+content:
+  field_create_content_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_create_content_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

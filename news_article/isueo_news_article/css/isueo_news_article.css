@@ -11,20 +11,22 @@
 	float: left;
 	padding: 10px;
 }
-
 .deck {
 	font-size: 1.25rem;
 }
-
 .authored-on {
-	font-size: .9rem;
-	color: #666;
+	font-size: 1rem;
+	color: #676767;
 	padding-bottom: 15px;
-	font-style: oblique;
+}
+span.authored-on {
+	font-size: 1rem;
+	color: #676767;
+}
+.isueo-news-author {
+	margin-top: 3rem;
+}
+.isueo-news-author h2.isu-block-title.h4 {
+	margin-bottom: 1.375rem;
 }
 
-span.authored-on {
-	font-size: .9rem;
-	color: #666;
-	font-style: oblique;
-}

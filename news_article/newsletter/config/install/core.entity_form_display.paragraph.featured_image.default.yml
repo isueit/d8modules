@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.featured_image.field_newsletter_featured_image
+    - paragraphs.paragraphs_type.featured_image
+id: paragraph.featured_image.default
+targetEntityType: paragraph
+bundle: featured_image
+mode: default
+content:
+  field_newsletter_featured_image:
+    type: options_buttons
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

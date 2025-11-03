@@ -1,0 +1,8 @@
+ts_events_details.ts-event-details:
+  path: '/ts-event-details/{eventID}/{eventTitle}'
+  defaults:
+    _controller: '\Drupal\ts_events_details\Controller\EventDetailsController::ts_event_details'
+    _title: 'Details of Event'
+    eventTitle: ''
+  requirements:
+    _permission: 'access content'

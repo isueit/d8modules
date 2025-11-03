@@ -1,0 +1,34 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.data_points_selector.field_data_point_1
+    - field.field.paragraph.data_points_selector.field_data_point_2
+    - field.field.paragraph.data_points_selector.field_data_point_3
+    - paragraphs.paragraphs_type.data_points_selector
+id: paragraph.data_points_selector.default
+targetEntityType: paragraph
+bundle: data_points_selector
+mode: default
+content:
+  field_data_point_1:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_data_point_2:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_data_point_3:
+    type: options_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

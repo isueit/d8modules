@@ -1,0 +1,52 @@
+/* --------------------------------------  */
+/* ## IMAGE EDIT SCREEN
+/* --------------------------------------  */
+.field--name-field-newsletter-featured-image .form-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+.field--name-field-newsletter-featured-image .form-radios .form-item:first-child {
+  display: none;
+}
+.field--name-field-newsletter-featured-image .form-radios .form-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  justify-items: start;
+  width: 30%;
+  margin: 0;
+}
+.field--name-field-newsletter-featured-image .form-radios label.form-item__label {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  flex-direction: column-reverse; 
+  align-items: start;
+  width: 100%;
+}
+.field--name-field-newsletter-featured-image .form-radios input[type="radio"] {
+  inset-block-start: auto;
+  margin: 0;
+  margin-top: -8px;
+  margin-left: .3rem;
+}
+.featured-image-option {
+  display: contents;
+}
+.featured-image-preview {
+  display: block;
+  margin-bottom: 8px;
+}
+.featured-image-preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.featured-image-label {
+    padding-left: 2.2rem;
+    font-size: 1rem;
+}

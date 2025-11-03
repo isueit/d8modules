@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies: {  }
+id: headers
+label: Headers
+description:
+  value: '<p>Paragraphs for feature or section headers.</p>'
+  format: wysiwyg
+weight: 0

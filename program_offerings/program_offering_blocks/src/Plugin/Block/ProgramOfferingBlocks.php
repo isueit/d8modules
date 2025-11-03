@@ -212,7 +212,7 @@ class ProgramOfferingBlocks extends BlockBase
 
           // Make the entire Horizontal Display Card a link
            if ($horizontal_display) {
-            $results .= '    <a href="' . base_path() . 'event_details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) . '">' . PHP_EOL;
+            $results .= '    <a href="' . base_path() . 'event-details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) . '">' . PHP_EOL;
           }
           // For Horizontal Displays
           // Month and day should be switched so that month comes first, move time
@@ -555,7 +555,7 @@ class ProgramOfferingBlocks extends BlockBase
     $title_text = $this->get_title_text($event);
 
     if ($config['event_details_page']) {
-      $title .= '<a href="' . base_path() . 'event_details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) . '">' . $title_text . '</a>';
+      $title .= '<a href="' . base_path() . 'event-details/' . $event['Id'] . '/' . str_replace('/', '-', $event['Name_Placeholder__c']) . '">' . $title_text . '</a>';
     } else {
       $now = strtotime('today midnight');
       $regstartdate = !empty($event['Registration_Opens__c']) ? strtotime($event['Registration_Opens__c']) : $now;
