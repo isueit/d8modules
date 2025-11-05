@@ -79,6 +79,11 @@ const programUnitDropdown = createDropdown(instantsearch.widgets.refinementList,
   buttonText: "Program Unit",
 });
 
+const programDropdown = createDropdown(instantsearch.widgets.refinementList, {
+  closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
+  buttonText: "Program ID",
+});
+
 searchResults.addWidgets([
   instantsearch.widgets.searchBox({
     container: "#search-results-bar",
@@ -163,10 +168,16 @@ searchResults.addWidgets([
     sortBy: ['name:asc'],
     limit: 3000,
   }),
+
   programUnitDropdown({
     container: "#program-unit",
     attribute: "PrimaryProgramUnit__c",
     sortBy: ['name:asc'],
+  }),
+
+  programDropdown({
+    container: "#program",
+    attribute: "Planned_Program__c",
   }),
 
   deliveryMethodDropdown({
