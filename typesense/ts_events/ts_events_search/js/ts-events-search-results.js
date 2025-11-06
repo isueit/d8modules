@@ -177,7 +177,7 @@ searchResults.addWidgets([
 
   programDropdown({
     container: "#program",
-    attribute: "Planned_Program__c",
+    attribute: "plp_program",
   }),
 
   deliveryMethodDropdown({

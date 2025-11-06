@@ -51,7 +51,7 @@ function ts_events_collection_index_events()
     $tmp['Registration_Opens__c'] = ts_events_collection_get_registration_opens($event);
     $tmp['Registration_Deadline__c'] = ts_events_collection_get_registration_deadline($event);
     $tmp['smugmug_id'] = $event['Planned_Program__r.Smugmug_ID__c'];
-    $tmp['Planned_Program__c'] = ts_events_collection_get_planned_progam($event['Planned_Program__c']);
+    $tmp['plp_program'] = ts_events_collection_get_planned_progam($event['Planned_Program__c']);
 
     // Handle fields that get copied straight over using the same field name
     $field_names = [
@@ -188,7 +188,7 @@ function ts_events_collection_create_collection()
     'Event_Location_Site_Building__c' => 'string',
     'Event_Location_Street_Address__c' => 'string',
     'Event_Location_Zip_Code__c' => 'string',
-    'Planned_Program__c' => 'string',
+    'plp_program' => 'string',
     'Planned_Program_Website__c' => 'string',
     'Program_Offering_Website__c' => 'string',
     'Registration_Opens__c' => 'int64',
@@ -201,7 +201,7 @@ function ts_events_collection_create_collection()
     'delivery_method',
     'Delivery_Language__c',
     'PrimaryProgramUnit__c',
-    'Planned_Program__c',
+    'plp_program',
     'category',
     'topics',
     'county',
@@ -226,7 +226,7 @@ function ts_events_collection_create_collection()
     'Event_Location_Street_Address__c',
     'Event_Location_Zip_Code__c',
     'smugmug_id',
-    'Planned_Program__c',
+    'plp_program',
     'Planned_Program_Website__c',
     'Program_Offering_Website__c',
     'Registration_Opens__c',
