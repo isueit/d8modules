@@ -3,6 +3,7 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -259,6 +260,7 @@ function newsletter_preprocess_block(&$variables) {
             $date_value = $paragraph->field_newsletter_event_date->value ?? '';
             $title = $paragraph->field_newsletter_event_title->value ?? '';
             $location = $paragraph->field_newsletter_event_location->value ?? '';
+            $time = $paragraph->field_newsletter_event_time->value ?? '';
             
             // Format date
             $month = '';
@@ -284,6 +286,7 @@ function newsletter_preprocess_block(&$variables) {
               'month' => $month,
               'day' => $day,
               'title' => $title,
+              'time' => $time,
               'link' => $link_url,
               'location' => $location,
             ];
@@ -300,6 +303,27 @@ function newsletter_preprocess_block(&$variables) {
  * Implements hook_preprocess_field().
  */
 function newsletter_preprocess_field(&$variables) {
+  $element = $variables['element'];
+    // Target the specific entity reference field in the existing_content paragraph
+  // Target the specific entity reference field in the existing_content paragraph
+  if ($element['#field_name'] == 'field_existing_content_search' && 
+      $element['#bundle'] == 'existing_content') {
+    
+    // Get the paragraph entity
+    $paragraph = $element['#object'];
+    $parent = $paragraph->getParentEntity();
+    
+    // Check if parent is a newsletter
+    if ($parent && $parent->getEntityTypeId() == 'node' && $parent->bundle() == 'newsletter') {
+      // Add context to all child items
+      foreach ($variables['items'] as $delta => &$item) {
+        if (isset($item['content']['#node'])) {
+          $item['content']['#is_in_newsletter'] = TRUE;
+          $item['content']['#newsletter_node'] = $parent;
+        }
+      }
+    }
+  }
   if ($variables['field_name'] == 'field_section_heading' && 
       isset($variables['element']['#bundle']) && 
       $variables['element']['#bundle'] == 'section_heading') {
@@ -336,6 +360,265 @@ function newsletter_preprocess_field(&$variables) {
           }
         }
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_views_pre_build().
+ *
+ * Adds newsletter fields and updates filters/text to the News Articles view
+ * when the newsletter module is enabled.
+ */
+function newsletter_views_pre_build(ViewExecutable $view) {
+  // Only affect the News Articles view.
+  if ($view->id() !== 'news_articles') {
+    return;
+  }
+
+  // --- Update displays that need changes ---
+  $displays_to_update = ['attachment_2', 'block_1', 'page_1'];
+
+  // Add newsletter type to the default display filter (so all inherit it).
+  $default_display = $view->displayHandlers->get('default');
+  if ($default_display) {
+    $filters = $default_display->getOption('filters');
+    if (isset($filters['type'])) {
+      $types = (array) $filters['type']['value'];
+      if (!in_array('newsletter', $types, TRUE)) {
+        $types[] = 'newsletter';
+        $filters['type']['value'] = $types;
+        $default_display->setOption('filters', $filters);
+      }
+    }
+  }
+
+  // Loop through the displays we want to alter individually.
+  foreach (['block_1', 'attachment_2', 'page_1'] as $display_id) {
+    $display = $view->displayHandlers->get($display_id);
+    if (!$display) {
+      continue;
+    }
+
+    // Add newsletter to the content type filter
+    $filters = $display->getOption('filters');
+    if (isset($filters['type'])) {
+      $types = (array) $filters['type']['value'];
+      if (!in_array('newsletter', $types, TRUE)) {
+        $types[] = 'newsletter';
+        $filters['type']['value'] = $types;
+        $display->setOption('filters', $filters);
+      }
+    }
+    if ($display_id === 'page_1') {
+    // Add exposed content type filter on Page
+    $filters = $display->getOption('filters');
+    if (isset($filters['type'])) {
+      $filters['type']['expose']['operator'] = TRUE;
+      $filters['type']['expose']['operator_id'] = 'type_op';
+      $filters['type']['expose']['label'] = t('Filter by Type');
+      $display->setOption('filters', $filters);
+    }
+  }
+
+    // Add new fields for newsletter content
+    $fields = $display->getOption('fields');
+
+    if ($display_id === 'block_1') {
+    // Add field_newsletter_thumbnail if missing.
+    if (!isset($fields['field_newsletter_thumbnail'])) {
+      $fields['field_newsletter_thumbnail'] = [
+        'id' => 'field_newsletter_thumbnail',
+        'table' => 'node__field_newsletter_thumbnail',
+        'field' => 'field_newsletter_thumbnail',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'type' => 'media_thumbnail',
+        'settings' => [
+          'image_link' => '',
+          'image_style' => 'news_articles_homepage_',
+        ],
+      ];
+    }
+
+    // Add field_newsletter_issue_date if missing.
+    if (!isset($fields['field_newsletter_issue_date'])) {
+      $fields['field_newsletter_issue_date'] = [
+        'id' => 'field_newsletter_issue_date',
+        'table' => 'node__field_newsletter_issue_date',
+        'field' => 'field_newsletter_issue_date',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'type' => 'string',
+        'settings' => ['link_to_entity' => 'FALSE']
+      ];
+    }
+
+    // Add field_newsletter_featured if missing.
+    if (!isset($fields['field_newsletter_featured'])) {
+      $fields['field_newsletter_featured'] = [
+        'id' => 'field_newsletter_featured',
+        'table' => 'node__field_newsletter_featured',
+        'field' => 'field_newsletter_featured',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'type' => 'entity_reference_revisions_entity_view',
+        'settings' => ['view_mode' => 'default'],
+      ];
+    }
+
+    // Update the rewrite block text for block display.
+      if (isset($fields['nothing'])) {
+        $fields['nothing']['alter']['text'] = <<<'EOT'
+        <div class="card"> 
+          <span class="bg-danger position-absolute">Featured</span> 
+          <div class="card-image"> 
+            {% if field_thumbnail is not empty %} {{ field_thumbnail }} {% endif %}
+            {% if field_newsletter_thumbnail is not empty %} {{ field_newsletter_thumbnail }} {% endif %}
+          </div> 
+          <div class="card-body"> 
+            <h3 class="card-title ext-news-feed--featured">{{ title }}</h3> 
+            {% if field_newsletter_issue_date is empty %}<span class="authored-on">{{ created }}</span>{% endif %}
+            {% if field_newsletter_issue_date is not empty %}<span class="authored-on">{{ field_newsletter_issue_date }} {% endif %}
+            {% if field_teaser is not empty %}<div>{{ field_teaser }}</div>{% endif %}
+            {% if field_newsletter_featured is not empty %}<div>{{ field_newsletter_featured }}</div>{% endif %}
+          </div> 
+        </div>
+        EOT;
+      }
+    }
+  elseif ($display_id === 'attachment_2') {
+    // Add field_newsletter_thumbnail if missing.
+    if (!isset($fields['field_newsletter_thumbnail'])) {
+      $fields['field_newsletter_thumbnail'] = [
+        'id' => 'field_newsletter_thumbnail',
+        'table' => 'node__field_newsletter_thumbnail',
+        'field' => 'field_newsletter_thumbnail',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'type' => 'media_thumbnail',
+        'settings' => [
+          'image_link' => '',
+          'image_style' => 'news_articles_home_column',
+        ],
+      ];
+    }
+     // Add field_newsletter_issue_date if missing.
+    if (!isset($fields['field_newsletter_issue_date'])) {
+      $fields['field_newsletter_issue_date'] = [
+        'id' => 'field_newsletter_issue_date',
+        'table' => 'node__field_newsletter_issue_date',
+        'field' => 'field_newsletter_issue_date',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'type' => 'string',
+        'settings' => ['link_to_entity' => 'FALSE']
+      ];
+    }
+      // Update the rewrite block text for block display.
+      if (isset($fields['nothing'])) {
+        $fields['nothing']['alter']['text'] = <<<'EOT'
+        <div class="ext-news-column">
+          <a class="card d-flex flex-row align-items-stretch" href="{{ view_node }}">
+            <div class="card-image-list flex-shrink-0">
+              {% if field_thumbnail is not empty %}{{ field_thumbnail }}{% endif %}
+              {% if field_newsletter_thumbnail is not empty %}{{ field_newsletter_thumbnail }}{% endif %  
+            </div>
+          <div class="card-body">
+            <h4 class="card-title">{{ title }}</h4>
+            {% if field_newsletter_issue_date is empty %}<span class="authored-on">{{ created }}</span>{% endif %}
+            {% if field_newsletter_issue_date is not empty %}<span class="authored-on">{{ field_newsletter_issue_date }}{% endif %}
+          </div>
+          <div class="card-arrow-wrapper">
+            <span class="card-arrow"></span>
+          </div>
+          </a>
+        </div>
+        EOT;
+      }
+    }
+  elseif ($display_id === 'page_1') {
+    // Exclude field_thumbnail field.
+    if (!isset($fields['field_thumbnail'])) {
+      $fields['field_thumbnail'] = [
+        'id' => 'field_thumbnail',
+        'table' => 'node__field_thumbnail',
+        'field' => 'field_thumbnail',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'type' => 'media_thumbnail',
+        'settings' => [
+          'image_link' => '',
+          'image_style' => 'news_article_grid_',
+        ],
+      ];
+    }
+    // Add field_newsletter_thumbnail if missing.
+    if (!isset($fields['field_newsletter_thumbnail'])) {
+      $fields['field_newsletter_thumbnail'] = [
+        'id' => 'field_newsletter_thumbnail',
+        'table' => 'node__field_newsletter_thumbnail',
+        'field' => 'field_newsletter_thumbnail',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'type' => 'media_thumbnail',
+        'settings' => [
+          'image_link' => '',
+          'image_style' => 'news_article_grid_',
+        ],
+      ];
+    }
+    // Add Rewrite for Thumbnails.
+    if (!isset($fields['nothing'])) {
+      $fields['nothing']['alter']['text'] = <<<'EOT'
+        {% if field_thumbnail is not empty %}{{ field_thumbnail }}{% endif %}
+        {% if field_newsletter_thumbnail is not empty %}{{ field_newsletter_thumbnail }}{% endif %}
+      EOT;
+    }
+    // Exclude created field.
+    if (isset($fields['created'])) {
+      $fields['created'] = [
+        'exclude' => TRUE,
+      ];
+    }
+    // Add field_newsletter_issue_date if missing.
+    if (!isset($fields['field_newsletter_issue_date'])) {
+      $fields['field_newsletter_issue_date'] = [
+        'id' => 'field_newsletter_issue_date',
+        'table' => 'node__field_newsletter_issue_date',
+        'field' => 'field_newsletter_issue_date',
+        'plugin_id' => 'field',
+        'exclude' => TRUE,
+        'alter' => [
+          'alter_text' => TRUE,
+          'text' => '<em>{{ field_newsletter_issue_date }}</em><br><b>{{ title }}</b>',
+        ], 
+        'type' => 'string',
+        'settings' => ['link_to_entity' => 'FALSE']
+      ];
+    }
+    // Add Rewrite for Authored On Info.
+    if (!isset($fields['nothing_1'])) {
+      $fields['nothing_1']['alter']['text'] = <<<'EOT'
+        {% if field_newsletter_issue_date is empty %}<span class="authored-on">{{ created }}</span>{% endif %}
+        {% if field_newsletter_issue_date is not empty %}<span class="authored-on">{{ field_newsletter_issue_date }}{% endif %}
+      EOT;
+    }
+    // Add field_newsletter_featured if missing.
+    if (!isset($fields['field_newsletter_featured'])) {
+      $fields['field_newsletter_featured'] = [
+        'id' => 'field_newsletter_featured',
+        'table' => 'node__field_newsletter_featured',
+        'field' => 'field_newsletter_featured',
+        'plugin_id' => 'field',
+        'exclude' => FALSE,
+        'type' => 'entity_reference_revisions_entity_view',
+        'settings' => ['view_mode' => 'default'],
+      ];
+    }
+
+    // Save the updated field set.
+    $display->setOption('fields', $fields);
     }
   }
 }

@@ -202,8 +202,14 @@ h2.newsletter-section-heading {
   align-items: center;
   gap: .5rem;
   background: var(--lt-gray);
+  align-items: stretch;
 }
-.save-the-date-date {
+.save-the-date-item p {
+  margin-bottom: 0;
+  line-height: 1.3;
+  font-size: .9rem;
+}
+.save-the-date-date--wrapper {
   flex-shrink: 0;
   width: 60px;
   text-align: center;
@@ -211,6 +217,9 @@ h2.newsletter-section-heading {
   color: #fff;
   padding: 0.3rem;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 .save-the-date-date .date-month {
   font-size: 0.875rem;
@@ -225,6 +234,7 @@ h2.newsletter-section-heading {
 }
 .save-the-date-title {
   flex: 1;
+  padding: .5rem 0;
 }
 .save-the-date-title .event-link {
   color: var(--secondary-color);
@@ -234,9 +244,10 @@ h2.newsletter-section-heading {
   color: #c8102e;
   text-decoration: underline;
 }
-span.save-the-date-location {
+.save-the-date-location {
     font-style: italic;
     font-size: 1rem;
+    line-height: 1;
 }
 
 /* Responsive design */

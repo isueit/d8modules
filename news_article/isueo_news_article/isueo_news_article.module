@@ -15,9 +15,23 @@ function isueo_news_article_preprocess_node(&$variables) {
 function isueo_news_article_theme($existing, $type, $theme, $path)
 {
    return [
-      'node__news_article__teaser' => [
-      'template' => 'node--news-article--teaser',
+      'node__news_article__teaser__newsletter' => [
+      'template' => 'node--news-article--teaser--newsletter',
       'base hook' => 'node',
     ],
   ];
+}
+
+/**
+ * Implements hook_theme_suggestions_node_alter().
+ */
+function isueo_news_article_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  $node = $variables['elements']['#node'];
+  $view_mode = $variables['elements']['#view_mode'];
+  
+  if ($node->bundle() == 'news_article' && $view_mode == 'teaser') {
+    if (!empty($variables['elements']['#is_in_newsletter'])) {
+      $suggestions[] = 'node__news_article__teaser__newsletter';
+    }
+  }
 }
