@@ -376,21 +376,44 @@ function newsletter_views_pre_build(ViewExecutable $view) {
     return;
   }
 
+  // Ensure all display handlers are loaded.
+  $view->initDisplay();
+
   // --- Update displays that need changes ---
   $displays_to_update = ['attachment_2', 'block_1', 'page_1'];
 
-  // Add newsletter type to the default display filter (so all inherit it).
+  // Modify the default display
   $default_display = $view->displayHandlers->get('default');
   if ($default_display) {
     $filters = $default_display->getOption('filters');
+    // Add newsletter to content type filter
     if (isset($filters['type'])) {
       $types = (array) $filters['type']['value'];
       if (!in_array('newsletter', $types, TRUE)) {
         $types[] = 'newsletter';
         $filters['type']['value'] = $types;
-        $default_display->setOption('filters', $filters);
       }
     }
+      // Add exclude newsletter value
+      if (!isset($filters['field_newsletter_exclude_value'])) {
+      $filters['field_newsletter_exclude_value'] = [
+        'id' => 'field_newsletter_exclude_value',
+        'table' => 'node__field_newsletter_exclude',
+        'field' => 'field_newsletter_exclude_value',
+        'plugin_id' => 'boolean',
+        'operator' => '=',
+        'value' => ['1'],
+        'exposed' => FALSE,
+      ];
+    }
+    else {
+      $values = (array) $filters['field_newsletter_exclude_value']['value'];
+      if (!in_array('1', $values, TRUE)) {
+        $values[] = '1';
+        $filters['field_newsletter_exclude_value']['value'] = $values;
+      }
+    }
+        $default_display->setOption('filters', $filters);
   }
 
   // Loop through the displays we want to alter individually.
