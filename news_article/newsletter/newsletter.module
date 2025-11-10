@@ -4,6 +4,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -44,9 +47,21 @@ function newsletter_theme($existing, $type, $theme, $path)
       'base hook' => 'node',
     ],
 
+    'node__newsletter__newsletter_export' => [
+      'template' => 'node--newsletter--newsletter-export',
+      'base hook' => 'node',
+    ],
+
     'block__field_block__node__newsletter__field_newsletter_save_the_date' => [
       'template' => 'block--field-block--node--newsletter--field-newsletter-save-the-date',
       'base hook' => 'block',
+    ],
+    'newsletter_export' => [
+      'variables' => [
+        'html' => NULL,
+        'node' => NULL,
+      ],
+      'template' => 'newsletter-export',
     ],
   ];
 }
@@ -644,4 +659,65 @@ function newsletter_views_pre_build(ViewExecutable $view) {
     $display->setOption('fields', $fields);
     }
   }
+}
+/**
+ * Implements hook_entity_operation().
+ * 
+ * Adds a "Newsletter Export" operation link to nodes.
+ */
+function newsletter_entity_operation($entity) {
+  $operations = [];
+  
+  // Only add for nodes and if user has permission
+  if ($entity instanceof NodeInterface && \Drupal::currentUser()->hasPermission('export newsletter content')) {
+    if ($entity->bundle() == 'newsletter') {
+      
+      $operations['newsletter_export'] = [
+        'title' => t('Newsletter Export'),
+        'url' => \Drupal\Core\Url::fromRoute('newsletter.export', [
+          'node' => $entity->id(),
+        ]),
+        'weight' => 50,
+      ];
+    }
+  }
+  
+  return $operations;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter() for nodes.
+ * 
+ * This ensures images are displayed with absolute URLs in the newsletter export.
+ */
+function newsletter_node_view_alter(array &$build, $entity, EntityViewDisplayInterface $display) {
+  if ($display->getMode() == 'newsletter_export') {
+    // Process image fields to use absolute URLs
+    foreach ($build as $field_name => &$field) {
+      // Make sure $field is an array and has the field_type key
+      if (is_array($field) && isset($field['#field_type']) && $field['#field_type'] == 'image') {
+        // Check if #items exists and is iterable
+        if (isset($field['#items']) && is_iterable($field['#items'])) {
+          foreach ($field['#items'] as $delta => $item) {
+            if (isset($field[$delta]['#url'])) {
+              $field[$delta]['#url'] = $field[$delta]['#url']->setAbsolute()->toString();
+            }
+            if (isset($field[$delta]['#item']->entity)) {
+              $uri = $field[$delta]['#item']->entity->getFileUri();
+              $field[$delta]['#image_style'] = NULL; // Optionally remove image styles
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+function newsletter_layout_builder_restrict_block_alter(array &$allowed_blocks, EntityInterface $entity, $context) {
+  if (!\Drupal::moduleHandler()->moduleExists('newsletter')) {
+    return;
+  }
+
+  $featured_block_id = 'views_block:newsletter-block_1';
+  $archive_block_id = 'views_block:newsletter-block_2';
 }
