@@ -42,6 +42,7 @@ class TSEventsSearchResults extends BlockBase
               <div id="delivery-language"></div>
               <div id="categories"></div>
               <div id="topics"></div>
+              <div id="program"></div>
             </div>
             </div>
             <div id="current-refinements"></div>
