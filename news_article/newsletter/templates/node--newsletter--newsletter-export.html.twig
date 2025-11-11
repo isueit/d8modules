@@ -1,0 +1,185 @@
+{#
+/**
+ * @file
+ * Generic newsletter export template - all-in-one with error handling.
+ */
+#}
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ node.label }}</title>
+  <style>
+    img { max-width: 100%; height: auto; }
+    body, table, td { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; }
+  </style>
+</head>
+<body>
+<center>
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+      <td align="center" valign="top">
+
+        {# Get hero background image #}
+        {% set hero_image_url = '' %}
+        {% if node.field_newsletter_hero is not empty %}
+          {% set hero_paragraph = node.field_newsletter_hero.0.entity %}
+          {% if hero_paragraph %}
+            {% if hero_paragraph.field_newsletter_featured_image is not empty %}
+              {% set image_value = hero_paragraph.field_newsletter_featured_image.value %}
+              {% if image_value %}
+                {% set module_path = 'modules/custom/d8modules/news_article/newsletter' %}
+                {% set base_url_clean = url('<front>')|render|trim('/') %}
+                {% set hero_image_url = base_url_clean ~ '/' ~ module_path ~ '/images/' ~ image_value ~ '.png' %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+
+        <!-- HEADER -->
+        <table border="0" cellpadding="0" cellspacing="0" width="600">
+          <tr>
+            <td align="center" valign="top" style="padding:0;">
+              {% if hero_image_url %}
+                <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center;">
+                  <tr>
+                    <td style="padding: 60px 20px; background-color: rgba(0, 0, 0, 0.5);">
+                      <img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="" style="height: 50px; width: auto; vertical-align: middle; margin-right: 15px; display: inline-block;">
+                      <h1 style="display: inline-block; vertical-align: middle; color: #ffffff; font-size: 28px; font-weight: bold; line-height: 1.2; margin: 0;">{{ node.label }}</h1>
+                    </td>
+                  </tr>
+                </table>
+              {% else %}
+                <h1 style="padding: 20px; color: #202020; font-size: 28px; margin: 0;">{{ node.label }}</h1>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+
+        <!-- MAIN CONTENT + SIDEBAR -->
+        <table border="0" cellpadding="0" cellspacing="0" width="600">
+          <tr>
+            <!-- Main Content Column -->
+            <td valign="top" width="390" style="padding: 20px 18px;">
+              
+              {# Loop through content paragraphs if field exists #}
+              {% if node.field_newsletter_content is not empty %}
+                {% for item in node.field_newsletter_content %}
+                  {% if item.entity %}
+                    {% set para = item.entity %}
+                    {% set para_type = para.getType() %}
+                    
+                    {# SECTION HEADING #}
+                    {% if para_type == 'section_heading' %}
+                      {% if para.field_section_heading is not empty %}
+                        {% set heading_text = para.field_section_heading.value %}
+                        {% set heading_slug = heading_text|lower|replace({' ': '-'}) %}
+                        {% set heading_id = heading_slug ~ '-' ~ para.id() %}
+                        
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" id="{{ heading_id }}" style="margin: 30px 0 20px 0; background-image: url('{{ hero_image_url }}'); background-size: contain; background-position: center;">
+                          <tr>
+                            <td style="padding: 10px 10px;">
+                              <h2 style="color: #ffffff; font-size: 22px; font-weight: bold; margin: 0;">{{ heading_text }}</h2>
+                            </td>
+                          </tr>
+                        </table>
+                      {% endif %}
+                    
+                    {# OTHER PARAGRAPH TYPES - just render normally #}
+                    {% else %}
+                      <div style="margin: 20px 0;">
+                        {{ content.field_newsletter_content[loop.index0] }}
+                      </div>
+                    {% endif %}
+                    
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+              
+              {# Fallback: render the field normally if loop fails #}
+              {% if content.field_newsletter_content %}
+                {# {{ content.field_newsletter_content }} #}
+              {% endif %}
+              
+            </td>
+            
+            <!-- Save the Date Sidebar -->
+            <td valign="top" width="210" style="padding: 20px 18px; background-color: #f9f9f9; border-left: 1px solid #dddddd;">
+              <h4 style="color: #c8102e; font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">Important Dates</h4>
+              <hr style="border: 0; border-top: 2px solid #c8102e; margin: 0 0 15px 0;">
+              
+              {% if node.field_newsletter_save_the_date is not empty %}
+                {% for item in node.field_newsletter_save_the_date %}
+                  {% if item.entity %}
+                    {% set event = item.entity %}
+                    
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 15px;">
+                      <tr>
+                        <td valign="top" style="width: 50px; padding-right: 10px;">
+                          <table border="0" cellpadding="0" cellspacing="0" width="50" style="background-color: #c8102e; text-align: center;">
+                            <tr>
+                              <td style="background-color: #c8102e; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 2px; text-transform: uppercase;">
+                                {% if event.field_newsletter_event_date is not empty %}
+                                  {{ event.field_newsletter_event_date.value|date('M') }}
+                                {% endif %}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td style="background-color: #ffffff; color: #202020; font-size: 20px; font-weight: bold; padding: 8px 2px;">
+                                {% if event.field_newsletter_event_date is not empty %}
+                                  {{ event.field_newsletter_event_date.value|date('j') }}
+                                {% endif %}
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td valign="top">
+                          {% if event.field_newsletter_event_title is not empty %}
+                            <p style="margin: 0 0 5px 0; font-size: 13px; font-weight: bold;">
+                              {{ event.field_newsletter_event_title.value }}
+                            </p>
+                          {% endif %}
+                          
+                          {% if event.field_newsletter_event_time is not empty %}
+                            <p style="margin: 0 0 3px 0; font-size: 12px; color: #555555;">
+                              {{ event.field_newsletter_event_time.value }}
+                            </p>
+                          {% endif %}
+                          
+                          {% if event.field_newsletter_event_location is not empty %}
+                            <p style="margin: 0; font-size: 12px; color: #555555;">
+                              {{ event.field_newsletter_event_location.value }}
+                            </p>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </table>
+                    
+                    {% if not loop.last %}
+                      <hr style="border: 0; border-top: 1px solid #dddddd; margin: 0 0 15px 0;">
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+
+        <!-- FOOTER -->
+        <table border="0" cellpadding="0" cellspacing="0" width="600">
+          <tr>
+            <td style="padding:18px; color:#656565; font-size:12px; text-align:center;">
+              <p style="margin: 0;">This institution is an equal opportunity provider.<br>
+              <a href="https://www.extension.iastate.edu/legal" style="color: #006ba6;">www.extension.iastate.edu/legal</a></p>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</center>
+</body>
+</html>

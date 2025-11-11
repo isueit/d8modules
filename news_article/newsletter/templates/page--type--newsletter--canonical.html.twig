@@ -113,7 +113,6 @@
 		{% endif %}
 
 		<div class="row">
-
 			{% if page.sidebar_first|render and page.sidebar_second|render %}
 				{% set content_classes = 'col-lg-6' %}
 				{% set sidebar_classes = 'col-lg-3' %}
@@ -157,6 +156,7 @@
 
 					{# Show the rest of the content without the title #}
 					{{ page.content|without('iastate_theme_page_title') }}
+					        
 					
 				</article>
 				</div>

@@ -1,0 +1,11 @@
+newsletter.export:
+  path: '/node/{node}/newsletter-export'
+  defaults:
+    _controller: '\Drupal\newsletter\Controller\NewsletterExportController::export'
+  requirements:
+    _permission: 'export newsletter content'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node

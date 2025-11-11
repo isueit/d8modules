@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.newsletter_export
+label: 'Newsletter Export'
+description: ''
+targetEntityType: node
+cache: true

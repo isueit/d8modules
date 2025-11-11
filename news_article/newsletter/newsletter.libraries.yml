@@ -9,3 +9,12 @@ image_widget:
   css:
     theme:
       css/image_widget.css: {}
+
+export:
+  version: 1.x
+  css:
+    theme:
+      css/newsletter-export.css: {}
+      css/newsletter.css: {}
+  js:
+    js/newsletter-export.js: {}
