@@ -228,7 +228,7 @@ function staff_profile_primary_profile_from_database()
       $raw = str_replace('Youth and 4-H', '4-H Youth Development', $raw);
       $raw = str_replace(' (ANR)', '', $raw);
       $raw = str_replace('Communities and Economic Development (CED)', 'Community and Economic Development', $raw);
-      $raw = str_replace('Human Sciences Extension and Outreach (HSEO)', 'Human Sciences', $raw);
+      $raw = str_replace('Human Sciences Extension and Outreach (HSEO)', 'Health and Human Sciences', $raw);
     }
     $newArray = [];
     foreach (explode(',', $raw) as $program_area) {
