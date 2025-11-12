@@ -167,6 +167,11 @@ searchResults.addWidgets([
     },
   }),
 
+  programDropdown({
+    container: "#program",
+    attribute: "plp_program",
+  }),
+
   countyDropdown({
     container: "#county",
     attribute: "county",
@@ -189,6 +194,20 @@ searchResults.addWidgets([
     container: "#delivery-language",
     attribute: "Delivery_Language__c",
   }),
+  
+  /* categoriesDropdown({
+    container: "#categories",
+    attribute: "category",
+    sortBy: ['name:asc'],
+    limit: 3000,
+  }),
+  
+  topicsDropdown({
+    container: "#topics",
+    attribute: "topics",
+    sortBy: ['name:asc'],
+    limit: 3000,
+  }), */
 
   instantsearch.widgets.stats({
     container: "#stats",
