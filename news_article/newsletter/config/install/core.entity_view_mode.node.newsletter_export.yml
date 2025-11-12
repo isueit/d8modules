@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - newsletter
 id: node.newsletter_export
 label: 'Newsletter Export'
 description: ''

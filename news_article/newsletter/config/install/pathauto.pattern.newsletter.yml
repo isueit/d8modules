@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    module:
+      - newsletter
 id: newsletter
 label: Newsletter
 type: 'canonical_entities:node'
