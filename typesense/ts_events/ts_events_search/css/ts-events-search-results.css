@@ -23,7 +23,9 @@
     display: flex;
     align-items: center;
 }
-/* OLD STYLES - TO BE DELETED AFTER TESTING */
+.search-results-facets #program {
+    display: none;
+}
 .search-results {
     max-width: 1140px;
     margin: 1.125rem 1.1rem .5rem;
