@@ -29,7 +29,7 @@ class TSEventsSearchResults extends BlockBase
     //\Drupal::service('page_cache_kill_switch')->trigger();
 
     $results = '
-          <div class="search-results">
+          <div class="ts-events-wrapper search-results">
           <div class="search-results-facets-outer_wrapper">
           <div class="search-results-facets-inner_wrapper">
           <div class="search-results-bar-wrapper">

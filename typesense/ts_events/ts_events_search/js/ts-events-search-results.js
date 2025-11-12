@@ -53,12 +53,12 @@ const countyDropdown = createDropdown(
 
 const deliveryMethodDropdown = createDropdown(instantsearch.widgets.refinementList, {
   closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
-  buttonText: "Delivery Method",
+  buttonText: "Format",
 });
 
 const deliveryLanguageDropdown = createDropdown(instantsearch.widgets.refinementList, {
   closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
-  buttonText: "Delivery Language",
+  buttonText: "Language",
 });
 
 const categoriesDropdown = createDropdown(
@@ -76,7 +76,7 @@ const topicsDropdown = createDropdown(instantsearch.widgets.refinementList, {
 
 const programUnitDropdown = createDropdown(instantsearch.widgets.refinementList, {
   closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
-  buttonText: "Program Unit",
+  buttonText: "Program Area",
 });
 
 const programDropdown = createDropdown(instantsearch.widgets.refinementList, {
@@ -90,7 +90,7 @@ searchResults.addWidgets([
     autofocus: true,
     showReset: false,
     searchAsYouType: false,
-    placeholder: "Search Programs",
+    placeholder: "Search Upcoming Events",
     //queryHook(query, search) {
     //  document.getElementById("isueo-searchall").innerHTML =
     //    '<a href="https://www.extension.iastate.edu/search-results?as_q=' +
@@ -119,13 +119,14 @@ searchResults.addWidgets([
             '-XL.jpg" alt="" />';
         }
         */
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const days = ['Sunday,', 'Monday,', 'Tuesday,', 'Wednesday,', 'Thursday,', 'Friday,', 'Saturday,'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const timeFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: '2-digit', hour12: true });
         var date = new Date(item.Next_Start_Date__c * 1000);
         var sessions = String(item.sessions).split(',');
         var sessionString = '';
         if (sessions.length > 1) {
-          sessionString = 'Session ' + (sessions.indexOf(String(item.Next_Start_Date__c)) + 1) + ' of ' + sessions.length + '<br>';
+          sessionString = '(Session ' + (sessions.indexOf(String(item.Next_Start_Date__c)) + 1) + ' of ' + sessions.length + ')';
         }
         var location = item.Event_Location__c;
         if (item.Program_State__c !== undefined) {
@@ -134,23 +135,27 @@ searchResults.addWidgets([
         location += '<br>'
 
         return `
-          <div class="card mb-3">
-            <div class="row no-gutters">
-              <div class="col-md-4">
-                ${imagelink}
-              </div>
-            <div class="col-md-8">
+          <div class="ts-events-item card">
+            <div class="ts-event-details">
               <div class="card-body">
-              ${months[date.getMonth()]}
-              ${String(date.getDate()).padStart(2,'0')}
-              ${timeFormatter.format(date)}
-                <h2 class="hit-name card-title"><a href="ts-event-details/${item.id}/${item.title.replaceAll('/', '-')}"> ${item._highlightResult.title.value}</a></h2>
-                ${sessionString}
-                ${location}
+                <h2 class="hit-name card-title"><a href="ts-event-details/${item.id}/${item.title.replaceAll('/', '-')}"> ${item._highlightResult.title.value} ${sessionString}</a></h2>
+                  <div class="ts-events-date">
+                    <span class="icon">
+                      <svg id="SVG_Time_Icon" xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304"><path id="Oval_27_-_Outline" data-name="Oval 27 - Outline" d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z" transform="translate(0)"></path><path id="Path_3472" data-name="Path 3472" d="M5756.131,1591.968a1,1,0,0,1-1-1v-13.16a1,1,0,1,1,2,0V1589.5l8.839-3.465a1,1,0,1,1,.729,1.862l-10.2,4A1,1,0,0,1,5756.131,1591.968Z" transform="translate(-5735 -1567.816)"></path></svg>
+                    </span>
+                    <span class="visible-for-screen-readers">Time</span>
+                    ${days[date.getDay()]} ${months[date.getMonth()]} ${String(date.getDate()).padStart(2,'0')} at ${timeFormatter.format(date)}
+                  </div>
+                  <div class="ts-event-location">
+                    <span class="icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304"><g id="SVG_Location_Icon" transform="translate(7.5 8.5)"><path id="Oval_27_-_Outline" data-name="Oval 27 - Outline" d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z" transform="translate(-7.5 -8.5)"></path><path id="Path_3472" data-name="Path 3472" d="M13.5.7a9.811,9.811,0,0,1,9.8,9.8,12.133,12.133,0,0,1-1.495,5.507,24.387,24.387,0,0,1-3.2,4.639,35.36,35.36,0,0,1-4.616,4.486.8.8,0,0,1-.982,0,35.36,35.36,0,0,1-4.616-4.486,24.387,24.387,0,0,1-3.2-4.639A12.133,12.133,0,0,1,3.7,10.5,9.811,9.811,0,0,1,13.5.7Zm0,22.764c1.838-1.557,8.2-7.354,8.2-12.964a8.2,8.2,0,1,0-16.4,0C5.3,16.117,11.661,21.908,13.5,23.464Z"></path><path id="Path_3473" data-name="Path 3473" d="M16.5,9.7a3.8,3.8,0,1,1-3.8,3.8A3.8,3.8,0,0,1,16.5,9.7Zm0,6a2.2,2.2,0,1,0-2.2-2.2A2.2,2.2,0,0,0,16.5,15.7Z" transform="translate(-3 -3)"></path></g></svg>
+                    </span>
+                    <span class="visible-for-screen-readers">Location</span>
+                    ${location}
+                  </div>
               </div>
             </div>
             </div>
-          </div>
         `;
       },
     },
@@ -175,11 +180,6 @@ searchResults.addWidgets([
     sortBy: ['name:asc'],
   }),
 
-  programDropdown({
-    container: "#program",
-    attribute: "plp_program",
-  }),
-
   deliveryMethodDropdown({
     container: "#delivery-method",
     attribute: "delivery_method",
@@ -188,19 +188,6 @@ searchResults.addWidgets([
   deliveryLanguageDropdown({
     container: "#delivery-language",
     attribute: "Delivery_Language__c",
-  }),
-
-  categoriesDropdown({
-    container: "#categories",
-    attribute: "category",
-    sortBy: ['name:asc'],
-    limit: 3000,
-  }),
-  topicsDropdown({
-    container: "#topics",
-    attribute: "topics",
-    sortBy: ['name:asc'],
-    limit: 3000,
   }),
 
   instantsearch.widgets.stats({
