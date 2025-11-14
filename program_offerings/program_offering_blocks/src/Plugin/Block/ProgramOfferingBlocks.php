@@ -292,7 +292,7 @@ class ProgramOfferingBlocks extends BlockBase
         }
       }
       if ($node instanceof \Drupal\node\NodeInterface && $node->bundle() == 'plp_program') {
-        $show_more_page = str_replace('[tokenProgram MyData ID]', $node->get('field_plp_program_mydata_id')->getString(), $show_more_page);
+        $show_more_page = str_replace('[tokenProgram MyData ID]', $node->getTitle(), $show_more_page);
         $results .= '<a class="events_show_more" id="plp-events" href="' . $base_url . '/' . $show_more_page . $tmpfilter . '">' . $config['show_more_text'] . '</a><br />';
       } else {
         $results .= '<a class="events_show_more btn btn-danger" href="' . $base_url . '/' . $show_more_page . $tmpfilter . '">' . $config['show_more_text'] . '</a><br />';

@@ -51,7 +51,7 @@ function ts_events_collection_index_events()
     $tmp['Registration_Opens__c'] = ts_events_collection_get_registration_opens($event);
     $tmp['Registration_Deadline__c'] = ts_events_collection_get_registration_deadline($event);
     $tmp['smugmug_id'] = $event['Planned_Program__r.Smugmug_ID__c'];
-    $tmp['plp_program'] = ts_events_collection_get_planned_progam($event['Planned_Program__c']);
+    $tmp['plp_program'] = ts_events_collection_get_planned_program($event['Planned_Program__c'], $tmp['title']);
 
     // Handle fields that get copied straight over using the same field name
     $field_names = [
@@ -299,7 +299,7 @@ function ts_events_collection_get_registration_deadline($event)
   return $open;
 }
 
-function ts_events_collection_get_planned_progam($programId)
+function ts_events_collection_get_planned_program($programId, $title)
 {
   $plannedProgram = '';
 
@@ -313,7 +313,7 @@ function ts_events_collection_get_planned_progam($programId)
       ->condition('status', 1)
       ->execute();
     if ($nids && count($nids) == 1) {
-      $plannedProgram = $programId;
+      $plannedProgram = $title;
     }
 
     // Check if the $programID refers to a Child Program in the PLP
@@ -325,7 +325,7 @@ function ts_events_collection_get_planned_progam($programId)
       ->execute();
     if ($nids && count($nids) == 1) {
       $node = Node::load(reset($nids));
-      $plannedProgram = $node->get('field_plp_program_mydata_id')->getString();
+      $plannedProgram = $node->getTitle();
     }
   }
 
