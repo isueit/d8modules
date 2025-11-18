@@ -9,6 +9,11 @@
 /* -------------------------------------- */
 /* ## Impact Reports
 /* ------------------------------------- */
+.county-impact-report-contact .layout-content {
+	max-width: 1140px;
+	align-items: center;
+}
+
 .county-impact-report h1.isu-page-title {
 	position: absolute !important;
 	overflow: hidden;
