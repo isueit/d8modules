@@ -1,0 +1,11 @@
+services:
+  county_impact_report.route_subscriber:
+    class: Drupal\county_impact_report\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+      
+  county_impact_report.print_page_subscriber:
+    class: Drupal\county_impact_report\EventSubscriber\PrintPageSubscriber
+    arguments: ['@path.matcher', '@path_alias.manager']
+    tags:
+      - { name: event_subscriber }

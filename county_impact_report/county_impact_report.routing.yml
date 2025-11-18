@@ -5,3 +5,18 @@ county_impact_report.custom_page:
     _title: 'Redirect To Current Impact Report'
   requirements:
     _permission: 'access content' # Or a more specific permission
+
+
+county_impact_report.print:
+  path: '/node/{node}/print'
+  defaults:
+    _controller: '\Drupal\county_impact_report\Controller\PrintController::printPage'
+    _title: 'Print Impact Report'
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'node.view'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node

@@ -70,6 +70,14 @@ function county_impact_report_theme($existing, $type, $theme, $path)
       'template' => 'page--type--county-impact-report--canonical',
       'base hook' => 'node',
     ],
+    'county_impact_report_print' => [
+      'variables' => [
+        'node' => NULL,
+        'site_name' => NULL,
+        'year' => NULL,
+      ],
+      'template' => 'county-impact-report-print',
+    ],
   ];
 }
 
@@ -158,6 +166,75 @@ function county_impact_report_preprocess_page__type__county_impact_report__canon
     $impacts[2]['value'] = county_impact_report_format_value($impactData[1][$data_point_3], $impactData[0][$data_point_3]);
   }
   $variables['bottom_impact_data'] = $impacts;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for county_impact_report_print theme.
+ */
+function county_impact_report_preprocess_county_impact_report_print(&$variables) {
+  $node = $variables['node'];
+  
+  if (!$node) {
+    return;
+  }
+  
+  // Process top data points (for stats bar)
+  if ($node->hasField('field_top_data_points') && !$node->get('field_top_data_points')->isEmpty()) {
+    $top_data_points = $node->get('field_top_data_points')[0]->entity;
+    $data_point_1 = $top_data_points->get('field_data_point_1')->value;
+    $data_point_2 = $top_data_points->get('field_data_point_2')->value;
+    $data_point_3 = $top_data_points->get('field_data_point_3')->value;
+
+    // Get the impact data
+    $impactData = county_impact_report_find_county_impacts();
+    $top_impacts = [];
+    
+    if ($data_point_1 != '') {
+      $top_impacts[0]['label'] = $impactData[0][$data_point_1];
+      $top_impacts[0]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_1]);
+      $top_impacts[0]['value'] = county_impact_report_format_value($impactData[1][$data_point_1], $impactData[0][$data_point_1]);
+    }
+    if ($data_point_2 != '') {
+      $top_impacts[1]['label'] = $impactData[0][$data_point_2];
+      $top_impacts[1]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_2]);
+      $top_impacts[1]['value'] = county_impact_report_format_value($impactData[1][$data_point_2], $impactData[0][$data_point_2]);
+    }
+    if ($data_point_3 != '') {
+      $top_impacts[2]['label'] = $impactData[0][$data_point_3];
+      $top_impacts[2]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_3]);
+      $top_impacts[2]['value'] = county_impact_report_format_value($impactData[1][$data_point_3], $impactData[0][$data_point_3]);
+    }
+    $variables['top_impact_data'] = $top_impacts;
+  }
+  
+  // Process bottom data points (for footer stats)
+  if ($node->hasField('field_bottom_data_points') && !$node->get('field_bottom_data_points')->isEmpty()) {
+    $bottom_data_points = $node->get('field_bottom_data_points')[0]->entity;
+    $data_point_1 = $bottom_data_points->get('field_data_point_1')->value;
+    $data_point_2 = $bottom_data_points->get('field_data_point_2')->value;
+    $data_point_3 = $bottom_data_points->get('field_data_point_3')->value;
+
+    // Get the impact data
+    $impactData = county_impact_report_find_county_impacts();
+    $bottom_impacts = [];
+    
+    if ($data_point_1 != '') {
+      $bottom_impacts[0]['label'] = $impactData[0][$data_point_1];
+      $bottom_impacts[0]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_1]);
+      $bottom_impacts[0]['value'] = county_impact_report_format_value($impactData[1][$data_point_1], $impactData[0][$data_point_1]);
+    }
+    if ($data_point_2 != '') {
+      $bottom_impacts[1]['label'] = $impactData[0][$data_point_2];
+      $bottom_impacts[1]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_2]);
+      $bottom_impacts[1]['value'] = county_impact_report_format_value($impactData[1][$data_point_2], $impactData[0][$data_point_2]);
+    }
+    if ($data_point_3 != '') {
+      $bottom_impacts[2]['label'] = $impactData[0][$data_point_3];
+      $bottom_impacts[2]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_3]);
+      $bottom_impacts[2]['value'] = county_impact_report_format_value($impactData[1][$data_point_3], $impactData[0][$data_point_3]);
+    }
+    $variables['bottom_impact_data'] = $bottom_impacts;
+  }
 }
 
 /*

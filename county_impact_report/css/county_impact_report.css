@@ -108,7 +108,7 @@ div#block-iastate-theme-content--2 .paragraph {
 
 /* -------------------------------------- */
 /* ## PRINT STYLES
-/* -------------------------------------- */
+/* -------------------------------------- 
 @media print {
 	@page {
 		margin: 0.5cm;
@@ -158,3 +158,4 @@ div#block-iastate-theme-content--2 .paragraph {
 		margin-top: 0;
 	}
 }
+	*/
