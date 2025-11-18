@@ -34,7 +34,7 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
   background-position: center;
   background-repeat: no-repeat;
   width: 100vw;
-  min-height: 200px;
+  min-height: 250px;
   position: relative;
 }
 .newsletter-hero-wrapper h1.isu-page-title {
@@ -52,6 +52,7 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
 .newsletter-hero-label.container h1.isu-page-title img {
     max-width: 6rem;
     margin-right: 1rem;
+    float: left;
 }
 .newsletter-date-wrapper p {
     color: #fff;
