@@ -386,6 +386,7 @@ function newsletter_preprocess_field(&$variables) {
  * when the newsletter module is enabled.
  */
 function newsletter_views_pre_build(ViewExecutable $view) {
+  return;
   // Only affect the News Articles view.
   if ($view->id() !== 'news_articles') {
     return;
