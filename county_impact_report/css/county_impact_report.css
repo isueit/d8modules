@@ -46,9 +46,7 @@ div#block-iastate-theme-content--2 .paragraph {
 	display: grid;
 	column-gap: 40px;
 }
-.county-impact-report h2.isu-block-title {
-	text-transform: capitalize;
-}
+
 .county-impact-report-contact .layout--top-bottom-padding--big {
 	padding-top: 60px;
 	padding-bottom: 60px;
