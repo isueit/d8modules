@@ -42,7 +42,7 @@
 {% block paragraph %}
   <div {{ attributes.addClass(classes) }}>
     {% block content %}
-      {% if content.field_create_content_title.value %}
+      {% if paragraph.field_create_content_title.value %}
         <h2 class="isu-block-title h4">{{ content.field_create_content_title }}</h2>
       {% endif %}
       {% if content.field_create_content_body is not empty %}
