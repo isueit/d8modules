@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.newsletter.field_newsletter_issue_number
     - field.field.node.newsletter.field_newsletter_save_the_date
     - field.field.node.newsletter.field_newsletter_thumbnail
+    - field.field.node.newsletter.field_newsletter_type
     - node.type.newsletter
   module:
     - user
@@ -35,3 +36,4 @@ hidden:
   field_newsletter_issue_number: true
   field_newsletter_save_the_date: true
   field_newsletter_thumbnail: true
+  field_newsletter_type: true

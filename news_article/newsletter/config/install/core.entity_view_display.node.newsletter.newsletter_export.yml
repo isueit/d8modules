@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.newsletter.field_newsletter_issue_number
     - field.field.node.newsletter.field_newsletter_save_the_date
     - field.field.node.newsletter.field_newsletter_thumbnail
+    - field.field.node.newsletter.field_newsletter_type
     - node.type.newsletter
   module:
     - entity_reference_revisions
@@ -87,3 +88,4 @@ hidden:
   field_newsletter_archive_exclude: true
   field_newsletter_exclude: true
   field_newsletter_thumbnail: true
+  field_newsletter_type: true

@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.newsletter.field_newsletter_issue_number
     - field.field.node.newsletter.field_newsletter_save_the_date
     - field.field.node.newsletter.field_newsletter_thumbnail
+    - field.field.node.newsletter.field_newsletter_type
     - node.type.newsletter
   module:
     - field_formatter_class
@@ -20,6 +21,7 @@ dependencies:
     - paragraphs_features
     - path
     - scheduler
+    - select_or_other
 id: node.newsletter.default
 targetEntityType: node
 bundle: newsletter
@@ -27,20 +29,20 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 9
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
   field_newsletter_archive_exclude:
     type: boolean_checkbox
-    weight: 20
+    weight: 21
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_newsletter_content:
     type: paragraphs
-    weight: 6
+    weight: 7
     region: content
     settings:
       title: Content
@@ -74,14 +76,14 @@ content:
           sidebar_disabled: true
   field_newsletter_exclude:
     type: boolean_checkbox
-    weight: 19
+    weight: 20
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_newsletter_featured:
     type: paragraphs
-    weight: 4
+    weight: 5
     region: content
     settings:
       title: Feature
@@ -115,7 +117,7 @@ content:
           sidebar_disabled: false
   field_newsletter_hero:
     type: paragraphs
-    weight: 3
+    weight: 4
     region: content
     settings:
       title: Paragraph
@@ -149,7 +151,7 @@ content:
           sidebar_disabled: true
   field_newsletter_issue_date:
     type: string_textfield
-    weight: 1
+    weight: 2
     region: content
     settings:
       size: 60
@@ -157,7 +159,7 @@ content:
     third_party_settings: {  }
   field_newsletter_issue_number:
     type: string_textfield
-    weight: 2
+    weight: 3
     region: content
     settings:
       size: 60
@@ -165,7 +167,7 @@ content:
     third_party_settings: {  }
   field_newsletter_save_the_date:
     type: paragraphs
-    weight: 5
+    weight: 6
     region: content
     settings:
       title: Date
@@ -199,50 +201,63 @@ content:
           sidebar_disabled: false
   field_newsletter_thumbnail:
     type: media_library_widget
-    weight: 7
+    weight: 8
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
+  field_newsletter_type:
+    type: select_or_other_reference
+    weight: 1
+    region: content
+    settings:
+      select_element_type: select_or_other_select
+      sort_options: ''
+      other_placeholder: ''
+      other_option: 'Create new'
+      other_field_label: ''
+    third_party_settings:
+      field_formatter_class:
+        class: ''
   path:
     type: path
-    weight: 12
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
-    weight: 10
+    weight: 11
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
-    weight: 17
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   scheduler_settings:
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   simple_sitemap:
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    weight: 15
+    weight: 16
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    weight: 11
+    weight: 12
     region: content
     settings:
       display_label: true
@@ -257,7 +272,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 8
+    weight: 9
     region: content
     settings:
       match_operator: CONTAINS
@@ -267,12 +282,12 @@ content:
     third_party_settings: {  }
   unpublish_on:
     type: datetime_timestamp_no_default
-    weight: 18
+    weight: 19
     region: content
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
