@@ -183,6 +183,17 @@ function newsletter_preprocess_paragraph(&$variables) {
       $variables['section_headings'] = $section_headings;
     }
   }
+    $parent = $paragraph->getParentEntity();
+  
+  if ($parent && $parent->hasField('field_newsletter_type') && !$parent->get('field_newsletter_type')->isEmpty()) {
+    foreach ($parent->get('field_newsletter_type') as $term) {
+      $term_name = strtolower($term->entity->getName());
+      if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
+        $variables['show_clover_logo'] = true;
+        break;
+      }
+    }
+  }
 }
 
 /**
@@ -196,6 +207,7 @@ function _newsletter_create_slug($text) {
 }
 
 function newsletter_preprocess_page(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
   // Only for newsletter content type
   if (isset($variables['node']) && $variables['node']->bundle() == 'newsletter') {
     $node = $variables['node'];
@@ -246,6 +258,15 @@ function newsletter_preprocess_page(&$variables) {
         $variables['show_archive_message'] = true;
         }
       }
+  }
+    if ($node && $node->hasField('field_newsletter_type') && !$node->get('field_newsletter_type')->isEmpty()) {
+    foreach ($node->get('field_newsletter_type') as $term) {
+      $term_name = strtolower($term->entity->getName());
+      if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
+        $variables['show_clover_logo'] = true;
+        break;
+      }
+    }
   }
 }
 
@@ -372,6 +393,24 @@ function newsletter_preprocess_field(&$variables) {
                 break;
               }
             }
+          }
+        }
+      }
+    }
+  }
+
+    if ($variables['field_name'] == 'field_section_heading') {
+    $entity = $variables['element']['#object'];
+    
+    if ($entity && method_exists($entity, 'getParentEntity')) {
+      $parent = $entity->getParentEntity();
+      
+      if ($parent && $parent->hasField('field_newsletter_type') && !$parent->get('field_newsletter_type')->isEmpty()) {
+        foreach ($parent->get('field_newsletter_type') as $term) {
+          $term_name = strtolower($term->entity->getName());
+          if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
+            $variables['show_clover_logo'] = true;
+            break;
           }
         }
       }
