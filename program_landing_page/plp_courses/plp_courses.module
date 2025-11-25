@@ -26,7 +26,7 @@ function plp_courses_getcourses()
 {
 
   //$feed_url = 'modules/custom/d8modules/program_landing_page/plp_courses/OnlineCourseOfferingExample.json';
-  $feed_url = 'https://datastore.exnet.iastate.edu/mydata/ProductOfferingsAll.json';
+  $feed_url = 'https://datastore.exnet.iastate.edu/mydata/ProductOfferings-Courses.json';
   // Get the courses feed, if it's empty, wait 1 second and try again
   $raw = ISUEOHelpers\Files::fetch_url($feed_url);
   if ($raw === false || strlen($raw) < 10000) {
@@ -77,6 +77,12 @@ function plp_courses_getcourses()
       continue;
     }
 
+    // Only include courses for programs that are in the PLP
+    $program_node = plp_courses_get_program_node($course);
+    if ($program_node == null) {
+      continue;
+    }
+
     $programIds[] = $course['Id'];
     $mynode = null;
     $save = false;
@@ -105,6 +111,12 @@ function plp_courses_getcourses()
       $save = true;
     }
 
+    if ($mynode->get('field_plp_course_program_id')->getString() != $program_node->get('field_plp_program_mydata_id')->getString()) {
+      $mynode->set('field_plp_course_program_id', $program_node->get('field_plp_program_mydata_id')->getString());
+      $save = true;
+    }
+
+    /*
     // Handle the text fields using an array and a loop
     $fields = [
       'field_plp_course_program_id' => 'hed__Course__c',
@@ -115,6 +127,7 @@ function plp_courses_getcourses()
         $save = true;
       }
     }
+      */
 
     /* Insert lines here */
 
@@ -303,4 +316,21 @@ function plp_courses_get_existing_nodes(string $content_type, string $mydata_id_
   }
 
   return $nodes;
+}
+
+// Get the Mydata ID of the program for this course, this program must be a published Program in the PLP
+function plp_courses_get_program_node($course)
+{
+  $program_node = null;
+  $nids = \Drupal::entityQuery('node')
+    ->accessCheck(false)
+    ->condition('type', 'plp_program')
+    ->condition('status', 1)
+    ->condition('field_plp_program_event_pgm_ids', $course['hed__Course__c'], 'CONTAINS')
+    ->execute();
+  if (count($nids) == 1) {
+    $program_node = Node::load(reset($nids));
+  }
+
+  return $program_node;
 }
