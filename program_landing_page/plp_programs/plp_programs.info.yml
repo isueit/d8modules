@@ -7,7 +7,6 @@ package: "ISUEO"
 dependencies:
   - d8modules:isueo_categories_topics
   - d8modules:isueo_helpers
-  - d8modules:plp_courses
   - d8modules:program_offering_blocks
   - views_data_export:views_data_export
   - views_accordion:views_accordion

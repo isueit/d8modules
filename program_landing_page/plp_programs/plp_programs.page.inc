@@ -234,11 +234,12 @@ function plp_programs_sort_calculator($mynode, array $child_nodes, string $progr
   if (array_key_exists($program_id, $child_nodes)) {
     $tmpnum += $config->get('children.child_boost') + ($config->get('children.child_multiplier') * intval(count($child_nodes[$program_id]) / $config->get('children.child_interval')));
   }
-
+/*
   $num_courses = count($mynode->get('field_plp_program_courses'));
   if ($num_courses > 0) {
     $tmpnum += $config->get('courses.course_boost') + ($config->get('courses.course_multiplier') * intval($num_courses / $config->get('courses.course_interval')));
   }
+*/
 
   return $tmpnum;
 }

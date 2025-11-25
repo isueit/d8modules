@@ -81,6 +81,7 @@ function plp_programs_getprograms()
   $nodeIds = array_keys($nodes);
   $child_nodes = plp_programs_handle_children($children, $programs);
 
+/*
   // Get array with key of program/child mydata ID's, and value of an array of course node id numbers
   // Only really used if plp_courses module is enabled
   $course_nodes = [];
@@ -89,6 +90,7 @@ function plp_programs_getprograms()
   foreach ($tmpnodes as $node) {
     $course_nodes[$node->get('field_plp_course_program_id')->getString()][] = $node->id();
   }
+*/
 
   // Step through the programs feed
   foreach ($programs as $program) {
@@ -224,7 +226,7 @@ function plp_programs_getprograms()
         $save = true;
       }
     }
-
+/*
     // Handle Courses
     $tmp_new_courses = [];
     $event_pgm_ids = unserialize($mynode->get('field_plp_program_event_pgm_ids')->getString());
@@ -243,6 +245,7 @@ function plp_programs_getprograms()
       $mynode->set('field_plp_program_courses', $tmp_new_courses);
       $save = true;
     }
+*/
 
 
     // Calculate the sort number
