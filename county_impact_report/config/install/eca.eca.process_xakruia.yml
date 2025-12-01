@@ -44,6 +44,17 @@ events:
       -
         id: Activity_1gktqif
         condition: ''
+  Event_0dnfdgw:
+    plugin: 'workflow:transition'
+    label: 'Needs Reviewed'
+    configuration:
+      type: 'node county_impact_report'
+      from_state: draft
+      to_state: needs_reviewed
+    successors:
+      -
+        id: Activity_1ngtlaz
+        condition: ''
 conditions: {  }
 gateways: {  }
 actions:

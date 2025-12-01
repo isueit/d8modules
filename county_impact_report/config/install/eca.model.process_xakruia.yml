@@ -54,6 +54,7 @@ modeldata: |
           </camunda:field>
         </bpmn2:extensionElements>
         <bpmn2:incoming>Flow_1czsdx3</bpmn2:incoming>
+        <bpmn2:incoming>Flow_0ecc8ep</bpmn2:incoming>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="Flow_1czsdx3" sourceRef="Event_0stoc6n" targetRef="Activity_1ngtlaz" />
       <bpmn2:startEvent id="Event_0xto2el" name="Approved" camunda:modelerTemplate="org.drupal.event.workflow:transition">
@@ -136,6 +137,24 @@ modeldata: |
         <bpmn2:incoming>Flow_0g6wos4</bpmn2:incoming>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="Flow_0g6wos4" sourceRef="Event_0g1x1c7" targetRef="Activity_1gktqif" />
+      <bpmn2:startEvent id="Event_0dnfdgw" name="Needs Reviewed" camunda:modelerTemplate="org.drupal.event.workflow:transition">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="workflow:transition" />
+          </camunda:properties>
+          <camunda:field name="type">
+            <camunda:string>node county_impact_report</camunda:string>
+          </camunda:field>
+          <camunda:field name="from_state">
+            <camunda:string>draft</camunda:string>
+          </camunda:field>
+          <camunda:field name="to_state">
+            <camunda:string>needs_reviewed</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_0ecc8ep</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:sequenceFlow id="Flow_0ecc8ep" sourceRef="Event_0dnfdgw" targetRef="Activity_1ngtlaz" />
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="sid-e4e726f4-4ca8-4609-98e7-84a8fe3bbe1c">
       <bpmndi:BPMNPlane id="sid-429da703-0e03-471a-a14d-e0ae8d425db3" bpmnElement="Process_xAkruIa">
@@ -169,6 +188,12 @@ modeldata: |
           <dc:Bounds x="310" y="190" width="100" height="80" />
           <bpmndi:BPMNLabel />
         </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="BPMNShape_1ml95i9" bpmnElement="Event_0dnfdgw">
+          <dc:Bounds x="502" y="102" width="36" height="36" />
+          <bpmndi:BPMNLabel>
+            <dc:Bounds x="478" y="145" width="84" height="14" />
+          </bpmndi:BPMNLabel>
+        </bpmndi:BPMNShape>
         <bpmndi:BPMNEdge id="Flow_1czsdx3_di" bpmnElement="Flow_1czsdx3">
           <di:waypoint x="258" y="120" />
           <di:waypoint x="310" y="120" />
@@ -180,6 +205,10 @@ modeldata: |
         <bpmndi:BPMNEdge id="Flow_0g6wos4_di" bpmnElement="Flow_0g6wos4">
           <di:waypoint x="258" y="230" />
           <di:waypoint x="310" y="230" />
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_0ecc8ep_di" bpmnElement="Flow_0ecc8ep">
+          <di:waypoint x="502" y="120" />
+          <di:waypoint x="410" y="120" />
         </bpmndi:BPMNEdge>
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>
