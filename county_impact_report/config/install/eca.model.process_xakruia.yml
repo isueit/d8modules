@@ -45,7 +45,7 @@ modeldata: |
             <camunda:string>[site:name] has indicated that their county impact report is ready for your review. 
   [node:url]
 
-  Please login to view the page: [site:login-url]. 
+  Please login to view the page: [site:base-url]/login. 
 
   Update the status to "Send Back for Revisions" or "Publish" if the impact report is approved.</camunda:string>
           </camunda:field>
@@ -94,6 +94,48 @@ modeldata: |
         <bpmn2:incoming>Flow_1e12g8b</bpmn2:incoming>
       </bpmn2:task>
       <bpmn2:sequenceFlow id="Flow_1e12g8b" sourceRef="Event_0xto2el" targetRef="Activity_1pjox2z" />
+      <bpmn2:startEvent id="Event_0g1x1c7" name="Oops" camunda:modelerTemplate="org.drupal.event.workflow:transition">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="workflow:transition" />
+          </camunda:properties>
+          <camunda:field name="type">
+            <camunda:string>node county_impact_report</camunda:string>
+          </camunda:field>
+          <camunda:field name="from_state">
+            <camunda:string>needs_reviewed</camunda:string>
+          </camunda:field>
+          <camunda:field name="to_state">
+            <camunda:string>in_progress</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:outgoing>Flow_0g6wos4</bpmn2:outgoing>
+      </bpmn2:startEvent>
+      <bpmn2:task id="Activity_1gktqif" name="Send Oops email" camunda:modelerTemplate="org.drupal.action.action_send_email_action">
+        <bpmn2:extensionElements>
+          <camunda:properties>
+            <camunda:property name="pluginid" value="action_send_email_action" />
+          </camunda:properties>
+          <camunda:field name="recipient">
+            <camunda:string>jolene@iastate.edu, cgannon@iastate.edu, kkaufman@iastate.edu</camunda:string>
+          </camunda:field>
+          <camunda:field name="subject">
+            <camunda:string>Oops [site:name] Impact Report!</camunda:string>
+          </camunda:field>
+          <camunda:field name="message">
+            <camunda:string>OOPS! 
+
+  The status of the Impact Report for [site:name] was just changed back to "In Progress". 
+
+  If you recently received a "Needs Reviewed" notification, please disregard to allow [site:name] to continue editing.</camunda:string>
+          </camunda:field>
+          <camunda:field name="replace_tokens">
+            <camunda:string>no</camunda:string>
+          </camunda:field>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>Flow_0g6wos4</bpmn2:incoming>
+      </bpmn2:task>
+      <bpmn2:sequenceFlow id="Flow_0g6wos4" sourceRef="Event_0g1x1c7" targetRef="Activity_1gktqif" />
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="sid-e4e726f4-4ca8-4609-98e7-84a8fe3bbe1c">
       <bpmndi:BPMNPlane id="sid-429da703-0e03-471a-a14d-e0ae8d425db3" bpmnElement="Process_xAkruIa">
@@ -108,13 +150,23 @@ modeldata: |
           <bpmndi:BPMNLabel />
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Event_0xto2el_di" bpmnElement="Event_0xto2el">
-          <dc:Bounds x="222" y="292" width="36" height="36" />
+          <dc:Bounds x="222" y="326" width="36" height="36" />
           <bpmndi:BPMNLabel>
-            <dc:Bounds x="216" y="335" width="48" height="14" />
+            <dc:Bounds x="216" y="369" width="48" height="14" />
           </bpmndi:BPMNLabel>
         </bpmndi:BPMNShape>
         <bpmndi:BPMNShape id="Activity_1pjox2z_di" bpmnElement="Activity_1pjox2z">
-          <dc:Bounds x="310" y="270" width="100" height="80" />
+          <dc:Bounds x="310" y="304" width="100" height="80" />
+          <bpmndi:BPMNLabel />
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Event_0g1x1c7_di" bpmnElement="Event_0g1x1c7">
+          <dc:Bounds x="222" y="212" width="36" height="36" />
+          <bpmndi:BPMNLabel>
+            <dc:Bounds x="227" y="255" width="27" height="14" />
+          </bpmndi:BPMNLabel>
+        </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="Activity_1gktqif_di" bpmnElement="Activity_1gktqif">
+          <dc:Bounds x="310" y="190" width="100" height="80" />
           <bpmndi:BPMNLabel />
         </bpmndi:BPMNShape>
         <bpmndi:BPMNEdge id="Flow_1czsdx3_di" bpmnElement="Flow_1czsdx3">
@@ -122,8 +174,12 @@ modeldata: |
           <di:waypoint x="310" y="120" />
         </bpmndi:BPMNEdge>
         <bpmndi:BPMNEdge id="Flow_1e12g8b_di" bpmnElement="Flow_1e12g8b">
-          <di:waypoint x="258" y="310" />
-          <di:waypoint x="310" y="310" />
+          <di:waypoint x="258" y="344" />
+          <di:waypoint x="310" y="344" />
+        </bpmndi:BPMNEdge>
+        <bpmndi:BPMNEdge id="Flow_0g6wos4_di" bpmnElement="Flow_0g6wos4">
+          <di:waypoint x="258" y="230" />
+          <di:waypoint x="310" y="230" />
         </bpmndi:BPMNEdge>
       </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

@@ -33,6 +33,17 @@ events:
       -
         id: Activity_1pjox2z
         condition: ''
+  Event_0g1x1c7:
+    plugin: 'workflow:transition'
+    label: Oops
+    configuration:
+      type: 'node county_impact_report'
+      from_state: needs_reviewed
+      to_state: in_progress
+    successors:
+      -
+        id: Activity_1gktqif
+        condition: ''
 conditions: {  }
 gateways: {  }
 actions:
@@ -47,7 +58,7 @@ actions:
         [site:name] has indicated that their county impact report is ready for your review. 
         [node:url]
 
-        Please login to view the page: [site:login-url]. 
+        Please login to view the page: [site:base-url]/login. 
 
         Update the status to "Send Back for Revisions" or "Publish" if the impact report is approved.
     successors: {  }
@@ -59,4 +70,18 @@ actions:
       recipient: '[node:author]@iastate.edu'
       subject: 'Your Impact Report is Published!'
       message: 'Your Impact Report was approved and published!'
+    successors: {  }
+  Activity_1gktqif:
+    plugin: action_send_email_action
+    label: 'Send Oops email'
+    configuration:
+      replace_tokens: false
+      recipient: 'jolene@iastate.edu, cgannon@iastate.edu, kkaufman@iastate.edu'
+      subject: 'Oops [site:name] Impact Report!'
+      message: |-
+        OOPS! 
+
+        The status of the Impact Report for [site:name] was just changed back to "In Progress". 
+
+        If you recently received a "Needs Reviewed" notification, please disregard to allow [site:name] to continue editing.
     successors: {  }
