@@ -289,3 +289,15 @@ function county_impact_report_field_widget_single_element_form_alter(array &$ele
     }
   }
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function county_impact_report_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'node_county_impact_report_edit_form') {
+    // Hide the preview button by setting #access to FALSE.
+    $form['actions']['preview']['#access'] = FALSE;
+    // Or unset it completely.
+    // unset($form['actions']['preview']);
+  }
+}
