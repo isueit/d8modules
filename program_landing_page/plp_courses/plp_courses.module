@@ -116,6 +116,43 @@ function plp_courses_getcourses()
       $save = true;
     }
 
+    // Handle Taxonomy Fields that come directly form the Parent Program
+    $fields = [
+      'field_plp_course_audiences' => 'field_plp_program_audiences',
+      'field_plp_course_category' => 'field_plp_program_category',
+      'field_plp_course_topics' => 'field_plp_program_topics',
+      'field_plp_course_program_area' => 'field_plp_program_program_area',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->getString() != $program_node->get($value)->getString()) {
+        $mynode->set($key, explode(', ', $program_node->get($value)->getString()));
+        $save = true;
+      }
+    }
+
+    // Handle Text Fields that come directly form the Parent Program
+    $fields = [
+      'field_plp_course_search_terms' => 'field_plp_program_search_terms',
+      'field_plp_course_smugmug' => 'field_plp_program_smugmug',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->getString() != $program_node->get($value)->getString()) {
+        $mynode->set($key, $program_node->get($value)->getString());
+        $save = true;
+      }
+    }
+
+    // Handle Link Fields that come directly form the Parent Program
+    $fields = [
+      'field_plp_course_website' => 'field_plp_program_website',
+    ];
+    foreach ($fields as $key => $value) {
+      if ($mynode->get($key)->uri != $program_node->get($value)->uri) {
+        $mynode->set($key, ['uri' => 'external:' . $program_node->get($value)->uri, 'title' => 'More About ' . $mynode->getTitle(), ]);
+        $save = true;
+      }
+    }
+
     /*
     // Handle the text fields using an array and a loop
     $fields = [
