@@ -36,7 +36,10 @@
 	padding-left: .5rem;
 	vertical-align: middle;
 }
-
+.isueo-card-deck-img img {
+	object-fit: cover;
+	width: 100%;
+}
 /* --------------------------------------  */
 /* ## RESPONSIVE
 /* --------------------------------------  */
