@@ -77,6 +77,9 @@ class PrintController extends ControllerBase {
         'library' => [
           'county_impact_report/print_styles',
         ],
+        'http_header' => [
+          ['X-Robots-Tag', 'noindex, nofollow'],
+        ],
       ],
     ];
 

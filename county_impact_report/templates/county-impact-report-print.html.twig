@@ -9,13 +9,17 @@
  * - year: Current year
  */
 #}
-
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>Print Impact Report - {{ site_name }}</title>
+</head>
 <div class="print-wrapper">
   <div class="print-page page-1">
     <div class="header-section">
       <div class="header-top">
         <div class="site-branding">
-          <img src="{{ theme_path }}/images/real-impact-banner.png" alt="{{ site_name }}'s Real Impact - a report for stakeholders" class="header-banner-image">
+          <img src="{{ theme_path }}/images/real-impact-print-banner.png" alt="{{ site_name }}'s Real Impact - a report for stakeholders" class="header-banner-image">
         </div>
       </div>
       
@@ -34,7 +38,7 @@
                 {% endif %}
                 <div class="stat-number">{{ impact.value }}</div>
               </div>
-              <div class="stat-label">{{ impact.label|striptags|raw }}</div>
+              <div class="stat-label">{{ impact.label|replace({'<br>': ' ', '<br/>': ' ', '<br />': ' '})|striptags|raw }}</div>
             </div>
           {% endfor %}
         {% endif %}
@@ -65,7 +69,7 @@
         {% endif %}
         
         <div class="story-layout-small">
-          {% if story.field_county_impact_story_image is not empty %}
+          {% if story.field_county_impact_story_image is not empty and loop.first %}
           <div class="story-image-small">
             {{ story.field_county_impact_story_image|view }}
           </div>
@@ -78,24 +82,16 @@
         </div>
       </div>
     {% endfor %}
-  </div>
 
-    {# Footer section #}
+      {# Footer section #}
     <div class="footer-section">
       <div class="footer-contact">
         <h3>IOWA STATE UNIVERSITY EXTENSION AND OUTREACH {{ site_name|upper }}</h3>
-        {% if node.field_address is not empty %}
-        <div class="contact-info">{{ node.field_address.value|raw }}</div>
-        {% endif %}
-        <p class="page-url">{{ page_url|default('') }}</p>
+        <div class="contact-info">{{ drupal_entity('block', 'contact_us') }}</div>
+        <p class="page-url">{{ drupal_token('site:base-url') }}</p>
         <p class="footer-legal">
-          This institution is an equal opportunity provider. For the full non-discrimination statement or accommodation inquiries, go to www.extension.iastate.edu/diversity/ext.
+          This institution is an equal opportunity provider. For the full non-discrimination statement or accommodation inquiries, go to www.extension.iastate.edu/legal.
         </p>
       </div>
-    </div>
-</div>
-
-<div class="print-button-container no-print">
-  <button onclick="window.print()" class="print-button">Print Report</button>
-  <button onclick="window.close()" class="close-button">Close</button>
+  </div>
 </div>
