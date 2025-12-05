@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * Implements hook_install().
  *
@@ -15,6 +17,16 @@ function newsletter_install()
   $locked = Drupal::state()->get('node.type.locked');
   $locked['newsletter'] = 'newsletter';
   Drupal::state()->set('node.type.locked', $locked);
+
+  // Add default terms to newsletter taxonomy
+  $terms = ["4-H", "Clover Kids", "Master Gardener", "Region", "Site/County",];
+  foreach ($terms as $term) {
+    Term::create([
+      "name" => $term,
+      "vid" => "newsletter",
+    ])->save();
+  }
+
 
   newsletter_handle_permissions(true);
 }
