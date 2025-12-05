@@ -204,7 +204,7 @@ p.page-url {
 
 /* Footer section */
 .footer-section {
-  margin-top: 40px;
+  margin-top: 20px;
   break-inside: avoid;
   page-break-inside: avoid;
 }
