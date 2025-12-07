@@ -1,3 +1,4 @@
+@media print {
 @page {
   padding: 0 !important;
 }
@@ -261,46 +262,36 @@ p.footer-legal {
 footer.isu-footer, .isu-navbar, .isu-site-navbar, .isu-menu-navbar {
   display: none !important;
 }
-
-/* Print-specific styles */
-@media print {
-  .no-print {
-        display: none !important;
-    }
-  
-    body {
-    margin: 0;
-    padding: 0;
-  }
-
-  .print-page {
-    padding: 0.5in;
-    margin: 0;
-    page-break-after: always;
-    box-sizing: border-box;
-    padding-bottom: 0;
-  }
-
-  .print-page.page-2 {
-    page-break-after: auto;
-  }
-
-  .stat-box {
-    border: 3px solid #c8102e !important;
-    color: #c8102e !important;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
-
-  .stat-number {
-    color: #c8102e !important;
-  }
-
-  .stat-label {
-    color: #c8102e !important;
-  }
-
-  .stat-icon svg {
-    fill: #c8102e !important;
-  }
+.no-print {
+  display: none !important;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+.print-page {
+  padding: 0.5in;
+  margin: 0;
+  page-break-after: always;
+  box-sizing: border-box;
+  padding-bottom: 0;
+}
+.print-page.page-2 {
+  page-break-after: auto;
+}
+.stat-box {
+  border: 3px solid #c8102e !important;
+  color: #c8102e !important;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+.stat-number {
+  color: #c8102e !important;
+}
+.stat-label {
+  color: #c8102e !important;
+}
+.stat-icon svg {
+  fill: #c8102e !important;
+}
 }
