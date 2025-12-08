@@ -9,6 +9,10 @@
  * - year: Current year
  */
 #}
+{% set base_url = url('<front>')|render %}
+{% set theme_path = active_theme_path() %}
+{% set image_path = base_url ~ '/' ~ theme_path ~ '/images/real-impact-print-banner.png' %}
+
 <head>
   <meta name="robots" content="noindex, nofollow">
   <meta name="googlebot" content="noindex, nofollow">
@@ -19,7 +23,7 @@
     <div class="header-section">
       <div class="header-top">
         <div class="site-branding">
-          <img src="{{ theme_path }}/images/real-impact-print-banner.png" alt="{{ site_name }}'s Real Impact - a report for stakeholders" class="header-banner-image">
+          <img src="{{ image_path }}" alt="{{ site_name }}'s Real Impact - a report for stakeholders" class="header-banner-image">
         </div>
       </div>
       
