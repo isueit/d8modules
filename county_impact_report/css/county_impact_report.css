@@ -228,4 +228,9 @@ div#block-iastate-theme-content--2 .paragraph {
 		padding-left: 0;
 		padding-right: 0;
 	}
+	.isueo-callout-stat img {
+  		max-width: 4em;
+  		max-height: 4em;
+  		filter: brightness(0) saturate(100%) invert(32%) sepia(55%) saturate(1410%) hue-rotate(116deg) brightness(96%) contrast(102%);
+	}
 }
