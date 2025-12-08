@@ -11,8 +11,12 @@ body {
   margin-right: 0 !important;
 }
 
-p {
+p, ol, ul {
   font-size: 16pt !important; /* Override theme's 12pt */
+}
+
+ol,ul {
+  margin-top: 1rem;
 }
 
 /* Reset and base styles */
@@ -195,11 +199,12 @@ p.page-url {
     orphans: 2;
     widows: 2;
 }
-
+.story-text p:last-child {
+    margin-bottom: 0;
+}
 .story-text p {
     orphans: 2;
     widows: 2;
-    margin-bottom: 0;
 }
 
 /* Footer section */
