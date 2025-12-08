@@ -119,7 +119,9 @@
             <div class="isu-block">
               <div>
                 <p><a class="btn btn-secondary d-print-none" href="{{ base_path }}staff">County Staff</a></p>
+                <p class="d-none d-print-block"><span style="font-size: 12pt; font-weight: 700;">County Staff</span><br><span style="font-size: .9rem; word-wrap: break-word; overflow-wrap: break-word;">https://www.extension.iastate.edu{{ base_path }}staff</span></p>
                 <p><a class="btn btn-secondary d-print-none" href="{{ base_path }}extension-council">County Council</a></p>
+                <p class="d-none d-print-block"><span style="font-size: 12pt; font-weight: 700;">County Council</span><br><span style="font-size: .9rem; word-wrap: break-word; overflow-wrap: break-word;">https://www.extension.iastate.edu{{ base_path }}extension-council</span></p>
               </div>
             </div>
           </div>
@@ -139,7 +141,7 @@
           <div class="layout__region layout__region--first">
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
-                <p class="d-print-none">{{ bottom_impact_data[0]['icon']|raw }}</p>
+                <p>{{ bottom_impact_data[0]['icon']|raw }}</p>
                 <h3 class="impact_statistic__title">{{ bottom_impact_data[0]['value'] }}</h3>
                 <p class="impact_statistic__text">{{ bottom_impact_data[0]['label']|raw }}</p>
               </div>

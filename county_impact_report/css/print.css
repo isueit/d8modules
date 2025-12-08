@@ -1,4 +1,3 @@
-@media print {
 @page {
   padding: 0 !important;
 }
@@ -262,6 +261,8 @@ p.footer-legal {
 footer.isu-footer, .isu-navbar, .isu-site-navbar, .isu-menu-navbar {
   display: none !important;
 }
+
+@media print {
 .no-print {
   display: none !important;
 }
