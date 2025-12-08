@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Template for newsletter export page.
+ *
+ * Available variables:
+ * - html: The rendered HTML content ready for email.
+ * - node: The node entity being exported.
+ */
+#}
+<div class="newsletter-export-wrapper">
+  <div class="newsletter-export-header">
+    <h1>Newsletter Export: {{ node.label }}</h1>
+    <p>Copy the HTML below and paste it into your email newsletter tool (MailChimp, iContact, Constant Contact, etc.)</p>
+  </div>
+
+    <div class="newsletter-code">
+      <h2>HTML Code</h2>
+      <textarea id="newsletter-html" readonly>{{ html }}</textarea>
+    </div>
+  </div>

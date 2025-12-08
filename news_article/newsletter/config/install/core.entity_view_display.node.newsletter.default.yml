@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.newsletter.field_newsletter_issue_number
     - field.field.node.newsletter.field_newsletter_save_the_date
     - field.field.node.newsletter.field_newsletter_thumbnail
+    - field.field.node.newsletter.field_newsletter_type
     - node.type.newsletter
   module:
     - entity_reference_revisions
@@ -149,6 +150,22 @@ third_party_settings:
                 third_party_settings: {  }
             weight: 0
             additional: {  }
+          888bdd9d-d11a-4a3d-9f2c-2606a80cdbf9:
+            uuid: 888bdd9d-d11a-4a3d-9f2c-2606a80cdbf9
+            region: content
+            configuration:
+              id: 'field_block:node:newsletter:field_newsletter_type'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
         third_party_settings: {  }
 id: node.newsletter.default
 targetEntityType: node
@@ -206,6 +223,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 6
+    region: content
+  field_newsletter_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
     region: content
   links:
     settings: {  }

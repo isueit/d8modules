@@ -55,6 +55,7 @@
  * @see html.html.twig
  */
 #}
+{# Check if the newsletter has 4-H or Clover Kids taxonomy term #}
 
 <div class="isu-page-wrap">
 
@@ -91,18 +92,23 @@
 			<div class="newsletter-hero-wrapper newsletter-hero--{{ image_name_clean }}" style="background-image: url('{{ featured_image_url }}');">
 				<div class="newsletter-hero-label-wrapper">
 					<div class="newsletter-hero-label container">
-					<h1 class="isu-page-title"><img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt=" ">{{ node.label }}</h1>
+					<h1 class="isu-page-title">
+						{% if show_clover_logo %}
+							<img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt=" ">
+						{% endif %}
+						{{ node.label }}
+					</h1>
 					{# Show Newsletter Issue Number and Date #}
 					{% if node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is not empty %}
-						<div class="newsletter-issue-wrapper">
+						<div class="newsletter-issue-wrapper{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
 							<p>{{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% elseif node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is empty %}
-						<div class="newsletter-date-wrapper">
+						<div class="newsletter-date-wrapper{% if show_clover_logo %} newsletter-date-wrapper--with-clover{% endif %}">
 							<p>{{ node.field_newsletter_issue_date.value }}</p>
 						</div>
 					{% elseif node.field_newsletter_issue_date is empty and node.field_newsletter_issue_number is not empty %}
-						<div class="newsletter-issue-wrapper">
+						<div class="newsletter-issue-wrapper{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
 							<p>{{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% endif %}
@@ -113,7 +119,6 @@
 		{% endif %}
 
 		<div class="row">
-
 			{% if page.sidebar_first|render and page.sidebar_second|render %}
 				{% set content_classes = 'col-lg-6' %}
 				{% set sidebar_classes = 'col-lg-3' %}
@@ -157,6 +162,7 @@
 
 					{# Show the rest of the content without the title #}
 					{{ page.content|without('iastate_theme_page_title') }}
+					        
 					
 				</article>
 				</div>

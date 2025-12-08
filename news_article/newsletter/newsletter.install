@@ -1,4 +1,7 @@
 <?php
+
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * Implements hook_install().
  *
@@ -8,23 +11,24 @@
  * do it in code, here.
  *
  */
-function newsletter_install() {
+function newsletter_install()
+{
   // Do not allow the locked content type to be deleted.
   $locked = Drupal::state()->get('node.type.locked');
   $locked['newsletter'] = 'newsletter';
   Drupal::state()->set('node.type.locked', $locked);
 
-  // Set up permissions for content editors
-  user_role_grant_permissions('content_editor', [
-    'clone newsletter content',
-    'create newsletter content',
-    'delete any newsletter content',
-    'edit any newsletter content',
-    'override newsletter authored on option',
-    'override newsletter published option',
-    'override newsletter sticky option',
-    'view any unpublished newsletter content',
-  ]);
+  // Add default terms to newsletter taxonomy
+  $terms = ["4-H", "Clover Kids", "Master Gardener", "Region", "Site/County",];
+  foreach ($terms as $term) {
+    Term::create([
+      "name" => $term,
+      "vid" => "newsletter",
+    ])->save();
+  }
+
+
+  newsletter_handle_permissions(true);
 }
 
 /**
@@ -40,7 +44,8 @@ function newsletter_install() {
  *
  * @ingroup layout_content_type
  */
-function newsletter_uninstall() {
+function newsletter_uninstall()
+{
   // Allow locked_content_type to be deleted.
   $locked = Drupal::state()->get('node.type.locked');
   unset($locked['newsletter']);
@@ -55,4 +60,40 @@ function newsletter_uninstall() {
     ->getStorage('node_type')
     ->load('newsletter');
   $content_type->delete();
+
+  newsletter_handle_permissions(false);
+}
+
+/**
+ * Grant or Revoke permissions to the Content Editor role
+ */
+function newsletter_handle_permissions(bool $grant_permissions)
+{
+  $role = Drupal\user\Entity\Role::load('content_editor');
+
+  if ($role) {
+    $permissions = [
+      'clone newsletter content',
+      'create newsletter content',
+      'delete any newsletter content',
+      'edit any newsletter content',
+      'override newsletter authored on option',
+      'override newsletter published option',
+      'override newsletter sticky option',
+      'view any unpublished newsletter content',
+      'export newsletter content',
+    ];
+
+    foreach ($permissions as $permission) {
+      if ($grant_permissions) {
+        $role->grantPermission($permission);
+      } else {
+        if ($role->hasPermission($permission)) {
+          $role->revokePermission($permission);
+        }
+      }
+    }
+
+    $role->save();
+  }
 }

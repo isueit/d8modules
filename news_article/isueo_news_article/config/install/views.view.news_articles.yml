@@ -790,7 +790,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"ext-news-column\">\r\n<a class=\"card d-flex flex-row align-items-stretch\" href=\"{{ view_node }}\">\r\n  <!-- Image -->\r\n  <div class=\"card-image-list flex-shrink-0\">\r\n    {{ field_thumbnail }}\r\n  </div>\r\n\r\n  <!-- Content -->\r\n  <div class=\"card-body\">\r\n    <h4 class=\"card-title\">{{ title }}</h4>\r\n<span class=\"authored-on\">{{ created }}</span>\r\n  </div>\r\n\r\n  <!-- Arrow Button -->\r\n  <div class=\"card-arrow-wrapper\">\r\n<span class=\"card-arrow\"></span>\r\n  </div>\r\n</a>\r\n</div>"
+            text: "<div class=\"ext-news-column\">\r\n<a class=\"card d-flex flex-row align-items-stretch\" href=\"{{ view_node }}\">\r\n  <!-- Image -->\r\n  <div class=\"card-image-list flex-shrink-0\">\r\n    {{ field_thumbnail }}\r\n  </div>\r\n\r\n  <!-- Content -->\r\n  <div class=\"card-body\">\r\n    <h4 class=\"card-title\">{{ title }}</h4>\r\n<span class=\"authored-on\">Published: {{ created }}</span>\r\n  </div>\r\n\r\n  <!-- Arrow Button -->\r\n  <div class=\"card-arrow-wrapper\">\r\n<span class=\"card-arrow\"></span>\r\n  </div>\r\n</a>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -1222,7 +1222,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<div class="card"> <span class="bg-danger position-absolute">Featured</span> <div class="card-image"> {{ field_thumbnail }} </div> <div class="card-body"> <h3 class="card-title ext-news-feed--featured">{{ title }}</h3> <span class="authored-on">{{ created }}</span> <div>{{ field_teaser }}</div> </div> </div>'
+            text: '<div class="card"> <span class="bg-danger position-absolute">Featured</span> <div class="card-image"> {{ field_thumbnail }} </div> <div class="card-body"> <h3 class="card-title ext-news-feed--featured">{{ title }}</h3> <span class="authored-on">Published: {{ created }}</span> <div>{{ field_teaser }}</div> </div> </div>'
             make_link: false
             path: ''
             absolute: false
@@ -1453,9 +1453,9 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        created:
-          id: created
-          table: node_field_revision
+        created_1:
+          id: created_1
+          table: node_field_data
           field: created
           relationship: none
           group_type: group
@@ -1467,7 +1467,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<em>{{ created }} </em><br /><b>{{ title }}</b>'
+            text: "<b>{{ title }}</b><br />\r\n<em>Published: {{ created_1 }} </em>"
             make_link: false
             path: ''
             absolute: false
@@ -1511,7 +1511,7 @@ display:
             custom_date_format: 'F j, Y'
             timezone: ''
             tooltip:
-              date_format: ''
+              date_format: long
               custom_date_format: ''
             time_diff:
               enabled: false
@@ -1519,6 +1519,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
           group_column: value
           group_columns: {  }
           group_rows: true
