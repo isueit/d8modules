@@ -1,0 +1,48 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.product.field_product_auto_created
+    - field.field.paragraph.product.field_product_image
+    - field.field.paragraph.product.field_product_sku
+    - field.field.paragraph.product.field_product_title
+    - paragraphs.paragraphs_type.product
+id: paragraph.product.default
+targetEntityType: paragraph
+bundle: product
+mode: default
+content:
+  field_product_auto_created:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_product_image:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_product_sku:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_product_title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
