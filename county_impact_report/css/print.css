@@ -194,7 +194,6 @@ p.page-url {
 
 .story-text, .subtitle {
     width: 100%;
-    font-size: 18pt;
     line-height: 1.4;
     orphans: 2;
     widows: 2;
@@ -254,9 +253,13 @@ p.footer-legal {
 .contact-info #block-contact-us br {
     display: none !important;
   }
-.contact-info #block-contact-us div:not(:nth-last-of-type(2))::after {
+.contact-info #block-contact-us > div:not(.contextual)::after {
     content: " | ";
-  }
+}
+.contact-info #block-contact-us > div:last-of-type:not(.contextual)::after,
+.contact-info #block-contact-us > div:nth-last-of-type(2):has(+ .contextual)::after {
+    content: none;
+}
 .contact-info #block-contact-us div.contextual {
   display: none;
 }
