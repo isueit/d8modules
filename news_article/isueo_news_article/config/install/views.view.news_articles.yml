@@ -2,16 +2,21 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.storage.node.field_newsletter_issue_date
+    - field.storage.node.field_newsletter_thumbnail
     - field.storage.node.field_teaser
     - field.storage.node.field_thumbnail
+    - field.storage.paragraph.field_featured_content_body
     - image.style.news_article_grid_
     - image.style.news_articles_home_column
     - image.style.news_articles_homepage_
     - image.style.thumbnail
     - node.type.news_article
+    - node.type.newsletter
   module:
     - media
     - node
+    - paragraphs
     - text
     - user
 id: news_articles
@@ -380,6 +385,7 @@ display:
           operator: in
           value:
             news_article: news_article
+            newsletter: newsletter
           group: 1
           exposed: false
           expose:
@@ -433,7 +439,16 @@ display:
           distinct: false
           replica: false
           query_tags: {  }
-      relationships: {  }
+      relationships:
+        field_newsletter_featured:
+          id: field_newsletter_featured
+          table: node__field_newsletter_featured
+          field: field_newsletter_featured
+          relationship: none
+          group_type: group
+          admin_label: 'field_newsletter_featured: Paragraph'
+          plugin_id: standard
+          required: false
       header: {  }
       footer: {  }
       display_extenders: {  }
@@ -459,6 +474,72 @@ display:
           id: field_thumbnail
           table: node__field_thumbnail
           field: field_thumbnail
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_thumbnail
+          settings:
+            image_link: ''
+            image_style: news_articles_home_column
+            image_loading:
+              attribute: lazy
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_newsletter_thumbnail:
+          id: field_newsletter_thumbnail
+          table: node__field_newsletter_thumbnail
+          field: field_newsletter_thumbnail
           relationship: none
           group_type: group
           admin_label: ''
@@ -648,6 +729,69 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_featured_content_body:
+          id: field_featured_content_body
+          table: paragraph__field_featured_content_body
+          field: field_featured_content_body
+          relationship: field_newsletter_featured
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 200
+            word_boundary: true
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: true
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_trimmed
+          settings:
+            trim_length: 200
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         created:
           id: created
           table: node_field_data
@@ -725,6 +869,69 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_newsletter_issue_date:
+          id: field_newsletter_issue_date
+          table: node__field_newsletter_issue_date
+          field: field_newsletter_issue_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         view_node:
           id: view_node
           table: node
@@ -790,7 +997,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: "<div class=\"ext-news-column\">\r\n<a class=\"card d-flex flex-row align-items-stretch\" href=\"{{ view_node }}\">\r\n  <!-- Image -->\r\n  <div class=\"card-image-list flex-shrink-0\">\r\n    {{ field_thumbnail }}\r\n  </div>\r\n\r\n  <!-- Content -->\r\n  <div class=\"card-body\">\r\n    <h4 class=\"card-title\">{{ title }}</h4>\r\n<span class=\"authored-on\">Published: {{ created }}</span>\r\n  </div>\r\n\r\n  <!-- Arrow Button -->\r\n  <div class=\"card-arrow-wrapper\">\r\n<span class=\"card-arrow\"></span>\r\n  </div>\r\n</a>\r\n</div>"
+            text: "<div class=\"ext-news-column\">\r\n<a class=\"card d-flex flex-row align-items-stretch\" href=\"{{ view_node }}\">\r\n <div class=\"card-image-list flex-shrink-0\">\r\n{% if field_newsletter_thumbnail is not empty %} \r\n{{ field_newsletter_thumbnail }}\r\n{% endif %}\r\n{% if field_thumbnail is not empty %} {{ field_thumbnail }}\r\n{% endif %}</div> \r\n<div class=\"card-body\"> \r\n<h4 class=\"card-title\">{{ title }}</h4> \r\n<span class=\"authored-on\">Published: {{ created }}</span> \r\n</div>\r\n<!-- Arrow Button -->\r\n  <div class=\"card-arrow-wrapper\">\r\n<span class=\"card-arrow\"></span>\r\n  </div>\r\n</a>\r\n</div>"
             make_link: false
             path: ''
             absolute: false
@@ -878,8 +1085,11 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
+        - 'config:field.storage.node.field_newsletter_issue_date'
+        - 'config:field.storage.node.field_newsletter_thumbnail'
         - 'config:field.storage.node.field_teaser'
         - 'config:field.storage.node.field_thumbnail'
+        - 'config:field.storage.paragraph.field_featured_content_body'
   block_1:
     id: block_1
     display_title: Block
@@ -888,6 +1098,59 @@ display:
     display_options:
       title: 'Local News'
       fields:
+        view_node:
+          id: view_node
+          table: node
+          field: view_node
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          plugin_id: entity_link
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: view
+          output_url_as_text: true
+          absolute: false
         field_thumbnail:
           id: field_thumbnail
           table: node__field_thumbnail
@@ -952,143 +1215,14 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        title:
-          id: title
-          table: node_field_data
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          entity_field: title
-          plugin_id: field
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: false
-            ellipsis: false
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: string
-          settings:
-            link_to_entity: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_teaser:
-          id: field_teaser
-          table: node__field_teaser
-          field: field_teaser
+        field_newsletter_thumbnail:
+          id: field_newsletter_thumbnail
+          table: node__field_newsletter_thumbnail
+          field: field_newsletter_thumbnail
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: ''
-          exclude: true
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 200
-            word_boundary: true
-            ellipsis: false
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: true
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: text_trimmed
-          settings:
-            trim_length: 200
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        view_node:
-          id: view_node
-          table: node
-          field: view_node
-          relationship: none
-          group_type: group
-          admin_label: ''
-          entity_type: node
-          plugin_id: entity_link
           label: ''
           exclude: true
           alter:
@@ -1130,9 +1264,86 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: view
-          output_url_as_text: true
-          absolute: false
+          click_sort_column: target_id
+          type: media_thumbnail
+          settings:
+            image_link: ''
+            image_style: news_articles_homepage_
+            image_loading:
+              attribute: lazy
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_newsletter_issue_date:
+          id: field_newsletter_issue_date
+          table: node__field_newsletter_issue_date
+          field: field_newsletter_issue_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         created:
           id: created
           table: node_field_data
@@ -1210,6 +1421,197 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_featured_content_body:
+          id: field_featured_content_body
+          table: paragraph__field_featured_content_body
+          field: field_featured_content_body
+          relationship: field_newsletter_featured
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 200
+            word_boundary: true
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: true
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_trimmed
+          settings:
+            trim_length: 200
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_teaser:
+          id: field_teaser
+          table: node__field_teaser
+          field: field_teaser
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 200
+            word_boundary: true
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: true
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_trimmed
+          settings:
+            trim_length: 200
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         nothing:
           id: nothing
           table: views
@@ -1222,7 +1624,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<div class="card"> <span class="bg-danger position-absolute">Featured</span> <div class="card-image"> {{ field_thumbnail }} </div> <div class="card-body"> <h3 class="card-title ext-news-feed--featured">{{ title }}</h3> <span class="authored-on">Published: {{ created }}</span> <div>{{ field_teaser }}</div> </div> </div>'
+            text: "<div class=\"card\"> <span class=\"bg-danger position-absolute\">Featured</span> \r\n<div class=\"card-image\">\r\n{% if field_newsletter_thumbnail is not empty %} \r\n{{ field_newsletter_thumbnail }}\r\n{% endif %}\r\n{% if field_thumbnail is not empty %} {{ field_thumbnail }}\r\n{% endif %}</div> \r\n<div class=\"card-body\"> \r\n<h3 class=\"card-title ext-news-feed--featured\">{{ title }}</h3> \r\n<span class=\"authored-on\">Published: {{ created }}</span> \r\n{% if field_featured_content_body is not empty %}<div>{{ field_featured_content_body }}</div> \r\n{% endif %}\r\n{% if field_teaser is not empty %}\r\n<div>{{ field_teaser }}</div>\r\n{% endif %}\r\n</div> </div>"
             make_link: false
             path: ''
             absolute: false
@@ -1314,8 +1716,11 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags:
+        - 'config:field.storage.node.field_newsletter_issue_date'
+        - 'config:field.storage.node.field_newsletter_thumbnail'
         - 'config:field.storage.node.field_teaser'
         - 'config:field.storage.node.field_thumbnail'
+        - 'config:field.storage.paragraph.field_featured_content_body'
   page_1:
     id: page_1
     display_title: Page
@@ -1378,6 +1783,74 @@ display:
           settings:
             image_link: ''
             image_style: news_article_grid_
+            image_loading:
+              attribute: lazy
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+        field_newsletter_thumbnail:
+          id: field_newsletter_thumbnail
+          table: node__field_newsletter_thumbnail
+          field: field_newsletter_thumbnail
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: news-page-thumbnail
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: media_thumbnail
+          settings:
+            image_link: ''
+            image_style: news_article_grid_
+            image_loading:
+              attribute: lazy
           group_column: target_id
           group_columns: {  }
           group_rows: true
@@ -1530,6 +2003,69 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_featured_content_body:
+          id: field_featured_content_body
+          table: paragraph__field_featured_content_body
+          field: field_featured_content_body
+          relationship: field_newsletter_featured
+          group_type: group
+          admin_label: ''
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: text_trimmed
+          settings:
+            trim_length: 400
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
         field_teaser:
           id: field_teaser
           table: node__field_teaser
@@ -1542,7 +2078,7 @@ display:
           exclude: false
           alter:
             alter_text: false
-            text: ''
+            text: "{% if field_featured_content_body is not empty %}\r\n{{ field_featured_content_body }}\r\n{% endif %}\r\n{% if field_teaser is not empty %}\r\n{{ field_teaser }}\r\n{% endif %}"
             make_link: false
             path: ''
             absolute: false
@@ -1615,6 +2151,113 @@ display:
             offset: false
             offset_label: Offset
           quantity: 9
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            news_article: news_article
+            newsletter: newsletter
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: 'Filter by Type'
+            description: ''
+            use_operator: false
+            operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              approver: '0'
+            reduce: true
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        type_1:
+          id: type_1
+          table: node_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            news_article: news_article
+            newsletter: newsletter
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: grid
         options:
@@ -1635,6 +2278,8 @@ display:
         style: false
         row: false
         fields: false
+        filters: false
+        filter_groups: false
         footer: false
       footer: {  }
       display_extenders:
@@ -1652,9 +2297,12 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
       tags:
+        - 'config:field.storage.node.field_newsletter_thumbnail'
         - 'config:field.storage.node.field_teaser'
         - 'config:field.storage.node.field_thumbnail'
+        - 'config:field.storage.paragraph.field_featured_content_body'
