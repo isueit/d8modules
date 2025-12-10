@@ -50,3 +50,18 @@
     padding-left: 2.2rem;
     font-size: 1rem;
 }
+
+/* --------------------------------------  */
+/* ## MORE EDIT FORM STYLES
+/* --------------------------------------  */
+.js img.paragraph-type-icon {
+  width: 40px;
+  height: 40px;
+}
+input.paragraphs-dropdown-action.button {
+  background: #676767;
+  border-top: 1px solid #ddd;
+}
+.js div.paragraph-top {
+  grid-template-columns: 1fr;
+}
