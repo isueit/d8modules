@@ -1,0 +1,105 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\block\BlockForm;
+use Drupal\block_content\BlockContentInterface;
+use Drupal\block\BlockPluginInterface;
+use Drupal\isueo_helpers\ISUEOHelpers;
+
+/**
+* Implements hook_form_alter().
+*/
+
+function products_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  //Drupal::logger('blah')->info($form_id);
+  if ($form_id == 'layout_builder_update_block' || $form_id == 'layout_builder_add_block') {
+        // The block plugin is stored in the form state.
+        //$block_plugin = $form_state->getFormObject()->getEntity();
+//        $block_plugin = $form_state->getFormObject()->getFormId();
+//  Drupal::logger('blah')->info($block_plugin);
+//  if (isset($form['settings']['block_form'])) {
+//  Drupal::logger('blah')->info('I am here');
+    //Drupal::logger('blah')->info($form['settings']['block_form']['#block']->getPluginId());
+
+//        $form['my_new_field'] = [
+//          '#type' => 'textfield',
+//          '#title' => t('My New Field'),
+          //'#default_value' => $form_state->getFormObject()->getEntity()->get('my_new_field_setting'),
+//        ];
+//  }
+
+        //if ($block_plugin instanceof BlockPluginInterface) {
+         // $block_type = $block_plugin->getPluginId();
+          // Now you have the block type (e.g., 'system_breadcrumb_block', 'block_content:basic').
+          // You can further process this.
+          //Drupal::logger('blah')->info($block_type);
+        //}
+  }
+  /*
+    if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
+      $upload_enabled_types = \Drupal::config('mymodule.settings')->get('upload_enabled_types');
+      echo $form_id;
+      echo $form_id;
+      $form['workflow']['upload_' . $form['type']['#value']] = [
+        '#type' => 'radios',
+        echo $form_id;
+        echo $form_id;
+        '#title' => t('Attachments'),
+        '#default_value' => in_array($form['type']['#value'], $upload_enabled_types) ? 1 : 0,
+        '#options' => [t('Disabled'), t('Enabled')],
+        echo $form_id;
+      ];
+      // Add a custom submit handler to save the array of types back to the config file.
+      $form['actions']['submit']['#submit'][] = 'mymodule_upload_enabled_types_submit';
+    }
+      echo $form_id;
+  */
+}
+
+function products_block_type_form_alter(array &$form, FormStateInterface &$form_state, string $block_type) {
+/*
+  Drupal::logger('blah')->info($block_type);
+  if ($block_type == 'accordion') {
+    $form['example_field']['widget'][0]['value']['#default_value'] = 'A better default value';
+  }
+*/
+}
+
+/**
+* Implements hook_entity_presave().
+*/
+
+function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityTypeId() == 'paragraph') {
+    if ($entity->bundle() == 'product') {
+      $found = false;
+      $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json', false);
+      $products = json_decode($raw, true);
+      $sku = strtolower(trim($entity->get('field_product_sku')->getString()));
+
+      foreach ($products as $product) {
+        if ($sku == $product['ProductID']) {
+          $found = true;
+          $entity->set('field_product_sku', $sku);
+          $entity->set('field_product_title', $product['Title']);
+          $entity->set('field_product_image', $product['ThumbnailURI']);
+          break;
+        }
+        if (!$found) {
+          $entity->set('field_product_sku', $sku);
+          $entity->set('field_product_title', 'Not Found');
+          $entity->set('field_product_image', '');
+        }
+      }
+
+      //$entity->save();
+
+    }
+  }
+  /*
+    if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
+      $route_match = \Drupal::routeMatch();
+      \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $route_match->getParameter('source_langcode'));
+    }
+  */
+}
