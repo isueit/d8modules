@@ -7,6 +7,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -418,6 +419,7 @@ function newsletter_preprocess_field(&$variables) {
   }
 }
 
+
 /**
  * Implements hook_entity_operation().
  * 
@@ -444,38 +446,34 @@ function newsletter_entity_operation($entity) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_view_alter() for nodes.
- * 
- * This ensures images are displayed with absolute URLs in the newsletter export.
+ * Implements hook_plugin_filter_block__layout_builder_alter().
  */
-function newsletter_node_view_alter(array &$build, $entity, EntityViewDisplayInterface $display) {
-  if ($display->getMode() == 'newsletter_export') {
-    // Process image fields to use absolute URLs
-    foreach ($build as $field_name => &$field) {
-      // Make sure $field is an array and has the field_type key
-      if (is_array($field) && isset($field['#field_type']) && $field['#field_type'] == 'image') {
-        // Check if #items exists and is iterable
-        if (isset($field['#items']) && is_iterable($field['#items'])) {
-          foreach ($field['#items'] as $delta => $item) {
-            if (isset($field[$delta]['#url'])) {
-              $field[$delta]['#url'] = $field[$delta]['#url']->setAbsolute()->toString();
-            }
-            if (isset($field[$delta]['#item']->entity)) {
-              $uri = $field[$delta]['#item']->entity->getFileUri();
-              $field[$delta]['#image_style'] = NULL; // Optionally remove image styles
-            }
-          }
-        }
+function newsletter_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra, $consumer) {
+  // Get current user
+  $account = \Drupal::currentUser();
+  
+  // If user has permission, ensure newsletter block is in the definitions
+  if ($account->hasPermission('place newsletter blocks') || $account->hasPermission('administer blocks')) {
+    // Make sure our block isn't filtered out
+    // This hook runs after restrictions, so we're re-adding it if needed
+    if (!isset($definitions['newsletter_archive_block'])) {
+      $block_manager = \Drupal::service('plugin.manager.block');
+      $all_definitions = $block_manager->getDefinitions();
+      if (isset($all_definitions['newsletter_archive_block'])) {
+        $definitions['newsletter_archive_block'] = $all_definitions['newsletter_archive_block'];
       }
     }
   }
 }
 
-function newsletter_layout_builder_restrict_block_alter(array &$allowed_blocks, EntityInterface $entity, $context) {
-  if (!\Drupal::moduleHandler()->moduleExists('newsletter')) {
-    return;
+/**
+ * Implements hook_layout_builder_restrictions_allowed_block_keys_alter().
+ */
+function newsletter_layout_builder_restrictions_allowed_block_keys_alter(array &$allowed_blocks, $context) {
+  $account = \Drupal::currentUser();
+  
+  // If user has permission, add newsletter block to allowed list
+  if ($account->hasPermission('place newsletter blocks') || $account->hasPermission('administer blocks')) {
+    $allowed_blocks[] = 'newsletter_archive_block';
   }
-
-  $featured_block_id = 'views_block:newsletter-block_1';
-  $archive_block_id = 'views_block:newsletter-block_2';
 }
