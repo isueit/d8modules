@@ -305,4 +305,16 @@ h2.newsletter-section-heading {
   .newsletter h2.isu-block-title h4 {
     margin: 1rem 0 0.5625rem;
   }
+  .paragraph--type--create-content h2.isu-block-title.h4, .paragraph--type--existing-content h3.isu-block-title.h4 {
+    margin-bottom: 0;
+  }
+  .block-save-the-date h2.isu-block-title.h4 {
+    margin: 0;
+  }
+  .newsletter-index-wrapper {
+    margin-top: 2rem;
+  }
+  .isueo-staff-author--header p {
+    font-size: 12pt;
+  }
 }
