@@ -2,19 +2,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_product_title
+    - field.storage.paragraph.field_product_date
     - paragraphs.paragraphs_type.product
-id: paragraph.product.field_product_title
-field_name: field_product_title
+id: paragraph.product.field_product_date
+field_name: field_product_date
 entity_type: paragraph
 bundle: product
-label: 'Product Title'
+label: 'Product Date'
 description: ''
 required: false
 translatable: false
-default_value:
-  -
-    value: 'Title Placeholder'
+default_value: {  }
 default_value_callback: ''
 settings: {  }
 field_type: string

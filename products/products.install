@@ -1,0 +1,21 @@
+<?php
+
+use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\block\Entity\Block;
+
+/**
+ * Implements hook_uninstall().
+ */
+function products_uninstall()
+{
+  $block_plugin_id = 'products_block';
+
+  // Get the entity query service.
+  $query = \Drupal::entityQuery('block');
+  $block_ids = $query->condition('plugin', $block_plugin_id)->execute();
+  $blocks = Block::loadMultiple($block_ids);
+
+  foreach ($blocks as $block) {
+    $block->delete();
+  }
+}
