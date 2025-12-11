@@ -259,7 +259,9 @@ h2.newsletter-section-heading {
     line-height: 1;
 }
 
-/* Responsive design */
+/* --------------------------------------  */
+/* ## RESPONSIVE
+/* --------------------------------------  */
 @media (max-width: 576px) {
   .save-the-date-item {
     gap: 1rem;
@@ -275,5 +277,20 @@ h2.newsletter-section-heading {
   
   .save-the-date-title {
     font-size: 1rem;
+  }
+}
+
+/* --------------------------------------  */
+/* ## PRINT
+/* --------------------------------------  */
+@media print {
+	@page {
+		margin: 0.5cm;
+	}
+  .newsletter-hero-wrapper h1.isu-page-title {
+    font-size: 24pt;
+    font-weight: bold;
+    line-height: 1.2;
+    font-family: Arial, Helvetica, sans-serif;
   }
 }
