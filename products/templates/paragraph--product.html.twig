@@ -61,7 +61,7 @@
       </span>
     </div>
     <div class="views-field views-field-field-publication-date">
-      <span class="field-content">{{ content.field_product_date[0] }}</span>
+      <span class="field-content">{{ content.field_product_date[0]|render|date('U')|format_date('custom', 'm/Y') }}</span>
     </div>
     <div class="views-field views-field-nothing">
       <span class="field-content">
