@@ -7,8 +7,33 @@ use Drupal\block\BlockPluginInterface;
 use Drupal\isueo_helpers\ISUEOHelpers;
 
 /**
-* Implements hook_form_alter().
+* Implements hook_preprocess_HOOK().
+* DELETE ME!
 */
+function products_preprocess_node(&$variables) {
+  // Delete Me for production
+  // Clear's the twig cache, so we don't have to keep doing drush cr
+  \Drupal::service('twig')->invalidate();
+}
+
+/**
+ * Implements hook_theme().
+ */
+
+function products_theme($existing, $type, $theme, $path)
+{
+
+  return [
+    'paragraph__product' => [
+      'template' => 'paragraph--product',
+      'base hook' => 'paragraph',
+    ]
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
 
 /*
 function products_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
@@ -27,10 +52,11 @@ function products_block_type_form_alter(array &$form, FormStateInterface &$form_
 */
 
 /**
-* Implements hook_entity_presave().
-*/
+ * Implements hook_entity_presave().
+ */
 
-function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
+function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
+{
   if ($entity->getEntityTypeId() == 'paragraph') {
     if ($entity->bundle() == 'product') {
       $found = false;
