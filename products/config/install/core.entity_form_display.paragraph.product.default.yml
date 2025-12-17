@@ -9,6 +9,29 @@ dependencies:
     - field.field.paragraph.product.field_product_sku
     - field.field.paragraph.product.field_product_title
     - paragraphs.paragraphs_type.product
+  module:
+    - field_group
+third_party_settings:
+  field_group:
+    group_additional_fields:
+      children:
+        - field_product_image
+        - field_product_date
+        - field_product_price
+        - field_product_auto_created
+      label: 'Additional Fields'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        label_as_html: false
+        formatter: closed
+        description: ''
+        required_fields: true
 id: paragraph.product.default
 targetEntityType: paragraph
 bundle: product
@@ -16,14 +39,14 @@ mode: default
 content:
   field_product_auto_created:
     type: boolean_checkbox
-    weight: 3
+    weight: 5
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_product_date:
     type: string_textfield
-    weight: 4
+    weight: 3
     region: content
     settings:
       size: 60
@@ -39,7 +62,7 @@ content:
     third_party_settings: {  }
   field_product_price:
     type: number
-    weight: 5
+    weight: 4
     region: content
     settings:
       placeholder: ''

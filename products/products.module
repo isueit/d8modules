@@ -5,12 +5,18 @@ use Drupal\block\BlockForm;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block\BlockPluginInterface;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+
 
 /**
-* Implements hook_preprocess_HOOK().
-* DELETE ME!
-*/
-function products_preprocess_node(&$variables) {
+ *
+ * Implements hook_preprocess_HOOK().
+ * DELETE ME!
+ */
+function products_preprocess_node(&$variables)
+{
   // Delete Me for production
   // Clear's the twig cache, so we don't have to keep doing drush cr
   \Drupal::service('twig')->invalidate();
@@ -29,6 +35,127 @@ function products_theme($existing, $type, $theme, $path)
       'base hook' => 'paragraph',
     ]
   ];
+}
+
+/**
+ * Implements hook_rebuild().
+ */
+
+function products_rebuild()
+{
+
+  products_rebuild_product_list();
+  /*
+    $themes = \Drupal::service('theme_handler')->listInfo();
+    foreach ($themes as $theme) {
+      _block_rehash($theme->getName());
+    }
+  */
+}
+
+/**
+ * Implements hook_cron().
+ */
+
+function products_cron()
+{
+  products_rebuild_product_list();
+
+  /*
+    // Short-running operation example, not using a queue:
+    // Delete all expired records since the last cron run.
+    $expires = \Drupal::state()->get('mymodule.last_check', 0);
+    \Drupal::database()->delete('mymodule_table')
+      ->condition('expires', $expires, '>=')
+      ->execute();
+    \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
+
+    // Long-running operation example, leveraging a queue:
+    // Queue news feeds for updates once their refresh interval has elapsed.
+    $queue = \Drupal::queue('aggregator_feeds');
+    $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+    foreach (Feed::loadMultiple($ids) as $feed) {
+      if ($queue->createItem($feed)) {
+        // Add timestamp to avoid queueing item more than once.
+        $feed->setQueuedTime(REQUEST_TIME);
+        $feed->save();
+      }
+    }
+    $ids = \Drupal::entityQuery('aggregator_feed')
+      ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+      ->execute();
+    if ($ids) {
+      $feeds = Feed::loadMultiple($ids);
+      foreach ($feeds as $feed) {
+        $feed->setQueuedTime(0);
+        $feed->save();
+      }
+    }
+  */
+}
+function products_rebuild_product_list()
+{
+  $blocks = products_get_all_blocks();
+
+  // Step through each block
+  foreach ($blocks as $block) {
+    $featured_products = products_get_featured_products($block->get('field_products_feed_url')->getString());
+    $new_products = [];
+    $existing_products = [];
+
+    // Step through each paragraph/product
+    foreach ($block->get('field_products')->referencedEntities() as $product) {
+      $tmp_sku = $product->get('field_product_sku')->getString();
+      $existing_products[$tmp_sku] = $product;
+      if (!$product->get('field_product_auto_created')->value) {
+        $new_products[$tmp_sku] = $product;
+      }
+    }
+
+    // Now Step through the featured products
+    foreach ($featured_products as $featured_product) {
+      $tmp_sku = $featured_product['ProductID'];
+      if (array_key_exists($tmp_sku, $existing_products)) {
+        $new_products[$tmp_sku] = $existing_products[$tmp_sku];
+      } else {
+        $new_products[$tmp_sku] = Paragraph::create([
+              'type' => 'product',
+              'field_product_sku' => $tmp_sku,
+              'field_product_auto_created' => 1,
+            ]);
+      }
+    }
+
+    $block->set('field_products', array_values($new_products));
+    $block->save();
+  }
+}
+
+function products_get_featured_products(string $feed_url)
+{
+    $featured_products = [];
+    if (!empty($feed_url)) {
+      $raw = ISUEOHelpers\Files::fetch_url($feed_url);
+      if ($raw) {
+        $products = json_decode($raw, true);
+      }
+      foreach ($products as $product) {
+        $featured_products[$product['ProductID']] = $product;
+      }
+    }
+    return $featured_products;
+}
+
+function products_get_all_blocks() {
+  $storage = \Drupal::entityTypeManager()->getStorage('block_content');
+  $block_ids = $storage->getQuery()
+    ->condition('type', 'products_block')
+    ->accessCheck(false) // Set to TRUE to respect user permissions
+    ->execute();
+  if (!$block_ids) {
+    return [];
+  }
+  return BlockContent::loadMultiple($block_ids);
 }
 
 /**
@@ -57,6 +184,7 @@ function products_block_type_form_alter(array &$form, FormStateInterface &$form_
 
 function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
 {
+    Drupal::logger('blah')->info($entity->getEntityTypeId() . ': ' . $entity->bundle());
   if ($entity->getEntityTypeId() == 'paragraph') {
     if ($entity->bundle() == 'product') {
       $found = false;
