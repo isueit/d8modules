@@ -184,7 +184,6 @@ function products_block_type_form_alter(array &$form, FormStateInterface &$form_
 
 function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
 {
-    Drupal::logger('blah')->info($entity->getEntityTypeId() . ': ' . $entity->bundle());
   if ($entity->getEntityTypeId() == 'paragraph') {
     if ($entity->bundle() == 'product') {
       $found = false;
