@@ -2,16 +2,16 @@ langcode: en
 status: true
 dependencies:
   config:
-    - block_content.type.products_block
-    - field.storage.block_content.field_products
+    - field.storage.paragraph.field_product_slides
+    - paragraphs.paragraphs_type.product
     - paragraphs.paragraphs_type.products_slideshow
   module:
     - entity_reference_revisions
-id: block_content.products_block.field_products
-field_name: field_products
-entity_type: block_content
-bundle: products_block
-label: Products
+id: paragraph.products_slideshow.field_product_slides
+field_name: field_product_slides
+entity_type: paragraph
+bundle: products_slideshow
+label: 'Product Slides'
 description: ''
 required: false
 translatable: false
@@ -21,7 +21,7 @@ settings:
   handler: 'default:paragraph'
   handler_settings:
     target_bundles:
-      products_slideshow: products_slideshow
+      product: product
     negate: 0
     target_bundles_drag_drop:
       county_impact_story:
@@ -47,10 +47,10 @@ settings:
         enabled: false
       product:
         weight: 20
-        enabled: false
+        enabled: true
       products_slideshow:
         weight: 21
-        enabled: true
+        enabled: false
       save_the_date:
         weight: 22
         enabled: false

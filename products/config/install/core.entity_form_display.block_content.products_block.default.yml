@@ -33,7 +33,7 @@ mode: default
 content:
   field_products:
     type: paragraphs
-    weight: 3
+    weight: 26
     region: content
     settings:
       title: Paragraph

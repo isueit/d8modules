@@ -8,6 +8,7 @@ dependencies:
   - drupal:datetime
   - slick:slick
   - slick:slick_ui
+  - slick_paragraphs:slick_paragraphs
   - slick_views:slick_views
   - blazy:blazy
   - d8modules:isueo_helpers

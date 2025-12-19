@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.products_slideshow.field_product_slides
+    - paragraphs.paragraphs_type.products_slideshow
+  module:
+    - slick_paragraphs
+id: paragraph.products_slideshow.default
+targetEntityType: paragraph
+bundle: products_slideshow
+mode: default
+content:
+  field_product_slides:
+    type: slick_paragraphs_vanilla
+    label: above
+    settings:
+      optionset: default
+      view_mode: default
+      cache: 0
+      admin_uri: ''
+      use_lb: false
+      use_theme_field: false
+      skin: ''
+      overridables: {  }
+      override: false
+      skin_arrows: ''
+      skin_dots: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }
