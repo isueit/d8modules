@@ -99,12 +99,19 @@ function products_rebuild_product_list()
 
   // Step through each block
   foreach ($blocks as $block) {
-    $featured_products = products_get_featured_products($block->get('field_products_feed_url')->getString());
+    // Get the products from the feed for this block
+    $feed_products = products_get_featured_products($block->get('field_products_feed_url')->getString());
     $new_products = [];
     $existing_products = [];
 
+    // Get the slideshow field from the block
+    $slideshow = $block->get('field_products')->referencedEntities();
+    $first_slideshow = reset($slideshow);
+
     // Step through each paragraph/product
-    foreach ($block->get('field_products')->referencedEntities() as $product) {
+    // Keep any product that isn't marked as auto created
+    // These are the products that are manually entered
+    foreach ($first_slideshow->get('field_product_slides')->referencedEntities() as $product) {
       $tmp_sku = $product->get('field_product_sku')->getString();
       $existing_products[$tmp_sku] = $product;
       if (!$product->get('field_product_auto_created')->value) {
@@ -112,41 +119,44 @@ function products_rebuild_product_list()
       }
     }
 
-    // Now Step through the featured products
-    foreach ($featured_products as $featured_product) {
-      $tmp_sku = $featured_product['ProductID'];
+    // Now Step through the products from the feed
+    // Ensure $new_products includes has each product from the feed
+    foreach ($feed_products as $feed_product) {
+      $tmp_sku = $feed_product['ProductID'];
       if (array_key_exists($tmp_sku, $existing_products)) {
         $new_products[$tmp_sku] = $existing_products[$tmp_sku];
       } else {
         $new_products[$tmp_sku] = Paragraph::create([
-              'type' => 'product',
-              'field_product_sku' => $tmp_sku,
-              'field_product_auto_created' => 1,
-            ]);
+          'type' => 'product',
+          'field_product_sku' => $tmp_sku,
+          'field_product_auto_created' => 1,
+        ]);
       }
     }
 
-    $block->set('field_products', array_values($new_products));
-    $block->save();
+    // Lastly, save the products in the product_slides field
+    $first_slideshow->set('field_product_slides', array_values($new_products));
+    $first_slideshow->save();
   }
 }
 
 function products_get_featured_products(string $feed_url)
 {
-    $featured_products = [];
-    if (!empty($feed_url)) {
-      $raw = ISUEOHelpers\Files::fetch_url($feed_url);
-      if ($raw) {
-        $products = json_decode($raw, true);
-      }
-      foreach ($products as $product) {
-        $featured_products[$product['ProductID']] = $product;
-      }
+  $featured_products = [];
+  if (!empty($feed_url)) {
+    $raw = ISUEOHelpers\Files::fetch_url($feed_url);
+    if ($raw) {
+      $products = json_decode($raw, true);
     }
-    return $featured_products;
+    foreach ($products as $product) {
+      $featured_products[$product['ProductID']] = $product;
+    }
+  }
+  return $featured_products;
 }
 
-function products_get_all_blocks() {
+function products_get_all_blocks()
+{
   $storage = \Drupal::entityTypeManager()->getStorage('block_content');
   $block_ids = $storage->getQuery()
     ->condition('type', 'products_block')
@@ -209,4 +219,20 @@ function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
       }
     }
   }
+}
+
+/**
+* Implements hook_preprocess_HOOK().
+*/
+
+function products_preprocess_block(&$variables) {
+  if ($variables['plugin_id'] == 'inline_block:products_block') {
+    $variables['#attached']['library'][] = 'products/products';
+  }
+
+  /*
+    // This example is from rdf_preprocess_image(). It adds an RDF attribute
+    // to the image hook's variables.
+    $variables['attributes']['typeof'] = ['foaf:Image'];
+  */
 }

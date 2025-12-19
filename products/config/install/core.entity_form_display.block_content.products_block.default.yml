@@ -16,7 +16,7 @@ third_party_settings:
       label: Configuration
       region: content
       parent_name: ''
-      weight: 5
+      weight: 4
       format_type: tab
       format_settings:
         classes: ''
@@ -33,7 +33,7 @@ mode: default
 content:
   field_products:
     type: paragraphs
-    weight: 26
+    weight: 3
     region: content
     settings:
       title: Paragraph
