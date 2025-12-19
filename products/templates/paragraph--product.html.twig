@@ -47,31 +47,13 @@
 #}
 
 {% if content.field_product_title[0]|render != 'Not Found' %}
-  <div class="slick__slide slide slide--0">
-    <div class="views-field views-field-field-image-url">
-      <span class="field-content">
+  <div class="product_wrapper">
         <a href="https://shop.iastate.edu/extension/{{ content.field_product_sku[0] }}.html">
           <img src="{{ content.field_product_image[0] }}" alt="{{ content.field_product_title[0] }}">
         </a>
-      </span>
-    </div>
-    <div class="views-field views-field-name">
-      <span class="field-content publication-title">
-        <a href="https://shop.iastate.edu/extension/{{ content.field_product_sku[0] }}.html">*{{ content.field_product_title[0] }}*</a>
-      </span>
-    </div>
-    <div class="views-field views-field-field-publication-date">
-      <span class="field-content">{{ content.field_product_date[0]|render|date('U')|format_date('custom', 'm/Y') }}</span>
-    </div>
-    <div class="views-field views-field-nothing">
-      <span class="field-content">
-        <div class="isueo-pubs-download">
+        <a href="https://shop.iastate.edu/extension/{{ content.field_product_sku[0] }}.html">{{ content.field_product_title[0] }} - {{ content.field_product_sku }}</a>
+      {{ content.field_product_date[0]|render|date('U')|format_date('custom', 'm/Y') }}
           <a href="https://shop.iastate.edu/extension/{{ content.field_product_sku[0] }}.html" aria-label="Download ">
-            <i class="fa-solid fa-cloud-arrow-down"></i>
-              <span class="isueo-pubs-download-text"> Download</span>
-          </a>
-        </div>
-      </span>
-    </div>
+            <i class="fa-solid fa-cloud-arrow-down"></i>Download</a>
   </div>
 {% endif %}
