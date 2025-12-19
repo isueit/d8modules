@@ -9,23 +9,24 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 
-
 /**
- *
  * Implements hook_preprocess_HOOK().
- * DELETE ME!
  */
-function products_preprocess_node(&$variables)
+function products_preprocess_block(&$variables)
 {
-  // Delete Me for production
-  // Clear's the twig cache, so we don't have to keep doing drush cr
-  \Drupal::service('twig')->invalidate();
+  if ($variables['plugin_id'] == 'inline_block:products_block') {
+    // This line is for development, it should be deleted for production
+    // DELETE ME
+    if (!ISUEOHelpers\General::is_production_server()) {
+      \Drupal::service('twig')->invalidate();
+    }
+    $variables['#attached']['library'][] = 'products/products';
+  }
 }
 
 /**
  * Implements hook_theme().
  */
-
 function products_theme($existing, $type, $theme, $path)
 {
 
@@ -219,20 +220,4 @@ function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
       }
     }
   }
-}
-
-/**
-* Implements hook_preprocess_HOOK().
-*/
-
-function products_preprocess_block(&$variables) {
-  if ($variables['plugin_id'] == 'inline_block:products_block') {
-    $variables['#attached']['library'][] = 'products/products';
-  }
-
-  /*
-    // This example is from rdf_preprocess_image(). It adds an RDF attribute
-    // to the image hook's variables.
-    $variables['attributes']['typeof'] = ['foaf:Image'];
-  */
 }
