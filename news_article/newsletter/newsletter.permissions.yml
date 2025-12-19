@@ -1,3 +1,13 @@
 export newsletter content:
   title: 'Export newsletter content'
   description: 'Allow users to export content in newsletter format'
+
+administer newsletter blocks:
+  title: 'Administer Newsletter blocks'
+  description: 'Allow users to place and configure Newsletter blocks in Layout Builder.'
+  restrict access: false
+
+place newsletter blocks:
+  title: 'Place Newsletter blocks'
+  description: 'Allow users to place Newsletter blocks in Layout Builder.'
+  restrict access: false

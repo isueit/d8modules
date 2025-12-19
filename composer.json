@@ -27,6 +27,7 @@
     "drupal/section_library": "^1.0",
     "drupal/select_or_other": "^4.2",
     "drupal/slick": "^3.0",
+    "drupal/slick_paragraphs": "^3.0",
     "drupal/slick_views": "^3.0",
     "drupal/twig_tweak": "^3.4",
     "drupal/view_unpublished": "^1.0",

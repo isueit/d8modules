@@ -259,7 +259,9 @@ h2.newsletter-section-heading {
     line-height: 1;
 }
 
-/* Responsive design */
+/* --------------------------------------  */
+/* ## RESPONSIVE
+/* --------------------------------------  */
 @media (max-width: 576px) {
   .save-the-date-item {
     gap: 1rem;
@@ -275,5 +277,44 @@ h2.newsletter-section-heading {
   
   .save-the-date-title {
     font-size: 1rem;
+  }
+}
+
+/* --------------------------------------  */
+/* ## PRINT
+/* --------------------------------------  */
+@media print {
+	@page {
+		margin: 0.5cm;
+	}
+  .newsletter-hero-wrapper h1.isu-page-title {
+    font-size: 24pt;
+    font-weight: bold;
+    line-height: 1.2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  h2.newsletter-section-heading {
+    font-size: 22pt;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .newsletter-section-heading-wrapper {
+    margin: 0;
+    margin: 0.5em 0;
+  }
+  .newsletter h2.isu-block-title h4 {
+    margin: 1rem 0 0.5625rem;
+  }
+  .paragraph--type--create-content h2.isu-block-title.h4, .paragraph--type--existing-content h3.isu-block-title.h4 {
+    margin-bottom: 0;
+  }
+  .block-save-the-date h2.isu-block-title.h4 {
+    margin: 0;
+  }
+  .newsletter-index-wrapper {
+    margin-top: 2rem;
+  }
+  .isueo-staff-author--header p {
+    font-size: 12pt;
   }
 }

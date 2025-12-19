@@ -116,19 +116,23 @@ div#block-iastate-theme-content--2 .paragraph {
 
 /* -------------------------------------- */
 /* ## PRINT STYLES
-/* -------------------------------------- */
+/* --------------------------------------*/
 @media print {
 	@page {
 		margin: 0.5cm;
 	}
 	.impact_statistic__title {
 		color: #000;
+		font-size: 36px;
+		line-height: 1;
+		font-family: Arial, sans-serif;
 	}
 	.impact_statistic__text {
 		font-weight: normal;
 	}
 	div.isueo-callout-stat svg {
 		color: var(--primary-color);
+		flex-shrink: 0;
 	}
 	.county-impact-hero.d-print-block img {
 		max-width: 60%;
@@ -136,14 +140,17 @@ div#block-iastate-theme-content--2 .paragraph {
 		margin-right: 4rem;
 	}
 	.county-impact-report h1 {
-		line-height: 1.32857;
-		font-weight: 400;
-		font-family: var(--serif-font);
-		letter-spacing: 0;
-		margin: 2rem 0 0.625rem;
-		color: var(--primary-color);
-		width: 100%;
-		clear: both;
+		line-height: 1.2;
+		font-weight: 700;
+		color: #c8102e;
+		margin: 40px 0 10px 0;
+		font-size: 24pt;
+		border-bottom: 2px solid #f1be48;
+		text-transform: uppercase;
+		font-family: Arial, sans-serif;
+	}
+	.county-impact-report-contact .layout-content {
+		align-items: end;
 	}
 	.impact-print-wrapper {
 		max-width: 1140px;
@@ -152,17 +159,78 @@ div#block-iastate-theme-content--2 .paragraph {
 	}
 	.paragraph.paragraph--type--county-impact-story h2 {
 		padding-top: 1rem;
+		margin-bottom: 0 !important;
+		font-size: 22pt !important;
+		page-break-inside: avoid;
+		page-break-after: avoid;
+		font-family: Arial, sans-serif;
 	}
 	article:not(.isu-user):not(.isu-search_collapse) {
-		margin-bottom: 0;
+		margin-bottom: 0 !important;
 	}
 	.county-impact-report-contact .layout--top-bottom-padding--big {
 		padding-bottom: 0;
+		padding-top: 0;
 	}
 	.impact-story-stats-two .layout--top-bottom-padding--big {
 		padding-bottom: 0;
 	}
 	.impact-story-stats-one, .impact-story-stats-two {
-		margin-top: 0;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		margin-bottom: 0;
+		margin-top: 30px;
+		page-break-inside: avoid;
+	}
+	.impact-story-stats-two .impact_statistic__text {
+		margin-bottom: 0;
+	}
+	.paragraph .impact-story-image img {
+		height: auto;
+		width: 100%;
+		display: block;
+	}
+	.paragraph .impact-story-image {
+		float: right;
+		width: 35%;
+		margin: 0 0 10px 10px;
+	}
+	.isueo-callout-stat p:first-child {
+		margin-bottom: .5rem;
+	}
+	#block-contact-us .isu-footer_contact-address-title {
+    	display: inline;
+  }
+	#block-contact-us {
+    	font-size: 12pt;
+    	line-height: 1.8;
+  }
+	#block-contact-us div {
+    	display: inline;
+  }
+	#block-contact-us br {
+    	display: none !important;
+  }
+	#block-contact-us div:not(:nth-last-of-type(2))::after {
+    	content: " | ";
+  }
+	#block-contact-us div.contextual {
+  		display: none;
+}
+	#block-contact-us a {
+		display: inline;
+	}
+	.county-impact-report-contact .layout-builder-base--two-columns.layout--column-width--75-25 .layout-content {
+		grid-template-columns: minmax(0, 0.67fr) minmax(0, 0.33fr);
+		column-gap: 18px;
+	}
+	.county-impact-report-contact .layout {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.isueo-callout-stat img {
+  		max-width: 4em;
+  		max-height: 4em;
+  		filter: brightness(0) saturate(100%) invert(32%) sepia(55%) saturate(1410%) hue-rotate(116deg) brightness(96%) contrast(102%);
 	}
 }

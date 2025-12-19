@@ -99,9 +99,9 @@
 
 
       {% if page.content|render %}
-<div class="d-none d-print-block impact-print-wrapper">
+ <div class="d-none d-print-block impact-print-wrapper">
 <div class="county-impact-hero d-none d-print-block"><img src="{{ theme_path }}/images/real-impact-print-banner.png" alt="{{ site_name }}'s Real Impact - a report for stakeholders"></div>
-</div>
+</div> 
 <div class="county-impact-hero d-print-none"><img src="{{ theme_path }}/images/real-impact-banner.png" alt="{{ site_name }}'s Real Impact - a report for stakeholders"></div>
 <div class="isu-region isu-region_content">
 <div id="block-iastate-theme-content--2" class="isu-block">
@@ -112,16 +112,16 @@
           <div class="layout__region layout__region--first">
             <div class="isu-block">
             <h1 class="h3">{{ node.label }}</h1>
-              <div><p>Iowa State University Extension and Outreach delivers education, facilitates collaboration, and sparks action for Iowans. This report shares examples of ISU Extension and Outreach making a difference and creating real impact in {{ site_name }}.</p></div>
+              <div><p>Iowa State University Extension and Outreach delivers education, facilitates collaboration, and sparks action for Iowans. This report shares examples of Iowa State University and the {{ site_name }} Agricultural Extension District making a difference and creating real impact in {{ site_name }}.</p></div>
             </div>
           </div>
           <div class="layout__region layout__region--second">
             <div class="isu-block">
               <div>
                 <p><a class="btn btn-secondary d-print-none" href="{{ base_path }}staff">County Staff</a></p>
-                <p class="d-none d-print-block"><span style="text-decoration: underline">County Staff</span><br><span style="font-size: .9rem;">https://www.extension.iastate.edu{{ base_path }}staff</span></p>
+                <p class="d-none d-print-block"><span style="font-size: 12pt; font-weight: 700;">County Staff</span><br><span style="font-size: .9rem; word-wrap: break-word; overflow-wrap: break-word;">https://www.extension.iastate.edu{{ base_path }}staff</span></p>
                 <p><a class="btn btn-secondary d-print-none" href="{{ base_path }}extension-council">County Council</a></p>
-                <p class="d-none d-print-block"><span style="text-decoration: underline">County Council</span><br><span style="font-size: .9rem;">https://www.extension.iastate.edu{{ base_path }}extension-council</span></p>
+                <p class="d-none d-print-block"><span style="font-size: 12pt; font-weight: 700;">County Council</span><br><span style="font-size: .9rem; word-wrap: break-word; overflow-wrap: break-word;">https://www.extension.iastate.edu{{ base_path }}extension-council</span></p>
               </div>
             </div>
           </div>
@@ -141,7 +141,7 @@
           <div class="layout__region layout__region--first">
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
-                <p class="d-print-none">{{ bottom_impact_data[0]['icon']|raw }}</p>
+                <p>{{ bottom_impact_data[0]['icon']|raw }}</p>
                 <h3 class="impact_statistic__title">{{ bottom_impact_data[0]['value'] }}</h3>
                 <p class="impact_statistic__text">{{ bottom_impact_data[0]['label']|raw }}</p>
               </div>

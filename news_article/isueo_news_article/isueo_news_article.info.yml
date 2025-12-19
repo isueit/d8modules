@@ -10,3 +10,4 @@ dependencies:
   - view_unpublished:view_unpublished
   - pathauto:pathauto
   - blazy:blazy
+  - newsletter:newsletter
