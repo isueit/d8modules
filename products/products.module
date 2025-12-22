@@ -201,6 +201,12 @@ function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
       $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json', false);
       $products = json_decode($raw, true);
       $sku = strtolower(trim($entity->get('field_product_sku')->getString()));
+      if (str_contains($sku, ' ')) {
+        $sku = preg_replace('/\s+/', ' ', $sku);
+        $tmparray = explode(' ', $sku);
+        $sku = $tmparray[0] . intval($tmparray[1]);
+        $entity->set('field_product_sku', $sku);
+      }
 
       foreach ($products as $product) {
         if ($sku == $product['ProductID']) {
@@ -211,12 +217,13 @@ function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
           $entity->set('field_product_date', $product['PubDate']);
           break;
         }
-        if (!$found) {
-          $entity->set('field_product_sku', $sku);
-          $entity->set('field_product_title', 'Not Found');
-          $entity->set('field_product_image', '');
-          $entity->set('field_product_date', '');
-        }
+      }
+
+      if (!$found) {
+        $entity->set('field_product_sku', $sku);
+        $entity->set('field_product_title', 'Not Found');
+        $entity->set('field_product_image', '');
+        $entity->set('field_product_date', '');
       }
     }
   }
