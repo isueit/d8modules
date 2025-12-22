@@ -135,6 +135,17 @@ function products_rebuild_product_list()
       }
     }
 
+    // Remove products that are not found, or the image is 404 not found
+    foreach (array_keys($new_products) as $key) {
+      if (
+        $new_products[$key]->get('field_product_title')->getString() == 'Not Found'
+        || !ISUEOHelpers\General::url_exists($new_products[$key]->get('field_product_image')->getString())
+      ) {
+        unset($new_products[$key]);
+        continue;
+      }
+    }
+
     // Lastly, save the products in the product_slides field
     $first_slideshow->set('field_product_slides', array_values($new_products));
     $first_slideshow->save();

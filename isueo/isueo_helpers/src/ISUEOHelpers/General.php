@@ -71,4 +71,17 @@ class General
   public static function is_production_server() {
     return str_starts_with(DRUPAL_ROOT, '/var/www/websites');
   }
+
+  public static function url_exists(string $url)
+  {
+    $exists = false;
+    $file_headers = @get_headers($url);
+    if(!$file_headers || strpos($file_headers[0], '404')) {
+        $exists = false;
+    }
+    else {
+        $exists = true;
+    }
+    return $exists;
+  }
 }
