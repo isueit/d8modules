@@ -135,12 +135,19 @@ function products_rebuild_product_list()
       }
     }
 
-    // Remove products that are not found, or the image is 404 not found
     foreach (array_keys($new_products) as $key) {
+      // Remove products that are not found
+      if ($new_products[$key]->get('field_product_title')->getString() == 'Not Found') {
+        Drupal::logger('products')->info('Deleted ' . $key . ': Title was "Not Found"');
+        unset($new_products[$key]);
+        continue;
+      }
+      // Also remove products where the image isn't found
       if (
-        $new_products[$key]->get('field_product_title')->getString() == 'Not Found'
-        || !ISUEOHelpers\General::url_exists($new_products[$key]->get('field_product_image')->getString())
+        !empty($new_products[$key]->get('field_product_image')->getString())
+        && !ISUEOHelpers\General::url_exists($new_products[$key]->get('field_product_image')->getString())
       ) {
+        Drupal::logger('products')->info('Deleted ' . $key . ': Image was not found');
         unset($new_products[$key]);
         continue;
       }
