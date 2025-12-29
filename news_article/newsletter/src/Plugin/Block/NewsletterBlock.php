@@ -77,10 +77,7 @@ class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   protected function blockAccess(AccountInterface $account) {
     // Check if user has permission to place newsletter blocks
-    return AccessResult::allowedIfHasPermissions($account, [
-      'place newsletter blocks',
-      'administer blocks',
-    ], 'OR');
+    return AccessResult::allowed();
   }
 
   /**
