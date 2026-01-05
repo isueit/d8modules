@@ -53,15 +53,19 @@
           <img src="{{ content.field_product_image[0] }}" alt="{{ content.field_product_title[0] }}">
         </a>
     </div>
+    <div class="product_wrapper__body">
     <div class="product_title">
         <a href="https://shop.iastate.edu/extension/{{ content.field_product_sku[0] }}.html">{{ content.field_product_title[0] }}</a>
     </div>
+    <div class="product_wrapper__footer">
     <div class="product_date">
       {{ content.field_product_date[0]|render|date('U')|format_date('custom', 'm/Y') }}
     </div>
     <div class="product_download">
           <a href="https://shop.iastate.edu/extension/{{ content.field_product_sku[0] }}.html" aria-label="Download ">
             <i class="fa-solid fa-cloud-arrow-down"></i>Download</a>
+    </div>
+    </div>
     </div>
   </div>
 {% endif %}
