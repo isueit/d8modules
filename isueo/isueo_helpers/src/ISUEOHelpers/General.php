@@ -35,7 +35,8 @@ class General
   }
 
   // Change County Names to match Counties In Iowa taxonomy
-  public static function fix_county_name($county_name) {
+  public static function fix_county_name($county_name)
+  {
     switch ($county_name) {
       case 'East Pottawattamie':
         $county_name = 'Pottawattamie - East';
@@ -68,19 +69,23 @@ class General
     return 'https://photos.smugmug.com/photos/' . $id . '/10000/' . $size . '/' . $id . '-' . $size . '.jpg';
   }
 
-  public static function is_production_server() {
+  public static function is_production_server()
+  {
     return str_starts_with(DRUPAL_ROOT, '/var/www/websites');
   }
 
   public static function url_exists(string $url)
   {
+    if (empty($url)) {
+      return false;
+    }
+
     $exists = false;
     $file_headers = @get_headers($url);
-    if(!$file_headers || strpos($file_headers[0], '404')) {
-        $exists = false;
-    }
-    else {
-        $exists = true;
+    if (!$file_headers || strpos($file_headers[0], '404')) {
+      $exists = false;
+    } else {
+      $exists = true;
     }
     return $exists;
   }
