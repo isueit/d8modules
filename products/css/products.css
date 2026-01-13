@@ -1,8 +1,8 @@
 button.slick-next.slick-arrow {
-	right: -7%;
+	right: -3%;
 }
 button.slick-prev.slick-arrow {
-	left: 0;
+	left: -3%;
 }
 button.slick-next, button.slick-prev {
 	font-size: 0;
