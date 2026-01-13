@@ -58,6 +58,7 @@ button.slick-next, button.slick-prev {
   height: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
+  padding: 16px;
 }
 .product_image {
   width: 100%;
@@ -66,23 +67,21 @@ button.slick-next, button.slick-prev {
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid #ebebeb;
+  min-height: 313px;
 }
 .slick .product_image img {
   width: 100%;
   max-height: 100%;
   display: block;
   object-fit: contain;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 1rem 1rem 0 1rem;
-  min-height: 320px;
 }
 .product_wrapper__body {
-  padding: 0.5rem 1rem 0.25rem 1rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   min-height: 8rem;
+  padding-top: 16px;
 }
 .product_title {
   margin-bottom: auto;
