@@ -8,6 +8,7 @@ use Drupal\isueo_helpers\ISUEOHelpers;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\paragraphs\Entity\Paragraph;
+use PhpParser\Node\Stmt\Catch_;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -304,4 +305,32 @@ function products_get_store_products(string $store_url)
   }
 
   return $store_products;
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+
+function products_entity_insert(Drupal\Core\Entity\EntityInterface $entity)
+{
+  try {
+    if ($entity->bundle() == 'products_block') {
+      products_rebuild_product_list();
+    }
+  } catch (Exception $ex) {
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+
+function products_entity_update(Drupal\Core\Entity\EntityInterface $entity)
+{
+  try {
+    if ($entity->bundle() == 'products_block') {
+      products_rebuild_product_list();
+    }
+  } catch (Exception $ex) {
+  }
 }
