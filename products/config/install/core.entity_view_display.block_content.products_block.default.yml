@@ -5,6 +5,7 @@ dependencies:
     - block_content.type.products_block
     - field.field.block_content.products_block.field_products
     - field.field.block_content.products_block.field_products_feed_url
+    - field.field.block_content.products_block.field_products_store_url
   module:
     - entity_reference_revisions
 id: block_content.products_block.default
@@ -23,3 +24,4 @@ content:
     region: content
 hidden:
   field_products_feed_url: true
+  field_products_store_url: true

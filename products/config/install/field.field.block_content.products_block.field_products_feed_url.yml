@@ -9,12 +9,10 @@ field_name: field_products_feed_url
 entity_type: block_content
 bundle: products_block
 label: 'Products Feed URL'
-description: ''
+description: 'Rarely used, the URL to a JSON Feed of products'
 required: false
 translatable: false
-default_value:
-  -
-    value: 'https://datastore.exnet.iastate.edu/mydata/Store/FeaturedProducts.json'
+default_value: {  }
 default_value_callback: ''
 settings: {  }
 field_type: string

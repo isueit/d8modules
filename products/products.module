@@ -101,7 +101,10 @@ function products_rebuild_product_list()
   // Step through each block
   foreach ($blocks as $block) {
     // Get the products from the feed for this block
-    $feed_products = products_get_featured_products($block->get('field_products_feed_url')->getString());
+    $store_products = array_merge(
+      products_get_feed_products($block->get('field_products_feed_url')->getString()),
+      products_get_store_products($block->get('field_products_store_url')->getString())
+    );
     $new_products = [];
     $existing_products = [];
 
@@ -122,7 +125,7 @@ function products_rebuild_product_list()
 
     // Now Step through the products from the feed
     // Ensure $new_products includes has each product from the feed
-    foreach ($feed_products as $feed_product) {
+    foreach ($store_products as $feed_product) {
       $tmp_sku = $feed_product['ProductID'];
       if (array_key_exists($tmp_sku, $existing_products)) {
         $new_products[$tmp_sku] = $existing_products[$tmp_sku];
@@ -155,21 +158,6 @@ function products_rebuild_product_list()
     $first_slideshow->set('field_product_slides', array_values($new_products));
     $first_slideshow->save();
   }
-}
-
-function products_get_featured_products(string $feed_url)
-{
-  $featured_products = [];
-  if (!empty($feed_url)) {
-    $raw = ISUEOHelpers\Files::fetch_url($feed_url);
-    if ($raw) {
-      $products = json_decode($raw, true);
-    }
-    foreach ($products as $product) {
-      $featured_products[$product['ProductID']] = $product;
-    }
-  }
-  return $featured_products;
 }
 
 function products_get_all_blocks()
@@ -243,4 +231,77 @@ function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
       }
     }
   }
+}
+
+function products_get_feed_products(string $feed_url)
+{
+  if (empty($feed_url)) {
+    return [];
+  }
+
+  $feed_products = [];
+  $raw = ISUEOHelpers\Files::fetch_url($feed_url);
+  if ($raw) {
+    $products = json_decode($raw, true);
+    foreach ($products as $product) {
+      $feed_products[$product['ProductID']] = $product;
+    }
+  }
+
+  return $feed_products;
+}
+
+function products_get_store_products(string $store_url)
+{
+  if (empty($store_url)) {
+    return [];
+  }
+  $products = [];
+  $store_products = [];
+
+  // Get listing of the full products list
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json');
+  $tmp = json_decode($raw, true);
+  foreach ($tmp as $product) {
+    $products[$product['ProductID']] = $product;
+  }
+
+  if (trim(trim(strtolower($store_url)), '/') == 'https://shop.iastate.edu/extension') {
+    // Get the featured products from the home page
+    $raw = ISUEOHelpers\Files::fetch_url('https://shop.iastate.edu/extension');
+
+    if ($raw !== false) {
+      $lines = explode(PHP_EOL, $raw);
+      foreach ($lines as $line) {
+        if (str_contains($line, 'replaceContent')) {
+          $begin = strpos($line, 'pid=');
+          $end = strpos($line, '\';');
+          if ($begin !== false && $end !== false && $begin < $end) {
+            $begin = $begin + 4;
+            $pid = substr($line, $begin, $end - $begin);
+            if (array_key_exists($pid, $products)) {
+              $store_products[] = $products[$pid];
+            }
+          }
+        }
+      }
+    }
+  } else {
+    $raw = ISUEOHelpers\Files::fetch_url($store_url);
+    if ($raw !== false) {
+      $lines = explode(PHP_EOL, $raw);
+      foreach ($lines as $line) {
+        if (str_contains($line, 'class="product"')) {
+          $begin = strpos($line, 'data-pid="') + 10;
+          $line = substr($line, $begin);
+          $pid = substr($line, 0, strpos($line, '"'));
+          if (array_key_exists($pid, $products)) {
+            $store_products[] = $products[$pid];
+          }
+        }
+      }
+    }
+  }
+
+  return $store_products;
 }
