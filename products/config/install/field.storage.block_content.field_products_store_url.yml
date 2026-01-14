@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - block_content
+  enforced:
+    config:
+      - block_content.type.products_block
 id: block_content.field_products_store_url
 field_name: field_products_store_url
 entity_type: block_content
