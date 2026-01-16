@@ -36,7 +36,7 @@ button.slick-next, button.slick-prev {
 	opacity: .25;
 }
 .slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
-	background: var(--primary-color);
+	background: var(--primary-color) !important;
 }
 .slick-arrow:hover::before {
   color: #fff;
