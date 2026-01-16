@@ -15,7 +15,12 @@ use PhpParser\Node\Stmt\Catch_;
  */
 function products_preprocess_block(&$variables)
 {
-  if ($variables['plugin_id'] == 'inline_block:products_block') {
+  // Check if the block is a custom content block (not a views block, etc.).
+  if ((isset($variables['elements']['content']['#block_content'])
+      && $variables['elements']['content']['#block_content'] instanceof BlockContentInterface
+      && $variables['elements']['content']['#block_content']->bundle() == 'products_block')
+    || ($variables['plugin_id'] == 'inline_block:products_block')
+  ) {
     // This line is for development, it should be deleted for production
     // DELETE ME
     if (!ISUEOHelpers\General::is_production_server()) {
