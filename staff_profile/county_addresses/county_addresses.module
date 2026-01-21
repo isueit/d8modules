@@ -1,0 +1,68 @@
+<?php
+
+use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_rebuild().
+ */
+function county_addresses_rebuild()
+{
+  county_addresses_handle_feed();
+}
+
+/**
+ * Implements hook_cron().
+ */
+function county_addresses_cron()
+{
+  county_addresses_handle_feed();
+}
+
+function county_addresses_handle_feed()
+{
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/Staffdir/CountyOffices.json');
+  $feed_counties = json_decode($raw, true);
+  if (!$feed_counties || count($feed_counties) < 50) {
+    return;
+  }
+  $taxonomy_counties = ISUEOHelpers\Taxonomy::get_terms('counties_in_iowa');
+  $fields = [
+    'field_address' => 'address_raw',
+    'field_office_hours' => 'hours',
+    'field_phone' => 'phone',
+    'field_region' => 'region',
+    'field_email' => 'email',
+  ];
+
+  foreach ($feed_counties as $county => $county_values) {
+    $save = false;
+    $site_name = $county_values['site_name'];
+    if (array_key_exists($site_name, $taxonomy_counties)) {
+      $term = Term::load($taxonomy_counties[$site_name]);
+      if (!$term) {
+        continue;
+      }
+      echo $term->id() . ': ' . $term->getName() . PHP_EOL;
+
+      foreach ($fields as $taxonomy_field => $feed_field) {
+        if ($term->get($taxonomy_field)->value != $county_values[$feed_field]) {
+          $term->set($taxonomy_field, $county_values[$feed_field]);
+          $save = true;
+        }
+      }
+
+      // Handle the website
+      if ( $term->field_website->isEmpty() || $term->get('field_website')->first()->getURL()->toString() != $county_values['website']) {
+        $term->set('field_website', ['uri' => $county_values['website'], 'title' => 'Visit ' . $site_name . ' County',]);
+        $save = true;
+      }
+
+      if ($save) {
+        echo 'Need to save term: ' . $term->id() . PHP_EOL;
+        $term->save();
+      }
+    }
+    echo PHP_EOL;
+  }
+}
