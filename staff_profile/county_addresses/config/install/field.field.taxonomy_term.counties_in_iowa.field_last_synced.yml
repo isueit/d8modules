@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_last_synced
+    - taxonomy.vocabulary.counties_in_iowa
+  enforced:
+    module:
+      - county_addresses
+id: taxonomy_term.counties_in_iowa.field_last_synced
+field_name: field_last_synced
+entity_type: taxonomy_term
+bundle: counties_in_iowa
+label: 'Last Synced'
+description: 'Date the data was last synced.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: timestamp
