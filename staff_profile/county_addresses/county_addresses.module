@@ -43,7 +43,6 @@ function county_addresses_handle_feed()
       if (!$term) {
         continue;
       }
-      echo $term->id() . ': ' . $term->getName() . PHP_EOL;
 
       foreach ($fields as $taxonomy_field => $feed_field) {
         if ($term->get($taxonomy_field)->value != $county_values[$feed_field]) {
@@ -53,16 +52,14 @@ function county_addresses_handle_feed()
       }
 
       // Handle the website
-      if ( $term->field_website->isEmpty() || $term->get('field_website')->first()->getURL()->toString() != $county_values['website']) {
+      if ($term->field_website->isEmpty() || $term->get('field_website')->first()->getURL()->toString() != $county_values['website']) {
         $term->set('field_website', ['uri' => $county_values['website'], 'title' => 'Visit ' . $site_name . ' County',]);
         $save = true;
       }
 
       if ($save) {
-        echo 'Need to save term: ' . $term->id() . PHP_EOL;
         $term->save();
       }
     }
-    echo PHP_EOL;
   }
 }
