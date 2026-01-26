@@ -1,0 +1,7 @@
+name: Date Dropdown
+type: module
+description: 'A custom date dropdown module.'
+core_version_requirement: ^9 || ^10
+package: Custom
+dependencies:
+  - drupal:datetime
