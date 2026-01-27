@@ -1,0 +1,405 @@
+/* Container */
+.county-office-map-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  background: #f9fafb;
+}
+
+/* Header */
+.map-header {
+  background: white;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.map-header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.quick-links {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-primary {
+  background: #c8102e;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #a00d25;
+}
+
+.btn-secondary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #1d4ed8;
+}
+
+/* Search */
+.search-wrapper {
+  position: relative;
+  max-width: 600px;
+  margin-bottom: 0.5rem;
+}
+
+#county-search {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+#county-search:focus {
+  outline: none;
+  border-color: #c8102e;
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  margin-top: 0.25rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.result-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.result-item:hover {
+  background: #f9fafb;
+}
+
+.result-title {
+  font-weight: 600;
+  color: #111827;
+}
+
+.result-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.no-results {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.help-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Main Content Wrapper */
+.map-content-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Map Area */
+.map-area {
+  flex: 1;
+  overflow: auto;
+  padding: 2rem;
+}
+
+.map-container {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.map-container svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* SVG County Styling */
+svg path.county-hover {
+  opacity: 0.7;
+}
+
+svg path.county-selected,
+svg g.county-selected {
+  stroke: #c8102e;
+  stroke-width: 2;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+
+/* Info Panel */
+.info-panel {
+  width: 400px;
+  background: white;
+  border-left: 1px solid #e5e7eb;
+  overflow-y: auto;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+}
+
+#panel-content {
+  padding: 1.5rem;
+}
+
+/* Empty State */
+.panel-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.icon-location {
+  color: #d1d5db;
+  margin: 0 auto 1rem;
+}
+
+.panel-empty-state h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.panel-empty-state p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Quick Access */
+.quick-access {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.quick-access h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.75rem 0;
+}
+
+.quick-county {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  color: #374151;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.quick-county:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Panel Header */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.panel-title-area h2 {
+font-size: 1.5rem;
+font-weight: 700;
+color: #111827;
+margin: 0 0 0.25rem 0;
+}
+.region-label {
+font-size: 0.875rem;
+color: #6b7280;
+margin: 0;
+}
+.close-panel {
+background: none;
+border: none;
+font-size: 2rem;
+color: #9ca3af;
+cursor: pointer;
+line-height: 1;
+padding: 0;
+width: 2rem;
+height: 2rem;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 0.25rem;
+}
+.close-panel:hover {
+background: #f3f4f6;
+color: #374151;
+}
+/* County Office Section */
+.county-office-section,
+.staff-section,
+.regional-director-section {
+margin-bottom: 1.5rem;
+padding: 1rem;
+background: #f9fafb;
+border-radius: 0.5rem;
+border: 1px solid #e5e7eb;
+}
+.county-office-section h3,
+.staff-section h3,
+.regional-director-section h3 {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+font-size: 1rem;
+font-weight: 600;
+color: #111827;
+margin: 0 0 1rem 0;
+}
+.icon {
+flex-shrink: 0;
+}
+.office-info {
+margin-bottom: 1rem;
+}
+.office-info p {
+margin: 0.5rem 0;
+font-size: 0.875rem;
+color: #374151;
+}
+.office-info a {
+color: #2563eb;
+text-decoration: none;
+}
+.office-info a:hover {
+text-decoration: underline;
+}
+/* Staff List */
+.staff-list {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+}
+.loading {
+padding: 1rem;
+text-align: center;
+color: #6b7280;
+font-size: 0.875rem;
+}
+/* Regional Director */
+.director-info {
+display: flex;
+gap: 1rem;
+margin-bottom: 1rem;
+}
+.director-avatar {
+width: 3rem;
+height: 3rem;
+border-radius: 50%;
+background: #2563eb;
+color: white;
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 700;
+font-size: 1.125rem;
+flex-shrink: 0;
+}
+.director-details p {
+margin: 0.25rem 0;
+font-size: 0.875rem;
+}
+.director-name {
+font-weight: 600;
+color: #111827;
+font-size: 1rem !important;
+}
+.director-region {
+color: #6b7280;
+}
+.director-email a,
+.director-phone a {
+color: #2563eb;
+text-decoration: none;
+}
+.director-email a:hover,
+.director-phone a:hover {
+text-decoration: underline;
+}
+/* Responsive */
+@media (max-width: 1024px) {
+.map-content-wrapper {
+flex-direction: column;
+}
+.info-panel {
+width: 100%;
+border-left: none;
+border-top: 1px solid #e5e7eb;
+max-height: 50vh;
+}
+.panel-empty-state {
+display: none;
+}
+}
+@media (max-width: 640px) {
+.map-header {
+padding: 1rem;
+}
+.map-header h1 {
+font-size: 1.5rem;
+}
+.quick-links {
+flex-direction: column;
+}
+.map-area {
+padding: 1rem;
+}
+}

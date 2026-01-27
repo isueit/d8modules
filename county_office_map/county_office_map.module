@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * County Office Map module.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_theme().
+ */
+function county_office_map_theme($existing, $type, $theme, $path) {
+  return [
+    'county_office_map' => [
+      'variables' => [
+        'counties' => [],
+        'regions' => [],
+        'map_svg' => '',
+      ],
+      'template' => 'county-office-map',
+    ],
+  ];
+}

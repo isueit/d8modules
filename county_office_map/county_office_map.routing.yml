@@ -1,0 +1,22 @@
+county_office_map.sync_admin:
+  path: '/admin/config/extension/county-sync'
+  defaults:
+    _form: '\Drupal\county_office_map\Form\CountySyncForm'
+    _title: 'County Office Data Sync'
+  requirements:
+    _permission: 'administer site configuration'
+
+county_office_map.sync_county:
+  path: '/admin/config/extension/county-sync/run/{county_tid}'
+  defaults:
+    _controller: '\Drupal\county_office_map\Controller\SyncController::syncCounty'
+  requirements:
+    _permission: 'administer site configuration'
+    county_tid: \d+
+
+county_office_map.sync_all:
+  path: '/admin/config/extension/county-sync/run-all'
+  defaults:
+    _controller: '\Drupal\county_office_map\Controller\SyncController::syncAll'
+  requirements:
+    _permission: 'administer site configuration'
