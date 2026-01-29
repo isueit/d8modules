@@ -1,0 +1,60 @@
+/* --------------------------------------  */
+/* ## ISU MICROSITE STYLES
+/* --------------------------------------  */
+
+/* Hero Header */
+.microsite-hero-label-wrapper {
+    z-index: 2;
+}
+.microsite-hero-wrapper {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    min-height: 400px;
+    position: relative;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.microsite-hero-label-wrapper.isueo-callout-stat {
+    backdrop-filter: blur(10px);
+    text-align: center;
+    width: 100%;
+    max-width: 45%;
+    animation: fadeIn 0.6s ease-out;
+}
+.microsite-hero-label-wrapper h1.isu-page-title {
+    color: #fff;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    font-weight: 700;
+}
+.microsite-event-details--wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 35px;
+    font-weight: 500;
+}
+.microsite-date-wrapper {
+    color: var(--primary-accent-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.microsite-event-location {
+    color: #fff;
+    font-weight: 500;
+}
+.microsite-event-location:before {
+    content: "\f041";
+    font-family: 'FontAwesome';
+    font-size: 1.1rem;
+    color: #fff;
+}
+.microsite-event-website header.isu-wordmark-sitename {
+    visibility: hidden;
+}

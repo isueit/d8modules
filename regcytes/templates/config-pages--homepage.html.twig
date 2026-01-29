@@ -1,0 +1,50 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a config_page.
+ *
+ * @see template_preprocess_config_pages()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('subsite-homepage') }}>
+ {% if content.field_subsite_header_image is not empty %}
+        {% set image_field = content.field_subsite_header_image['#items'].entity %}
+        {% set header_image_url = file_url(image_field.uri.value) %}
+          <div class="microsite-hero-wrapper" style="background-image: url('{{ header_image_url }}');">
+          <div class="microsite-hero-label-wrapper isueo-callout-stat">
+            <div class="microsite-hero-label container">
+              <div class="microsite-date-wrapper">
+                {% if config_pages.field_subsite_dates.0.value %}
+                  {% set start_date = config_pages.field_subsite_dates.0.value %}
+                  {% set end_date = config_pages.field_subsite_dates.0.end_value %}
+    
+                  {% set start_month = start_date|date('F') %}
+                  {% set start_day = start_date|date('j') %}
+                  {% set start_year = start_date|date('Y') %}
+    
+                  {% set end_month = end_date|date('F') %}
+                  {% set end_day = end_date|date('j') %}
+                  {% set end_year = end_date|date('Y') %}
+    
+                  {% if start_month == end_month and start_year == end_year %}
+                    {{ start_month }} {{ start_day }}-{{ end_day }}, {{ start_year }}
+                  {% elseif start_year == end_year %}
+                    {{ start_month }} {{ start_day }} - {{ end_month }} {{ end_day }}, {{ start_year }}
+                  {% else %}
+                    {{ start_month }} {{ start_day }}, {{ start_year }} - {{ end_month }} {{ end_day }}, {{ end_year }}
+                  {% endif %}
+                {% endif %}  
+              </div>
+              <h1 class="isu-page-title">{{ content.field_subsite_site_name }}</h1>
+              <div class="microsite-event-details--wrapper">
+              <div class="microsite-event-location">
+                {{ content.field_subsite_location }}
+              </div>
+              </div>
+            </div>
+          </div>
+          </div>
+      {% endif %}
+</div>
