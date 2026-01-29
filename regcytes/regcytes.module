@@ -29,5 +29,9 @@ function regcytes_theme($existing, $type, $theme, $path)
       'template' => 'page--type--microsite-page--canonical',
       'base hook' => 'page',
     ],
+    'isu_columns_two__config_pages_event_site_information_footer' => [
+    'template' => 'isu-columns-two--config-pages-event-site-information-footer',
+    'base hook' => 'config_pages',
+    ],
   ];
 }
