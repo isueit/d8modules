@@ -1,6 +1,6 @@
 name: 'Typesense - Events - Collection'
 type: module
-core_version_requirement: ^10
+core_version_requirement: ^10 || ^11
 description: 'Put events into a Typesense Collection'
 version: '8.x-1.1-dev'
 package: 'ISUEO'

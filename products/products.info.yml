@@ -1,6 +1,6 @@
 name: 'Products'
 type: module
-core_version_requirement: ^10
+core_version_requirement: ^10 || ^11
 description: 'Creates a block listing Products from the Store'
 version: '10.x-1.0-dev'
 package: 'ISUEO'
