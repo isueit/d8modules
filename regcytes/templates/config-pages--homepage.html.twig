@@ -39,10 +39,25 @@
               </div>
               <h1 class="isu-page-title">{{ content.field_subsite_site_name }}</h1>
               <div class="microsite-event-details--wrapper">
-              <div class="microsite-event-location">
-                {{ content.field_subsite_location }}
+                <div class="microsite-event-location">
+                  {{ content.field_subsite_location }}
+                </div>
               </div>
-              </div>
+              {% if config_pages.field_subsite_registration_deets.0.entity %}
+                {% set reg_paragraph = config_pages.field_subsite_registration_deets.0.entity %}
+                {% if reg_paragraph.field_subsite_registration_link is not empty %}
+                  {% set registration_url = reg_paragraph.field_subsite_registration_link.0.uri %}
+                  {% set registration_open = reg_paragraph.field_subsite_registration_open.0.value %}
+                  {% set registration_close = reg_paragraph.field_subsite_registration_close.0.value %}
+                  {% set current_date = "now"|date('Y-m-d') %}
+
+                  {% if registration_open <= current_date and registration_close >= current_date %}
+                    <div class="microsite-registration">
+                      <a class="btn btn-outline-danger" href="{{ registration_url }}">Register Now <i class="fa-solid fa-angle-right"></i></a>
+                    </div>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
             </div>
           </div>
           </div>

@@ -48,12 +48,14 @@
 .microsite-event-location {
     color: #fff;
     font-weight: 500;
+    display: flex;
 }
 .microsite-event-location:before {
     content: "\f041";
     font-family: 'FontAwesome';
     font-size: 1.1rem;
     color: #fff;
+    padding-right: .5rem;
 }
 .microsite-event-website header.isu-wordmark-sitename {
     visibility: hidden;
