@@ -12,4 +12,5 @@ dependencies:
   - slick_views:slick_views
   - blazy:blazy
   - d8modules:isueo_helpers
-  - drupal:paragraphs
+  - paragraphs:paragraphs
+  - paragraphs_ee:paragraphs_ee
