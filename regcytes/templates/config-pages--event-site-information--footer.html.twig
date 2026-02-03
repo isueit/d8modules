@@ -1,0 +1,87 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a config_page.
+ *
+ * @see template_preprocess_config_pages()
+ *
+ * @ingroup themeable
+ */
+#}
+
+			{# Event Footer #}
+			<section class="subsite-footer">
+  				<div class="pre-footer-container">
+    				<div class="pre-footer-grid">
+      					<div class="pre-footer-left">
+        					{% if content.field_subsite_logo_graphic is not empty %}
+          						{{ content.field_subsite_logo_graphic }}
+        					{% endif %}
+        					<h2>{{ content.field_subsite_site_name }}</h2>
+        					<div class="microsite-date-wrapper">
+          						{% if config_pages.field_subsite_dates.0.value %}
+            						{% set start_date = config_pages.field_subsite_dates.0.value %}
+            						{% set end_date = config_pages.field_subsite_dates.0.end_value %}
+    
+            						{% set start_month = start_date|date('F') %}
+            						{% set start_day = start_date|date('j') %}
+            						{% set start_year = start_date|date('Y') %}
+    
+            						{% set end_month = end_date|date('F') %}
+            						{% set end_day = end_date|date('j') %}
+            						{% set end_year = end_date|date('Y') %}
+    
+            						{% if start_month == end_month and start_year == end_year %}
+              							{{ start_month }} {{ start_day }}-{{ end_day }}, {{ start_year }}
+            						{% elseif start_year == end_year %}
+              							{{ start_month }} {{ start_day }} - {{ end_month }} {{ end_day }}, {{ start_year }}
+            						{% else %}
+              							{{ start_month }} {{ start_day }}, {{ start_year }} - {{ end_month }} {{ end_day }}, {{ end_year }}
+            						{% endif %}
+          						{% endif %}  
+        					</div>
+       						<div class="microsite-event-details--wrapper">
+          						<div class="microsite-event-location">
+            						{{ content.field_subsite_location }}
+          						</div>
+       						</div>
+      					</div>
+
+      					<div class="pre-footer-right">
+        					{% if config_pages.field_subsite_contact.0.entity %}
+          						{% set contact_paragraph = config_pages.field_subsite_contact.0.entity %}
+								{% set contact_email = contact_paragraph.field_subsite_contact_email.0.value %}
+								{% set contact_phone = contact_paragraph.field_subsite_contact_phone.0.value %}
+
+								<div class = "subsite-contact-email">
+									<p>Questions?</p>
+									{{ contact_email }}
+								</div>
+
+								<div class = "subsite-contact-phone">
+									<p>Phone</p>
+									{{ contact_phone }}
+								</div>
+
+								{% if config_pages.field_subsite_registration_deets.0.entity %}
+                					{% set reg_paragraph = config_pages.field_subsite_registration_deets.0.entity %}
+                					{% if reg_paragraph.field_subsite_registration_link is not empty %}
+                  						{% set registration_url = reg_paragraph.field_subsite_registration_link.0.uri %}
+                  						{% set registration_open = reg_paragraph.field_subsite_registration_open.0.value %}
+                  						{% set registration_close = reg_paragraph.field_subsite_registration_close.0.value %}
+                  						{% set current_date = "now"|date('Y-m-d') %}
+
+                  						{% if registration_open <= current_date and registration_close >= current_date %}
+                    					<div class="microsite-registration">
+											<p>Registration</p>
+                      						<a href="{{ registration_url }}">Register Now <i class="fa-solid fa-angle-right"></i></a>
+                    					</div>
+                  						{% endif %}
+                					{% endif %}
+              					{% endif %}
+							{% endif %}
+
+            			</div>
+          			</div>
+          		</div>
+      		</section>
