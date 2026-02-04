@@ -25,10 +25,6 @@ function regcytes_theme($existing, $type, $theme, $path)
       'template' => 'config-pages--homepage',
       'base hook' => 'config_pages',
     ],
-    'config_pages__event_site_information__footer' => [
-      'template' => 'config-pages--event-site-information--footer',
-      'base hook' => 'config_pages',
-    ],
     'page__type__microsite_page__canonical' => [
       'template' => 'page--type--microsite-page--canonical',
       'base hook' => 'page',
