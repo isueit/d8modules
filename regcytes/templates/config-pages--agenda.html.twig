@@ -46,10 +46,10 @@
               {% for schedule_key, schedule_item in schedule_items %}
                 {% set schedule_entity = schedule_item.entity %}
                 
-                {# Field Time module stores time as 'value' and 'end_value' in the first item #}
-                {% set time_field = schedule_entity.field_microsite_schedule_time.0 %}
-                {% set time_start = time_field.value %}
-                {% set time_end = time_field.end_value %}
+                {# Access time field using getValue() to get raw data array #}
+                {% set time_data = schedule_entity.field_microsite_schedule_time.getValue() %}
+                {% set time_start_seconds = time_data[0].from ?? time_data[0].value ?? null %}
+                {% set time_end_seconds = time_data[0].to ?? time_data[0].end_value ?? null %}
                 
                 {% set title = schedule_entity.field_microsite_section_title.value %}
                 {% set location = schedule_entity.field_microsite_schedule_locate.value %}
@@ -58,10 +58,30 @@
                 
                 <div class="schedule-item">
                   <div class="schedule-time">
-                    {% if time_start and time_end %}
-                      {{ time_start }} - {{ time_end }}
-                    {% elseif time_start %}
-                      {{ time_start }}
+                    {% if time_start_seconds and time_end_seconds %}
+                      {# Convert seconds to hours and minutes #}
+                      {% set start_hours = (time_start_seconds / 3600)|round(0, 'floor') %}
+                      {% set start_minutes = ((time_start_seconds % 3600) / 60)|round(0, 'floor') %}
+                      {% set end_hours = (time_end_seconds / 3600)|round(0, 'floor') %}
+                      {% set end_minutes = ((time_end_seconds % 3600) / 60)|round(0, 'floor') %}
+                      
+                      {# Format as 12-hour time #}
+                      {% set start_period = start_hours >= 12 ? 'PM' : 'AM' %}
+                      {% set start_display_hour = start_hours > 12 ? start_hours - 12 : (start_hours == 0 ? 12 : start_hours) %}
+                      {% set end_period = end_hours >= 12 ? 'PM' : 'AM' %}
+                      {% set end_display_hour = end_hours > 12 ? end_hours - 12 : (end_hours == 0 ? 12 : end_hours) %}
+                      
+                      {{ start_display_hour }}:{{ '%02d'|format(start_minutes) }} {{ start_period }} - {{ end_display_hour }}:{{ '%02d'|format(end_minutes) }} {{ end_period }}
+                    {% elseif time_start_seconds %}
+                      {# Convert seconds to hours and minutes #}
+                      {% set start_hours = (time_start_seconds / 3600)|round(0, 'floor') %}
+                      {% set start_minutes = ((time_start_seconds % 3600) / 60)|round(0, 'floor') %}
+                      
+                      {# Format as 12-hour time #}
+                      {% set start_period = start_hours >= 12 ? 'PM' : 'AM' %}
+                      {% set start_display_hour = start_hours > 12 ? start_hours - 12 : (start_hours == 0 ? 12 : start_hours) %}
+                      
+                      {{ start_display_hour }}:{{ '%02d'|format(start_minutes) }} {{ start_period }}
                     {% endif %}
                   </div>
                   
@@ -72,7 +92,6 @@
                     
                     {% if location %}
                       <div class="schedule-location">
-                        <span class="location-icon" aria-hidden="true">📍</span>
                         <span>{{ location }}</span>
                       </div>
                     {% endif %}

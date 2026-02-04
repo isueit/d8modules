@@ -1,5 +1,5 @@
 /* --------------------------------------  */
-/* ## ISU MICROSITE STYLES
+/* ## MICROSITE BANNER
 /* --------------------------------------  */
 
 /* Hero Header */
@@ -59,4 +59,76 @@
 }
 .microsite-event-website header.isu-wordmark-sitename {
     visibility: hidden;
+}
+
+/* --------------------------------------  */
+/* ## MICROSITE - AGENDA
+/* --------------------------------------  */
+.schedule-timeline {
+    border-radius: .25rem;
+    padding: 2rem;
+    box-shadow: 0.5625rem 0.5625rem 1.25rem rgb(0 0 0 / 20%);
+}
+.schedule-item {
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 0.125rem solid #ebebeb;
+    position: relative;
+    align-items: baseline;
+}
+.schedule-time {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    position: relative;
+    padding-left: 2rem;
+}
+.schedule-time::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.2);
+}
+.schedule-details {
+    flex: 1;
+}
+h3.schedule-title {
+    font-size: 1.18rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    margin-top: 0.2rem;
+}
+.schedule-location {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+.schedule-description {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+.schedule-description p {
+    margin-bottom: 0.5rem;
+}
+.schedule-description ul,
+.schedule-description ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.schedule-speakers {
+    color: #666;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+.schedule-speakers strong {
+    font-style: normal;
+    color: #333;
 }
