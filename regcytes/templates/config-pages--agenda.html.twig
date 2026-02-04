@@ -1,0 +1,143 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a config_page.
+ *
+ * @see template_preprocess_config_pages()
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div{{ attributes.addClass('subsite-agenda') }}>
+
+  {# Tab Navigation #}
+  {% if content.field_daily_schedule['#items'] is not empty %}
+    {% set daily_schedules = content.field_daily_schedule['#items'] %}
+    
+    <div class="agenda-tabs" role="tablist">
+      {% for key, day_item in daily_schedules %}
+        {% set day_entity = day_item.entity %}
+        {% set day_date = day_entity.field_microsite_event_date.value %}
+        {% set day_formatted = day_date|date('l, F j') %}
+        {% set day_number = key + 1 %}
+        {% set tab_id = 'day-' ~ day_number %}
+
+        <button class="agenda-tab {% if loop.first %}active{% endif %}" role="tab" aria-selected="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="{{ tab_id }}--panel" id="{{ tab_id }}--tab" data-tab="{{ tab_id }}">
+          <span class="tab-day-number">{{ day_number }}</span>
+          <span class="tab-day-name">{{ day_formatted }}</span>
+        </button>
+      {% endfor %}
+    </div>
+
+    {# Tab Content #}
+    <div class="agenda-content">
+      {% for key, day_item in daily_schedules %}
+        {% set day_entity = day_item.entity %}
+        {% set day_number = key + 1 %}
+        {% set tab_id = 'day-' ~ day_number %}
+        {% set schedule_items = day_entity.field_event_daily_schedule %}
+
+        <div class="agenda-panel {% if loop.first %}active{% endif %}" role="tabpanel" id="{{ tab_id }}--panel" aria-labelledby="{{ tab_id }}--tab" {% if not loop.first %}hidden{% endif %}>
+
+          {# Schedule Timeline per day #}
+          {% if schedule_items is not empty %}
+            <div class="schedule-timeline">
+              {% for schedule_key, schedule_item in schedule_items %}
+                {% set schedule_entity = schedule_item.entity %}
+                
+                {# Field Time module stores time as 'value' and 'end_value' in the first item #}
+                {% set time_field = schedule_entity.field_microsite_schedule_time.0 %}
+                {% set time_start = time_field.value %}
+                {% set time_end = time_field.end_value %}
+                
+                {% set title = schedule_entity.field_microsite_section_title.value %}
+                {% set location = schedule_entity.field_microsite_schedule_locate.value %}
+                {% set description = schedule_entity.field_microsite_schedule_descrip.value %}
+                {% set speakers = schedule_entity.field_microsite_schedule_speaker %}
+                
+                <div class="schedule-item">
+                  <div class="schedule-time">
+                    {% if time_start and time_end %}
+                      {{ time_start }} - {{ time_end }}
+                    {% elseif time_start %}
+                      {{ time_start }}
+                    {% endif %}
+                  </div>
+                  
+                  <div class="schedule-details">
+                    {% if title %}
+                      <h3 class="schedule-title">{{ title }}</h3>
+                    {% endif %}
+                    
+                    {% if location %}
+                      <div class="schedule-location">
+                        <span class="location-icon" aria-hidden="true">📍</span>
+                        <span>{{ location }}</span>
+                      </div>
+                    {% endif %}
+                    
+                    {% if description %}
+                      <div class="schedule-description">
+                        {{ description|raw }}
+                      </div>
+                    {% endif %}
+                    
+                    {% if speakers is not empty %}
+                      <div class="schedule-speakers">
+                        <strong>Speaker(s):</strong>
+                        {% for speaker_key, speaker in speakers %}
+                          {{ speaker.value }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="no-schedule">No events scheduled for this day.</p>
+          {% endif %}
+          
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="no-schedule">No schedule available at this time.</p>
+  {% endif %}
+  
+</div>
+
+{# Add inline JavaScript for tab functionality #}
+<script>
+(function() {
+  const tabs = document.querySelectorAll('.agenda-tab');
+  const panels = document.querySelectorAll('.agenda-panel');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-tab');
+      
+      // Remove active class from all tabs and panels
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      panels.forEach(p => {
+        p.classList.remove('active');
+        p.setAttribute('hidden', '');
+      });
+      
+      // Add active class to clicked tab and corresponding panel
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
+      
+      const targetPanel = document.getElementById(targetId + '--panel');
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.removeAttribute('hidden');
+      }
+    });
+  });
+})();
+</script>
