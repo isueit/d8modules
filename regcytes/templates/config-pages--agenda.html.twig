@@ -12,8 +12,8 @@
 <div{{ attributes.addClass('subsite-agenda') }}>
 
   {# Tab Navigation #}
-  {% if content.field_daily_schedule['#items'] is not empty %}
-    {% set daily_schedules = content.field_daily_schedule['#items'] %}
+  {% if content.field_subsite_daily_schedule['#items'] is not empty %}
+    {% set daily_schedules = content.field_subsite_daily_schedule['#items'] %}
     
     <div class="agenda-tabs" role="tablist">
       {% for key, day_item in daily_schedules %}
