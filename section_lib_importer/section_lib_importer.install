@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use function Drupal\Core\Session\user_role_permissions;
 use Drupal\isueo_helpers\ISUEOHelpers;
 use GuzzleHttp\Promise\Is;
+use Drupal\Core\File\FileExists;
 
 // ADD NEW UPDATES HERE
 // function section_lib_importer_update_8001() {
@@ -846,7 +847,7 @@ function addSectionTemplates($templates, bool $create_blocks = false) {
       //Load images and set them to be used as thumbnails
       $file_loc = \Drupal::service('file_system')->realpath(\Drupal::service('extension.list.module')->getPath('section_lib_importer')) . '/resources/' . $sectlibtemplate['filename'];
       $file_data = ISUEOHelpers\Files::fetch_url($file_loc);
-      $file_saved = \Drupal::service('file.repository')->writeData($file_data, "public://section_library/" . $sectlibtemplate['filename'], FileSystemInterface::EXISTS_REPLACE);
+      $file_saved = \Drupal::service('file.repository')->writeData($file_data, "public://section_library/" . $sectlibtemplate['filename'], FileExists::Replace);
 
       $data = [
         'type' => $sectlibtemplate['type'],

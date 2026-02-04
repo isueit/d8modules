@@ -1,6 +1,6 @@
 name: 'Typesense - Events Search'
 type: module
-core_version_requirement: ^10
+core_version_requirement: ^10 || ^11
 description: 'Create Blocks for doing Events Searches'
 version: '8.x-1.1-dev'
 package: 'ISUEO'
