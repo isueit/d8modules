@@ -1,98 +1,162 @@
 {#
 /**
  * @file
- * Step-by-step template logic debug
+ * Default theme implementation to display a config_page.
+ *
+ * @see template_preprocess_config_pages()
+ *
+ * @ingroup themeable
  */
 #}
 
 <div{{ attributes.addClass('subsite-agenda') }}>
 
-  <h2>Step-by-Step Template Logic Debug</h2>
-
-  <div style="background: #e7f3ff; padding: 15px; margin: 15px 0;">
-    <h3>Step 1: Check if field has items</h3>
-    <p><strong>content.field_subsite_daily_schedule['#items'] is not empty:</strong> 
-      {{ content.field_subsite_daily_schedule['#items'] is not empty ? 'TRUE ✓' : 'FALSE ✗' }}</p>
-  </div>
-
+  {# Tab Navigation #}
   {% if content.field_subsite_daily_schedule['#items'] is not empty %}
-    <div style="background: #d4edda; padding: 15px; margin: 15px 0;">
-      <h3>Step 2: Set daily_schedules variable</h3>
-      {% set daily_schedules = content.field_subsite_daily_schedule['#items'] %}
-      <p><strong>daily_schedules set:</strong> ✓</p>
-      <p><strong>daily_schedules count:</strong> {{ daily_schedules|length }}</p>
+    {% set daily_schedules = content.field_subsite_daily_schedule['#items'] %}
+    
+    <div class="agenda-tabs" role="tablist">
+      {% for key, day_item in daily_schedules %}
+        {% set day_entity = day_item.entity %}
+        {% set day_date = day_entity.field_microsite_event_date.value %}
+        {% set day_formatted = day_date|date('l, F j') %}
+        {% set day_number = key + 1 %}
+        {% set tab_id = 'day-' ~ day_number %}
+
+        <button class="agenda-tab {% if loop.first %}active{% endif %}" role="tab" aria-selected="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="{{ tab_id }}--panel" id="{{ tab_id }}--tab" data-tab="{{ tab_id }}">
+          <span class="tab-day-number">{{ day_number }}</span>
+          <span class="tab-day-name">{{ day_formatted }}</span>
+        </button>
+      {% endfor %}
     </div>
 
-    <div style="background: #fff3cd; padding: 15px; margin: 15px 0;">
-      <h3>Step 3: Loop through daily_schedules</h3>
+    {# Tab Content #}
+    <div class="agenda-content">
       {% for key, day_item in daily_schedules %}
-        <div style="background: white; padding: 10px; margin: 10px 0; border: 1px solid #ccc;">
-          <h4>Loop Iteration {{ key + 1 }}</h4>
-          
-          <p><strong>Step 3a: Set day_entity</strong></p>
-          {% set day_entity = day_item.entity %}
-          <p>day_entity set: {{ day_entity is defined ? 'YES ✓' : 'NO ✗' }}</p>
-          
-          <p><strong>Step 3b: Get day_date</strong></p>
-          {% set day_date = day_entity.field_microsite_event_date.value %}
-          <p>day_date: {{ day_date }}</p>
-          
-          <p><strong>Step 3c: Format day_date</strong></p>
-          {% set day_formatted = day_date|date('l, F j') %}
-          <p>day_formatted: {{ day_formatted }}</p>
-          
-          <p><strong>Step 3d: Calculate day_number</strong></p>
-          {% set day_number = key + 1 %}
-          <p>day_number: {{ day_number }}</p>
-          
-          <p><strong>Step 3e: Create tab_id</strong></p>
-          {% set tab_id = 'day-' ~ day_number %}
-          <p>tab_id: {{ tab_id }}</p>
-          
-          <hr>
-          
-          <p><strong>Step 3f: Get schedule_items</strong></p>
-          {% set schedule_items = day_entity.field_event_daily_schedule %}
-          <p>schedule_items set: {{ schedule_items is defined ? 'YES ✓' : 'NO ✗' }}</p>
-          <p>schedule_items is not empty: {{ schedule_items is not empty ? 'YES ✓' : 'NO ✗' }}</p>
-          <p>schedule_items count: {{ schedule_items|length }}</p>
-          
+        {% set day_entity = day_item.entity %}
+        {% set day_number = key + 1 %}
+        {% set tab_id = 'day-' ~ day_number %}
+        {% set schedule_items = day_entity.field_event_daily_schedule %}
+
+        <div class="agenda-panel {% if loop.first %}active{% endif %}" role="tabpanel" id="{{ tab_id }}--panel" aria-labelledby="{{ tab_id }}--tab" {% if not loop.first %}hidden{% endif %}>
+
+          {# Schedule Timeline per day #}
           {% if schedule_items is not empty %}
-            <div style="background: #d1ecf1; padding: 10px; margin: 10px 0;">
-              <p><strong>Step 3g: Loop through schedule_items</strong></p>
+            <div class="schedule-timeline">
               {% for schedule_key, schedule_item in schedule_items %}
-                <div style="background: white; padding: 5px; margin: 5px 0; border-left: 3px solid #0c5460;">
-                  <p><strong>Schedule Item {{ schedule_key + 1 }}:</strong></p>
+                {% set schedule_entity = schedule_item.entity %}
+                
+                {# Access time field using getValue() to get raw data array #}
+                {% set time_data = schedule_entity.field_microsite_schedule_time.getValue() %}
+                {% set time_start_seconds = time_data[0].from ?? time_data[0].value ?? null %}
+                {% set time_end_seconds = time_data[0].to ?? time_data[0].end_value ?? null %}
+                
+                {% set title = schedule_entity.field_microsite_section_title.value %}
+                {% set location = schedule_entity.field_microsite_schedule_locate.value %}
+                {% set description = schedule_entity.field_microsite_schedule_descrip.value %}
+                {% set speakers = schedule_entity.field_microsite_schedule_speaker %}
+                
+                <div class="schedule-item">
+                  <div class="schedule-time">
+                    {% if time_start_seconds and time_end_seconds %}
+                      {# Convert seconds to hours and minutes #}
+                      {% set start_hours = (time_start_seconds / 3600)|round(0, 'floor') %}
+                      {% set start_minutes = ((time_start_seconds % 3600) / 60)|round(0, 'floor') %}
+                      {% set end_hours = (time_end_seconds / 3600)|round(0, 'floor') %}
+                      {% set end_minutes = ((time_end_seconds % 3600) / 60)|round(0, 'floor') %}
+                      
+                      {# Format as 12-hour time #}
+                      {% set start_period = start_hours >= 12 ? 'PM' : 'AM' %}
+                      {% set start_display_hour = start_hours > 12 ? start_hours - 12 : (start_hours == 0 ? 12 : start_hours) %}
+                      {% set end_period = end_hours >= 12 ? 'PM' : 'AM' %}
+                      {% set end_display_hour = end_hours > 12 ? end_hours - 12 : (end_hours == 0 ? 12 : end_hours) %}
+                      
+                      {{ start_display_hour }}:{{ '%02d'|format(start_minutes) }} {{ start_period }} - {{ end_display_hour }}:{{ '%02d'|format(end_minutes) }} {{ end_period }}
+                    {% elseif time_start_seconds %}
+                      {# Convert seconds to hours and minutes #}
+                      {% set start_hours = (time_start_seconds / 3600)|round(0, 'floor') %}
+                      {% set start_minutes = ((time_start_seconds % 3600) / 60)|round(0, 'floor') %}
+                      
+                      {# Format as 12-hour time #}
+                      {% set start_period = start_hours >= 12 ? 'PM' : 'AM' %}
+                      {% set start_display_hour = start_hours > 12 ? start_hours - 12 : (start_hours == 0 ? 12 : start_hours) %}
+                      
+                      {{ start_display_hour }}:{{ '%02d'|format(start_minutes) }} {{ start_period }}
+                    {% endif %}
+                  </div>
                   
-                  {% set schedule_entity = schedule_item.entity %}
-                  <p>schedule_entity exists: {{ schedule_entity is defined ? 'YES' : 'NO' }}</p>
-                  
-                  {% if schedule_entity is defined and schedule_entity is not null %}
-                    <p>Title: {{ schedule_entity.field_microsite_section_title.value ?? 'NO TITLE' }}</p>
+                  <div class="schedule-details">
+                    {% if title %}
+                      <h3 class="schedule-title">{{ title }}</h3>
+                    {% endif %}
                     
-                    <p><strong>Getting time data:</strong></p>
-                    {% set time_data = schedule_entity.field_microsite_schedule_time.getValue() %}
-                    <p>time_data: {{ dump(time_data) }}</p>
+                    {% if location %}
+                      <div class="schedule-location">
+                        <span>{{ location }}</span>
+                      </div>
+                    {% endif %}
                     
-                    {% set time_start_seconds = time_data[0].from ?? time_data[0].value ?? null %}
-                    {% set time_end_seconds = time_data[0].to ?? time_data[0].end_value ?? null %}
-                    <p>time_start_seconds: {{ time_start_seconds ?? 'NULL' }}</p>
-                    <p>time_end_seconds: {{ time_end_seconds ?? 'NULL' }}</p>
-                  {% endif %}
+                    {% if description %}
+                      <div class="schedule-description">
+                        {{ description|raw }}
+                      </div>
+                    {% endif %}
+                    
+                    {% if speakers is not empty %}
+                      <div class="schedule-speakers">
+                        <strong>Speaker(s):</strong>
+                        {% for speaker_key, speaker in speakers %}
+                          {{ speaker.value }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
                 </div>
               {% endfor %}
             </div>
           {% else %}
-            <p style="color: red;">schedule_items is EMPTY - this is why content doesn't show!</p>
+            <p class="no-schedule">No events scheduled for this day.</p>
           {% endif %}
+          
         </div>
       {% endfor %}
     </div>
-    
   {% else %}
-    <div style="background: #f8d7da; padding: 15px; margin: 15px 0;">
-      <p style="color: red; font-weight: bold;">STOPPED: Field items is empty - "No schedule available" message would show here</p>
-    </div>
+    <p class="no-schedule">No schedule available at this time.</p>
   {% endif %}
-
+  
 </div>
+
+{# Add inline JavaScript for tab functionality #}
+<script>
+(function() {
+  const tabs = document.querySelectorAll('.agenda-tab');
+  const panels = document.querySelectorAll('.agenda-panel');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-tab');
+      
+      // Remove active class from all tabs and panels
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      panels.forEach(p => {
+        p.classList.remove('active');
+        p.setAttribute('hidden', '');
+      });
+      
+      // Add active class to clicked tab and corresponding panel
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
+      
+      const targetPanel = document.getElementById(targetId + '--panel');
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.removeAttribute('hidden');
+      }
+    });
+  });
+})();
+</script>
