@@ -1,87 +1,105 @@
 {#
 /**
  * @file
- * Diagnostic template to debug preview server
+ * Debug entity reference access
  */
 #}
 
 <div{{ attributes.addClass('subsite-agenda') }}>
 
-  <h2>Diagnostic Information</h2>
-  
-  <div style="background: #f0f0f0; padding: 20px; margin: 20px 0;">
-    <h3>Environment Check:</h3>
-    <p><strong>Server:</strong> {{ app.request.server.get('SERVER_NAME') }}</p>
-    <p><strong>Environment:</strong> {{ app.request.server.get('APP_ENV') ?? 'Unknown' }}</p>
-  </div>
+  <h2>Entity Reference Debug</h2>
 
-  <div style="background: #fff3cd; padding: 20px; margin: 20px 0;">
-    <h3>Content Variable Check:</h3>
-    <p><strong>content exists:</strong> {{ content is defined ? 'YES' : 'NO' }}</p>
-    <p><strong>content is empty:</strong> {{ content is empty ? 'YES' : 'NO' }}</p>
-    
-    <h4>Available fields in content:</h4>
-    <ul>
-      {% for key in content|keys %}
-        <li>{{ key }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div style="background: #d1ecf1; padding: 20px; margin: 20px 0;">
-    <h3>Field Check: field_subsite_daily_schedule</h3>
-    <p><strong>Field exists:</strong> {{ content.field_subsite_daily_schedule is defined ? 'YES' : 'NO' }}</p>
-    <p><strong>Field is empty:</strong> {{ content.field_subsite_daily_schedule is empty ? 'YES' : 'NO' }}</p>
-    
-    {% if content.field_subsite_daily_schedule is defined %}
-      <h4>Field Structure:</h4>
-      <pre style="background: white; padding: 10px; overflow: auto;">{{ dump(content.field_subsite_daily_schedule) }}</pre>
-      
-      <p><strong>Has #items:</strong> {{ content.field_subsite_daily_schedule['#items'] is defined ? 'YES' : 'NO' }}</p>
-      
-      {% if content.field_subsite_daily_schedule['#items'] is defined %}
-        <p><strong>#items is empty:</strong> {{ content.field_subsite_daily_schedule['#items'] is empty ? 'YES' : 'NO' }}</p>
-        <p><strong>#items count:</strong> {{ content.field_subsite_daily_schedule['#items']|length }}</p>
-      {% endif %}
-    {% endif %}
-  </div>
-
-  <div style="background: #d4edda; padding: 20px; margin: 20px 0;">
-    <h3>Alternative Field Names to Check:</h3>
-    <p><strong>field_daily_schedule exists:</strong> {{ content.field_daily_schedule is defined ? 'YES' : 'NO' }}</p>
-    {% if content.field_daily_schedule is defined %}
-      <p><strong>field_daily_schedule has #items:</strong> {{ content.field_daily_schedule['#items'] is defined ? 'YES' : 'NO' }}</p>
-      {% if content.field_daily_schedule['#items'] is defined %}
-        <p><strong>field_daily_schedule #items count:</strong> {{ content.field_daily_schedule['#items']|length }}</p>
-      {% endif %}
-    {% endif %}
-  </div>
-
-  <div style="background: #f8d7da; padding: 20px; margin: 20px 0;">
-    <h3>Config Pages Object Check:</h3>
-    <p><strong>config_pages exists:</strong> {{ config_pages is defined ? 'YES' : 'NO' }}</p>
-    {% if config_pages is defined %}
-      <p><strong>config_pages type:</strong> {{ config_pages.getEntityTypeId() }}</p>
-      <p><strong>config_pages bundle:</strong> {{ config_pages.bundle() }}</p>
-      
-      <h4>Config Pages Fields:</h4>
-      <ul>
-        {% for field_name, field in config_pages.getFields() %}
-          <li>{{ field_name }} - {{ field.isEmpty() ? 'EMPTY' : 'HAS DATA' }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  </div>
-
-  <hr>
-
-  <h2>Original Template Logic Test:</h2>
   {% if content.field_subsite_daily_schedule['#items'] is not empty %}
-    <p style="color: green; font-weight: bold;">✓ Condition PASSED - Schedule should display</p>
-    <p>Items count: {{ content.field_subsite_daily_schedule['#items']|length }}</p>
+    {% set daily_schedules = content.field_subsite_daily_schedule['#items'] %}
+    
+    <p><strong>Daily schedules count:</strong> {{ daily_schedules|length }}</p>
+    
+    {% for key, day_item in daily_schedules %}
+      <div style="border: 2px solid #333; padding: 15px; margin: 15px 0; background: #f5f5f5;">
+        <h3>Day Item {{ key + 1 }}</h3>
+        
+        <h4>Full day_item dump:</h4>
+        <pre style="background: white; padding: 10px; overflow: auto; max-height: 300px;">{{ dump(day_item) }}</pre>
+        
+        <hr>
+        
+        <h4>Checking day_item.entity:</h4>
+        <p><strong>day_item.entity exists:</strong> {{ day_item.entity is defined ? 'YES' : 'NO' }}</p>
+        
+        {% if day_item.entity is defined %}
+          <p><strong>day_item.entity is null:</strong> {{ day_item.entity is null ? 'YES' : 'NO' }}</p>
+          
+          {% if day_item.entity is not null %}
+            <p><strong>Entity type:</strong> {{ day_item.entity.getEntityTypeId() }}</p>
+            <p><strong>Entity bundle:</strong> {{ day_item.entity.bundle() }}</p>
+            <p><strong>Entity ID:</strong> {{ day_item.entity.id() }}</p>
+            
+            <h5>Available fields on entity:</h5>
+            <ul>
+              {% for field_name in day_item.entity.getFields()|keys %}
+                <li>{{ field_name }}</li>
+              {% endfor %}
+            </ul>
+            
+            <hr>
+            
+            <h5>Testing field_microsite_event_date:</h5>
+            <p><strong>Field exists:</strong> {{ day_item.entity.hasField('field_microsite_event_date') ? 'YES' : 'NO' }}</p>
+            {% if day_item.entity.hasField('field_microsite_event_date') %}
+              <p><strong>Field value:</strong> {{ day_item.entity.field_microsite_event_date.value }}</p>
+            {% endif %}
+            
+            <hr>
+            
+            <h5>Testing field_event_daily_schedule:</h5>
+            <p><strong>Field exists:</strong> {{ day_item.entity.hasField('field_event_daily_schedule') ? 'YES' : 'NO' }}</p>
+            {% if day_item.entity.hasField('field_event_daily_schedule') %}
+              <p><strong>Field is empty:</strong> {{ day_item.entity.field_event_daily_schedule.isEmpty() ? 'YES' : 'NO' }}</p>
+              <p><strong>Schedule items count:</strong> {{ day_item.entity.field_event_daily_schedule|length }}</p>
+              
+              {% set schedule_items = day_item.entity.field_event_daily_schedule %}
+              
+              {% if schedule_items is not empty %}
+                <h6>Schedule Items:</h6>
+                {% for sched_key, sched_item in schedule_items %}
+                  <div style="background: white; padding: 10px; margin: 10px 0;">
+                    <p><strong>Schedule {{ sched_key + 1 }}:</strong></p>
+                    <p>sched_item.entity exists: {{ sched_item.entity is defined ? 'YES' : 'NO' }}</p>
+                    {% if sched_item.entity is defined and sched_item.entity is not null %}
+                      <p>Title field exists: {{ sched_item.entity.hasField('field_microsite_section_title') ? 'YES' : 'NO' }}</p>
+                      {% if sched_item.entity.hasField('field_microsite_section_title') %}
+                        <p>Title: {{ sched_item.entity.field_microsite_section_title.value }}</p>
+                      {% endif %}
+                    {% else %}
+                      <p style="color: red;">Schedule item entity is null or undefined!</p>
+                      <pre>{{ dump(sched_item) }}</pre>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+            
+          {% else %}
+            <p style="color: red; font-weight: bold;">ERROR: day_item.entity is NULL</p>
+            <p>This means the referenced entity doesn't exist or isn't loaded.</p>
+          {% endif %}
+          
+        {% else %}
+          <p style="color: red; font-weight: bold;">ERROR: day_item.entity is not defined</p>
+        {% endif %}
+        
+        <hr>
+        
+        <h4>Alternative access methods:</h4>
+        <p><strong>day_item['entity']:</strong> {{ day_item['entity'] is defined ? 'EXISTS' : 'NOT DEFINED' }}</p>
+        <p><strong>day_item.getValue():</strong></p>
+        <pre style="background: white; padding: 10px;">{{ dump(day_item.getValue()) }}</pre>
+        
+      </div>
+    {% endfor %}
+    
   {% else %}
-    <p style="color: red; font-weight: bold;">✗ Condition FAILED - No schedule will display</p>
-    <p>Reason: field_subsite_daily_schedule['#items'] is empty or doesn't exist</p>
+    <p style="color: red;">No daily schedules found</p>
   {% endif %}
 
 </div>
