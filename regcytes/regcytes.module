@@ -33,5 +33,9 @@ function regcytes_theme($existing, $type, $theme, $path)
       'template' => 'page--type--microsite-page--canonical',
       'base hook' => 'page',
     ],
+    'menu__group_menu' => [
+      'template' => 'menu--group-menu',
+      'base hook' => 'menu',
+    ],
   ];
 }
