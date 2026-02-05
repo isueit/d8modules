@@ -19,13 +19,15 @@
       {% for key, day_item in daily_schedules %}
         {% set day_entity = day_item.entity %}
         {% set day_date = day_entity.field_microsite_event_date.value %}
+        {% set day_name_short = day_date|date('D') %}
+        {% set month_day = day_date|date('M j') %}
         {% set day_formatted = day_date|date('l, F j') %}
         {% set day_number = key + 1 %}
         {% set tab_id = 'day-' ~ day_number %}
 
         <button class="agenda-tab {% if loop.first %}active{% endif %}" role="tab" aria-selected="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="{{ tab_id }}--panel" id="{{ tab_id }}--tab" data-tab="{{ tab_id }}">
-          <span class="tab-day-number">{{ day_number }}</span>
-          <span class="tab-day-name">{{ day_formatted }}</span>
+          <span class="tab-day-name">{{ day_name_short }}</span>
+          <span class="tab-month-day">{{ month_day }}</span>
         </button>
       {% endfor %}
     </div>
