@@ -1,162 +1,87 @@
 {#
 /**
  * @file
- * Default theme implementation to display a config_page.
- *
- * @see template_preprocess_config_pages()
- *
- * @ingroup themeable
+ * Diagnostic template to debug preview server
  */
 #}
 
 <div{{ attributes.addClass('subsite-agenda') }}>
 
-  {# Tab Navigation #}
-  {% if content.field_subsite_daily_schedule['#items'] is not empty %}
-    {% set daily_schedules = content.field_subsite_daily_schedule['#items'] %}
+  <h2>Diagnostic Information</h2>
+  
+  <div style="background: #f0f0f0; padding: 20px; margin: 20px 0;">
+    <h3>Environment Check:</h3>
+    <p><strong>Server:</strong> {{ app.request.server.get('SERVER_NAME') }}</p>
+    <p><strong>Environment:</strong> {{ app.request.server.get('APP_ENV') ?? 'Unknown' }}</p>
+  </div>
+
+  <div style="background: #fff3cd; padding: 20px; margin: 20px 0;">
+    <h3>Content Variable Check:</h3>
+    <p><strong>content exists:</strong> {{ content is defined ? 'YES' : 'NO' }}</p>
+    <p><strong>content is empty:</strong> {{ content is empty ? 'YES' : 'NO' }}</p>
     
-    <div class="agenda-tabs" role="tablist">
-      {% for key, day_item in daily_schedules %}
-        {% set day_entity = day_item.entity %}
-        {% set day_date = day_entity.field_microsite_event_date.value %}
-        {% set day_formatted = day_date|date('l, F j') %}
-        {% set day_number = key + 1 %}
-        {% set tab_id = 'day-' ~ day_number %}
-
-        <button class="agenda-tab {% if loop.first %}active{% endif %}" role="tab" aria-selected="{% if loop.first %}true{% else %}false{% endif %}" aria-controls="{{ tab_id }}--panel" id="{{ tab_id }}--tab" data-tab="{{ tab_id }}">
-          <span class="tab-day-number">{{ day_number }}</span>
-          <span class="tab-day-name">{{ day_formatted }}</span>
-        </button>
+    <h4>Available fields in content:</h4>
+    <ul>
+      {% for key in content|keys %}
+        <li>{{ key }}</li>
       {% endfor %}
-    </div>
+    </ul>
+  </div>
 
-    {# Tab Content #}
-    <div class="agenda-content">
-      {% for key, day_item in daily_schedules %}
-        {% set day_entity = day_item.entity %}
-        {% set day_number = key + 1 %}
-        {% set tab_id = 'day-' ~ day_number %}
-        {% set schedule_items = day_entity.field_event_daily_schedule %}
+  <div style="background: #d1ecf1; padding: 20px; margin: 20px 0;">
+    <h3>Field Check: field_subsite_daily_schedule</h3>
+    <p><strong>Field exists:</strong> {{ content.field_subsite_daily_schedule is defined ? 'YES' : 'NO' }}</p>
+    <p><strong>Field is empty:</strong> {{ content.field_subsite_daily_schedule is empty ? 'YES' : 'NO' }}</p>
+    
+    {% if content.field_subsite_daily_schedule is defined %}
+      <h4>Field Structure:</h4>
+      <pre style="background: white; padding: 10px; overflow: auto;">{{ dump(content.field_subsite_daily_schedule) }}</pre>
+      
+      <p><strong>Has #items:</strong> {{ content.field_subsite_daily_schedule['#items'] is defined ? 'YES' : 'NO' }}</p>
+      
+      {% if content.field_subsite_daily_schedule['#items'] is defined %}
+        <p><strong>#items is empty:</strong> {{ content.field_subsite_daily_schedule['#items'] is empty ? 'YES' : 'NO' }}</p>
+        <p><strong>#items count:</strong> {{ content.field_subsite_daily_schedule['#items']|length }}</p>
+      {% endif %}
+    {% endif %}
+  </div>
 
-        <div class="agenda-panel {% if loop.first %}active{% endif %}" role="tabpanel" id="{{ tab_id }}--panel" aria-labelledby="{{ tab_id }}--tab" {% if not loop.first %}hidden{% endif %}>
+  <div style="background: #d4edda; padding: 20px; margin: 20px 0;">
+    <h3>Alternative Field Names to Check:</h3>
+    <p><strong>field_daily_schedule exists:</strong> {{ content.field_daily_schedule is defined ? 'YES' : 'NO' }}</p>
+    {% if content.field_daily_schedule is defined %}
+      <p><strong>field_daily_schedule has #items:</strong> {{ content.field_daily_schedule['#items'] is defined ? 'YES' : 'NO' }}</p>
+      {% if content.field_daily_schedule['#items'] is defined %}
+        <p><strong>field_daily_schedule #items count:</strong> {{ content.field_daily_schedule['#items']|length }}</p>
+      {% endif %}
+    {% endif %}
+  </div>
 
-          {# Schedule Timeline per day #}
-          {% if schedule_items is not empty %}
-            <div class="schedule-timeline">
-              {% for schedule_key, schedule_item in schedule_items %}
-                {% set schedule_entity = schedule_item.entity %}
-                
-                {# Access time field using getValue() to get raw data array #}
-                {% set time_data = schedule_entity.field_microsite_schedule_time.getValue() %}
-                {% set time_start_seconds = time_data[0].from ?? time_data[0].value ?? null %}
-                {% set time_end_seconds = time_data[0].to ?? time_data[0].end_value ?? null %}
-                
-                {% set title = schedule_entity.field_microsite_section_title.value %}
-                {% set location = schedule_entity.field_microsite_schedule_locate.value %}
-                {% set description = schedule_entity.field_microsite_schedule_descrip.value %}
-                {% set speakers = schedule_entity.field_microsite_schedule_speaker %}
-                
-                <div class="schedule-item">
-                  <div class="schedule-time">
-                    {% if time_start_seconds and time_end_seconds %}
-                      {# Convert seconds to hours and minutes #}
-                      {% set start_hours = (time_start_seconds / 3600)|round(0, 'floor') %}
-                      {% set start_minutes = ((time_start_seconds % 3600) / 60)|round(0, 'floor') %}
-                      {% set end_hours = (time_end_seconds / 3600)|round(0, 'floor') %}
-                      {% set end_minutes = ((time_end_seconds % 3600) / 60)|round(0, 'floor') %}
-                      
-                      {# Format as 12-hour time #}
-                      {% set start_period = start_hours >= 12 ? 'PM' : 'AM' %}
-                      {% set start_display_hour = start_hours > 12 ? start_hours - 12 : (start_hours == 0 ? 12 : start_hours) %}
-                      {% set end_period = end_hours >= 12 ? 'PM' : 'AM' %}
-                      {% set end_display_hour = end_hours > 12 ? end_hours - 12 : (end_hours == 0 ? 12 : end_hours) %}
-                      
-                      {{ start_display_hour }}:{{ '%02d'|format(start_minutes) }} {{ start_period }} - {{ end_display_hour }}:{{ '%02d'|format(end_minutes) }} {{ end_period }}
-                    {% elseif time_start_seconds %}
-                      {# Convert seconds to hours and minutes #}
-                      {% set start_hours = (time_start_seconds / 3600)|round(0, 'floor') %}
-                      {% set start_minutes = ((time_start_seconds % 3600) / 60)|round(0, 'floor') %}
-                      
-                      {# Format as 12-hour time #}
-                      {% set start_period = start_hours >= 12 ? 'PM' : 'AM' %}
-                      {% set start_display_hour = start_hours > 12 ? start_hours - 12 : (start_hours == 0 ? 12 : start_hours) %}
-                      
-                      {{ start_display_hour }}:{{ '%02d'|format(start_minutes) }} {{ start_period }}
-                    {% endif %}
-                  </div>
-                  
-                  <div class="schedule-details">
-                    {% if title %}
-                      <h3 class="schedule-title">{{ title }}</h3>
-                    {% endif %}
-                    
-                    {% if location %}
-                      <div class="schedule-location">
-                        <span>{{ location }}</span>
-                      </div>
-                    {% endif %}
-                    
-                    {% if description %}
-                      <div class="schedule-description">
-                        {{ description|raw }}
-                      </div>
-                    {% endif %}
-                    
-                    {% if speakers is not empty %}
-                      <div class="schedule-speakers">
-                        <strong>Speaker(s):</strong>
-                        {% for speaker_key, speaker in speakers %}
-                          {{ speaker.value }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          {% else %}
-            <p class="no-schedule">No events scheduled for this day.</p>
-          {% endif %}
-          
-        </div>
-      {% endfor %}
-    </div>
+  <div style="background: #f8d7da; padding: 20px; margin: 20px 0;">
+    <h3>Config Pages Object Check:</h3>
+    <p><strong>config_pages exists:</strong> {{ config_pages is defined ? 'YES' : 'NO' }}</p>
+    {% if config_pages is defined %}
+      <p><strong>config_pages type:</strong> {{ config_pages.getEntityTypeId() }}</p>
+      <p><strong>config_pages bundle:</strong> {{ config_pages.bundle() }}</p>
+      
+      <h4>Config Pages Fields:</h4>
+      <ul>
+        {% for field_name, field in config_pages.getFields() %}
+          <li>{{ field_name }} - {{ field.isEmpty() ? 'EMPTY' : 'HAS DATA' }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+  <hr>
+
+  <h2>Original Template Logic Test:</h2>
+  {% if content.field_subsite_daily_schedule['#items'] is not empty %}
+    <p style="color: green; font-weight: bold;">✓ Condition PASSED - Schedule should display</p>
+    <p>Items count: {{ content.field_subsite_daily_schedule['#items']|length }}</p>
   {% else %}
-    <p class="no-schedule">No schedule available at this time.</p>
+    <p style="color: red; font-weight: bold;">✗ Condition FAILED - No schedule will display</p>
+    <p>Reason: field_subsite_daily_schedule['#items'] is empty or doesn't exist</p>
   {% endif %}
-  
-</div>
 
-{# Add inline JavaScript for tab functionality #}
-<script>
-(function() {
-  const tabs = document.querySelectorAll('.agenda-tab');
-  const panels = document.querySelectorAll('.agenda-panel');
-  
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      const targetId = this.getAttribute('data-tab');
-      
-      // Remove active class from all tabs and panels
-      tabs.forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      panels.forEach(p => {
-        p.classList.remove('active');
-        p.setAttribute('hidden', '');
-      });
-      
-      // Add active class to clicked tab and corresponding panel
-      this.classList.add('active');
-      this.setAttribute('aria-selected', 'true');
-      
-      const targetPanel = document.getElementById(targetId + '--panel');
-      if (targetPanel) {
-        targetPanel.classList.add('active');
-        targetPanel.removeAttribute('hidden');
-      }
-    });
-  });
-})();
-</script>
+</div>
