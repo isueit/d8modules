@@ -5,7 +5,6 @@
   "require": {
     "drupal/address": "^2.0",
     "drupal/allowed_formats": "^1.2 || ^3.0",
-    "drupal/block_content_permissions": "^1.10",
     "drupal/bpmn_io": "^2.0",
     "drupal/ckeditor_html_embed": "^2.0",
     "drupal/diff": "^1.9",
