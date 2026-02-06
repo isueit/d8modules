@@ -5,7 +5,6 @@
   "require": {
     "drupal/address": "^2.0",
     "drupal/allowed_formats": "^1.2 || ^3.0",
-    "drupal/block_content_permissions": "^1.10",
     "drupal/bpmn_io": "^2.0",
     "drupal/ckeditor_html_embed": "^2.0",
     "drupal/diff": "^1.9",
@@ -27,6 +26,7 @@
     "drupal/section_library": "^1.0",
     "drupal/select_or_other": "^4.2",
     "drupal/slick": "^3.0",
+    "drupal/slick_paragraphs": "^3.0",
     "drupal/slick_views": "^3.0",
     "drupal/twig_tweak": "^3.4",
     "drupal/view_unpublished": "^1.0",

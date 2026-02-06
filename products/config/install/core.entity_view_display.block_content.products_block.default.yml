@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.products_block
+    - field.field.block_content.products_block.field_products
+    - field.field.block_content.products_block.field_products_feed_url
+    - field.field.block_content.products_block.field_products_store_url
+  module:
+    - entity_reference_revisions
+id: block_content.products_block.default
+targetEntityType: block_content
+bundle: products_block
+mode: default
+content:
+  field_products:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_products_feed_url: true
+  field_products_store_url: true

@@ -1,0 +1,341 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\block\BlockForm;
+use Drupal\block_content\BlockContentInterface;
+use Drupal\block\BlockPluginInterface;
+use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\paragraphs\Entity\Paragraph;
+use PhpParser\Node\Stmt\Catch_;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function products_preprocess_block(&$variables)
+{
+  // Check if the block is a custom content block (not a views block, etc.).
+  if ((isset($variables['elements']['content']['#block_content'])
+      && $variables['elements']['content']['#block_content'] instanceof BlockContentInterface
+      && $variables['elements']['content']['#block_content']->bundle() == 'products_block')
+    || ($variables['plugin_id'] == 'inline_block:products_block')
+  ) {
+    // This line is for development, it should be deleted for production
+    // DELETE ME
+    if (!ISUEOHelpers\General::is_production_server()) {
+      \Drupal::service('twig')->invalidate();
+    }
+    $variables['#attached']['library'][] = 'products/products';
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function products_theme($existing, $type, $theme, $path)
+{
+
+  return [
+    'paragraph__product' => [
+      'template' => 'paragraph--product',
+      'base hook' => 'paragraph',
+    ]
+  ];
+}
+
+/**
+ * Implements hook_rebuild().
+ */
+
+function products_rebuild()
+{
+
+  products_rebuild_product_list();
+  /*
+    $themes = \Drupal::service('theme_handler')->listInfo();
+    foreach ($themes as $theme) {
+      _block_rehash($theme->getName());
+    }
+  */
+}
+
+/**
+ * Implements hook_cron().
+ */
+
+function products_cron()
+{
+  products_rebuild_product_list();
+
+  /*
+    // Short-running operation example, not using a queue:
+    // Delete all expired records since the last cron run.
+    $expires = \Drupal::state()->get('mymodule.last_check', 0);
+    \Drupal::database()->delete('mymodule_table')
+      ->condition('expires', $expires, '>=')
+      ->execute();
+    \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
+
+    // Long-running operation example, leveraging a queue:
+    // Queue news feeds for updates once their refresh interval has elapsed.
+    $queue = \Drupal::queue('aggregator_feeds');
+    $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+    foreach (Feed::loadMultiple($ids) as $feed) {
+      if ($queue->createItem($feed)) {
+        // Add timestamp to avoid queueing item more than once.
+        $feed->setQueuedTime(REQUEST_TIME);
+        $feed->save();
+      }
+    }
+    $ids = \Drupal::entityQuery('aggregator_feed')
+      ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+      ->execute();
+    if ($ids) {
+      $feeds = Feed::loadMultiple($ids);
+      foreach ($feeds as $feed) {
+        $feed->setQueuedTime(0);
+        $feed->save();
+      }
+    }
+  */
+}
+function products_rebuild_product_list()
+{
+  $blocks = products_get_all_blocks();
+
+  // Step through each block
+  foreach ($blocks as $block) {
+    // Get the products from the feed for this block
+    $store_products = array_merge(
+      products_get_feed_products($block->get('field_products_feed_url')->getString()),
+      products_get_store_products($block->get('field_products_store_url')->getString())
+    );
+    $new_products = [];
+    $existing_products = [];
+
+    // Get the slideshow field from the block
+    $slideshow = $block->get('field_products')->referencedEntities();
+    $first_slideshow = reset($slideshow);
+
+    // Step through each paragraph/product
+    // Keep any product that isn't marked as auto created
+    // These are the products that are manually entered
+    foreach ($first_slideshow->get('field_product_slides')->referencedEntities() as $product) {
+      $tmp_sku = $product->get('field_product_sku')->getString();
+      $existing_products[$tmp_sku] = $product;
+      if (!$product->get('field_product_auto_created')->value) {
+        $new_products[$tmp_sku] = $product;
+      }
+    }
+
+    // Now Step through the products from the feed
+    // Ensure $new_products includes has each product from the feed
+    foreach ($store_products as $feed_product) {
+      $tmp_sku = $feed_product['ProductID'];
+      if (array_key_exists($tmp_sku, $existing_products)) {
+        $new_products[$tmp_sku] = $existing_products[$tmp_sku];
+      } else {
+        $new_products[$tmp_sku] = Paragraph::create([
+          'type' => 'product',
+          'field_product_sku' => $tmp_sku,
+          'field_product_auto_created' => 1,
+          'field_product_image' => $feed_product['ThumbnailURI'],
+        ]);
+      }
+    }
+
+    foreach (array_keys($new_products) as $key) {
+      // Remove products that are not found
+      if ($new_products[$key]->get('field_product_title')->getString() == 'Not Found') {
+        Drupal::logger('products')->info('Deleted ' . $key . ': Title was "Not Found"');
+        unset($new_products[$key]);
+        continue;
+      }
+      // Also remove products where the image isn't found
+      if (!ISUEOHelpers\General::url_exists($new_products[$key]->get('field_product_image')->getString())) {
+        Drupal::logger('products')->info('Deleted ' . $key . ': Image was not found');
+        unset($new_products[$key]);
+        continue;
+      }
+    }
+
+    // Lastly, save the products in the product_slides field
+    $first_slideshow->set('field_product_slides', array_values($new_products));
+    $first_slideshow->save();
+  }
+}
+
+function products_get_all_blocks()
+{
+  $storage = \Drupal::entityTypeManager()->getStorage('block_content');
+  $block_ids = $storage->getQuery()
+    ->condition('type', 'products_block')
+    ->accessCheck(false) // Set to TRUE to respect user permissions
+    ->execute();
+  if (!$block_ids) {
+    return [];
+  }
+  return BlockContent::loadMultiple($block_ids);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+
+/*
+function products_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'layout_builder_update_block' || $form_id == 'layout_builder_add_block') {
+  }
+}
+*/
+
+/*
+function products_block_type_form_alter(array &$form, FormStateInterface &$form_state, string $block_type) {
+  Drupal::logger('blah')->info($block_type);
+  if ($block_type == 'accordion') {
+    $form['example_field']['widget'][0]['value']['#default_value'] = 'A better default value';
+  }
+}
+*/
+
+/**
+ * Implements hook_entity_presave().
+ */
+
+function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
+{
+  if ($entity->getEntityTypeId() == 'paragraph') {
+    if ($entity->bundle() == 'product') {
+      $found = false;
+      $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json', false);
+      $products = json_decode($raw, true);
+      $sku = strtolower(trim($entity->get('field_product_sku')->getString()));
+      if (str_contains($sku, ' ')) {
+        $sku = preg_replace('/\s+/', ' ', $sku);
+        $tmparray = explode(' ', $sku);
+        $sku = $tmparray[0] . intval($tmparray[1]);
+        $entity->set('field_product_sku', $sku);
+      }
+
+      foreach ($products as $product) {
+        if ($sku == $product['ProductID']) {
+          $found = true;
+          $entity->set('field_product_sku', $sku);
+          $entity->set('field_product_title', $product['Title']);
+          $entity->set('field_product_image', $product['ThumbnailURI']);
+          $entity->set('field_product_date', $product['PubDate']);
+          break;
+        }
+      }
+
+      if (!$found) {
+        $entity->set('field_product_sku', $sku);
+        $entity->set('field_product_title', 'Not Found');
+        $entity->set('field_product_image', '');
+        $entity->set('field_product_date', '');
+      }
+    }
+  }
+}
+
+function products_get_feed_products(string $feed_url)
+{
+  if (empty($feed_url)) {
+    return [];
+  }
+
+  $feed_products = [];
+  $raw = ISUEOHelpers\Files::fetch_url($feed_url);
+  if ($raw) {
+    $products = json_decode($raw, true);
+    foreach ($products as $product) {
+      $feed_products[$product['ProductID']] = $product;
+    }
+  }
+
+  return $feed_products;
+}
+
+function products_get_store_products(string $store_url)
+{
+  if (empty($store_url)) {
+    return [];
+  }
+  $products = [];
+  $store_products = [];
+
+  // Get listing of the full products list
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json');
+  $tmp = json_decode($raw, true);
+  foreach ($tmp as $product) {
+    $products[$product['ProductID']] = $product;
+  }
+
+  if (trim(trim(strtolower($store_url)), '/') == 'https://shop.iastate.edu/extension') {
+    // Get the featured products from the home page
+    $raw = ISUEOHelpers\Files::fetch_url('https://shop.iastate.edu/extension');
+
+    if ($raw !== false) {
+      $lines = explode(PHP_EOL, $raw);
+      foreach ($lines as $line) {
+        if (str_contains($line, 'replaceContent')) {
+          $begin = strpos($line, 'pid=');
+          $end = strpos($line, '\';');
+          if ($begin !== false && $end !== false && $begin < $end) {
+            $begin = $begin + 4;
+            $pid = substr($line, $begin, $end - $begin);
+            if (array_key_exists($pid, $products)) {
+              $store_products[] = $products[$pid];
+            }
+          }
+        }
+      }
+    }
+  } else {
+    $raw = ISUEOHelpers\Files::fetch_url($store_url);
+    if ($raw !== false) {
+      $lines = explode(PHP_EOL, $raw);
+      foreach ($lines as $line) {
+        if (str_contains($line, 'class="product"')) {
+          $begin = strpos($line, 'data-pid="') + 10;
+          $line = substr($line, $begin);
+          $pid = substr($line, 0, strpos($line, '"'));
+          if (array_key_exists($pid, $products)) {
+            $store_products[] = $products[$pid];
+          }
+        }
+      }
+    }
+  }
+
+  return $store_products;
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+
+function products_entity_insert(Drupal\Core\Entity\EntityInterface $entity)
+{
+  try {
+    if ($entity->bundle() == 'products_block') {
+      products_rebuild_product_list();
+    }
+  } catch (Exception $ex) {
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+
+function products_entity_update(Drupal\Core\Entity\EntityInterface $entity)
+{
+  try {
+    if ($entity->bundle() == 'products_block') {
+      products_rebuild_product_list();
+    }
+  } catch (Exception $ex) {
+  }
+}

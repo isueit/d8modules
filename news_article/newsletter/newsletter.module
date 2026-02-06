@@ -188,7 +188,13 @@ function newsletter_preprocess_paragraph(&$variables) {
   
   if ($parent && $parent->hasField('field_newsletter_type') && !$parent->get('field_newsletter_type')->isEmpty()) {
     foreach ($parent->get('field_newsletter_type') as $term) {
-      $term_name = strtolower($term->entity->getName());
+      $term_name = '';
+      if (!empty($term->target_id)) {
+        $term_entity = $term->entity ? $term->entity : \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->target_id);
+        if ($term_entity) {
+          $term_name = strtolower($term_entity->getName());
+        }
+      }
       if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
         $variables['show_clover_logo'] = true;
         break;
@@ -262,7 +268,13 @@ function newsletter_preprocess_page(&$variables) {
   }
     if ($node && $node->hasField('field_newsletter_type') && !$node->get('field_newsletter_type')->isEmpty()) {
     foreach ($node->get('field_newsletter_type') as $term) {
-      $term_name = strtolower($term->entity->getName());
+      $term_name = '';
+      if (!empty($term->target_id)) {
+        $term_entity = $term->entity ? $term->entity : \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->target_id);
+        if ($term_entity) {
+          $term_name = strtolower($term_entity->getName());
+        }
+      }
       if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
         $variables['show_clover_logo'] = true;
         break;
@@ -408,7 +420,13 @@ function newsletter_preprocess_field(&$variables) {
       
       if ($parent && $parent->hasField('field_newsletter_type') && !$parent->get('field_newsletter_type')->isEmpty()) {
         foreach ($parent->get('field_newsletter_type') as $term) {
-          $term_name = strtolower($term->entity->getName());
+          $term_name = '';
+          if (!empty($term->target_id)) {
+            $term_entity = $term->entity ? $term->entity : \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->target_id);
+            if ($term_entity) {
+              $term_name = strtolower($term_entity->getName());
+            }
+          }
           if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
             $variables['show_clover_logo'] = true;
             break;
