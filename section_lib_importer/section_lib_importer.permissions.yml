@@ -6,7 +6,7 @@ create basic_content block content:
   title: 'Create basic_content block content'
 delete any basic_content block content:
   title: 'Delete any basic_content block content'
-update any basic_content block content:
-  title: 'Update any basic_content block content'
-Update any basic_content block content:
-  title: 'Update any basic_content block content'
+edit any basic_content block content:
+  title: 'Edit any basic_content block content'
+Edit any basic_content block content:
+  title: 'Edit any basic_content block content'
