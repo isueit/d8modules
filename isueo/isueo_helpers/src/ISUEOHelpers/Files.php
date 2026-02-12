@@ -34,7 +34,7 @@ class Files
 
       // If the file exists and is new enough, use it
       if (file_exists($cache_file_path) && ((time() - filemtime($cache_file_path)) < Files::CACHE_SECONDS)) {
-        return file_get_contents($cache_file_path);
+        return self::file_get_wrapper($url);
       } else {
         $update_cache = true;
       }
@@ -57,7 +57,7 @@ class Files
     }
 
     // Get the page
-    $results = file_get_contents($url);
+    $results = self::file_get_wrapper($url);
 
     // Check if we should write the results to cache
     if ($use_cache && $update_cache) {
@@ -72,10 +72,33 @@ class Files
       if (!empty($results) && is_writable('/tmp/isueo_helpers') && !empty(json_decode($results, true))) {
         file_put_contents($cache_file_path, $results);
       }
-
     }
 
     // Finally, return the results
     return $results;
+  }
+
+  private static function file_get_wrapper(string $url)
+  {
+    $options = array(
+      'http' => array(
+        'method' => 'GET',
+        // Either use the 'user_agent' specific option, or 'header' with 'User-Agent'
+        // Both work; the 'header' method is more general for other headers.
+        'user_agent' => 'ISU Extension',
+        // Or using the 'header' approach:
+        // 'header' => "User-Agent: MyCustomUserAgentString/1.0 (http://example.com/bot.html)\r\n"
+      )
+    );
+
+    $context = stream_context_create($options);
+    $response = file_get_contents($url, false, $context);
+
+    if ($response === false) {
+      // Handle errors (e.g., failed to open stream, 403 Forbidden error).
+      Drupal::logger('isueo_helpers')->info('Failed to retreive file: ' . $url);
+      $response = '[]';
+    }
+    return $response;
   }
 }
