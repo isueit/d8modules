@@ -2,7 +2,7 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
-use function Drupal\Core\Session\user_role_permissions;
+use Drupal\user\Entity\Role;
 
 
 /**
@@ -16,7 +16,7 @@ use function Drupal\Core\Session\user_role_permissions;
     'info' => 'socialmediared',
   ]);
   $block_content->save();
- 
+
   $block = Block::create([
     'id' => 'socialmediared',
     'plugin' => 'block_content:' . $block_content->uuid(),
@@ -33,8 +33,10 @@ use function Drupal\Core\Session\user_role_permissions;
   $block->save();
 
 // Set up permissions for content editors
-  user_role_grant_permissions('content_editor', [
-    'Update any social_media_red_bar block content',
-  ]);
+  $role_object = Role::load('content_editor');
+  if ($role_object) {
+    $role_object->grantPermission('edit any social_media_red_bar block content');
+    $role_object->save();
+  }
  }
 
