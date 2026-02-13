@@ -34,7 +34,7 @@ class Files
 
       // If the file exists and is new enough, use it
       if (file_exists($cache_file_path) && ((time() - filemtime($cache_file_path)) < Files::CACHE_SECONDS)) {
-        return self::file_get_wrapper($url);
+        return self::file_get_wrapper($cache_file_path);
       } else {
         $update_cache = true;
       }
