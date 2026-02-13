@@ -8,7 +8,6 @@ dependencies:
     - node.type.staff_profile
   module:
     - block_content
-    - block_content_permissions
     - contact_creator
     - exclude_node_title
     - file
