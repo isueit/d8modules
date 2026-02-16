@@ -40,6 +40,9 @@ a.bean-card_link {
 .bean-card_label div {
     margin: 0;
 }
+.bean-card_label.Below {
+    position: relative;
+}
 /* Used for content card */
 .bean-card_body {
     color: black;
