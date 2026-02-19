@@ -1,8 +1,5 @@
 <?php
 
-use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\block\Entity\Block;
-use Drupal\block_content\Entity\BlockContent;
 use Drupal\user\Entity\Role;
 
 /**
@@ -26,8 +23,10 @@ function products_install()
   // Add a few permissions to Content Editor role
   $role_object = Role::load('content_editor');
   if ($role_object) {
+    if (!$role_object->hasPermission("access block library")) {
+      $role_object->grantPermission("access block library");
+    }
     $role_object->grantPermission('edit any products_block block content');
-    $role_object->grantPermission('update any products_block block content');
     $role_object->save();
   }
 }

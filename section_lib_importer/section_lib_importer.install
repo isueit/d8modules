@@ -1,15 +1,13 @@
 <?php
-use \Drupal\section_library\Entity\SectionLibraryTemplate;
-use \Drupal\Core\File\FileSystemInterface;
-use \Drupal\layout_builder\Section;
-use \Drupal\layout_builder\SectionComponent;
-use \Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use function Drupal\Core\Session\user_role_permissions;
 use Drupal\isueo_helpers\ISUEOHelpers;
-use GuzzleHttp\Promise\Is;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
+use Drupal\user\Entity\Role;
 
 // ADD NEW UPDATES HERE
 // function section_lib_importer_update_8001() {
@@ -356,14 +354,19 @@ addSectionTemplates($templates, true);
 
 
 function section_lib_importer_install() {
-  // Set up permissions for content editors
-   user_role_grant_permissions('content_editor', [
-    'import template from section_library',
-    'view section_library templates',
-    'create basic_content block content',
-    'delete any basic_content block content',
-    'update any basic_content block content',
-  ]);
+  // Add a few permissions to Content Editor role
+  $role_object = Role::load('content_editor');
+  if ($role_object) {
+    if (!$role_object->hasPermission("access block library")) {
+      $role_object->grantPermission("access block library");
+    }
+    $role_object->grantPermission('import template from section_library');
+    $role_object->grantPermission('view section_library templates');
+    $role_object->grantPermission('create basic_content block content');
+    $role_object->grantPermission('delete any basic_content block content');
+    $role_object->grantPermission('edit any basic_content block content');
+    $role_object->save();
+  }
 
   //Prepare for images
   $uri_file = 'public://section_library/';
