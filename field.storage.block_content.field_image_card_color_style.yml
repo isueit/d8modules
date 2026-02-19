@@ -1,0 +1,59 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - options
+  enforced:
+    module:
+      - image_bean_cards
+id: block_content.field_image_card_color_style
+field_name: field_image_card_color_style
+entity_type: block_content
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: bean-card_red
+      label: 'Full Red'
+    -
+      value: bean-card_green
+      label: 'Full Green'
+    -
+      value: bean-card_dark-red
+      label: 'Full Dk Red'
+    -
+      value: bean-card_dark-blue
+      label: 'Full Dk Blue'
+    -
+      value: bean-card-half_red
+      label: 'Partial Red'
+    -
+      value: bean-card-half_green
+      label: 'Partial Green'
+    -
+      value: bean-card-half_dark-red
+      label: 'Partial Dk Red'
+    -
+      value: bean-card-half_dark-blue
+      label: 'Partial Dk Blue'
+    -
+      value: bean-card_red-after
+      label: 'Full Red Below'
+    -
+      value: bean-card_green-after
+      label: 'Full Green Below'
+    -
+      value: bean-card_dark-red-after
+      label: 'Full Dk Red Below'
+    -
+      value: bean-card_dark-blue-after
+      label: 'Full Dk Blue Below'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
