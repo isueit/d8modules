@@ -1,0 +1,15 @@
+ts_events_search.calendar_feed:
+  path: '/calendar/feed.ics'
+  defaults:
+    _controller: '\Drupal\ts_events_search\Controller\CalendarFeedController::feed'
+    _title: 'Calendar Feed'
+  requirements:
+    _permission: 'access content'
+
+ts_events_search.calendar_feed_filtered:
+  path: '/calendar/feed-filtered.ics'
+  defaults:
+    _controller: '\Drupal\ts_events_search\Controller\CalendarFeedController::filtered_feed'
+    _title: 'Filtered Calendar Feed'
+  requirements:
+    _permission: 'access content'

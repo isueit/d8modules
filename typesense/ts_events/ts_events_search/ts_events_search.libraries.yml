@@ -14,3 +14,9 @@ ts_events_search_bar_only:
   css:
     theme:
       css/search-bar-only.css: {}
+
+calendar_download:
+  js:
+    js/calendar-download.js: {}
+  dependencies:
+    - ts_events_search/ts_events_search_results

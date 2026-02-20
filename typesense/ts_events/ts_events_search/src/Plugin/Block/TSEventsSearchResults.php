@@ -31,6 +31,15 @@ class TSEventsSearchResults extends BlockBase
     $results = '
           <div class="ts-events-wrapper search-results">
           <div class="search-results-facets-outer_wrapper">
+          <div class="calendar-download-buttons">
+            <a href="/calendar/feed.ics" class="btn btn-primary" download>
+              📅 Download Full Calendar
+            </a>
+  
+            <button id="download-filtered-calendar" class="btn btn-secondary">
+              📅 Download Filtered Results
+            </button>
+          </div>
           <div class="search-results-facets-inner_wrapper">
           <div class="search-results-bar-wrapper">
           <div id="search-results-bar"></div>
@@ -65,6 +74,7 @@ class TSEventsSearchResults extends BlockBase
     $block['#allowed_tags'] = $tags;
     $block['#markup'] = $results;
     $block['#attached']['library'][] = 'ts_events_search/ts_events_search_results';
+    $block['#attached']['library'][] = 'ts_events_search/calendar_download';
     return $block;
   }
 
