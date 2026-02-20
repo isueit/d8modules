@@ -16,3 +16,11 @@ program_offering_blocks.event-details:
     eventTitle: ''
   requirements:
     _permission: 'access content'
+
+program_offering_blocks.event_ics:
+  path: '/event-details/{eventID}/calendar.ics'
+  defaults:
+    _controller: '\Drupal\program_offering_blocks\Controller\EventDetailsController::download_ics'
+    _title: 'Download Event Calendar'
+  requirements:
+    _permission: 'access content'

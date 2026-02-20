@@ -57,7 +57,11 @@
 #}
 
 <div class="program_offering_blocks ungerboeck_eventlist_details">
-
+<div class="event-actions">
+<a href="{{ path('program_offering_blocks.event_ics', {'eventID': eventID}) }}" class="button add-to-calendar" download>
+    <span class="icon">📅</span> Add to Calendar
+  </a>
+</div>
   <div class="event_details_wrapper">
     <div class="event_details_dates">
       <span class="icon">

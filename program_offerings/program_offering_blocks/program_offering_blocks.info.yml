@@ -7,3 +7,4 @@ package: 'ISUEO'
 dependencies:
   - drupal:block
   - d8modules:isueo_helpers
+  - sabre/vobject
