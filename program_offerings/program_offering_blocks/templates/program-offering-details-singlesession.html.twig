@@ -58,8 +58,8 @@
 
 <div class="program_offering_blocks ungerboeck_eventlist_details">
 <div class="event-actions">
-<a href="{{ path('program_offering_blocks.event_ics', {'eventID': eventID}) }}" class="button add-to-calendar" download>
-    <span class="icon">📅</span> Add to Calendar
+<a href="{{ path('program_offering_blocks.event_ics', {'eventID': eventID}) }}" aria-label="Add {{title }} to your calendar"class="btn btn-outline-secondary add-to-calendar" download>
+    <i class="fa-regular fa-calendar-plus"></i> Add to Calendar
   </a>
 </div>
   <div class="event_details_wrapper">
