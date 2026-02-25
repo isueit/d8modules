@@ -40,7 +40,9 @@ function ts_events_collection_index_events()
     $tmp['last_updated_time'] = $now;
     $tmp['description'] = ts_events_collection_get_description($event);
     $tmp['county'] = ts_events_collection_get_counties($event);
-    $tmp['sessions'] = ts_events_collection_get_sessions($event);
+    $sessions = ts_events_collection_get_sessions($event);
+    $tmp['sessions'] = array_keys($sessions);
+    $tmp['sessions_end_date_time'] = array_values(($sessions));
     $tmp['category'] = $event['Planned_Program__r.Program_landing_Page_Category__c'];
     $tmp['topics'] = empty($event['Planned_Program__r.Program_Landing_Page_Topic__c']) ? [] : explode(';', $event['Planned_Program__r.Program_Landing_Page_Topic__c']);
     $tmp['delivery_method'] = $event['Event_Location__c'] == 'Online' ? 'Online' : 'In Person';
@@ -117,31 +119,35 @@ function ts_events_collection_get_counties($event)
   return $tmpcounties;
 }
 
+/**
+ * Get a copy of the sessions associated with this event
+ * Both arrays have the start as the key, and the end as the value
+ */
 function ts_events_collection_get_sessions($event)
 {
   $tmparray = [];
   $session_names = [
-    'Start_Time_and_Date__c',
-    'Second_Session_Date_Time__c',
-    'Third_Session_Begining_Date_and_Time__c',
-    'Fourth_Session_Beginning_Date_and_Time__c',
-    'Fifth_Session_Beginning_Date_and_Time__c',
-    'Sixth_Session_Beginning_Date_and_Time__c',
-    'Seventh_Session_Beginning_Date_and_Time__c',
-    'Eighth_Session_Beginning_Date_and_Time__c',
-    'Ninth_Session_Beginning_Date_and_Time__c',
-    'Tenth_Session_Beginning_Date_and_Time__c',
-    'Eleventh_Session_Start_Date__c',
-    'Twelfth_Session_Start_Date__c',
+    'Start_Time_and_Date__c' => 'First_Session_End_Date_Time__c',
+    'Second_Session_Date_Time__c' => 'Second_Session_End_Date_Time__c',
+    'Third_Session_Begining_Date_and_Time__c' => 'Third_Session_End_Date_and_Time__c',
+    'Fourth_Session_Beginning_Date_and_Time__c' => 'Fourth_Session_End_Date_and_Time__c',
+    'Fifth_Session_Beginning_Date_and_Time__c' => 'Fifth_Session_End_Date_and_Time__c',
+    'Sixth_Session_Beginning_Date_and_Time__c' => 'Sixth_Session_End_Date_and_Time__c',
+    'Seventh_Session_Beginning_Date_and_Time__c' => 'Seventh_Session_End_Date_and_Time__c',
+    'Eighth_Session_Beginning_Date_and_Time__c' => 'Eighth_Session_End_Date_and_Time__c',
+    'Ninth_Session_Beginning_Date_and_Time__c' => 'Ninth_Session_End_Date_and_Time__c',
+    'Tenth_Session_Beginning_Date_and_Time__c' => 'Tenth_Session_End_Date_and_Time__c',
+    'Eleventh_Session_Start_Date__c' => 'Eleventh_Session_End_Date__c',
+    'Twelfth_Session_Start_Date__c' => 'Twelfth_Session_End_Date__c',
   ];
 
-  foreach ($session_names as $session) {
-    if (!empty($event[$session])) {
-      $tmparray[] = strtotime($event[$session]);
+  foreach ($session_names as $start => $end) {
+    if (!empty($event[$start])) {
+      $tmparray[strtotime($event[$start])] = strtotime($event[$end]);
     }
   }
 
-  sort($tmparray);
+  ksort($tmparray);
   return $tmparray;
 }
 
@@ -176,6 +182,7 @@ function ts_events_collection_create_collection()
     'last_updated_time' => 'int32',
     'Next_Start_Date__c' => 'int64',
     'sessions' => 'int64[]',
+    'sessions_end_date_time' => 'int64[]',
     'Contact_Information_Name__c' => 'string',
     'Contact_Information_Email__c' => 'string',
     'Contact_Information_Phone__c' => 'string',
