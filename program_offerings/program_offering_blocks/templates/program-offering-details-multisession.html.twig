@@ -57,11 +57,6 @@
 #}
 
 <div class="program_offering_blocks ungerboeck_eventlist_details">
-<div class="event-actions">
-<a href="{{ path('program_offering_blocks.event_ics', {'eventID': eventID}) }}" aria-label="Add {{title }} to your calendar"class="btn btn-outline-secondary add-to-calendar" download>
-    <i class="fa-regular fa-calendar-plus"></i> Add to Calendar
-  </a>
-</div>
   <div class="event_details_wrapper">
     <div class="event_details_dates">
     <span class="icon">
@@ -101,7 +96,7 @@
 
     {% if (contact.name) %}
       <div class="event_contact_wrapper">
-      <span class="icon">
+        <span class="icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304"><ellipse data-name="Oval 27" cx="21.131" cy="21.152" rx="21.131" ry="21.152" transform="translate(0)" fill="none"></ellipse><path data-name="Oval 27 - Outline" d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z" transform="translate(0)"></path><path data-name="Path 3229" d="M9.239,9.1a.748.748,0,0,1-.5-.188L1,2.062A.75.75,0,1,1,2,.938L9.239,7.345,16.482.938a.75.75,0,1,1,.994,1.123L9.736,8.908A.748.748,0,0,1,9.239,9.1Z" transform="translate(11.527 13.102)"></path><path data-name="Line 28" d="M0,5.756a.748.748,0,0,1-.53-.22.75.75,0,0,1,0-1.061L4.476-.53a.75.75,0,0,1,1.061,0,.75.75,0,0,1,0,1.061L.53,5.537A.748.748,0,0,1,0,5.756Z" transform="translate(28.506 21.512) rotate(45)"></path><path data-name="Path 3231" d="M3.894,4.644a.75.75,0,0,1-.75-.75V.75H0A.75.75,0,0,1-.75,0,.75.75,0,0,1,0-.75H3.894a.75.75,0,0,1,.53.22.75.75,0,0,1,.22.53V3.894A.75.75,0,0,1,3.894,4.644Z" transform="translate(29.292 22.3) rotate(45)"></path><path data-name="Path 3232" d="M14.316,16.383H3.09A3.114,3.114,0,0,1,0,13.252V3.131A3.114,3.114,0,0,1,3.09,0H15.374a3.114,3.114,0,0,1,3.09,3.131V5.964a.75.75,0,0,1-1.5,0V3.131A1.613,1.613,0,0,0,15.374,1.5H3.09A1.613,1.613,0,0,0,1.5,3.131v10.12a1.613,1.613,0,0,0,1.59,1.631H14.316a.75.75,0,1,1,0,1.5Z" transform="translate(11.385 12.958)"></path></svg>
         </span>
         <span class="visible-for-screen-readers">Contact</span>
@@ -111,6 +106,13 @@
         {% endif %}
       </div>
     {% endif %}
+
+    <div class="event-actions">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304" fill="#c8102e"><path d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z"></path><path d="M19,17.5H2.5A1.5,1.5,0,0,1,1,16V3A1.5,1.5,0,0,1,2.5,1.5H19A1.5,1.5,0,0,1,20.5,3v13A1.5,1.5,0,0,1,19,17.5Zm-16.5-1.5H19a0,0,0,0,0,0,0V3a0,0,0,0,0,0,0H2.5a0,0,0,0,0,0,0V16A0,0,0,0,0,2.5,16Z" transform="translate(10.881 12.752)"></path><path d="M20.5,0H0A.75.75,0,0,1,0-1.5H20.5A.75.75,0,0,1,20.5,0Z" transform="translate(10.881 19.502)"></path><path d="M0,4A.75.75,0,0,1-.75,3.25V.75A.75.75,0,0,1,.75.75v2.5A.75.75,0,0,1,0,4Z" transform="translate(15.881 11.002)"></path><path d="M0,4A.75.75,0,0,1-.75,3.25V.75A.75.75,0,0,1,.75.75v2.5A.75.75,0,0,1,0,4Z" transform="translate(25.881 11.002)"></path><path d="M7,0.75H0A.75.75,0,0,1,0-.75H7A.75.75,0,0,1,7,0.75Z" transform="translate(17.381 25.252)"></path><path d="M0,7A.75.75,0,0,1-.75,6.25V-.25A.75.75,0,0,1,.75-.25V6.25A.75.75,0,0,1,0,7Z" transform="translate(21.131 21.752)"></path></svg>
+        <a href="{{ path('program_offering_blocks.event_ics', {'eventID': eventID}) }}" aria-label="Add to calendar: {{title }}" class="add-to-calendar" download>Add to Calendar</a>
+      </span>
+    </div>
 
 {#
   {% if smugmug_id %}
@@ -122,6 +124,11 @@
     {% if description %}
       <div class="event_description">
         {{ description }}
+        {% if (urls.program) and (urls.program != registration.url) and (urls.program != urls.event) %}
+          <span class="event_details_more_information">
+            <a href="{{ urls.program }}">Learn more about this program<span class="visually-hidden">: {{title }}</span></a>
+          </span>
+        {% endif %}
           <span class="event_details_links">
       {% if (urls.event) and (urls.event != registration.url) %}
         <div class="event_details_more_information">
@@ -129,11 +136,7 @@
         </div>
       {% endif %}
 
-      {% if (urls.program) and (urls.program != registration.url) and (urls.program != urls.event) %}
-        <div class="event_details_more_information">
-          <a href="{{ urls.program }}">Learn more about this program<span class="visually-hidden">: {{title }}</span></a>
-        </div>
-      {% endif %}
+
       </span>
           {% if (instructor.name) and (instructor.name != contact.name) %}
       <div class="event_instructor_wrapper">

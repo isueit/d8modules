@@ -26,7 +26,6 @@ p.event_details_next_session {
 }
 .event_contact_wrapper {
     margin-top: 1.5rem;
-    padding-bottom: 3rem;
 }
 .events_show_more{
     background-color: #006BA6;
@@ -103,7 +102,5 @@ div.clearer {clear:both;}
 /* Add to Calendar Button */
 .event-actions {
     margin-bottom: 2.875rem;
-}
-.event-actions .btn-outline-secondary {
-    white-space: normal;
+    margin-top: 1.5rem;
 }

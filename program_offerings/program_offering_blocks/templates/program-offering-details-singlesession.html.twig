@@ -57,11 +57,6 @@
 #}
 
 <div class="program_offering_blocks ungerboeck_eventlist_details">
-<div class="event-actions">
-<a href="{{ path('program_offering_blocks.event_ics', {'eventID': eventID}) }}" aria-label="Add {{title }} to your calendar"class="btn btn-outline-secondary add-to-calendar" download>
-    <i class="fa-regular fa-calendar-plus"></i> Add to Calendar
-  </a>
-</div>
   <div class="event_details_wrapper">
     <div class="event_details_dates">
       <span class="icon">
@@ -106,6 +101,13 @@
         {% endif %}
       </div>
     {% endif %}
+
+    <div class="event-actions">
+      <span class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304" fill="#c8102e"><path d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z"></path><path d="M19,17.5H2.5A1.5,1.5,0,0,1,1,16V3A1.5,1.5,0,0,1,2.5,1.5H19A1.5,1.5,0,0,1,20.5,3v13A1.5,1.5,0,0,1,19,17.5Zm-16.5-1.5H19a0,0,0,0,0,0,0V3a0,0,0,0,0,0,0H2.5a0,0,0,0,0,0,0V16A0,0,0,0,0,2.5,16Z" transform="translate(10.881 12.752)"></path><path d="M20.5,0H0A.75.75,0,0,1,0-1.5H20.5A.75.75,0,0,1,20.5,0Z" transform="translate(10.881 19.502)"></path><path d="M0,4A.75.75,0,0,1-.75,3.25V.75A.75.75,0,0,1,.75.75v2.5A.75.75,0,0,1,0,4Z" transform="translate(15.881 11.002)"></path><path d="M0,4A.75.75,0,0,1-.75,3.25V.75A.75.75,0,0,1,.75.75v2.5A.75.75,0,0,1,0,4Z" transform="translate(25.881 11.002)"></path><path d="M7,0.75H0A.75.75,0,0,1,0-.75H7A.75.75,0,0,1,7,0.75Z" transform="translate(17.381 25.252)"></path><path d="M0,7A.75.75,0,0,1-.75,6.25V-.25A.75.75,0,0,1,.75-.25V6.25A.75.75,0,0,1,0,7Z" transform="translate(21.131 21.752)"></path></svg>
+        <a href="{{ path('program_offering_blocks.event_ics', {'eventID': eventID}) }}" aria-label="Add to calendar: {{title }}"class="add-to-calendar" download>Add to Calendar</a>
+      </span>
+    </div>
 
 {#
   {% if smugmug_id %}
