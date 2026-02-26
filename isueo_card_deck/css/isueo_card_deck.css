@@ -40,6 +40,9 @@
 	object-fit: cover;
 	width: 100%;
 }
+.isueo-card-deck.card dl, .isueo-card-deck.card ol, .isueo-card-deck.card ul {
+	color: initial;
+}
 /* --------------------------------------  */
 /* ## RESPONSIVE
 /* --------------------------------------  */
