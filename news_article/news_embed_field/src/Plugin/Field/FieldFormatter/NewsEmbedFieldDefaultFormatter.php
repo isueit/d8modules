@@ -69,6 +69,7 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     //open connection
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'ISU Extension');
 
     //So that curl_exec returns the contents of the cURL; rather than echoing it
     curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
