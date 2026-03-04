@@ -6,10 +6,11 @@ use Drupal\path_alias\Entity\PathAlias;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 
 /**
-* Implements hook_install().
-*/
+ * Implements hook_install().
+ */
 
-function county_impact_report_install() {
+function county_impact_report_install()
+{
   $site_name = \Drupal::config('system.site')->get('name');
 
   // Create County Impact Report Node
@@ -52,5 +53,15 @@ function county_impact_report_install() {
       $menu_link->save();
       break;
     }
+  }
+
+  $config = Drupal::configFactory()->getEditable('diff.settings');
+
+  if ($config) {
+    $config->set('general_settings.context_lines_leading', 4);
+    $config->set('general_settings.context_lines_trailing', 4);
+    $config->set('general_settings.layout_plugins.visual_inline.enabled', false);
+    $config->set('general_settings.layout_plugins.unified_fields.enabled', false);
+    $config->save();
   }
 }
