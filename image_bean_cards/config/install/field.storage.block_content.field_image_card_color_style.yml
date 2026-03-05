@@ -37,6 +37,18 @@ settings:
     -
       value: bean-card-half_dark-blue
       label: 'Partial Dk Blue'
+    -
+      value: bean-card_red-after
+      label: 'Full Red Below'
+    -
+      value: bean-card_green-after
+      label: 'Full Green Below'
+    -
+      value: bean-card_dark-red-after
+      label: 'Full Dk Red Below'
+    -
+      value: bean-card_dark-blue-after
+      label: 'Full Dk Blue Below'
   allowed_values_function: ''
 module: options
 locked: false
@@ -45,4 +57,3 @@ translatable: true
 indexes: {  }
 persist_with_no_fields: false
 custom_storage: false
-
