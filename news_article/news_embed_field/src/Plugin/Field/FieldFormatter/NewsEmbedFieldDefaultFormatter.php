@@ -39,6 +39,7 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     $elements['#cache']['max-age'] = 0;
     $elements['#cache']['contexts'] = [];
     $elements['#cache']['tags'] = [];
+    $elements['#attached']['library'] = ['news_embed_field/news_embed_field', ];
 
     foreach ($items as $delta => $item) {
       // Render output
