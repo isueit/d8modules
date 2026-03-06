@@ -27,8 +27,22 @@ function newsletter_install()
     ])->save();
   }
 
-
   newsletter_handle_permissions(true);
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+
+function newsletter_modules_installed($modules)
+{
+  if (in_array('newsletter', $modules)) {
+    if (!in_array('isueo_news_article', $modules)) {
+      if (!Drupal::moduleHandler()->moduleExists('isueo_news_article')) {
+        Drupal::service('module_installer')->install(['isueo_news_article'], true);
+      }
+    }
+  }
 }
 
 /**
