@@ -5,6 +5,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\user\Entity\Role;
@@ -355,18 +356,15 @@ addSectionTemplates($templates, true);
 
 function section_lib_importer_install() {
   // Add a few permissions to Content Editor role
-  $role_object = Role::load('content_editor');
-  if ($role_object) {
-    if (!$role_object->hasPermission("access block library")) {
-      $role_object->grantPermission("access block library");
-    }
-    $role_object->grantPermission('import template from section_library');
-    $role_object->grantPermission('view section_library templates');
-    $role_object->grantPermission('create basic_content block content');
-    $role_object->grantPermission('delete any basic_content block content');
-    $role_object->grantPermission('edit any basic_content block content');
-    $role_object->save();
-  }
+  $permissions = [
+    'access block library',
+    'import template from section_library',
+    'view section_library templates',
+    'create basic_content block content',
+    'delete any basic_content block content',
+    'edit any basic_content block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 
   //Prepare for images
   $uri_file = 'public://section_library/';

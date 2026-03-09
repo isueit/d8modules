@@ -1,9 +1,8 @@
 <?php
 
 use Drupal\node\Entity\Node;
-use Drupal\user\Entity\Role;
-use Drupal\path_alias\Entity\PathAlias;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_install().
@@ -18,17 +17,18 @@ function county_impact_report_install()
     'type' => 'county_impact_report',
     'title' => '2024 ' . $site_name . ' Impact Report',
     'status' => 0,
-    'path' => ['alias' => '/impact_report', 'pathauto' => 0,],
+    'path' => ['alias' => '/impact-report', 'pathauto' => 0,],
   ]);
   $mynode->save();
 
 
   // Add a few permissions to Content Editor role
-  $role_object = Role::load('content_editor');
-  $role_object->grantPermission('edit any county_impact_report content');
-  $role_object->grantPermission('view any unpublished county_impact_report content');
-  $role_object->grantPermission('use text format impact_report');
-  $role_object->save();
+  $permissions = [
+    'edit any county_impact_report content',
+    'view any unpublished county_impact_report content',
+    'use text format impact_report',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 
   // Create the menu link
   $menu_tree = \Drupal::menuTree();
