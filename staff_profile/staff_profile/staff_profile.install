@@ -5,6 +5,7 @@ use \Drupal\taxonomy\Entity\Term;
 use \Drupal\taxonomy_import\Form\ImportForm;
 use \Drupal\node\Entity\Node;
 use \Drupal\user\Entity\User;
+use \Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 function staff_profile_install()
 {
@@ -101,12 +102,13 @@ function staff_profile_install()
   }
 
   // Set up permissions, allow users to edit their own staff profile
-  user_role_grant_permissions('content_editor', array(
+  $permissions = [
     'edit any staff_profile content',
     'create staff_profile content',
     'revert staff_profile revisions',
     'view staff_profile revisions',
-  ));
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }
 
 /**

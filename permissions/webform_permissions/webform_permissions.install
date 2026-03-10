@@ -1,19 +1,15 @@
 <?php
 
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\File\FileSystem;
-
-use function Drupal\Core\Session\user_role_permissions;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_install().
  */
 
 function webform_permissions_install() {
-  user_role_grant_permissions('authenticated', ['view the administration theme']);
-
-  user_role_grant_permissions('content_editor', [
+  // Changed some permissions
+  $permissions = [
     'view the administration theme',
     'access webform overview',
     'access webform submission user',
@@ -23,7 +19,9 @@ function webform_permissions_install() {
     'edit any webform',
     'edit any webform submission',
     'view any webform submission',
-  ]);
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
+  Wrappers::changeRolePermissions('authenticated', ['view the administration theme'], TRUE);
 
   $config = \Drupal::service('config.factory')->getEditable('system.mail');
   if (!empty($config)) {
