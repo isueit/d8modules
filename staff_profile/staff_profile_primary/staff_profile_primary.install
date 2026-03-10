@@ -1,9 +1,7 @@
 <?php
 
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 use \Drupal\user\Entity\Role;
-use \Drupal\taxonomy\Entity\Vocabulary;
-use \Drupal\taxonomy\Entity\Term;
-use \Drupal\taxonomy_import\Form\ImportForm;
 
 /**
  * Implements hook_install()
@@ -11,15 +9,14 @@ use \Drupal\taxonomy_import\Form\ImportForm;
 function staff_profile_primary_install()
 {
   // Set up permissions, allow users to edit their own staff profile
-  user_role_grant_permissions('authenticated', array(
+  $permissions = [
     'edit own staff_profile content',
     'use text format basic',
-  ));
+  ];
+  Wrappers::changeRolePermissions('authenticated', $permissions, TRUE);
 
   // Don't let content editors "create url aliases"
-  user_role_revoke_permissions('content_editor', array(
-    'create url aliases',
-  ));
+  Wrappers::changeRolePermissions('content_editor', ['create url aliases',], FALSE);
 
   // Make sure we have a Regional Director Role
   $roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadByProperties(['id' => 'regional_director']);
@@ -29,17 +26,19 @@ function staff_profile_primary_install()
   }
 }
 
-function staff_profile_primary_uninstall() {
+function staff_profile_primary_uninstall()
+{
   \Drupal::configFactory()->getEditable('views.view.county_feeds_json')->delete();
   \Drupal::configFactory()->getEditable('views.view.staff_directory')->delete();
   \Drupal::configFactory()->getEditable('views.view.web_author_feeds')->delete();
 }
 
 /**
-* Blank out all staff id's
-*/
+ * Blank out all staff id's
+ */
 
-function staff_profile_primary_update_8001() {
+function staff_profile_primary_update_8001()
+{
   // Uninstall unused modules
   \Drupal::service('module_installer')->uninstall(['real_aes']);
   \Drupal::service('module_installer')->uninstall(['encrypt']);

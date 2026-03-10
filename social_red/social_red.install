@@ -3,6 +3,7 @@
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\user\Entity\Role;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 
 /**
@@ -32,11 +33,10 @@ use Drupal\user\Entity\Role;
   ]);
   $block->save();
 
-// Set up permissions for content editors
-  $role_object = Role::load('content_editor');
-  if ($role_object) {
-    $role_object->grantPermission('edit any social_media_red_bar block content');
-    $role_object->save();
-  }
+  // Set up permissions for content editors
+  $permissions = [
+    'edit any social_media_red_bar block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
  }
 
