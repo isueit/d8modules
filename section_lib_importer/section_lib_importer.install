@@ -8,7 +8,6 @@ use Drupal\isueo_helpers\ISUEOHelpers;
 use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
-use Drupal\user\Entity\Role;
 
 // ADD NEW UPDATES HERE
 // function section_lib_importer_update_8001() {

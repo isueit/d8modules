@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\user\Entity\Role;
 use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**

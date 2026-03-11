@@ -2,7 +2,6 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
-use Drupal\user\Entity\Role;
 use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 

@@ -14,8 +14,12 @@ class Wrappers
     if ($role) {
       foreach ($permissions as $permission) {
         if ($addPermissions) {
-          $role->grantPermission($permission);
+          // Grant permission to role if it's not already there
+          if (!$role->hasPermission($permission)) {
+            $role->grantPermission($permission);
+          }
         } else {
+          // Revoke permission from role if it's currently there
           if ($role->hasPermission($permission)) {
             $role->revokePermission($permission);
           }
