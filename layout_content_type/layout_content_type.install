@@ -15,27 +15,12 @@
  *
  * @ingroup layout_content_type
  */
-function layout_content_type_install() {
+function layout_content_type_install()
+{
   // Do not allow the locked content type to be deleted.
   $locked = Drupal::state()->get('node.type.locked');
   $locked['layout_ct'] = 'layout_ct';
   Drupal::state()->set('node.type.locked', $locked);
-
-  /*
-  user_role_grant_permissions('content_editor', array(
-    'access layout builder page',
-	'config layout builder blocks',
-	'create layout builder blocks',
-	'create layout_ct content',
-	'delete any layout_ct content',
-	'edit any layout_ct content',
-	'remove layout builder blocks',
-	'reorder layout builder blocks',
-	'view layout_ct revisions',
-	'configure editable layout_ct node layout overrides',
-	'override layout_ct published option',
-  ));
-  */
 }
 
 /**
@@ -51,7 +36,8 @@ function layout_content_type_install() {
  *
  * @ingroup layout_content_type
  */
-function layout_content_type_uninstall() {
+function layout_content_type_uninstall()
+{
   // Allow locked_content_type to be deleted.
   $locked = Drupal::state()->get('node.type.locked');
   unset($locked['layout_ct']);
@@ -66,6 +52,4 @@ function layout_content_type_uninstall() {
     ->getStorage('node_type')
     ->load('layout_ct');
   $content_type->delete();
-
 }
-

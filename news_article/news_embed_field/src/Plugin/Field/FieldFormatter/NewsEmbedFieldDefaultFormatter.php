@@ -39,6 +39,7 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     $elements['#cache']['max-age'] = 0;
     $elements['#cache']['contexts'] = [];
     $elements['#cache']['tags'] = [];
+    $elements['#attached']['library'] = ['news_embed_field/news_embed_field', ];
 
     foreach ($items as $delta => $item) {
       // Render output
@@ -69,6 +70,7 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     //open connection
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'ISU Extension');
 
     //So that curl_exec returns the contents of the cURL; rather than echoing it
     curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);

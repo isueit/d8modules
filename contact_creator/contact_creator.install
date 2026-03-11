@@ -2,14 +2,15 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
-use function Drupal\Core\Session\user_role_permissions;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_install().
  */
 
- function contact_creator_install(){
-    // Add Demo block.
+function contact_creator_install()
+{
+  // Add Demo block.
   $block_content = BlockContent::create([
     'type' => 'contact_creator',
     'info' => 'contact_us',
@@ -32,8 +33,9 @@ use function Drupal\Core\Session\user_role_permissions;
   $block->save();
 
   // Set up permissions for content editors
-    user_role_grant_permissions('content_editor', [
-      'create contact_creator block content',
-      'delete own contact_creator block content',
-    ]);
-  }
+  $permissions = [
+    'create contact_creator block content',
+    'delete own contact_creator block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
+}
