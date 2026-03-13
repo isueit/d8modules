@@ -91,6 +91,17 @@ button.slick-next, button.slick-prev {
   margin-bottom: auto;
   flex-grow: 1;
 }
+.layout--background--blue .product_title a, .layout--background--blue .product_download a {
+  color: var(--secondary-color);
+  text-decoration: none;
+}
+.layout--background--blue .product_title a:hover, .layout--background--blue .product_download a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+.layout--background--blue button.slick-next, button.slick-prev {
+  background: var(--primary-accent-color);
+}
 .product_title a {
   text-decoration: none;
   display: block;
@@ -146,6 +157,7 @@ button.slick-next, button.slick-prev {
   width: 100%;
   display: flex !important;
   flex-direction: column;
+  background: #fff;
 }
 .slick-list {
     margin: 0 -15px;
