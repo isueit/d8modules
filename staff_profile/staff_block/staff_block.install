@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\user\Entity\Role;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_install().
@@ -8,16 +8,13 @@ use Drupal\user\Entity\Role;
 function staff_block_install()
 {
   // Add a few permissions to Content Editor role
-  $role_object = Role::load('content_editor');
-  if ($role_object) {
-    if (!$role_object->hasPermission("access block library")) {
-      $role_object->grantPermission("access block library");
-    }
-    $role_object->grantPermission('create staff_contact_block block content');
-    $role_object->grantPermission('delete any staff_contact_block block content');
-    $role_object->grantPermission('edit any staff_contact_block block content');
-    $role_object->save();
-  }
+  $permissions = [
+    'access block library',
+    'create staff_contact_block block content',
+    'delete any staff_contact_block block content',
+    'edit any staff_contact_block block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }
 
 /**
@@ -26,11 +23,10 @@ function staff_block_install()
 function staff_block_uninstall()
 {
   // Remove a few permissions from Content Editor role
-  $role_object = Role::load('content_editor');
-  if ($role_object) {
-    $role_object->revokePermission('create staff_contact_block block content');
-    $role_object->revokePermission('delete any staff_contact_block block content');
-    $role_object->revokePermission('edit any staff_contact_block block content');
-    $role_object->save();
-  }
+  $permissions = [
+    'create staff_contact_block block content',
+    'delete any staff_contact_block block content',
+    'edit any staff_contact_block block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, FALSE);
 }

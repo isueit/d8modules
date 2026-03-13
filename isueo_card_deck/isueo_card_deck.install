@@ -1,6 +1,6 @@
 <?php
 
-use \Drupal\user\Entity\Role;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_install().
@@ -8,13 +8,10 @@ use \Drupal\user\Entity\Role;
 function isueo_card_deck_install()
 {
   // Add a few permissions to Content Editor role
-  $role_object = Role::load('content_editor');
-  if ($role_object) {
-    if (!$role_object->hasPermission("access block library")) {
-      $role_object->grantPermission("access block library");
-    }
-    $role_object->grantPermission('delete any isueo_card_deck block content');
-    $role_object->grantPermission('edit any isueo_card_deck block content');
-    $role_object->save();
-  }
+  $permissions = [
+    'access block library',
+    'delete any isueo_card_deck block content',
+    'edit any isueo_card_deck block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }
