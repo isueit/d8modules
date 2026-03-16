@@ -2,6 +2,7 @@
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+use Drupal\isueo_helpers\ISUEOHelpers\Files;
 
 /**
  * Implements hook_install().
@@ -32,7 +33,7 @@ function webform_permissions_install() {
   $module_path = \Drupal::service('extension.list.module')->getPath('webform_permissions');
   $config_files = \Drupal::service('file_system')->scanDirectory($module_path . '/config/overriden', '/.yml/');
   foreach ($config_files as $config_id) {
-    $raw_data = file_get_contents($module_path . '/config/overriden/' . $config_id->filename);
+    $raw_data = Files::fetch_url($module_path . '/config/overriden/' . $config_id->filename, FALSE);
     \Drupal::configFactory()->getEditable(str_replace('.yml', '', $config_id->filename))
       ->setData(Yaml::decode($raw_data))
       ->save();
