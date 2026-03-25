@@ -94,6 +94,7 @@ function newsletter_handle_permissions(bool $grant_permissions)
     'override newsletter sticky option',
     'view any unpublished newsletter content',
     'export newsletter content',
+    'create terms in newsletter',
   ];
 
   Wrappers::changeRolePermissions('content_editor', $permissions, $grant_permissions);
