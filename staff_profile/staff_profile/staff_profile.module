@@ -6,7 +6,9 @@ use Drupal\node\Entity\Node;
 /*
  * Implements hook_preprocess_node()
  */
-function staff_profile_preprocess_node(&$variables) {
+
+function staff_profile_preprocess_node(&$variables)
+{
   $node = $variables['node'];
   //check content type
   if ($node->getType() == 'staff_profile') {
@@ -17,12 +19,13 @@ function staff_profile_preprocess_node(&$variables) {
 /**
  * Implements hook_form_alter().
  */
-function staff_profile_form_node_form_alter(&$form, &$form_state, $form_id) {
+function staff_profile_form_node_form_alter(&$form, &$form_state, $form_id)
+{
   /* @var Drupal\Core\Entity\FieldableEntityInterface $node */
   $node = $form_state->getFormObject()->getEntity();
 
   if ($node->getType() == 'staff_profile') {
-   /* var_dump($node);*/
+    /* var_dump($node);*/
     $form['#attached']['library'][] = 'staff_profile/staff_profile_edit';
     $form['#validate'][] = 'staff_profile_form_node_validate';
 
@@ -42,7 +45,8 @@ function staff_profile_form_node_form_alter(&$form, &$form_state, $form_id) {
 /**
  * Validiate function for staff_profile node create/edit form
  */
-function staff_profile_form_node_validate(&$form, FormStateInterface $form_state) {
+function staff_profile_form_node_validate(&$form, FormStateInterface $form_state)
+{
   $old_staffid = '';
 
   // Check if it's a new node, and if not, get the existing netID
@@ -51,7 +55,7 @@ function staff_profile_form_node_validate(&$form, FormStateInterface $form_state
   if (!empty($nid)) {
     $is_new_node = FALSE;
     $node = Node::load($nid);
-    $old_netid = $node->field_staff_profile_netid->value;
+    $old_netid = strtolower($node->field_staff_profile_netid->value);
     $old_staffid = !empty($node->field_staff_profile_staffid->value) ? $node->field_staff_profile_staffid->value : '';
   }
 
@@ -62,7 +66,7 @@ function staff_profile_form_node_validate(&$form, FormStateInterface $form_state
   }
 
   // Get the new netID from the form, truncating it if there is a @ in the string
-  $new_netid = $form_state->getValue('field_staff_profile_netid')[0]['value'];
+  $new_netid = strtolower($form_state->getValue('field_staff_profile_netid')[0]['value']);
   $tmp_arr = explode("@", $new_netid, 2);
   $new_netid = $tmp_arr[0];
 
@@ -72,7 +76,7 @@ function staff_profile_form_node_validate(&$form, FormStateInterface $form_state
 
   // If it's a new node, or the netID changed, then make sure this netID doesn't already have a node
   if ($is_new_node || $old_netid != $new_netid) {
-    $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type','staff_profile')
+    $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')
       ->condition('field_staff_profile_netid', $new_netid)
       ->execute();
     if (!empty($nids)) {
@@ -85,7 +89,8 @@ function staff_profile_form_node_validate(&$form, FormStateInterface $form_state
 /*
  * Mark fields from staff directory database as readonly on the staff_profile node edit form
  */
-function staff_profile_mark_database_fields_readonly(&$form) {
+function staff_profile_mark_database_fields_readonly(&$form)
+{
   $form['title']['widget']['#disabled'] = TRUE;
   $form['field_staff_profile_first_name']['widget'][0]['value']['#disabled'] = TRUE;
   $form['field_staff_profile_last_name']['widget'][0]['value']['#disabled'] = TRUE;
@@ -114,7 +119,7 @@ function staff_profile_mark_database_fields_readonly(&$form) {
 
 function staff_profile_theme($existing, $type, $theme, $path)
 {
-   return [
+  return [
     'node__staff_profile__staff_author' => [
       'template' => 'node--staff-profile--staff-author',
       'base hook' => 'node',

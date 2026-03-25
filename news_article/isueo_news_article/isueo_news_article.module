@@ -1,4 +1,7 @@
 <?php
+use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+
 //Add custom css to news_article nodes
 function isueo_news_article_preprocess_node(&$variables) {
   $node = $variables['node'];
@@ -33,5 +36,38 @@ function isueo_news_article_theme_suggestions_node_alter(array &$suggestions, ar
     if (!empty($variables['elements']['#is_in_newsletter'])) {
       $suggestions[] = 'node__news_article__teaser__newsletter';
     }
+  }
+}
+
+/**
+ * Implements hook_views_query_alter() to exclude newsetters from news article view.
+ */
+function isueo_news_article_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'news_articles') {
+    
+  // Manually ensure the table is added as a LEFT JOIN
+    $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', [
+      'type' => 'LEFT',
+      'table' => 'node__field_newsletter_exclude',
+      'field' => 'entity_id',
+      'left_table' => 'node_field_data',
+      'left_field' => 'nid',
+      'extra' => [
+        [
+          'field' => 'deleted',
+          'value' => 0,
+          'numeric' => TRUE,
+        ],
+      ],
+    ]);
+
+    $query->addTable('node__field_newsletter_exclude', NULL, $join, 'node__field_newsletter_exclude');
+
+
+    // Add OR IS NULL to the WHERE condition for that field
+    $query->addWhereExpression(0, 
+      'node__field_newsletter_exclude.field_newsletter_exclude_value = 0 
+       OR node__field_newsletter_exclude.field_newsletter_exclude_value IS NULL'
+    );
   }
 }

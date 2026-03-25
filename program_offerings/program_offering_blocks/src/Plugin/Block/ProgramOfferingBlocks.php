@@ -286,7 +286,7 @@ class ProgramOfferingBlocks extends BlockBase
       $tmpfilter = '';
       $tmpfilter = !empty($string_of_search_terms) ? '?filter=' . urlencode($string_of_search_terms) : '';
       if ($filtering_by_program_ids) {
-        $tmpfilter .= (empty($tmpfilter) ? '?' : '&') . 'referring_nid=' . $node->id();
+        //$tmpfilter .= (empty($tmpfilter) ? '?' : '&') . 'referring_nid=' . $node->id();
         if (str_contains($show_more_page, '?')) {
           $tmpfilter = str_replace('?', '&', $tmpfilter);
         }
