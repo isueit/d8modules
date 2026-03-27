@@ -166,6 +166,22 @@ function products_rebuild_product_list()
       $first_slideshow->save();
     }
   }
+
+  // Get paragraph IDs of a specific bundle (type)
+  $pids = \Drupal::entityQuery('paragraph')
+    ->condition('type', 'product') // machine name
+    ->accessCheck(TRUE)
+    ->execute();
+
+  // Load full paragraph entities
+  $paragraphs = Paragraph::loadMultiple($pids);
+
+  // Loop through them
+  foreach ($paragraphs as $paragraph) {
+    // Example: get a field value
+    //$value = $paragraph->get('field_example')->value;
+    $paragraph->save();
+  }
 }
 
 function products_get_all_blocks()
@@ -210,8 +226,9 @@ function products_entity_presave(Drupal\Core\Entity\EntityInterface $entity)
   if ($entity->getEntityTypeId() == 'paragraph') {
     if ($entity->bundle() == 'product') {
       $found = false;
-      $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json', false);
-      $products = json_decode($raw, true);
+      //$raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json', true);
+      //$products = json_decode($raw, true);
+      $products = products_get_store_full_products_list();
       $sku = strtolower(trim($entity->get('field_product_sku')->getString()));
       if (str_contains($sku, ' ')) {
         $sku = preg_replace('/\s+/', ' ', $sku);
@@ -268,8 +285,9 @@ function products_get_store_products(string $store_url)
   $store_products = [];
 
   // Get listing of the full products list
-  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json');
-  $tmp = json_decode($raw, true);
+  //$raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json');
+  //$tmp = json_decode($raw, true);
+  $tmp = products_get_store_full_products_list();
   foreach ($tmp as $product) {
     $products[$product['ProductID']] = $product;
   }
@@ -340,4 +358,27 @@ function products_entity_update(Drupal\Core\Entity\EntityInterface $entity)
     }
   } catch (Exception $ex) {
   }
+}
+
+function products_get_store_full_products_list()
+{
+  $cid = 'products:store_products';
+
+  // Try cache first
+  if ($cache = \Drupal::cache()->get($cid)) {
+    return $cache->data;
+  }
+
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/Store/FullProduct.json');
+  $data = json_decode($raw, TRUE);
+
+  // Store in cache for 1 minute
+  \Drupal::cache()->set(
+    $cid,
+    $data,
+    time() + 60,  // Should be 1 minute
+    ['products:external_data'] // cache tag
+  );
+
+  return $data;
 }
