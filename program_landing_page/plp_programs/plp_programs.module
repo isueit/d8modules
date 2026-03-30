@@ -101,17 +101,25 @@ function plp_programs_getprograms()
       $mynode->setTitle(html_entity_decode($program['Name']));
       $save = true;
     }
-
+    
     // Handle Body
-    $body = plp_programs_generate_body($program);
+    $body = preg_replace_callback(
+      '/\sstyle="([^"]*)"/i',
+      function (array $matches): string {
+        $cleaned = preg_replace(
+          '/\b(?:font-size|font-family|color|background-color)\s*:[^;"]*(;|(?="))/i',
+          '',
+          $matches[1]
+        );
+        $cleaned = trim(preg_replace('/;+/', ';', $cleaned), '; ');
+        return $cleaned === '' ? '' : ' style="' . $cleaned . '"';
+      },
+      plp_programs_generate_body($program)
+    );
+  
     if ($mynode->body->value != $body) {
       $mynode->body->value = $body;
       $mynode->body->format = 'basic';
-      $save = true;
-    }
-
-    if ($mynode->body->summary != $program['hed__Description__c']) {
-      $mynode->body->summary = $program['hed__Description__c'];
       $save = true;
     }
 
