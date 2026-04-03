@@ -1,9 +1,6 @@
 <?php
 
-use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\block\Entity\Block;
-use Drupal\block_content\Entity\BlockContent;
-use Drupal\user\Entity\Role;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_uninstall().
@@ -24,10 +21,10 @@ function products_uninstall()
 function products_install()
 {
   // Add a few permissions to Content Editor role
-  $role_object = Role::load('content_editor');
-  if ($role_object) {
-    $role_object->grantPermission('edit any products_block block content');
-    $role_object->grantPermission('update any products_block block content');
-    $role_object->save();
-  }
+  $permissions = [
+    'access block library',
+    'edit any products_block block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
+
 }

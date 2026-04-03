@@ -1,0 +1,5 @@
+regcytes:
+  version: 1.x
+  css:
+    layout:
+      css/regcytes.css: {}

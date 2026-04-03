@@ -1,14 +1,17 @@
 <?php
 
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+
 /**
-* Implements hook_install().
-*/
-
-function isueo_card_deck_install() {
-
-  // Set up permissions, allow users to edit their own staff profile
-  user_role_grant_permissions('content_editor', array(
+ * Implements hook_install().
+ */
+function isueo_card_deck_install()
+{
+  // Add a few permissions to Content Editor role
+  $permissions = [
+    'access block library',
     'delete any isueo_card_deck block content',
-    'update any isueo_card_deck block content',
-  ));
+    'edit any isueo_card_deck block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }

@@ -1,0 +1,5 @@
+div.embedded_article article p.iastate-article__back-btn {display: none;}
+div.embedded_article article h2.hero--news-article__subhead {color: black; font-weight: normal; font-size: 1em;}
+div.embedded_article article div.share {display: none;}
+/*div.embedded_article article div.itswd-section-wrapper-last {display: none;}*/
+svg.svg-inline--fa {display: none;}

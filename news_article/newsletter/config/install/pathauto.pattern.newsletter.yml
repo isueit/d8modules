@@ -9,7 +9,7 @@ dependencies:
 id: newsletter
 label: Newsletter
 type: 'canonical_entities:node'
-pattern: 'newsetter/[node:title]'
+pattern: 'newsletter/[node:title]'
 selection_criteria:
   b02292e2-2f52-4aa1-9cec-cad7fadae6a3:
     id: 'entity_bundle:node'

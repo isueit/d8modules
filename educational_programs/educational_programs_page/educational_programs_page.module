@@ -92,6 +92,9 @@ function educational_programs_page_node_presave(Drupal\Core\Entity\EntityInterfa
 						case 'Community and Economic Development':
 							$parent_term_name = 'Community Development';
 							break;
+						case 'Health and Human Sciences':
+							$parent_term_name = 'Family & Food';
+							break;
 						case 'Human Sciences':
 							$parent_term_name = 'Family & Food';
 							break;

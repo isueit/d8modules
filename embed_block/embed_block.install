@@ -1,23 +1,19 @@
 <?php
 
-use Drupal\node\Entity\Node;
-use Drupal\user\Entity\Role;
-use Drupal\path_alias\Entity\PathAlias;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
-* Implements hook_install().
-*/
-
-function embed_block_install() {
+ * Implements hook_install().
+ */
+function embed_block_install()
+{
   // Add a few permissions to Content Editor role
-  $role_object = Role::load('content_editor');
-  if ($role_object) {
-    $role_object->grantPermission('create embed_block block content');
-    $role_object->grantPermission('delete any embed_block block content');
-    $role_object->grantPermission('update any embed_block block content');
-    $role_object->grantPermission('use text format code_embed');
-    $role_object->save();
-  }
-
+  $permissions = [
+    'access block library',
+    'create embed_block block content',
+    'delete any embed_block block content',
+    'edit any embed_block block content',
+    'use text format code_embed',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }

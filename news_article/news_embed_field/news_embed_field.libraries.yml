@@ -1,0 +1,5 @@
+news_embed_field:
+  version: 1.x
+  css:
+    theme:
+      css/news_embed_field.css: {}

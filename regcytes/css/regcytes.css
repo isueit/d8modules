@@ -1,0 +1,250 @@
+/* --------------------------------------  */
+/* ## MICROSITE BANNER
+/* --------------------------------------  */
+
+/* Hero Header */
+.microsite-hero-label-wrapper {
+    z-index: 2;
+}
+.microsite-hero-wrapper {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    min-height: 400px;
+    position: relative;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.microsite-hero-label-wrapper.isueo-callout-stat {
+    backdrop-filter: blur(10px);
+    text-align: center;
+    width: 100%;
+    max-width: 45%;
+    animation: fadeIn 0.6s ease-out;
+}
+.microsite-hero-label-wrapper h1.isu-page-title {
+    color: #fff;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    font-weight: 700;
+}
+.microsite-event-details--wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 35px;
+    font-weight: 500;
+}
+.microsite-date-wrapper {
+    color: var(--primary-accent-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.microsite-event-location {
+    color: #fff;
+    font-weight: 500;
+    display: flex;
+}
+.microsite-event-location:before {
+    content: "\f041";
+    font-family: 'FontAwesome';
+    font-size: 1.1rem;
+    color: #fff;
+    padding-right: .5rem;
+}
+.microsite-event-website header.isu-wordmark-sitename {
+    visibility: hidden;
+}
+
+/* --------------------------------------  */
+/* ## MICROSITE - AGENDA
+/* --------------------------------------  */
+.subsite-agenda {
+    box-shadow: 0.5625rem 0.5625rem 1.25rem rgb(0 0 0 / 20%);
+    border-radius: 0.25rem;
+}
+.subsite-agenda .agenda-content {
+    position: relative;
+}
+.subsite-agenda .agenda-panel {
+    display: none;
+}
+.subsite-agenda .agenda-panel.active {
+    display: block;
+    animation: fadeIn 0.4s;
+}
+.subsite-agenda .schedule-timeline {
+    border-radius: 0 0 .25rem .25rem;
+    padding: 2rem;
+    border-top: none;
+}
+.subsite-agenda .schedule-item {
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 0.125rem solid #ebebeb;
+    position: relative;
+    align-items: baseline;
+}
+.subsite-agenda .schedule-item:last-child {
+    border-bottom: none;
+}
+.subsite-agenda .schedule-time {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    position: relative;
+    padding-left: 2rem;
+}
+.subsite-agenda .schedule-time::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.2);
+}
+.subsite-agenda .schedule-details {
+    flex: 1;
+}
+.subsite-agenda h3.schedule-title {
+    font-size: 1.18rem;
+    color: #000;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    margin-top: 0.2rem;
+}
+.subsite-agenda .schedule-location {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+.subsite-agenda .schedule-description {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+.subsite-agenda .schedule-description p {
+    margin-bottom: 0.5rem;
+}
+.subsite-agenda .schedule-description ul,
+.subsite-agenda .schedule-description ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.subsite-agenda .schedule-speakers {
+    color: #666;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+.subsite-agenda .schedule-speakers strong {
+    font-style: normal;
+    color: #000;
+}
+/* In Page Navigation */
+.subsite-agenda .agenda-tabs {
+    display: flex;
+    margin-bottom: 0;
+}
+.subsite-agenda .agenda-tab {
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border-radius: .25rem .25rem 0 0;
+    transition: all 0.3s;
+    background: #f5f5f5;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-bottom: -2px;
+    border: none;
+}
+.subsite-agenda .agenda-tab span.tab-day-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #666;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.subsite-agenda .agenda-tab span.tab-month-day {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #666;
+    display: block;
+}
+.subsite-agenda .agenda-tab.active {
+  background: white;
+  z-index: 2;
+}
+.subsite-agenda .agenda-tab.active .tab-day-name,
+.subsite-agenda .agenda-tab.active .tab-month-day {
+  color: #c8102e;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .agenda-tabs {
+    flex-wrap: wrap;
+  }
+  .agenda-tab {
+    padding: 1rem 1.5rem;
+  }
+  .agenda-tab .tab-day-name {
+    font-size: 1.5rem;
+  }
+  .agenda-tab .tab-month-day {
+    font-size: 0.9rem;
+  }
+  .schedule-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .schedule-time {
+    padding-left: 2rem;
+  }
+  .schedule-timeline {
+    padding: 1.5rem;
+  }
+  .schedule-title {
+    font-size: 1.15rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .agenda-tab {
+    display: none;
+  }
+  .agenda-panel {
+    display: block !important;
+    page-break-before: always;
+  }
+  .agenda-panel:first-child {
+    page-break-before: avoid;
+  }
+  .schedule-time::before {
+    background-color: #000;
+    box-shadow: none;
+  }
+}
