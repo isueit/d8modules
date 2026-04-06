@@ -82,7 +82,6 @@ svg g[id] path.county-selected {
   overflow-y: auto;
   position: sticky;
   top: 0;
-  max-height: 100vh;
   flex-shrink: 0;
   margin-right: calc((100vw - 1200px) / -2);
   overflow-x: hidden;
