@@ -1,0 +1,397 @@
+/* ========================================
+   CONTAINER
+   ======================================== */
+.county-office-map-container {
+  display: flex;
+  min-height: 80vh;
+  background: #fff;
+  margin: 0;
+  width: 100%;
+  position: relative;
+}
+.map-content-wrapper {
+  display: flex;
+  flex: 1;
+  overflow: visible;
+  max-width: none;
+  margin: 0;
+  width: 100%;
+}
+
+/* ========================================
+   MAP AREA
+   ======================================== */
+.map-area {
+  flex: 1;
+  padding: 2rem;
+  background: #fff;
+  max-width: 80%;
+}
+.map-container {
+  background: #fff;
+  max-width: 100%;
+}
+.map-container svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ========================================
+   SVG Interactivity
+   ======================================== */
+svg g[id] text {
+  pointer-events: none;
+  user-select: none;
+}
+svg g[id] a {
+  pointer-events: none;
+}
+svg g[id]:focus {
+  outline: none;
+}
+svg g[id]:focus-visible {
+  outline: none;
+}
+svg g[id] polygon.county-hover,
+svg g[id] path.county-hover {
+  fill: #f3f4f6 !important;
+  stroke: #374151 !important;
+  stroke-width: 1.5px !important;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+}
+svg g[id].county-selected polygon,
+svg g[id].county-selected path,
+svg g[id] polygon.county-selected,
+svg g[id] path.county-selected {
+  fill: #c8102e !important;
+  stroke: #7c2529 !important;
+  stroke-width: 2px !important;
+  opacity: 1;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+}
+
+/* ========================================
+   INFO PANEL
+   ======================================== */
+.info-panel {
+  width: 400px;
+  background: #fff;
+  border-left: 1px solid #e5e7eb;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  flex-shrink: 0;
+  margin-right: calc((100vw - 1200px) / -2);
+  overflow-x: hidden;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
+  min-width: 300px;
+}
+#panel-content {
+  padding: 1.5rem;
+  margin-right: calc((100vw - 1200px) / -2);
+  padding-right: calc(2rem + ((100vw - 1200px) / 2));
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+#panel-content a,
+#panel-content p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Empty State */
+.panel-empty-state {
+  text-align: center;
+  padding: 2rem 0;
+}
+.panel-empty-state .fa-location-dot {
+  color: #4a4a4a;
+  margin: 0 auto 1.5rem;
+  width: 64px;
+  height: 64px;
+  font-size: 64px;
+  display: block;
+  line-height: 1;
+}
+.panel-empty-state p {
+  color: #4a4a4a;
+  line-height: 1.6;
+  margin: 0.4rem 0;
+}
+.quick-access {
+  margin-top: 2rem;
+  text-align: center;
+  max-width: 95%;
+}
+.quick-access h3 {
+  color: #000;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.8rem 0;
+}
+a.btn.quick-county-btn {
+  background-color: var(--lt-gray);
+  color: #4a4a4a;
+  border-color: var(--lt-gray);
+  border-radius: .5rem;
+  white-space: break-spaces;
+  overflow: hidden;
+  padding: .75rem;
+  font-size: 1.1rem;
+  margin-bottom: .8rem;
+  display: block;
+  transition: all 0.15s;
+}
+a.quick-county-btn:hover {
+  background: white;
+  border-color: #c8102e;
+  color: #c8102e;
+  transform: translateX(2px);
+}
+.quick-county-btn:focus {
+  outline: 2px solid #f1be48;
+  outline-offset: 2px;
+  border-color: #c8102e;
+}
+/* Click State */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+.panel-title-area h2 {
+  color: #000;
+  margin: 0;
+  padding-bottom: 0;
+  font-size: 2rem;
+}
+.region-label {
+  font-size: 0.875rem;
+  color: #4a4a4a;
+  margin: 0;
+  letter-spacing: 0.025em;
+}
+.close-panel {
+  background: white;
+  border: none;
+  font-size: 1.5rem;
+  color: #9ca3af;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: all 0.15s;
+}
+.close-panel:hover {
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #9ca3af;
+}
+.close-panel:focus {
+  outline: 2px solid #f1be48;
+  outline-offset: 2px;
+}
+/* County Office Info */
+.regional-director-section {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: white;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+.county-office-section h3,
+.regional-director-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #000;
+  margin: 0 0 0.8rem 0;
+}
+.office-info {
+  margin-bottom: 1rem;
+}
+.office-info p {
+  margin: 0.4rem 0;
+  color: #4a4a4a;
+  line-height: 1.6;
+}
+.office-info p:first-child {
+  margin-top: 0;
+}
+a.county-website-link {
+  display: inline-flex;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  align-items: center;
+}
+a.county-website-link:after {
+  content: '\f061';
+  font-family: FontAwesome;
+  padding-left: 0.5rem;
+  vertical-align: middle;
+  font-size: inherit;
+  transition: transform 0.3s ease;
+}
+a.county-website-link:hover::after {
+  transform: translateX(4px);
+}
+/* RD Section */
+.regional-director-section {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--lt-gray);
+  border-radius: .5rem;
+  border: 1px solid #e5e7eb;
+  margin-top: 2rem;
+  max-width: 95%;
+}
+.h3.director-name,
+.h3.director-name a {
+  margin: 0.5rem 0;
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+.h3.director-name a:hover {
+  text-decoration: underline;
+}
+.director-info {
+  display: flex;
+  flex-direction: column;
+}
+.director-photo {
+  width: 75px;
+  height: 75px;
+  border-radius: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: start;
+  flex-shrink: 0;
+}
+.director-photo img.staff_profile_smugmug {
+  max-width: 100%;
+  min-width: auto;
+  display: block;
+}
+p.director-email a {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #666;
+}
+p.director-email a:hover {
+  text-decoration: underline;
+}
+p.director-email, p.director-phone {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: .5rem;
+}
+.quick-links-section h3 {
+  color: #000;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.8rem 0;
+}
+
+/* Block-specific styles for homepage placement */
+.block-county-office-map-block {
+  margin: 0;
+  padding: 0;
+}
+
+.block-county-office-map-block .county-office-map-container {
+  border-radius: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .county-office-map-container {
+    flex-direction: column;
+    overflow: visible;
+  }
+  .map-content-wrapper {
+    flex-direction: column;
+  }
+  .info-panel {
+    width: 90%;
+    min-width: 70%;
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+    max-height: none;
+    position: relative;
+    margin-right: 0;
+    box-shadow: none;
+  }
+  #panel-content {
+    margin-right: 0;
+    padding-right: 2rem;
+  }
+  .map-area {
+    padding: 1rem;
+    width: 100%;
+  }
+}
+ 
+@media (max-width: 768px) {
+  .map-header {
+    padding: 1.5rem 1rem 0.75rem 1rem;
+  }
+  .map-area {
+    padding: 1rem;
+    max-width: 100%;
+  }
+  .info-panel {
+    padding: 1.5rem;
+    width: 90%;
+  }
+  #panel-content {
+    padding: 1.5rem;
+  }
+  .panel-title-area h2 {
+    word-break: break-word;
+  }
+  .director-info {
+    gap: 0.75rem;
+  }
+  .director-photo {
+    width: 60px;
+    height: 60px;
+  }
+  .quick-links-list a {
+    word-break: break-word;
+  }
+  .regional-director-section {
+    max-width: 80%;
+  }
+}
+ 
+@media (max-width: 480px) {
+  .map-header {
+    padding: 1rem 1rem 0.5rem 1rem;
+  }
+  .close-panel {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.25rem;
+  }
+  .director-photo {
+    width: 50px;
+    height: 50px;
+  }
+  .regional-director-section {
+    max-width: 95%;
+  }
+}
