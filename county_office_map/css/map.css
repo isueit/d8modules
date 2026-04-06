@@ -165,7 +165,7 @@ a.quick-county-btn:hover {
   align-items: flex-start;
   margin-bottom: 1.5rem;
 }
-.panel-title-area h2 {
+.panel-title-area h2, h2.panel-title-area {
   color: #000;
   margin: 0;
   padding-bottom: 0;
