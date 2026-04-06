@@ -7,3 +7,6 @@ map:
     js/map.js: {}
   dependencies:
     - core/drupal
+    - core/jquery
+    - core/once
+    - core/drupalSettings

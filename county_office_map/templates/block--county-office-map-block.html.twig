@@ -1,0 +1,61 @@
+{#
+/**
+ * @file
+ * Template for County Office Map Block.
+ *
+ * Available variables:
+ * - svg_path: Path to the SVG file
+ * - counties_count: Number of counties loaded
+ */
+#}
+<div class="county-office-map-container">
+ {# <div class="map-header">
+    <div class="header-content">
+      <h2>Interactive County Map</h2>
+      
+      <p class="intro-text">
+        Click any county to connect with local programs, resources and educational experiences.
+      </p>
+    </div>
+  </div> #}
+  
+  <div class="map-content-wrapper">
+    
+    <div class="map-area">
+      <div class="map-container">
+        {% if svg_content %}
+          {% autoescape false %}
+            {{ svg_content }}
+          {% endautoescape %}
+        {% else %}
+          <p style="color: #c8102e; padding: 2rem; text-align: center; background: #fee;">
+            Error: Map not loaded.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div class="info-panel">
+      <div id="panel-content">
+        
+        <div class="panel-empty-state">
+          <i class="fa-solid fa-location-dot"></i>
+          <h2 class="panel-title-area">Select a County</h2>
+          <p> Click any county to connect with local programs, resources and educational experiences.</p>
+          
+          <div class="quick-access">
+            <h3>Quick Access</h3>
+            <a class="btn quick-county-btn" href="https://www.extension.iastate.edu/impact-stories/" role="button">Impact Reports</a>
+            <a class="btn quick-county-btn" href="" role="button">Regional Directors</a>
+            <a class="btn quick-county-btn" href="https://www.extension.iastate.edu/staff/" role="button">Staff Directory</a>
+            <a class="btn quick-county-btn" href="https://www.extension.iastate.edu/jobs/" role="button">County Job Openings</a>
+            <a class="btn quick-county-btn" href="https://www.extension.iastate.edu/calendar/" role="button">Calendar of Events</a>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
