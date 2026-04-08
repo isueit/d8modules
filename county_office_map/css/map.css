@@ -55,21 +55,49 @@ svg g[id]:focus-visible {
 }
 svg g[id] polygon.county-hover,
 svg g[id] path.county-hover {
-  fill: #f3f4f6 !important;
-  stroke: #374151 !important;
+  fill: #d1d5db !important;
+  stroke: #6b7280 !important;
   stroke-width: 1.5px !important;
   opacity: 0.9;
   transition: all 0.2s ease;
 }
+svg.region-active g[id]:not(.region-highlight) polygon,
+svg.region-active g[id]:not(.region-highlight) path {
+  fill: #fff !important;
+  opacity: 0.6 !important;
+  stroke: #d1d5db !important;
+  stroke-width: 1px !important;
+}
+svg.region-active g[id]:not(.region-highlight) polygon.county-hover,
+svg.region-active g[id]:not(.region-highlight) path.county-hover {
+  fill: #d1d5db !important;
+  stroke: #6b7280 !important;
+  stroke-width: 1.5px !important;
+  opacity: 0.9 !important;
+}
+svg g[id].region-highlight {
+  transform: scale(1.08);
+  transform-origin: center;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  transition: all 0.3s ease;
+  transform-box: fill-box;
+}
+
+/* Selected county - scale even larger */
+svg g[id].county-selected.region-highlight {
+  transform: scale(1.12);
+  transform-origin: center;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+  transition: all 0.3s ease;
+  transform-box: fill-box;
+}
+
+/* Then keep the polygon/path styling separate */
 svg g[id].county-selected polygon,
-svg g[id].county-selected path,
-svg g[id] polygon.county-selected,
-svg g[id] path.county-selected {
-  fill: #c8102e !important;
-  stroke: #7c2529 !important;
-  stroke-width: 2px !important;
+svg g[id].county-selected path {
+  stroke: #000 !important;
+  stroke-width: 1.5px !important;
   opacity: 1;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
 }
 
 /* ========================================
@@ -170,11 +198,21 @@ a.quick-county-btn:hover {
   padding-bottom: 0;
   font-size: 2rem;
 }
-.region-label {
+.county-meta {
+  display: flex;
+  gap: 0.1rem;
+  flex-wrap: wrap;
+}
+.region-label, .model-label {
   font-size: 0.875rem;
   color: #4a4a4a;
   margin: 0;
   letter-spacing: 0.025em;
+}
+.meta-separator {
+  font-size: 0.875rem;
+  color: #4a4a4a;
+  margin: 0 0.25rem;
 }
 .close-panel {
   background: white;

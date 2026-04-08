@@ -5,6 +5,7 @@
     attach: function (context, settings) {
       
       const counties = drupalSettings.countyOfficeMap?.counties || {};
+      const $svg = $('.map-container svg').first();
       
       // Store the original empty state HTML on first load
       const panelContent = once('store-empty-state', '#panel-content', context);
@@ -19,7 +20,6 @@
         }
       }
 
-
       // ============================================
       // HELPER FUNCTIONS - Define these first
       // ============================================
@@ -33,7 +33,11 @@
           <div class="panel-header">
             <div class="panel-title-area">
               <h2>${county.name} County</h2>
-              ${county.region ? `<p class="region-label">Region ${county.region}</p>` : ''}
+              <div class="county-meta">
+                ${county.region ? `<span class="region-label">Region ${county.region}</span>` : ''}
+                ${county.region && county.model ? `<span class="meta-separator">|</span>` : ''}
+                ${county.model ? `<span class="model-label">Model ${county.model}</span>` : ''}
+              </div>
             </div>
             <button class="close-panel" aria-label="Close">×</button>
           </div>
@@ -71,15 +75,15 @@
         html += `</div>`;
         
         // Add Regional Director section
-          html += `
-            <div class="regional-director-section">
-              <h3>
-                <i class="fa-solid fa-user-group"></i>
-                Regional Director
-              </h3>
-              <div class="director-info">`;
+        html += `
+          <div class="regional-director-section">
+            <h3>
+              <i class="fa-solid fa-user-group"></i>
+              Regional Director
+            </h3>
+            <div class="director-info">`;
 
-          if (county.regional_director) {
+        if (county.regional_director) {
           const director = county.regional_director;
           
           if (director.image_url) {
@@ -94,8 +98,7 @@
           if (director.name) {
             // Build staff profile URL if we have netid
             if (director.netid) {
-              const countySlug = svgId; 
-              const profileUrl = `https://www.extension.iastate.edu/${countySlug}/staff/${director.netid}`;
+              const profileUrl = `https://www.extension.iastate.edu/${svgId}/staff/${director.netid}`;
               html += `<p class="h3 director-name"><a href="${profileUrl}">${director.name}</a></p>`;
             } else {
               html += `<p class="h3 director-name">${director.name}</p>`;
@@ -121,9 +124,8 @@
         
         html += `</div></div>`;
         
-       // Add Quick Links section
-        const countySlug = svgId; 
-        const baseUrl = `https://www.extension.iastate.edu/${countySlug}`;
+        // Add Quick Links section
+        const baseUrl = `https://www.extension.iastate.edu/${svgId}`;
         
         html += `
           <div class="quick-links-section">
@@ -145,7 +147,7 @@
         });
       }
       
-         /**
+      /**
        * Reset panel to empty state.
        */
       function resetPanel() {
@@ -154,9 +156,10 @@
           $('#panel-content').html(window.countyMapEmptyState);
         }
         
-        // Clear map selection
-        $('svg g[id]').removeClass('county-selected');
-        $('svg g[id] polygon, svg g[id] path').removeClass('county-selected');
+        // Clear all map selections and highlights
+        $svg.find('g[id]').removeClass('county-selected region-highlight');
+        $svg.find('g[id] polygon, g[id] path').removeClass('county-selected');
+        $svg.removeClass('region-active');
       }
       
       // ============================================
@@ -203,15 +206,58 @@
             e.preventDefault();
             e.stopPropagation();
             
-            loadCountyInfo(countyData, svgId);
+            // Read region and model from SVG data attributes if available
+            const regionFromSVG = $(this).attr('data-region');
+            const modelFromSVG = $(this).attr('data-model');
             
-            // Highlight selected county
-            $('svg g[id]').removeClass('county-selected');
-            $('svg g[id] polygon, svg g[id] path').removeClass('county-selected');
+            // Create enhanced county data with SVG attributes
+            const enhancedCountyData = { ...countyData };
+            if (regionFromSVG) {
+              enhancedCountyData.region = regionFromSVG;
+            }
+            if (modelFromSVG) {
+              enhancedCountyData.model = modelFromSVG;
+            }
+            
+            // Remove all previous highlights
+            $svg.find('g[id]').removeClass('county-selected region-highlight');
+            $svg.find('g[id] polygon, g[id] path').removeClass('county-selected');
+            $svg.removeClass('region-active');
+
+            loadCountyInfo(enhancedCountyData, svgId);
+
+            // Highlight selected county in red
             $(this).addClass('county-selected');
             $(this).find('polygon, path').addClass('county-selected');
-          });
 
+            // Highlight all counties in the same region with overlay
+            if (enhancedCountyData.region) {
+              $svg.addClass('region-active');
+              $svg.find('g[id]').each(function() {
+                const countyId = $(this).attr('id');
+                const otherRegion = $(this).attr('data-region') || counties[countyId]?.region;
+
+                if (otherRegion === enhancedCountyData.region) {
+                  $(this).addClass('region-highlight');
+                }
+              });
+            }
+
+            // Move region-highlight counties to the end, then selected on top
+            $svg.find('g[id].region-highlight').each(function() {
+              $svg.append($(this));
+            });
+            const $selected = $svg.find('g[id].county-selected');
+            if ($selected.length) {
+              $svg.append($selected);
+            }
+            // Keep region number labels on top of all county layers
+            const $regions = $svg.find('g#regions');
+            if ($regions.length) {
+              $svg.append($regions);
+            }
+          });
+          
           // Keyboard support for accessibility
           $countyGroup.on('keydown', function(e) {
             // Enter or Space key
@@ -223,7 +269,8 @@
         }
       });
       
-       // Quick county buttons - bind to buttons with data-county-id attribute
+      
+      // Quick county buttons - bind to buttons with data-county-id attribute
       // These are in the Twig template's empty state
       const quickButtons = once('quick-county', '.quick-county-btn[data-county-id]', context);
       quickButtons.forEach(function(button) {
@@ -233,19 +280,63 @@
           const countyData = counties[svgId];
           
           if (countyData) {
-            loadCountyInfo(countyData, svgId);
+            // Read region and model from SVG data attributes
+            const $mapCounty = $svg.find('g#' + svgId);
+            const regionFromSVG = $mapCounty.attr('data-region');
+            const modelFromSVG = $mapCounty.attr('data-model');
             
-            // Find and highlight the county on map
-            const $mapCounty = $('svg g#' + svgId);
-            $('svg g[id]').removeClass('county-selected');
-            $('svg g[id] polygon, svg g[id] path').removeClass('county-selected');
+            // Create enhanced county data with SVG attributes
+            const enhancedCountyData = { ...countyData };
+            if (regionFromSVG) {
+              enhancedCountyData.region = regionFromSVG;
+            }
+            if (modelFromSVG) {
+              enhancedCountyData.model = modelFromSVG;
+            }
+            
+            // Remove all previous highlights
+            $svg.find('g[id]').removeClass('county-selected region-highlight');
+            $svg.find('g[id] polygon, g[id] path').removeClass('county-selected');
+            $svg.removeClass('region-active');
+
+            // Load panel with enhanced data
+            loadCountyInfo(enhancedCountyData, svgId);
+
+            // Highlight selected county
             $mapCounty.addClass('county-selected');
             $mapCounty.find('polygon, path').addClass('county-selected');
+
+            // Highlight all counties in the same region
+            if (enhancedCountyData.region) {
+              $svg.addClass('region-active');
+              $svg.find('g[id]').each(function() {
+                const countyId = $(this).attr('id');
+                const otherRegion = $(this).attr('data-region') || counties[countyId]?.region;
+
+                if (otherRegion === enhancedCountyData.region) {
+                  $(this).addClass('region-highlight');
+                }
+              });
+            }
+
+            // Move all region-highlight counties to the end, then selected on top
+            $svg.find('g[id].region-highlight').each(function() {
+              $svg.append($(this));
+            });
+            const $selectedCounty = $svg.find('g[id].county-selected');
+            if ($selectedCounty.length) {
+              $svg.append($selectedCounty);
+            }
+            // Keep region number labels on top of all county layers
+            const $regionsGroup = $svg.find('g#regions');
+            if ($regionsGroup.length) {
+              $svg.append($regionsGroup);
+            }
           }
         });
       });
  
     }
   };
-
+ 
 })(jQuery, Drupal, drupalSettings, once);
