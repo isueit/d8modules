@@ -22,6 +22,10 @@ function isueo_news_article_theme($existing, $type, $theme, $path)
       'template' => 'node--news-article--teaser--newsletter',
       'base hook' => 'node',
     ],
+    'page__type__news_article__canonical' => [
+      'template' => 'page--type--news-article--canonical',
+      'base hook' => 'page',
+    ],
   ];
 }
 
