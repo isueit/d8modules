@@ -23,8 +23,18 @@ span.authored-on {
 	font-size: 1rem;
 	color: #676767;
 }
-.isueo-news-author {
-	margin-top: 3rem;
+.isueo-news-author, .isueo-news-author > div, .isueo-news-author-list, .isueo-news-author-list ul {
+	display: inline-flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+}
+.isueo-news-author-list ul li:not(:last-child)::after {
+	content: ',';
+	margin-right: 4px;
+	margin-left: -4px;
 }
 .isueo-news-author h2.isu-block-title.h4 {
 	margin-bottom: 1.375rem;
