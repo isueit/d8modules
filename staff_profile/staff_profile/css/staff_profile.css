@@ -28,3 +28,228 @@ p.address span.country {display:none;}
 .isueo-news-author .isueo-staff-author { align-items: flex-start; }
 .isueo-news-author ul { display: flex; gap: 10px; flex-direction: column; }
 .isueo-news-author .isueo-staff-author--img { width: 50px; height: 50px; border-radius: 100%; overflow: hidden; display: flex; align-items: start; justify-content: center; }
+
+/* ==========================================================================
+   STAFF PROFILE — Full-page layout
+   WCAG 2.1 AA compliant, mobile-first, responsive layout.
+   Row 1: Photo | Bio | Contact
+   Row 2: Program Areas | Counties Served
+   Row 3: Latest Articles
+   ========================================================================== */
+.staff-profile {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.staff-profile__name {
+  font-family: var(--serif-font, Merriweather, serif);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  margin: 0 0 0.25rem;
+  color: var(--primary-color);
+}
+.staff-profile__job-title {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: #4a4a4a;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.staff-profile__bio p {
+  margin-bottom: 0;
+  color: #4a4a4a;
+  line-height: 1.75;
+}
+
+
+
+.staff-profile__section-heading {
+  font-family: var(--sans-font, Arial, sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #4a4a4a;
+  border-bottom: 2px solid var(--primary-color, #c8102e);
+  padding-bottom: 0.3rem;
+  margin: 0 0 0.75rem;
+}
+.staff-profile__top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media screen and (min-width: 640px) {
+  .staff-profile__top {
+    /* Photo fixed, contact fixed, bio takes the rest */
+    grid-template-columns: 225px 1fr 300px;
+    gap: 2rem;
+    align-items: start;
+  }
+  .staff-profile__top--no-bio {
+    grid-template-columns: 225px 1fr 300px;
+  }
+}
+.staff-profile__photo img.staff_profile_smugmug,
+.node--type-staff-profile .staff-profile__photo img.staff_profile_smugmug {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  margin: 0;
+}
+.staff-profile__photo img.staff_profile_blank_image {
+  display: none;
+}
+.staff-profile__contact {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 2.125rem 2.75rem;
+  overflow: auto;
+  position: relative;
+}
+.staff-profile__contact:before {
+  content: '';
+  position: absolute;
+  width: 3.5rem;
+  height: 0.5rem;
+  left: 50%;
+  margin-left: -1.75rem;
+  top: -.15rem;
+  border-bottom: 0.5rem solid var(--primary-accent-color);
+}
+.staff-profile__contact h2.staff-profile__section-heading {
+  color: var(--primary-color);
+  text-transform: none;
+  border-bottom: none;
+}
+.staff-profile__address-block {
+  line-height: 1.75;
+  font-size: 1rem;
+}
+.staff-profile__contact-wrapper-1 {
+  margin-bottom: 1rem;
+}
+.staff-profile__contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.staff-profile__contact-row.address p.address {
+  color: #4a4a4a;
+}
+
+.staff-profile__contact-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  text-align: center;
+  color: var(--primary-color, #c8102e);
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+}
+
+.staff-profile__address-block a {
+  color: var(--link_color, #7c2529);
+  word-break: break-all;
+}
+
+.staff-profile__address-block a:hover,
+.staff-profile__address-block a:focus {
+  text-decoration: underline;
+}
+
+/* --- Custodian notice --------------------------------------------------- */
+.staff-profile__custodian {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+
+/* ── Row 2: Program Areas | Counties Served ────────────────────────────── */
+.staff-profile__details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #ebebeb;
+}
+
+@media screen and (min-width: 640px) {
+  .staff-profile__details {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+}
+
+.staff-profile__details-col .staff-profile__section-heading {
+  margin-top: 0;
+}
+
+/* --- Meta DL ------------------------------------------------------------ */
+.staff-profile__meta-list {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.staff-profile__meta-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.4rem;
+  margin-bottom: 0.4rem;
+  align-items: baseline;
+}
+
+.staff-profile__meta-row dt {
+  font-weight: 700;
+  color: #4a4a4a;
+  white-space: nowrap;
+}
+
+.staff-profile__meta-row dt::after {
+  content: ':';
+}
+
+.staff-profile__meta-row dd {
+  margin: 0;
+  color: #4a4a4a;
+}
+
+/* Strip inline field labels added by field_formatter_class */
+.staff-profile__meta-row dd .field-label-inline .field__label {
+  display: none;
+}
+
+/* Counties served list */
+.staff-profile__county-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.staff-profile__county-list li {
+  margin-bottom: 0.2rem;
+}
+
+/* ── Row 3: Latest Articles ─────────────────────────────────────────────── */
+.staff-profile__articles {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #ebebeb;
+}
+
+.staff-profile__articles-heading {
+  margin-top: 0;
+}
+
+/* --- Forced-colours / Windows High Contrast ----------------------------- */
+@media (forced-colors: active) {
+  .staff-profile__contact {
+    border: 1px solid ButtonText;
+  }
+  .staff-profile__contact-icon {
+    forced-color-adjust: auto;
+  }
+}

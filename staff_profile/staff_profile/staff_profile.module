@@ -2,6 +2,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /*
  * Implements hook_preprocess_node()
@@ -10,9 +11,95 @@ use Drupal\node\Entity\Node;
 function staff_profile_preprocess_node(&$variables)
 {
   $node = $variables['node'];
-  //check content type
   if ($node->getType() == 'staff_profile') {
     $variables['#attached']['library'][] = 'staff_profile/staff_profile';
+
+    // Twig's sandbox blocks .view() calls on field objects. Pre-render each
+    // field we need in the template as a standalone render array so the
+    // template can use {{ sp_fields.body }} etc. without hitting sandbox limits.
+
+    // Build staff photo directly — same pattern as StaffContactBlock.php.
+    $smugmug_id = $node->get('field_staff_profile_smugmug')->value;
+    if (!empty($smugmug_id)) {
+      $variables['sp_fields']['field_staff_profile_smugmug'] = [
+        '#markup' => '<img class="staff_profile_smugmug" src="'
+          . ISUEOHelpers\General::build_smugmug_url($smugmug_id, 'XL')
+          . '" alt="' . htmlspecialchars($node->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '" />',
+      ];
+    }
+    else {
+      $variables['sp_fields']['field_staff_profile_smugmug'] = [
+        '#markup' => '<img class="staff_profile_smugmug staff_profile_blank_image" src="'
+          . \Drupal::request()->getBaseUrl()
+          . '/modules/custom/d8modules/staff_profile/staff_profile/images/blank_image.png" alt="" />',
+      ];
+    }
+
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+    $fields = [
+      'field_staff_profile_pref_title',
+      'field_staff_profile_cty_dept',
+      'field_staff_profile_email',
+      'field_staff_profile_pref_phone',
+      'field_staff_profile_addr',
+      'field_staff_profile_college',
+      'field_staff_profile_pgm_areas',
+      'field_staff_profile_region',
+      'field_staff_profile_base_county',
+      'field_staff_profile_cty_served',
+      'field_staff_profile_teams_groups',
+      'field_custodian_of_public_record',
+      'body',
+    ];
+    foreach ($fields as $field_name) {
+      if ($node->hasField($field_name)) {
+        $variables['sp_fields'][$field_name] = $view_builder->viewField(
+          $node->get($field_name),
+          ['type' => NULL, 'label' => 'hidden']
+        );
+      }
+    }
+
+    // For scalar text fields also expose the raw value directly.
+    $scalar_fields = [
+      'field_staff_profile_pref_title',
+      'field_staff_profile_cty_dept',
+      'field_staff_profile_email',
+      'field_staff_profile_pref_phone',
+      'field_staff_profile_region',
+    ];
+    foreach ($scalar_fields as $field_name) {
+      if ($node->hasField($field_name)) {
+        $variables['sp_values'][$field_name] = $node->get($field_name)->value;
+      }
+    }
+
+    // Boolean field.
+    if ($node->hasField('field_custodian_of_public_record')) {
+      $variables['sp_values']['field_custodian_of_public_record'] = (bool) $node->get('field_custodian_of_public_record')->value;
+    }
+
+    // Flag for whether a bio exists — used to collapse the top grid to 2 columns.
+    $variables['staff_profile_has_bio'] = !empty(trim(strip_tags($node->get('body')->value ?? '')));
+
+    // Build county links from the field_website field on the counties_in_iowa
+    // taxonomy term, for base county and counties served.
+    $county_fields = [
+      'field_staff_profile_base_county' => 'sp_base_county_links',
+      'field_staff_profile_cty_served'  => 'sp_cty_served_links',
+    ];
+    foreach ($county_fields as $field_name => $var_name) {
+      $links = [];
+      if ($node->hasField($field_name)) {
+        foreach ($node->get($field_name)->referencedEntities() as $term) {
+          $url = $term->hasField('field_website') && !$term->get('field_website')->isEmpty()
+            ? $term->get('field_website')->uri
+            : NULL;
+          $links[] = ['name' => $term->label(), 'url' => $url];
+        }
+      }
+      $variables[$var_name] = $links;
+    }
   }
 }
 
@@ -120,6 +207,14 @@ function staff_profile_mark_database_fields_readonly(&$form)
 function staff_profile_theme($existing, $type, $theme, $path)
 {
   return [
+    'page__type__staff_profile__canonical' => [
+      'template' => 'page--type--staff-profile--canonical',
+      'base hook' => 'page',
+    ],
+    'node__staff_profile' => [
+      'template' => 'node--staff-profile',
+      'base hook' => 'node',
+    ],
     'node__staff_profile__staff_author' => [
       'template' => 'node--staff-profile--staff-author',
       'base hook' => 'node',

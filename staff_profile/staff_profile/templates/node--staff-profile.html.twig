@@ -1,0 +1,217 @@
+{#
+/**
+ * @file
+ * Template for Staff Profile nodes (full/default view mode).
+ *
+ * Layout (desktop):
+ *   ┌──────────┬───────────────────────┬──────────────┐
+ *   │  Photo   │  Bio / About          │  Contact     │
+ *   └──────────┴───────────────────────┴──────────────┘
+ *   ┌────────────────────────┬─────────────────────────┐
+ *   │  Program Areas / Meta  │  Counties Served        │
+ *   └────────────────────────┴─────────────────────────┘
+ *   ┌─────────────────────────────────────────────────┐
+ *   │  Latest Articles (optional)                     │
+ *   └─────────────────────────────────────────────────┘
+ *
+ * Uses sp_fields / sp_values prepared in hook_preprocess_node() to work
+ * around Twig sandbox restrictions and field_group field removal.
+ */
+#}
+
+{%
+  set node_classes = [
+    'node',
+    'node--type-staff-profile',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+
+<article{{ attributes.addClass(node_classes) }} itemscope itemtype="https://schema.org/Person">
+
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <div class="staff-profile">
+
+    {# ── Row 1: Photo | Name+Bio | Contact ────────────────────────────── #}
+    <div class="staff-profile__top{{ not staff_profile_has_bio ? ' staff-profile__top--no-bio' }}">
+
+      {# Photo #}
+      <div class="staff-profile__photo">
+        {{ sp_fields.field_staff_profile_smugmug }}
+      </div>
+
+      {# Bio — name and title appear at the top of this column #}
+      <div class="staff-profile__bio">
+        <h1 class="staff-profile__name isu-block-title h4" itemprop="name">{{ node.label }}</h1>
+        {% if sp_values.field_staff_profile_pref_title %}
+          <p class="staff-profile__job-title" itemprop="jobTitle">
+            {{- sp_values.field_staff_profile_pref_title -}}
+          </p>
+        {% endif %}
+        {% if sp_fields.body|render %}
+          <div class="staff-profile__bio"itemprop="description">
+            {{ sp_fields.body }}
+          </div>
+        {% endif %}
+      </div>
+
+      {# Contact #}
+      {% if sp_values.field_staff_profile_email
+          or sp_values.field_staff_profile_pref_phone
+          or sp_fields.field_staff_profile_addr|render %}
+        <aside class="staff-profile__contact" aria-label="Contact information">
+          <h2 class="staff-profile__section-heading h3">Contact</h2>
+          <address class="staff-profile__address-block">
+            <div class="staff-profile__contact-wrapper-1">
+            {% if sp_values.field_staff_profile_email %}
+              <div class="staff-profile__contact-row">
+                <span class="staff-profile__contact-icon" aria-hidden="true">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <span class="visually-hidden">Email:</span>
+                <a href="mailto:{{ sp_values.field_staff_profile_email }}"
+                   itemprop="email">
+                  {{- sp_values.field_staff_profile_email -}}
+                </a>
+              </div>
+            {% endif %}
+
+            {% if sp_values.field_staff_profile_pref_phone %}
+              <div class="staff-profile__contact-row">
+                <span class="staff-profile__contact-icon" aria-hidden="true">
+                  <i class="fas fa-phone"></i>
+                </span>
+                <span class="visually-hidden">Phone:</span>
+                <a href="tel:{{ sp_values.field_staff_profile_pref_phone|replace({' ': '', '(': '', ')': '', '-': '', '.': ''}) }}"
+                   itemprop="telephone">
+                  {{- sp_values.field_staff_profile_pref_phone -}}
+                </a>
+              </div>
+            {% endif %}
+            </div>
+            {% if sp_fields.field_staff_profile_addr|render %}
+              <div class="staff-profile__contact-row address">
+                <span class="staff-profile__contact-icon" aria-hidden="true">
+                  <i class="fas fa-location-dot"></i>
+                </span>
+                <span class="visually-hidden">Address:</span>
+                {{ sp_fields.field_staff_profile_addr }}
+              </div>
+            {% endif %}
+
+            {% if sp_values.field_staff_profile_region %}
+              <div class="staff-profile__contact-row">
+                <span class="staff-profile__contact-icon" aria-hidden="true">
+                  <i class="fas fa-map"></i>
+                </span>
+                <span>Region {{ sp_values.field_staff_profile_region }}</span>
+              </div>
+            {% endif %}
+
+            {% if sp_base_county_links %}
+              <div class="staff-profile__contact-row">
+                <span class="staff-profile__contact-icon" aria-hidden="true">
+                  <i class="fas fa-map-pin"></i>
+                </span>
+                <span>Base County
+                  {% for county in sp_base_county_links %}
+                    {% if county.url %}<a href="{{ county.url }}">{{ county.name }}</a>{% else %}{{ county.name }}{% endif %}{% if not loop.last %}, {% endif %}
+                  {% endfor %}
+                </span>
+              </div>
+            {% endif %}
+
+          </address>
+
+          {% if sp_values.field_custodian_of_public_record %}
+            <div class="staff-profile__custodian isu-custodian-records">
+              Custodian of Public Record
+            </div>
+          {% endif %}
+
+        </aside>
+      {% endif %}
+
+    </div>{# /.staff-profile__top #}
+
+    {# ── Row 2: Program areas / meta details ──────────────────────────── #}
+    {%
+      set has_details = sp_fields.field_staff_profile_college|render
+        or sp_fields.field_staff_profile_pgm_areas|render
+        or sp_cty_served_links
+        or sp_fields.field_staff_profile_teams_groups|render
+    %}
+    {% if has_details %}
+      <div class="staff-profile__details">
+
+        {% if sp_fields.field_staff_profile_pgm_areas|render
+            or sp_fields.field_staff_profile_college|render %}
+          <div class="staff-profile__details-col">
+            <h2 class="staff-profile__section-heading">Program Areas</h2>
+            <dl class="staff-profile__meta-list">
+
+              {% if sp_fields.field_staff_profile_pgm_areas|render %}
+                <div class="staff-profile__meta-row">
+                  <dt class="visually-hidden">Program Areas</dt>
+                  <dd>{{ sp_fields.field_staff_profile_pgm_areas }}</dd>
+                </div>
+              {% endif %}
+
+              {% if sp_fields.field_staff_profile_college|render %}
+                <div class="staff-profile__meta-row">
+                  <dt>College</dt>
+                  <dd>{{ sp_fields.field_staff_profile_college }}</dd>
+                </div>
+              {% endif %}
+
+            </dl>
+          </div>
+        {% endif %}
+
+        {% if sp_cty_served_links %}
+          <div class="staff-profile__details-col">
+            <h2 class="staff-profile__section-heading">Counties Served</h2>
+            <ul class="staff-profile__county-list">
+              {% for county in sp_cty_served_links %}
+                <li>
+                  {% if county.url %}<a href="{{ county.url }}">{{ county.name }}</a>{% else %}{{ county.name }}{% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if sp_fields.field_staff_profile_teams_groups|render %}
+          <div class="staff-profile__details-col">
+            <h2 class="staff-profile__section-heading">Teams &amp; Groups</h2>
+            <dl class="staff-profile__meta-list">
+              <div class="staff-profile__meta-row">
+                <dt class="visually-hidden">Teams &amp; Groups</dt>
+                <dd>{{ sp_fields.field_staff_profile_teams_groups }}</dd>
+              </div>
+            </dl>
+          </div>
+        {% endif %}
+
+      </div>{# /.staff-profile__details #}
+    {% endif %}
+
+    {# ── Row 3: Latest articles ───────────────────────────────────────────
+       Uncomment once the View "staff_articles" / block display "block_1"
+       exists with a contextual filter on Content: Nid.
+    ─────────────────────────────────────────────────────────────────────── #}
+    {# {% if drupal_view_result('staff_articles', 'block_1', node.id()) is not empty %}
+      <section class="staff-profile__articles"
+               aria-labelledby="staff-articles-heading-{{ node.id() }}">
+        <h2 id="staff-articles-heading-{{ node.id() }}"
+            class="staff-profile__articles-heading">Latest Articles</h2>
+        {{ drupal_view('staff_articles', 'block_1', node.id()) }}
+      </section>
+    {% endif %} #}
+
+  </div>{# /.staff-profile #}
+
+</article>
