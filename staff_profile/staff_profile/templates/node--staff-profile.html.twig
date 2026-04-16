@@ -118,7 +118,7 @@
                 </span>
                 <span>Base County
                   {% for county in sp_base_county_links %}
-                    {% if county.url %}<a href="{{ county.url }}">{{ county.name }}</a>{% else %}{{ county.name }}{% endif %}{% if not loop.last %}, {% endif %}
+                    {% if county.url %}<a href="{{ county.url }}">{{ county.name }} County</a>{% else %}{{ county.name }} County{% endif %}{% if not loop.last %}, {% endif %}
                   {% endfor %}
                 </span>
               </div>

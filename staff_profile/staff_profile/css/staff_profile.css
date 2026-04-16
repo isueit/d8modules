@@ -140,7 +140,6 @@ p.address span.country {display:none;}
 .staff-profile__contact-row.address p.address {
   color: #4a4a4a;
 }
-
 .staff-profile__contact-icon {
   flex-shrink: 0;
   width: 1rem;
@@ -149,17 +148,20 @@ p.address span.country {display:none;}
   margin-top: 0.2rem;
   font-size: 0.85rem;
 }
-
 .staff-profile__address-block a {
-  color: var(--link_color, #7c2529);
+  color: var(--link_color);
   word-break: break-all;
 }
-
 .staff-profile__address-block a:hover,
 .staff-profile__address-block a:focus {
   text-decoration: underline;
 }
-
+.staff-profile__contact-row-extra p {
+  margin-bottom: 0;
+}
+p.staff-profile__contact-label {
+  text-transform: uppercase;
+}
 /* --- Custodian notice --------------------------------------------------- */
 .staff-profile__custodian {
   margin-top: 0.75rem;
