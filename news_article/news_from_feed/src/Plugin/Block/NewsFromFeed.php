@@ -181,7 +181,6 @@ class NewsFromFeed extends BlockBase
     static $parsed_json;
     if (!isset($parsed_json)) {
       $json = ISUEOHelpers\Files::fetch_url('https://www.extension.iastate.edu/news/json-feed');
-      $json = ISUEOHelpers\Files::fetch_url('/opt/Sites/ag/web/modules/custom/d8modules/news_article/news_from_feed/test.json', false);
       $parsed_json = json_decode($json, false);
     }
     return $parsed_json;
