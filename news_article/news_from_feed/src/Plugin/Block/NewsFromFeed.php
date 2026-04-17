@@ -117,6 +117,21 @@ class NewsFromFeed extends BlockBase
       '#size' => 256,
       '#maxlength' => 256,
     ];
+    $form['program_area'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Program Area'),
+      '#options' => [
+        'option_1' => $this->t('All'),
+        'option_2' => $this->t('4-H Youth Development'),
+        'option_3' => $this->t('Administration'),
+        'option_4' => $this->t('Agriculture and Natural Resources'),
+        'option_5' => $this->t('Community and Economic Development'),
+        'option_6' => $this->t('County Services'),
+        'option_7' => $this->t('Health and Human Sciences'),
+      ],
+      '#default_value' => empty($this->configuration['program_area']) ? 'option_1' : $this->configuration['program_area'], // Optional
+      //'#description' => $this->t('Please choose one of the available choices.'),
+    ];
 
     return $form;
   }
@@ -130,6 +145,7 @@ class NewsFromFeed extends BlockBase
     $this->configuration['max_articles'] = $values['max_articles'];
     $this->configuration['header'] = $values['header'];
     $this->configuration['categories'] = $values['categories'];
+    $this->configuration['program_area'] = $values['program_area'];
   }
 
 
