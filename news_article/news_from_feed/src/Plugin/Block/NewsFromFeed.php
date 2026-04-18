@@ -49,23 +49,12 @@ class NewsFromFeed extends BlockBase
     if ($program_area == 'All') {
       $program_area = '';
     }
-    //echo $program_area;
 
     $categories = $this->get_categories();
     $obj = $this->news_from_feed_parse_json();
-
-    //if (count($obj) == 0) {
-    //  return;
-    //}
-
-    $results = PHP_EOL . '<div id="news_from_feed">' . PHP_EOL;
-    if (!empty($this->configuration['header'])) {
-      $results .= '  <p class="header" style="text-align:center;">' . $this->configuration['header'] . '</p>' . PHP_EOL;
-    }
-
-    $results .= '  <div class="item-list">' . PHP_EOL;
-    $results .= '    <ul class="list-unstyled row">' . PHP_EOL;
+    $articles = [];
     $count = 0;
+
     foreach ($obj as $node) {
       /*
        * categories is commented out because the new news feed uses program area, but doesn't includ categories.
@@ -85,25 +74,24 @@ class NewsFromFeed extends BlockBase
         break;
       }
 
-      $results .= '      <li class="col-md-6 col-lg-4 mb-3">' . PHP_EOL;
-      $results .= '        <div class="card">' . PHP_EOL;
-      $results .= '            <img src="https://www.extension.iastate.edu' . $node->thumbnail__title . '" alt="' . $node->thumbnail__alt . '" loading="lazy" />' . PHP_EOL;
-      $results .= '            <div class="card-body">' . PHP_EOL;
-      $results .= '              <h3 class="card-title">' . $node->title . '</h3>' . PHP_EOL;
-      $results .= '              <div><p>' . $node->field_teaser . '</p></div>' . PHP_EOL;
-      $results .= '            </div>' . PHP_EOL;
-      $results .= '          <div class="card-footer">' . PHP_EOL;
-      $results .= '            <a href="https://www.extension.iastate.edu' . $node->view_node . '" class="btn btn-outline-danger" aria-label="Read More about ' . $node->node->title . '">Read More</a>' . PHP_EOL;
-      $results .= '          </div>' . PHP_EOL;
-      $results .= '        </div>' . PHP_EOL;
-      $results .= '      </li>' . PHP_EOL;
+      $article = [];
+      $article['thumbnail_url'] = $node->thumbnail__title;
+      $article['thumbnail_alt'] = $node->thumbnail__alt;
+      $article['title'] = $node->title;
+      $article['teaser'] = $node->field_teaser;
+      $article['url'] = $node->view_node;
+      $articles[] = $article;
     }
-    $results .= '    </ul>' . PHP_EOL;
-    $results .= '  </div>' . PHP_EOL;
-    $results .= '</div>' . PHP_EOL;
 
     return [
-      '#markup' => $this->t($results),
+      '#attached' => [
+        'library' => [
+          'news_from_feed/news_from_feed',
+        ],
+      ],
+      '#articles' => $articles,
+      '#header' => $this->configuration['header'],
+      '#theme' => 'news_from_feed',
     ];
   }
 
@@ -186,7 +174,8 @@ class NewsFromFeed extends BlockBase
     return $parsed_json;
   }
 
-  function get_categories() {
+  function get_categories()
+  {
     $categories = [];
     if (empty(trim($this->configuration['categories']))) {
       return $categories;
@@ -200,6 +189,5 @@ class NewsFromFeed extends BlockBase
     }
 
     return $categories;
-
   }
 }
