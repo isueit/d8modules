@@ -37,6 +37,9 @@ h2.isu-footer_contact-address-title::after {
 .isu-footer_contact-col {
 	flex: 1;
 }
+.isu-footer_contact-col p {
+	margin-bottom: 0;
+}
 .isu-footer_contact-label {
 	display: flex;
 	align-items: center;
