@@ -45,24 +45,28 @@ class NewsFromFeed extends BlockBase
       $max_articles = intval($this->configuration['max_articles']);
     }
 
-    $categories = $this->get_categories();
-    $obj = $this->news_from_feed_parse_json();
-
-    //if (count($obj) == 0) {
-    //  return;
-    //}
-
-    $results = PHP_EOL . '<div id="news_from_feed">' . PHP_EOL;
-    if (!empty($this->configuration['header'])) {
-      $results .= '  <p class="header" style="text-align:center;">' . $this->configuration['header'] . '</p>' . PHP_EOL;
+    $program_area = $this->configuration['program_area'];
+    if ($program_area == 'All') {
+      $program_area = '';
     }
 
-    $results .= '  <div class="item-list">' . PHP_EOL;
-    $results .= '    <ul class="list-unstyled row">' . PHP_EOL;
+    $categories = $this->get_categories();
+    $obj = $this->news_from_feed_parse_json();
+    $articles = [];
     $count = 0;
-    foreach ($obj->nodes as $node) {
-      $node_categories = empty($node->node->Category) ? [] : explode(', ', $node->node->Category);
-      if (count($categories) > 0 && count($node_categories) > 0 && count(array_intersect($categories, $node_categories)) == 0) {
+
+    foreach ($obj as $node) {
+      /*
+       * categories is commented out because the new news feed uses program area, but doesn't includ categories.
+       * However, it's left here in case we want to use catagories again.
+       *
+      */
+      //$node_categories = empty($node->node->Category) ? [] : explode(', ', $node->node->Category);
+      //if (count($categories) > 0 && count($node_categories) > 0 && count(array_intersect($categories, $node_categories)) == 0) {
+      //  continue;
+      //}
+
+      if (!empty($program_area) && $node->field_program_area != $program_area) {
         continue;
       }
       $count++;
@@ -70,25 +74,24 @@ class NewsFromFeed extends BlockBase
         break;
       }
 
-      $results .= '      <li class="col-md-6 col-lg-4 mb-3">' . PHP_EOL;
-      $results .= '        <div class="card">' . PHP_EOL;
-      $results .= '            <img src="' . $node->node->ThumbnailImage->src . '" alt="' . $node->node->ThumbnailImage->alt . '" loading="lazy" />' . PHP_EOL;
-      $results .= '            <div class="card-body">' . PHP_EOL;
-      $results .= '              <h3 class="card-title">' . $node->node->title . '</h3>' . PHP_EOL;
-      $results .= '              <div><p>' . $node->node->Body . '</p></div>' . PHP_EOL;
-      $results .= '            </div>' . PHP_EOL;
-      $results .= '          <div class="card-footer">' . PHP_EOL;
-      $results .= '            <a href="https://www.extension.iastate.edu' . $node->node->Path . '" class="btn btn-outline-danger" aria-label="Read More about ' . $node->node->title . '">Read More</a>' . PHP_EOL;
-      $results .= '          </div>' . PHP_EOL;
-      $results .= '        </div>' . PHP_EOL;
-      $results .= '      </li>' . PHP_EOL;
+      $article = [];
+      $article['thumbnail_url'] = $node->thumbnail__title;
+      $article['thumbnail_alt'] = $node->thumbnail__alt;
+      $article['title'] = $node->title;
+      $article['teaser'] = $node->field_teaser;
+      $article['url'] = $node->view_node;
+      $articles[] = $article;
     }
-    $results .= '    </ul>' . PHP_EOL;
-    $results .= '  </div>' . PHP_EOL;
-    $results .= '</div>' . PHP_EOL;
 
     return [
-      '#markup' => $this->t($results),
+      '#attached' => [
+        'library' => [
+          'news_from_feed/news_from_feed',
+        ],
+      ],
+      '#articles' => $articles,
+      '#header' => $this->configuration['header'],
+      '#theme' => 'news_from_feed',
     ];
   }
 
@@ -117,6 +120,21 @@ class NewsFromFeed extends BlockBase
       '#size' => 256,
       '#maxlength' => 256,
     ];
+    $form['program_area'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Program Area'),
+      '#options' => [
+        'All' => $this->t('All'),
+        '4-H Youth Development' => $this->t('4-H Youth Development'),
+        'Administration' => $this->t('Administration'),
+        'Agriculture and Natural Resources' => $this->t('Agriculture and Natural Resources'),
+        'Community and Economic Development' => $this->t('Community and Economic Development'),
+        'County Services' => $this->t('County Services'),
+        'Health and Human Sciences' => $this->t('Health and Human Sciences'),
+      ],
+      '#default_value' => empty($this->configuration['program_area']) ? 'All' : $this->configuration['program_area'], // Optional
+      //'#description' => $this->t('Please choose one of the available choices.'),
+    ];
 
     return $form;
   }
@@ -130,6 +148,7 @@ class NewsFromFeed extends BlockBase
     $this->configuration['max_articles'] = $values['max_articles'];
     $this->configuration['header'] = $values['header'];
     $this->configuration['categories'] = $values['categories'];
+    $this->configuration['program_area'] = $values['program_area'];
   }
 
 
@@ -155,7 +174,8 @@ class NewsFromFeed extends BlockBase
     return $parsed_json;
   }
 
-  function get_categories() {
+  function get_categories()
+  {
     $categories = [];
     if (empty(trim($this->configuration['categories']))) {
       return $categories;
@@ -169,6 +189,5 @@ class NewsFromFeed extends BlockBase
     }
 
     return $categories;
-
   }
 }

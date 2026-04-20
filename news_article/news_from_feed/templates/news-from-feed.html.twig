@@ -1,0 +1,45 @@
+{#
+/**
+ * @file
+ * Template for news_from_feed
+ *
+ * Available variables:
+ * - articles: An array of articles
+ *   - article: An array of items. Each item contains:
+ *     - title: (string) The item title
+ *     - thumbnail_url: (string) Image URL
+ *     - thumbnail_alt: (string) Alt text for the thumbnail
+ *     - url: (string) URL to the actual article
+ *     - teaser: (string) Teaser for the article
+ * - header: (string) The block header text.
+ *
+ * Example usage:
+ * {% for item in items %}
+ *   <a href="{{ item.url }}">{{ item.title }}</a>
+ * {% endfor %}
+ */
+#}
+
+<div id="news_from_feed">
+  {% if header %}
+    <p class="header" style="text-align:center;">{{ header }}</p>
+  {% endif %}
+  <div class="item-list">
+    <ul class="list-unstyled row">
+      {% for article in articles %}
+        <li class="col-md-6 col-lg-4 mb-3">
+          <div class="card">
+          <img src="https://www.extension.iastate.edu{{ article.thumbnail_url }}" alt="{{ article.thumbnail.alt }}" loading="lazy" />
+          <div class="card-body">
+            <h3 class="card-title">{{ article.title }}</h3>
+            <div><p>{{ article.teaser }}</p></div>
+          </div>
+            <div class="card-footer">
+              <a href="https://www.extension.iastate.edu{{ article.url }}" class="btn btn-outline-danger" aria-label="Read More about {{ article.title }}">Read More</a>
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
