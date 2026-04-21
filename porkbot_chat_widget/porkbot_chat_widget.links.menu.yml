@@ -1,0 +1,5 @@
+porkbot_chat_widget.settings:
+  title: 'Porkbot Chat Widget'
+  description: 'Configure the chat widget loader.'
+  parent: system.admin_config_services
+  route_name: porkbot_chat_widget.settings
