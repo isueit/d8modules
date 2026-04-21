@@ -6,4 +6,5 @@ svg.svg-inline--fa {display: none;}
 div.embedded_article span.authored-on {display: none;}
 div.embedded_article .itswd-section-content .hero--news-article.text-content {display: none;}
 div.embedded_article aside.iastate2022-aside {display: none;}
+div.embedded_article .isueo-related-news-articles {display: none;}
 div.embedded_article figcaption {padding: 0.5rem 0.8rem 0 0.8rem; font-size: 0.875rem; font-style: italic; line-height: 1.57143; position: relative; color: var(--dk-gray);}
