@@ -74,12 +74,14 @@ class NewsFromFeed extends BlockBase
         break;
       }
 
+      $base_url = 'https://www.extension.iastate.edu';
       $article = [];
-      $article['thumbnail_url'] = $node->thumbnail__title;
+      $article['thumbnail_url'] = $this->make_absolute($node->thumbnail__title, $base_url);
       $article['thumbnail_alt'] = $node->thumbnail__alt;
       $article['title'] = $node->title;
       $article['teaser'] = $node->field_teaser;
-      $article['url'] = $node->view_node;
+      $article['url'] = $this->make_absolute($node->view_node, $base_url);
+      $article['created'] = !empty($node->created) ? date('F j, Y', $node->created) : '';
       $articles[] = $article;
     }
 
@@ -91,6 +93,7 @@ class NewsFromFeed extends BlockBase
       ],
       '#articles' => $articles,
       '#header' => $this->configuration['header'],
+      '#all_news_url' => $this->configuration['all_news_url'] ?? 'https://www.extension.iastate.edu/news',
       '#theme' => 'news_from_feed',
     ];
   }
@@ -110,7 +113,7 @@ class NewsFromFeed extends BlockBase
       '#type' => 'number',
       '#title' => $this->t('Articles to display'),
       '#description' => $this->t('Maximum number of articles, blank or 0 means display them all'),
-      '#default_value' => is_null($this->configuration['max_articles']) ? 3 : $this->configuration['max_articles'],
+      '#default_value' => is_null($this->configuration['max_articles']) ? 5 : $this->configuration['max_articles'],
     ];
     $form['categories'] = [
       '#type' => 'textfield',
@@ -132,8 +135,15 @@ class NewsFromFeed extends BlockBase
         'County Services' => $this->t('County Services'),
         'Health and Human Sciences' => $this->t('Health and Human Sciences'),
       ],
-      '#default_value' => empty($this->configuration['program_area']) ? 'All' : $this->configuration['program_area'], // Optional
-      //'#description' => $this->t('Please choose one of the available choices.'),
+      '#default_value' => empty($this->configuration['program_area']) ? 'All' : $this->configuration['program_area'],
+    ];
+    $form['all_news_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('All News URL'),
+      '#description' => $this->t('URL for the "All News" footer link. Defaults to https://www.extension.iastate.edu/news'),
+      '#default_value' => $this->configuration['all_news_url'] ?? 'https://www.extension.iastate.edu/news',
+      '#size' => 256,
+      '#maxlength' => 256,
     ];
 
     return $form;
@@ -149,6 +159,7 @@ class NewsFromFeed extends BlockBase
     $this->configuration['header'] = $values['header'];
     $this->configuration['categories'] = $values['categories'];
     $this->configuration['program_area'] = $values['program_area'];
+    $this->configuration['all_news_url'] = $values['all_news_url'];
   }
 
 
@@ -172,6 +183,14 @@ class NewsFromFeed extends BlockBase
       $parsed_json = json_decode($json, false);
     }
     return $parsed_json;
+  }
+
+  function make_absolute($url, $base_url)
+  {
+    if (empty($url)) {
+      return '';
+    }
+    return str_starts_with($url, 'http') ? $url : $base_url . $url;
   }
 
   function get_categories()

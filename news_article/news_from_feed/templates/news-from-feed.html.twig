@@ -7,39 +7,72 @@
  * - articles: An array of articles
  *   - article: An array of items. Each item contains:
  *     - title: (string) The item title
- *     - thumbnail_url: (string) Image URL
+ *     - thumbnail_url: (string) Absolute image URL
  *     - thumbnail_alt: (string) Alt text for the thumbnail
- *     - url: (string) URL to the actual article
+ *     - url: (string) Absolute URL to the actual article
  *     - teaser: (string) Teaser for the article
+ *     - created: (string) Published date
  * - header: (string) The block header text.
- *
- * Example usage:
- * {% for item in items %}
- *   <a href="{{ item.url }}">{{ item.title }}</a>
- * {% endfor %}
+ * - all_news_url: (string) URL for the "All News" footer link.
  */
 #}
 
-<div id="news_from_feed">
+<div id="news_from_feed" class="ext-news-feed">
   {% if header %}
     <p class="header" style="text-align:center;">{{ header }}</p>
   {% endif %}
-  <div class="item-list">
-    <ul class="list-unstyled row">
-      {% for article in articles %}
-        <li class="col-md-6 col-lg-4 mb-3">
-          <div class="card">
-          <img src="https://www.extension.iastate.edu{{ article.thumbnail_url }}" alt="{{ article.thumbnail.alt }}" loading="lazy" />
-          <div class="card-body">
-            <h3 class="card-title">{{ article.title }}</h3>
-            <div><p>{{ article.teaser }}</p></div>
+  {% for article in articles %}
+    {% if loop.first %}
+      <div class="view-content">
+        <div class="card">
+          <span class="bg-danger position-absolute">Featured</span>
+          <div class="card-image">
+            {% if article.thumbnail_url %}
+              <img src="{{ article.thumbnail_url }}" alt="{{ article.thumbnail_alt }}" width="480" height="320" loading="lazy" />
+            {% endif %}
           </div>
-            <div class="card-footer">
-              <a href="https://www.extension.iastate.edu{{ article.url }}" class="btn btn-outline-danger" aria-label="Read More about {{ article.title }}">Read More</a>
+          <div class="card-body">
+            <h3 class="card-title ext-news-feed--featured"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+            {% if article.created %}
+              <span class="authored-on">Published: {{ article.created }}</span>
+            {% endif %}
+            {% if article.teaser %}
+              <div><p>{{ article.teaser }}</p></div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+  <div class="view-attachment view-attachment-after">
+    <div class="ext-news-feed--list">
+      {% for article in articles %}
+        {% if not loop.first %}
+          <div class="views-row">
+            <div class="ext-news-column">
+              <a class="card d-flex flex-row align-items-stretch" href="{{ article.url }}">
+                <div class="card-image-list flex-shrink-0">
+                  {% if article.thumbnail_url %}
+                    <img src="{{ article.thumbnail_url }}" alt="{{ article.thumbnail_alt }}" width="200" height="115" loading="lazy" />
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                  <h4 class="card-title">{{ article.title }}</h4>
+                  {% if article.created %}
+                    <span class="authored-on">Published: {{ article.created }}</span>
+                  {% endif %}
+                </div>
+                <div class="card-arrow-wrapper">
+                  <span class="card-arrow"></span>
+                </div>
+              </a>
             </div>
           </div>
-        </li>
+        {% endif %}
       {% endfor %}
-    </ul>
+    </div>
   </div>
+  <footer>
+    <a href="{{ all_news_url }}">All News</a>
+  </footer>
 </div>
