@@ -50,7 +50,7 @@ class CountyOfficeMapBlock extends BlockBase {
       }
       
       if ($term->hasField('field_website') && !$term->get('field_website')->isEmpty()) {
-        $county_data['website'] = $term->get('field_website')->uri;
+        $county_data['website'] = rtrim($term->get('field_website')->uri, '/') . '/';
       }
       
       // Find Regional Director for this county
