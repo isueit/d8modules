@@ -39,3 +39,103 @@ function regcytes_theme($existing, $type, $theme, $path)
     ],
   ];
 }
+
+/**
+ * Implements hook_path_alias_insert().
+ * Implements hook_path_alias_update().
+ */
+function regcytes_path_alias_insert(\Drupal\path_alias\Entity\PathAlias $path_alias) {
+  regcytes_sync_group_path_prefix($path_alias);
+}
+
+function regcytes_path_alias_update(\Drupal\path_alias\Entity\PathAlias $path_alias) {
+  regcytes_sync_group_path_prefix($path_alias);
+}
+
+/**
+ * Syncs path_prefix on a group when its alias is saved.
+ */
+function regcytes_sync_group_path_prefix(\Drupal\path_alias\Entity\PathAlias $path_alias) {
+  $system_path = $path_alias->getPath();
+
+  // Check if this alias belongs to a group: /group/{id}
+  if (!preg_match('#^/group/(\d+)$#', $system_path, $matches)) {
+    return;
+  }
+
+  $group_id = $matches[1];
+  $group = \Drupal\group\Entity\Group::load($group_id);
+
+  if (!$group) {
+    return;
+  }
+
+  $new_alias = $path_alias->getAlias();
+  $current_prefix = $group->get('group_context_path_prefix')->value;
+
+  if ($current_prefix !== $new_alias) {
+    $group->set('group_context_path_prefix', $new_alias);
+    \Drupal::entityTypeManager()->getStorage('group')->save($group);
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Target group add/edit forms. Optionally restrict to a specific group type:
+  // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
+  if (!preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
+    return;
+  }
+
+  // The path alias widget lives here.
+  if (isset($form['path']['widget'][0]['alias'])) {
+    $form['path']['widget'][0]['alias']['#required'] = TRUE;
+
+    // Add a custom validate handler.
+    $form['#validate'][] = 'regcytes_group_alias_required_validate';
+  }
+
+  // ensure the fieldset is expaneded by default
+  if (isset($form['path'])) {
+    $form['path']['#open'] = TRUE; // Forces the details element open.
+  }
+
+  if (isset($form['path']['widget'][0]['alias'])) {
+    $form['path']['widget'][0]['alias']['#required'] = TRUE;
+    $form['#validate'][] = 'regcytes_group_alias_required_validate';
+  }
+}
+
+/**
+ * Validation handler — ensures the alias field is not empty.
+ */
+function regcytes_group_alias_required_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  $path_values = $form_state->getValue(['path', 0]);
+  $alias = trim($path_values['alias'] ?? '');
+
+  if (empty($alias)) {
+    $form_state->setError(
+      $form['path']['widget'][0]['alias'],
+      t('The URL alias field is required.')
+    );
+  }
+}
+
+/**
+ * Implements hook_group_presave().
+ */
+function regcytes_group_presave(\Drupal\group\Entity\Group $group) {
+  if ($group->isNew()) {
+    return; // Alias won't exist yet at presave for new groups.
+  }
+
+  $internal_path = '/group/' . $group->id();
+  $alias = \Drupal::service('path_alias.manager')
+    ->getAliasByPath($internal_path);
+
+  if ($alias === $internal_path) {
+    throw new \Exception('A URL alias is required for all groups.');
+  }
+}
