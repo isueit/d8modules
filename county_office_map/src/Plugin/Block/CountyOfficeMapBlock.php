@@ -209,6 +209,8 @@ class CountyOfficeMapBlock extends BlockBase {
       'Buena Vista' => 'buenavista',
       'Palo Alto' => 'paloalto',
       'Des Moines' => 'desmoines',
+      'Pottawattamie - East' => 'eastpottawattamie',
+      'Pottawattamie - West' => 'westpottawattamie',
     ];
     
     return $special_cases[$name] ?? strtolower(str_replace(' ', '', $name));
