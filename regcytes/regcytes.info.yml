@@ -1,4 +1,4 @@
-name: Registration Services
+name: Registration Services - Groups
 description: Customization for Registration Services mircosites
 package: Custom
 type: module
@@ -10,6 +10,4 @@ dependencies:
  - drupal:link
  - drupal:node
  - drupal:group
- - drupal:group_sites
  - drupal:layout_builder
- - drupal:config_pages

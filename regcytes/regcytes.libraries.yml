@@ -3,3 +3,12 @@ regcytes:
   css:
     layout:
       css/regcytes.css: {}
+
+group_autocomplete:
+  js:
+    js/group_autocomplete.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once

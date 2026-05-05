@@ -51,12 +51,12 @@ function regcytes_theme($existing, $type, $theme, $path)
  */
 function regcytes_path_alias_insert(\Drupal\path_alias\Entity\PathAlias $path_alias)
 {
-  regcytes_sync_group_path_prefix($path_alias);
+  //regcytes_sync_group_path_prefix($path_alias);
 }
 
 function regcytes_path_alias_update(\Drupal\path_alias\Entity\PathAlias $path_alias)
 {
-  regcytes_sync_group_path_prefix($path_alias);
+  //regcytes_sync_group_path_prefix($path_alias);
 }
 
 /**
@@ -89,33 +89,99 @@ function regcytes_sync_group_path_prefix(\Drupal\path_alias\Entity\PathAlias $pa
 
 /**
  * Implements hook_form_alter().
+ *
+ * Require the URL Aliases in groups, and try to expand the tab containing this field
  */
 function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
 {
+  //Drupal::messenger()->addMessage('Form ID: ' . $form_id);
   // Target group add/edit forms. Optionally restrict to a specific group type:
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
-  if (!preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
-    return;
+  if (preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
+
+    // The path alias widget lives here.
+    if (isset($form['path']['widget'][0]['alias'])) {
+      $form['path']['widget'][0]['alias']['#required'] = TRUE;
+
+      // Add a custom validate handler.
+      $form['#validate'][] = 'regcytes_group_alias_required_validate';
+    }
+
+    // ensure the fieldset is expaneded by default
+    if (isset($form['path'])) {
+      $form['path']['#open'] = TRUE; // Forces the details element open.
+    }
+
+    if (isset($form['path']['widget'][0]['alias'])) {
+      $form['path']['widget'][0]['alias']['#required'] = TRUE;
+      $form['#validate'][] = 'regcytes_group_alias_required_validate';
+    }
   }
 
-  // The path alias widget lives here.
-  if (isset($form['path']['widget'][0]['alias'])) {
-    $form['path']['widget'][0]['alias']['#required'] = TRUE;
+    //if ($form_id === 'menu_link_content_menu_link_content_form'
+    //  || $form_id === 'menu_link_content_memu_link_content_edit_form') {
+    if (strpos($form_id, 'menu_link_content_') === 0) {
 
-    // Add a custom validate handler.
-    $form['#validate'][] = 'regcytes_group_alias_required_validate';
-  }
+    $group = _regcytes_get_group_from_request();
+    if ($group) {
 
-  // ensure the fieldset is expaneded by default
-  if (isset($form['path'])) {
-    $form['path']['#open'] = TRUE; // Forces the details element open.
-  }
+    $url = \Drupal\Core\Url::fromRoute('regcytes.group_node_autocomplete', ['group' => $group->id()])
+      ->toString();
 
-  if (isset($form['path']['widget'][0]['alias'])) {
-    $form['path']['widget'][0]['alias']['#required'] = TRUE;
-    $form['#validate'][] = 'regcytes_group_alias_required_validate';
+    $form['#attached']['library'][] = 'regcytes/group_autocomplete';
+    $form['#attached']['drupalSettings']['regcytes']['groupAutocompleteUrl'] = $url;
+    }
+    }
+
+/*
+  // Targets group content menu link add/edit forms.
+  if (in_array($form_id, ['menu_link_content_menu_link_content_form'])) {
+
+    $group = _regcytes_get_group_from_request();
+    echo "I am here";
+    if ($group) {
+      echo "Group is " . $group->id();
+
+      // Store group id for the autocomplete route.
+      $form['link']['widget'][0]['uri']['#autocomplete_route_name'] =
+        'regcytes.group_node_autocomplete';
+      $form['link']['widget'][0]['uri']['#autocomplete_route_parameters'] = [
+        'group' => $group->id(),
+      ];
+    }
   }
+*/
 }
+
+function regcytes_field_widget_single_element_form_alter(
+  array &$element,
+  \Drupal\Core\Form\FormStateInterface $form_state,
+  array $context
+) {
+    $field_definition = $context['items']->getFieldDefinition();
+
+    if ($field_definition->getName() !== 'link') {
+      return;
+    }
+    if ($field_definition->getTargetEntityTypeId() !== 'menu_link_content') {
+      return;
+    }
+
+    $group = _regcytes_get_group_from_request();
+    if (!$group) {
+      return;
+    }
+
+    // Keep this in case it ever starts working, but the real
+    // override is now done via JS attached in hook_form_alter.
+    $element['uri']['#autocomplete_route_name'] = 'regcytes.group_node_autocomplete';
+    $element['uri']['#autocomplete_route_parameters'] = [
+      'group' => $group->id(),
+    ];
+
+}
+
+
 
 /**
  * Validation handler — ensures the alias field is not empty.
@@ -138,6 +204,7 @@ function regcytes_group_alias_required_validate(&$form, \Drupal\Core\Form\FormSt
  */
 function regcytes_group_presave(\Drupal\group\Entity\Group $group)
 {
+/*
   if ($group->isNew()) {
     return; // Alias won't exist yet at presave for new groups.
   }
@@ -149,6 +216,7 @@ function regcytes_group_presave(\Drupal\group\Entity\Group $group)
   if ($alias === $internal_path) {
     throw new \Exception('A URL alias is required for all groups.');
   }
+*/
 }
 
 /**
@@ -157,7 +225,8 @@ function regcytes_group_presave(\Drupal\group\Entity\Group $group)
 
 function regcytes_preprocess_config_pages__homepage(&$variables)
 {
-  $group = regcytes_get_group();
+  //$group = regcytes_get_group();
+  $group = _regcytes_get_group_from_request();
   if ($group) {
     $variables['group'] = $group->getFields();
     $variables['deleteme'] = 'Should delete me';
@@ -166,6 +235,7 @@ function regcytes_preprocess_config_pages__homepage(&$variables)
 
 function regcytes_get_group()
 {
+  /*
   $group = null;
   switch (Drupal::routeMatch()->getRouteName()) {
     case 'entity.node.canonical':
@@ -195,4 +265,22 @@ function regcytes_get_group()
   }
 
   return $group;
+  */
+}
+function _regcytes_get_group_from_request() {
+  $request = \Drupal::request();
+
+  // group_content_menu passes ?destination= or is accessed via
+  // /group/{group}/content paths — check route params first.
+  $route_match = \Drupal::routeMatch();
+//\Drupal::messenger()->addMessage('Route name: ' . $route_match->getRouteName());
+//\Drupal::messenger()->addMessage('Raw params: ' . print_r($route_match->getRawParameters()->all(), TRUE));
+
+  $group = $route_match->getParameter('group');
+  if ($group instanceof \Drupal\group\Entity\GroupInterface) {
+    return $group;
+  }
+
+  // Fallback: parse 'destination' query param if needed.
+  return NULL;
 }
