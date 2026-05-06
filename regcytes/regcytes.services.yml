@@ -27,4 +27,8 @@ services:
       - '@regcytes.site_prefix_manager'
       - '@config.factory'
       - '@entity_type.manager'
+  regcytes.route_subscriber:
+    class: Drupal\regcytes\Routing\GroupHomepageRouteSubscriber
+    tags:
+      - { name: event_subscriber }
 
