@@ -287,17 +287,12 @@ final class GroupPathPrefixRepository implements GroupPathPrefixRepositoryInterf
    *   group's path prefix field value property.
    */
   private function getPathPrefixTableAndColumn(): array {
-    $base_field_definitions = $this->entityFieldManager->getBaseFieldDefinitions('group');
-    $path_prefix_field_definition = $base_field_definitions[GroupPathPrefix::FIELD_NAME];
-    \assert($path_prefix_field_definition instanceof BaseFieldDefinition);
     $storage_handler = $this->entityTypeManager->getStorage('group');
     \assert($storage_handler instanceof SqlEntityStorageInterface);
     $table_mapping = $storage_handler->getTableMapping();
     \assert($table_mapping instanceof DefaultTableMapping);
     return [
       'entity_data_table' => $table_mapping->getDataTable(),
-      //'value_column_name' => $table_mapping->getFieldColumnName($path_prefix_field_definition, 'value'),
-// BDW - Not sure if this is the right thing to do, but it works
       'value_column_name' => 'label',
     ];
   }

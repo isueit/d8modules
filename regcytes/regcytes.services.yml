@@ -20,11 +20,4 @@ services:
     arguments:
       - '@regcytes.repository'
       - '@config.factory'
-  regcytes.path_processor:
-    class: Drupal\regcytes\PathProcessor\GroupPathPrefixProcessor
-    arguments:
-      - '@regcytes.repository'
-      - '@regcytes.site_prefix_manager'
-      - '@config.factory'
-      - '@entity_type.manager'
 

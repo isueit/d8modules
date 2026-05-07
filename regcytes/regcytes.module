@@ -23,16 +23,9 @@ function regcytes_preprocess_node(&$variables)
 function regcytes_theme($existing, $type, $theme, $path)
 {
   return [
-    'config_pages__homepage' => [
-      'template' => 'config-pages--homepage',
-      'base hook' => 'config_pages',
-      'variables' => [
-        'group' => [],
-      ],
-    ],
-    'config_pages__agenda' => [
-      'template' => 'config-pages--agenda',
-      'base hook' => 'config_pages',
+    'page__type__event_homepage__canonical' => [
+      'template' => 'page--type--event-homepage--canonical',
+      'base hook' => 'page',
     ],
     'page__type__microsite_page__canonical' => [
       'template' => 'page--type--microsite-page--canonical',
@@ -42,7 +35,97 @@ function regcytes_theme($existing, $type, $theme, $path)
       'template' => 'menu--group-menu',
       'base hook' => 'menu',
     ],
+    'group__hero_banner' => [
+      'template' => 'group--hero-banner',
+      'base hook' => 'group',
+    ],
+    'group__agenda' => [
+      'template' => 'group--agenda',
+      'base hook' => 'group',
+    ],
   ];
+}
+
+/**
+ * Implements hook_theme_suggestions_group_alter().
+ *
+ * Ensures view-mode-based template suggestions are generated for group
+ * entities, so templates like group--hero-banner.html.twig are selected when
+ * the hero_banner view mode is rendered.
+ */
+/**
+ * Implements hook_preprocess_menu__group_menu().
+ *
+ * Passes registration open/closed state to the template so the Register link
+ * can be shown only when registration is active.
+ */
+function regcytes_preprocess_menu__group_menu(array &$variables): void {
+  $variables['registration_is_open'] = FALSE;
+  $variables['registration_url'] = '';
+
+  try {
+    $contexts = \Drupal::service('regcytes.path_prefix_context')
+      ->getRuntimeContexts(['group']);
+
+    if (empty($contexts['group'])) {
+      return;
+    }
+
+    $group = $contexts['group']->getContextValue();
+    if (!$group instanceof GroupInterface) {
+      return;
+    }
+
+    // Vary per URL path so each group site gets its own cached menu.
+    $variables['#cache']['contexts'][] = 'url.path';
+    // Invalidate when the group entity is saved (e.g. dates change).
+    $variables['#cache']['tags'] = array_merge(
+      $variables['#cache']['tags'] ?? [],
+      $group->getCacheTags()
+    );
+
+    $reg_field = $group->get('field_subsite_registration_deets');
+    if ($reg_field->isEmpty()) {
+      return;
+    }
+
+    $reg_paragraph = $reg_field->entity;
+    if (!$reg_paragraph) {
+      return;
+    }
+
+    $link_field = $reg_paragraph->get('field_subsite_registration_link');
+    if ($link_field->isEmpty()) {
+      return;
+    }
+
+    $open_date = $reg_paragraph->get('field_subsite_registration_open')->value;
+    $close_date = $reg_paragraph->get('field_subsite_registration_close')->value;
+    $current_date = date('Y-m-d');
+
+    if ($open_date && $close_date && $open_date <= $current_date && $close_date >= $current_date) {
+      $variables['registration_is_open'] = TRUE;
+      $variables['registration_url'] = $link_field->first()->getUrl()->toString();
+    }
+  }
+  catch (\Throwable $e) {
+    // Context not available; leave defaults.
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_group_alter().
+ */
+function regcytes_theme_suggestions_group_alter(array &$suggestions, array $variables) {
+  $view_mode = $variables['elements']['#view_mode'] ?? NULL;
+  if (!$view_mode) {
+    return;
+  }
+  $group = $variables['elements']['#group'] ?? NULL;
+  $suggestions[] = 'group__' . $view_mode;
+  if ($group instanceof GroupInterface) {
+    $suggestions[] = 'group__' . $group->bundle() . '__' . $view_mode;
+  }
 }
 
 /**
@@ -94,7 +177,7 @@ function regcytes_sync_group_path_prefix(\Drupal\path_alias\Entity\PathAlias $pa
  */
 function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
 {
-  //Drupal::messenger()->addMessage('Form ID: ' . $form_id);
+  //\Drupal::messenger()->addMessage('Form ID: ' . $form_id);
   // Target group add/edit forms. Optionally restrict to a specific group type:
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
   if (preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
@@ -107,9 +190,8 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
       $form['#validate'][] = 'regcytes_group_alias_required_validate';
     }
 
-    // ensure the fieldset is expaneded by default
     if (isset($form['path'])) {
-      $form['path']['#open'] = TRUE; // Forces the details element open.
+      $form['path']['#open'] = TRUE;
     }
 
     if (isset($form['path']['widget'][0]['alias'])) {
@@ -217,6 +299,76 @@ function regcytes_group_presave(\Drupal\group\Entity\Group $group)
     throw new \Exception('A URL alias is required for all groups.');
   }
 */
+}
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * Adds a 'group-site' body class on any page within a group URL prefix so
+ * theme CSS can suppress the global site name in the navbar.
+ */
+function regcytes_preprocess_html(array &$variables): void {
+  try {
+    $contexts = \Drupal::service('regcytes.path_prefix_context')
+      ->getRuntimeContexts(['group']);
+
+    if (empty($contexts['group'])) {
+      return;
+    }
+
+    $group = $contexts['group']->getContextValue();
+    if ($group instanceof GroupInterface) {
+      $variables['attributes']['class'][] = 'group-site';
+    }
+  }
+  catch (\Throwable $e) {
+    // Context unavailable — do nothing.
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Passes hide_default_footer and subsite_contact to page templates based on
+ * the current group resolved via the regcytes path-prefix context.
+ */
+function regcytes_preprocess_page(array &$variables): void {
+  $variables['hide_default_footer'] = FALSE;
+  $variables['show_site_contact_info'] = FALSE;
+  $variables['subsite_contact'] = NULL;
+
+  try {
+    $contexts = \Drupal::service('regcytes.path_prefix_context')
+      ->getRuntimeContexts(['group']);
+
+    if (empty($contexts['group'])) {
+      return;
+    }
+
+    $group = $contexts['group']->getContextValue();
+    if (!$group instanceof GroupInterface) {
+      return;
+    }
+
+    if ($group->hasField('field_hide_default_footer')
+      && !$group->get('field_hide_default_footer')->isEmpty()
+      && (bool) $group->get('field_hide_default_footer')->value) {
+      $variables['hide_default_footer'] = TRUE;
+    }
+
+    if ($group->bundle() === 'isu_event_website') {
+      $variables['show_site_contact_info'] = TRUE;
+
+      if ($group->hasField('field_subsite_contact')
+        && !$group->get('field_subsite_contact')->isEmpty()) {
+        $variables['subsite_contact'] = $group->field_subsite_contact->entity;
+      }
+
+    }
+  }
+  catch (\Throwable $e) {
+    // Context unavailable — leave defaults.
+  }
 }
 
 /**
