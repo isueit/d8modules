@@ -13,10 +13,12 @@
 #}
 <div{{ attributes.addClass('subsite-banner') }}>
 
-  {% if content.field_subsite_header_image is not empty %}
-    {% set image_field = content.field_subsite_header_image['#items'].entity %}
-    {% set header_image_url = file_url(image_field.uri.value) %}
-    <div class="microsite-hero-wrapper" style="background-image: url('{{ header_image_url }}');">
+  {% set image_entity = group.field_subsite_header_image[0].entity %}
+  {% if image_entity and image_entity.uri.value %}
+    {% set header_image_url = file_url(image_entity.uri.value) %}
+  {% endif %}
+
+  <div class="microsite-hero-wrapper{{ header_image_url is not defined ? ' microsite-hero-wrapper--no-image' : '' }}"{% if header_image_url is defined %} style="background-image: url('{{ header_image_url }}')"{% endif %}>
       <div class="microsite-hero-label-wrapper isueo-callout-stat">
         <div class="microsite-hero-label container">
 
@@ -53,7 +55,7 @@
 
           <div class="microsite-event-details--wrapper">
             <div class="microsite-event-location">
-              {{ content.field_subsite_location }}
+              {{ group.field_subsite_location.value }}
             </div>
           </div>
 
@@ -67,7 +69,7 @@
 
               {% if registration_open <= current_date and registration_close >= current_date %}
                 <div class="microsite-registration">
-                  <a class="btn btn-outline-danger" href="{{ registration_url }}">Register Now<i class="fa-solid fa-angle-right"></i></a>
+                  <a class="btn btn-outline-danger" href="{{ registration_url }}">Register Now <i class="fa-solid fa-angle-right"></i></a>
                 </div>
               {% endif %}
             {% endif %}
@@ -76,6 +78,5 @@
         </div>
       </div>
     </div>
-  {% endif %}
 
 </div>

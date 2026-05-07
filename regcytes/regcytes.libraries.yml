@@ -12,3 +12,13 @@ group_autocomplete:
     - core/drupal
     - core/drupalSettings
     - core/once
+
+group_color_picker:
+  version: 1.x
+  js:
+    js/group-color-picker.js: { minified: false }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once

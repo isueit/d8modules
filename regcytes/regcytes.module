@@ -10,6 +10,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\group_content_menu\Entity\GroupContentMenu;
 
+require_once __DIR__ . '/regcytes.group_colors.inc';
+
 /**
  * Implements hook_preprocess_HOOK()
  */
@@ -184,6 +186,9 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
   if (preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
 
+    $form['#after_build'][] = 'regcytes_group_color_after_build';
+    $form['#after_build'][] = 'regcytes_group_form_after_build';
+
     // The path alias widget lives here.
     if (isset($form['path']['widget'][0]['alias'])) {
       $form['path']['widget'][0]['alias']['#required'] = TRUE;
@@ -217,6 +222,36 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
     }
     }
 
+    // Target group entity add/edit forms only.
+  if (!preg_match('/^group_.+_(add|edit)_form$/', $form_id)) {
+    return;
+  }
+ 
+  // Only attach if the color fields are present on this group type.
+  if (!isset($form['field_color_enabled'])) {
+    return;
+  }
+ 
+  $defaults = regcytes_color_defaults();
+  $css_map  = regcytes_color_css_map();
+ 
+  $color_fields = [];
+  foreach ($css_map as $field => $css_var) {
+    $color_fields[] = [
+      'fieldName'     => $field,
+      'inputSelector' => '[name="' . $field . '[0][value]"]',
+      'cssVar'        => $css_var,
+      'default'       => $defaults[$field],
+      'isButton'      => str_starts_with($field, 'field_color_btn_'),
+    ];
+  }
+ 
+  $form['#attached']['library'][] = 'regcytes/group_color_picker';
+  $form['#attached']['drupalSettings']['regcytesGroupColors'] = [
+    'fields'          => $color_fields,
+    'enabledSelector' => '[name="field_color_enabled[value]"]',
+    'webaim_api_base' => 'https://webaim.org/resources/contrastchecker/',
+  ];
 /*
   // Targets group content menu link add/edit forms.
   if (in_array($form_id, ['menu_link_content_menu_link_content_form'])) {
@@ -266,6 +301,29 @@ function regcytes_field_widget_single_element_form_alter(
 }
 
 
+
+/**
+ * #after_build callback — moves all field descriptions above the input.
+ */
+function regcytes_group_form_after_build(array $form, \Drupal\Core\Form\FormStateInterface $form_state): array {
+  _regcytes_description_before($form);
+  return $form;
+}
+
+/**
+ * Recursively sets #description_display to 'before' on all form elements.
+ */
+function _regcytes_description_before(array &$element): void {
+  foreach (array_keys($element) as $key) {
+    if ($key[0] === '#' || !is_array($element[$key])) {
+      continue;
+    }
+    if (isset($element[$key]['#description'])) {
+      $element[$key]['#description_display'] = 'before';
+    }
+    _regcytes_description_before($element[$key]);
+  }
+}
 
 /**
  * Validation handler — ensures the alias field is not empty.
@@ -365,25 +423,24 @@ function regcytes_preprocess_page(array &$variables): void {
         && !$group->get('field_subsite_contact')->isEmpty()) {
         $variables['subsite_contact'] = $group->field_subsite_contact->entity;
       }
+    }
 
+    // Inject group color overrides as an inline <style> in <head>.
+    $css = regcytes_group_color_css($group);
+    if ($css !== '') {
+      $variables['#attached']['html_head'][] = [
+        [
+          '#type'       => 'html_tag',
+          '#tag'        => 'style',
+          '#value'      => $css,
+          '#attributes' => ['data-regcytes-group-colors' => $group->id()],
+        ],
+        'regcytes_group_colors_' . $group->id(),
+      ];
     }
   }
   catch (\Throwable $e) {
     // Context unavailable — leave defaults.
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-
-function regcytes_preprocess_config_pages__homepage(&$variables)
-{
-  //$group = regcytes_get_group();
-  $group = _regcytes_get_group_from_request();
-  if ($group) {
-    $variables['group'] = $group->getFields();
-    $variables['deleteme'] = 'Should delete me';
   }
 }
 
