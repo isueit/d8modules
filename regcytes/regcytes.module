@@ -7,6 +7,8 @@ use Drupal\group\Entity\Group;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\group_content_menu\Entity\GroupContentMenu;
 
 /**
  * Implements hook_preprocess_HOOK()
@@ -284,3 +286,103 @@ function _regcytes_get_group_from_request() {
   // Fallback: parse 'destination' query param if needed.
   return NULL;
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for group entities.
+ */
+function regcytes_group_insert(Group $group)
+{
+  // Only act on a specific group type (e.g. "community").
+  // Remove this check if you want it for all group types.
+  if ($group->bundle() !== 'isu_event_website') {
+    return;
+  }
+
+  // Create the  Homepage node.
+  $node = Node::create([
+    'type'   => 'event_homepage',
+    'title'  => 'Homepage',
+    'status' => 1, // published
+    'uid'    => $group->getOwnerId(),
+  ]);
+  $node->save();
+  // Add it to the group using Group 3.x API.
+  // Plugin ID format: 'group_node:{node_type}'
+  $group->addRelationship($node, 'group_node:' . 'event_homepage');
+
+  // Create the rest of the nodes
+  // First, get the labels selected in the field_pages field
+  $field_definition = $group->getFieldDefinition('field_pages');
+  $allowed_values = $field_definition->getSetting('allowed_values');
+  $keys = array_column($group->get('field_pages')->getValue(), 'value');
+  $labels = array_map(fn($key) => $allowed_values[$key] ?? $key, $keys);
+
+  // Next, some variables for the menu
+  $weight = 5;
+  $menu_name = null;
+  $menus = $group->getRelationships('group_content_menu:microsite_menu');
+  if (!empty($menus)) {
+      // Get the first (usually only) menu for this group.
+      $relationship = reset($menus);
+      $menu_entity  = $relationship->getEntity();
+
+      // The menu name used by MenuLinkContent is derived from the entity ID.
+      $menu_name = 'group_menu_link_content-' . $menu_entity->id();
+  }
+
+  // Step through each of the selected labels
+  foreach ($labels as $page_title) {
+    // Create the node for each label
+    $node = Node::create([
+      'type'   => 'microsite_page',
+      'title'  => $page_title,
+      'status' => 1, // published
+      'uid'    => $group->getOwnerId(),
+    ]);
+    $node->save();
+    // Add it to the group using Group 3.x API.
+    // Plugin ID format: 'group_node:{node_type}'
+    $group->addRelationship($node, 'group_node:' . 'microsite_page');
+
+    // And create the Menu Link for each node
+    if (!empty($menu_name)) {
+      MenuLinkContent::create([
+        'title'     => $node->getTitle(),
+        'link'      => ['uri' => 'entity:node/' . $node->id()],
+        'menu_name' => $menu_name,
+        'weight'    => $weight,
+        'enabled'   => TRUE,
+      ])->save();
+      $weight += 5;
+    }
+
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for group entities.
+ */
+/*
+function regcytes_group_predelete(\Drupal\group\Entity\Group $group) {
+  Drupal::messenger()->addStatus('I am here now: ' . count($group->getRelationships()));
+  foreach ($group->getRelationships() as $relationship) {
+    Drupal::messenger()->addStatus('Got a relationship');
+    $entity = $relationship->getEntity();
+
+    if (!($entity instanceof \Drupal\node\Entity\Node)) {
+      continue;
+    }
+
+    // Check if this node belongs to any other groups.
+    $other_groups = \Drupal::service('group.membership_loader')
+      ->loadByEntity($entity);
+
+      Drupal::messenger()->addStatus($entity->id() . ': ' . count($other_groups));
+
+    // Only delete if this was the node's only group.
+    if (count($other_groups) <= 1) {
+      $entity->delete();
+    }
+  }
+}
+*/
