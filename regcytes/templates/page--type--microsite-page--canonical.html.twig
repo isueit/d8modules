@@ -142,8 +142,9 @@
 				</div>
 			{% endif %}
 			{% if page.content|render %}
-				{# Show the rest of the content without the title #}
-				{{ page.content|without('iastate_theme_page_title') }}
+				<div class="isu-page-column isu-content-column {{ content_classes }}">
+					{{ page.content|without('iastate_theme_page_title') }}
+				</div>
 			{% endif %}
 
 			{% if page.sidebar_second|render %}
@@ -225,7 +226,7 @@
 				</div>
 
 			</div>
-		</div>
+		</section>
 	{% endif %}
 
 	{% if not hide_default_footer and not custom_theme %}

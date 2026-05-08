@@ -200,9 +200,16 @@ body.custom-theme .isu-menu-navbar .nav-item.active > .isu-nav-link {
     color: var(--color-hero-text, #fff);
     padding-right: .5rem;
 }
-/* No hero image — outer wrapper and callout both use primary color */
+/* No hero image — outer wrapper becomes the primary color background. */
 .microsite-hero-wrapper--no-image {
     background-color: var(--color-primary, var(--primary-color));
+}
+/* When there's no image the callout would blend into the same primary background,
+   so strip its fill and use an accent border to visually separate it. */
+.microsite-hero-wrapper--no-image .microsite-hero-label-wrapper.isueo-callout-stat {
+    background-color: transparent;
+    border: 3px solid var(--color-accent, #f1be48);
+    border-radius: 4px;
 }
 
 .microsite-event-website header.isu-wordmark-sitename,
