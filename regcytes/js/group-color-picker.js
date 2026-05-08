@@ -97,6 +97,50 @@
       border: 1px solid rgba(0,0,0,0.18);
       flex-shrink: 0;
     }
+    .rc-palette-chooser {
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+    .rc-palette-heading {
+      margin: 0 0 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #555;
+    }
+    .rc-palette-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .rc-palette-card {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    .rc-palette-card:hover { border-color: #888; }
+    .rc-palette-card.rc-palette-selected { border-color: #1a73e8; background: #e8f0fe; }
+    .rc-palette-swatches { display: flex; gap: 3px; }
+    .rc-palette-swatch {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+    .rc-palette-name { color: #333; font-weight: 500; }
   `;
 
   let stylesInjected = false;
@@ -121,13 +165,13 @@
         <span class="rc-swatch" style="background:${swatchB}"></span>
         <span class="rc-pair-label">${label}</span>
         <span class="rc-ratio">${ratio.toFixed(2)}:1</span>
-        ${badge(ratio >= 4.5)} <span class="rc-level">Standard</span>
-        ${badge(ratio >= 7)}   <span class="rc-level">Enhanced</span>
+        ${badge(ratio >= 4.5)} <span class="rc-level">AA</span>
+        ${badge(ratio >= 7)}   <span class="rc-level">AAA</span>
       </div>`;
   }
 
   function renderPanel(cfg, hex, dynamicBgHex) {
-    let html = '<h4>Readability check</h4><p class="rc-hint">Standard = meets minimum web accessibility requirement &nbsp;&middot;&nbsp; Enhanced = exceeds it</p>';
+    let html = '<h4>Accessibility check</h4><p class="rc-hint">AA = WCAG minimum requirement &nbsp;&middot;&nbsp; AAA = enhanced</p>';
 
     if (cfg.isButton) {
       // Filled button — white or black text on button background.
@@ -142,14 +186,25 @@
         html += row(hex, '#ffffff', 'Outline button &mdash; this color used as text on a white background', outlineRatio);
       } else {
         html += row(hex, '#ffffff', 'Outline button &mdash; this color as text on white is too low contrast', outlineRatio);
-        html += row('#000000', '#ffffff', 'Outline button &mdash; <strong>black text</strong> will be used as a fallback', contrastRatio('#000000', '#ffffff'));
+        html += row('#000000', hex, 'Outline button &mdash; <strong>black text</strong> will be used as a fallback', contrastRatio('#000000', hex));
       }
     } else {
       (cfg.backgrounds || [{ hex: '#ffffff', label: 'On white' }]).forEach(bg => {
-        html += row(hex, bg.hex, bg.label, contrastRatio(hex, bg.hex));
+        if (bg.fg) {
+          // Reversed check: bg.fg as foreground text on hex (the chosen color) as background.
+          html += row(bg.fg, hex, bg.label, contrastRatio(bg.fg, hex));
+        } else {
+          html += row(hex, bg.hex, bg.label, contrastRatio(hex, bg.hex));
+        }
       });
       if (cfg.dynamicBg && dynamicBgHex) {
-        html += row(hex, dynamicBgHex, cfg.dynamicBg.label, contrastRatio(hex, dynamicBgHex));
+        const dynRatio = contrastRatio(hex, dynamicBgHex);
+        html += row(hex, dynamicBgHex, cfg.dynamicBg.label, dynRatio);
+        if (cfg.dynamicBg.showFallback && dynRatio < 4.5) {
+          const fallback = bestTextColor(dynamicBgHex);
+          const fallbackName = fallback === '#ffffff' ? 'white' : 'black';
+          html += `<p class="rc-hint" style="margin-top:4px">Does not pass &mdash; <strong>${fallbackName}</strong> will be used as hero date text instead.</p>`;
+        }
       }
     }
 
@@ -207,6 +262,81 @@
           }
 
           if (input.value) refresh();
+        });
+      });
+    },
+  };
+
+  // ─── Palette chooser ───────────────────────────────────────────────────────
+
+  Drupal.behaviors.regcytesGroupPalettePicker = {
+    attach(context) {
+      const settings = drupalSettings.regcytesGroupColors;
+      if (!settings || !settings.palettes || !settings.palettes.length) return;
+
+      once('regcytes-palette-picker', 'form', context).forEach(form => {
+        injectStyles();
+
+        // Locate the first color field wrapper — insert the chooser just before
+        // it so it sits below the field group title but above the color inputs.
+        const groupContainer = form.querySelector('[data-drupal-selector="edit-group-custom-theme-options"]');
+        const searchRoot    = groupContainer || form;
+        const firstCfg      = settings.fields[0];
+        if (!firstCfg) return;
+
+        const outerKey = 'edit-' + firstCfg.fieldName.replace(/_/g, '-') + '-wrapper';
+        let firstWrapper = searchRoot.querySelector('[data-drupal-selector="' + outerKey + '"]');
+        if (!firstWrapper) {
+          const firstInput = form.querySelector(firstCfg.inputSelector);
+          if (!firstInput) return;
+          firstWrapper = firstInput.closest('.js-form-wrapper')
+            || firstInput.closest('.form-item')
+            || firstInput.parentElement;
+        }
+        if (!firstWrapper) return;
+
+        const cards = settings.palettes.map(palette => {
+          // Show every unique hex value from the full palette (deduplicated).
+          const seen = new Set();
+          const swatches = Object.values(palette.colors)
+            .filter(hex => {
+              const norm = hex.toLowerCase();
+              if (seen.has(norm)) return false;
+              seen.add(norm);
+              return true;
+            })
+            .map(hex => `<span class="rc-palette-swatch" style="background:${hex}" title="${hex}"></span>`)
+            .join('');
+          return `<button type="button" class="rc-palette-card" data-palette-id="${palette.id}">
+            <span class="rc-palette-swatches">${swatches}</span>
+            <span class="rc-palette-name">${palette.label}</span>
+          </button>`;
+        }).join('');
+
+        const chooser = document.createElement('div');
+        chooser.className = 'rc-palette-chooser';
+        chooser.innerHTML = `<p class="rc-palette-heading">Color Palettes</p><div class="rc-palette-cards">${cards}</div>`;
+        firstWrapper.parentElement.insertBefore(chooser, firstWrapper);
+
+        chooser.querySelectorAll('.rc-palette-card').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const palette = settings.palettes.find(p => p.id === btn.dataset.paletteId);
+            if (!palette) return;
+
+            Object.entries(palette.colors).forEach(([cssKey, hex]) => {
+              const fieldCfg = settings.fields.find(f => f.cssKey === cssKey);
+              if (!fieldCfg) return;
+              const input = form.querySelector(fieldCfg.inputSelector);
+              if (!input) return;
+              input.value = hex;
+              // Update Spectrum's visual picker if it owns this input.
+              try { $(input).spectrum('set', hex); } catch (e) {}
+              $(input).trigger('change').trigger('input');
+            });
+
+            chooser.querySelectorAll('.rc-palette-card').forEach(c => c.classList.remove('rc-palette-selected'));
+            btn.classList.add('rc-palette-selected');
+          });
         });
       });
     },

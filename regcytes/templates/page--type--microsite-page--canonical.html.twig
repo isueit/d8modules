@@ -58,13 +58,57 @@
 
 <div class="isu-page-wrap regcytes-microsite">
 
-	{# The ISU Navbar may be disabled in theme settings #}
-	{% if isu_navbar %}
+	{# ISU Navbar is suppressed entirely for custom-themed microsites #}
+	{% if isu_navbar and not custom_theme %}
 		{% include '@iastate_theme/parts/isu-navbar.html.twig' %}
 	{% endif %}
 
-	{# site-navbar.html.twig contains branded ISU header #}
-	{% include '@iastate_theme/parts/site-navbar.html.twig' %}
+	{% if custom_theme %}
+		<header class="regcytes-custom-header" role="banner" aria-label="Site header">
+			<div class="container">
+				<div class="regcytes-custom-header__inner">
+
+					<div class="regcytes-custom-header__brand">
+						{% if subsite_logo_url %}
+							<img src="{{ subsite_logo_url }}" alt="{{ subsite_logo_alt }}" class="regcytes-custom-header__logo">
+						{% endif %}
+						<div class="regcytes-custom-header__info">
+							{% if subsite_dates_formatted or subsite_location %}
+								<p class="regcytes-custom-header__meta">
+									{{- subsite_dates_formatted -}}
+									{%- if subsite_dates_formatted and subsite_location %} &nbsp;·&nbsp; {% endif -%}
+									{{- subsite_location -}}
+								</p>
+							{% endif %}
+							{% if subsite_group_label %}
+								<p class="regcytes-custom-header__title">{{ subsite_group_label }}</p>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="regcytes-custom-header__actions">
+						{% if subsite_registration_url %}
+							<a href="{{ subsite_registration_url }}" class="btn regcytes-register-btn">
+								Register Now <i class="fa-solid fa-angle-right"></i>
+							</a>
+						{% endif %}
+						<button class="navbar-toggler isu-menu-navbar_toggler" type="button" data-toggle="collapse" id="isu-menu-navbar_toggler" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="isu-menu-navbar_toggler-label sr-only">Menu</span>
+							<div class="navbar-toggler-icon isu-menu-navbar_toggler-icon">
+								<span class="mm-line-1"></span>
+								<span class="mm-line-2"></span>
+								<span class="mm-line-3"></span>
+							</div>
+						</button>
+					</div>
+
+				</div>
+			</div>
+		</header>
+	{% else %}
+		{# site-navbar.html.twig contains branded ISU header #}
+		{% include '@iastate_theme/parts/site-navbar.html.twig' %}
+	{% endif %}
 
 	{# menu-navbar.html.twig contains the main menu #}
 	{% include '@iastate_theme/parts/menu-navbar.html.twig' %}
@@ -114,8 +158,8 @@
 
 	</main>
 
-	{% if show_site_contact_info %}
-		<div class="site-contact-info">
+	{% if show_site_contact_info and not (custom_theme and hide_default_footer) %}
+		<section class="site-contact-info{% if custom_theme %} site-contact-info--custom-theme{% endif %}" aria-label="Contact information">
 			<div class="site-contact-info__inner">
 
 				{% if subsite_contact %}
@@ -162,7 +206,7 @@
 
 						{% if subsite_contact.field_microsite_contact_website.uri %}
 							<p class="site-contact-info__link">
-								<a href="{{ subsite_contact.field_microsite_contact_website.uri }}" target="_blank" rel="noopener">
+								<a href="{{ subsite_contact.field_microsite_contact_website.uri }}" rel="noopener noreferrer">
 									{{- subsite_contact.field_microsite_contact_website.title ?: subsite_contact.field_microsite_contact_website.uri -}}
 								</a>
 							</p>
@@ -184,7 +228,7 @@
 		</div>
 	{% endif %}
 
-	{% if not hide_default_footer %}
+	{% if not hide_default_footer and not custom_theme %}
 		{% include '@iastate_theme/parts/footer.html.twig' %}
 	{% endif %}
 

@@ -1,6 +1,139 @@
 /* --------------------------------------  */
+/* ## CUSTOM THEME HEADER
+/* --------------------------------------  */
+
+.regcytes-custom-header {
+    background: #ffffff;
+    border-bottom: 2px solid var(--color-primary, #c8102e);
+    padding: 1rem;
+}
+.regcytes-custom-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    gap: 1rem;
+}
+.regcytes-custom-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.regcytes-custom-header__logo {
+    max-height: 56px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+}
+.regcytes-custom-header__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.regcytes-custom-header__meta {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-primary, #c8102e);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.regcytes-custom-header__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary, #c8102e);
+    line-height: 1.2;
+}
+.regcytes-custom-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+.regcytes-register-btn {
+    background-color: var(--color-primary, #c8102e);
+    border-color: var(--color-primary, #c8102e);
+    color: var(--color-hero-text, #ffffff);
+    white-space: nowrap;
+}
+.regcytes-register-btn:hover,
+.regcytes-register-btn:focus {
+    background-color: var(--color-secondary, #7c2529);
+    border-color: var(--color-secondary, #7c2529);
+    color: var(--color-hero-text, #ffffff);
+}
+@media (max-width: 768px) {
+    .regcytes-custom-header__meta { font-size: 0.72rem; }
+    .regcytes-custom-header__title { font-size: 1rem; }
+    .regcytes-register-btn { font-size: 0.78rem; padding: 0.25rem 0.6rem; }
+}
+
+/* --------------------------------------  */
+/* ## CUSTOM THEME FOOTER
+/* --------------------------------------  */
+
+.site-contact-info.site-contact-info--custom-theme {
+    background-color: var(--color-primary, #c8102e);
+}
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__label,
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__name,
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__meta {
+    color: var(--color-hero-text, #ffffff);
+}
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__link a {
+    color: var(--color-hero-text, #ffffff);
+}
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__column--divided {
+    border-left-color: rgba(255, 255, 255, 0.35);
+}
+@media (max-width: 600px) {
+    .site-contact-info.site-contact-info--custom-theme .site-contact-info__column--divided {
+        border-top-color: rgba(255, 255, 255, 0.35);
+        border-left: none;
+    }
+}
+
+/* --------------------------------------  */
+/* ## CUSTOM THEME MENU
+/* --------------------------------------  */
+
+/* Left-align nav items under the custom header */
+body.custom-theme .isu-menu-navbar_wrap {
+    justify-content: flex-start;
+}
+body.custom-theme .isu-menu-navbar_wrap .navbar-nav {
+    margin-right: auto;
+}
+
+/* Link color */
+body.custom-theme .isu-menu-navbar .nav-link,
+body.custom-theme .isu-menu-navbar .isu-nav-link {
+    color: var(--color-link, #c8102e);
+}
+
+/* Hover / focus / active */
+body.custom-theme .isu-menu-navbar .nav-link:hover,
+body.custom-theme .isu-menu-navbar .nav-link:focus,
+body.custom-theme .isu-menu-navbar .isu-nav-link:hover,
+body.custom-theme .isu-menu-navbar .isu-nav-link:focus,
+body.custom-theme .isu-menu-navbar .nav-item.active > .nav-link,
+body.custom-theme .isu-menu-navbar .nav-item.active > .isu-nav-link {
+    color: var(--color-primary, #c8102e);
+}
+
+/* --------------------------------------  */
 /* ## MICROSITE BANNER
 /* --------------------------------------  */
+
+/* The microsite homepage content column must be full-width so the hero
+   banner's calc(50% - 50vw) full-bleed resolves correctly. Without this,
+   the theme's max-width: 75% on .isu-page-column shifts the hero off-center. */
+.regcytes-microsite-homepage .isu-page-column {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
 
 /* Hero Header */
 .microsite-hero-label-wrapper {
@@ -61,7 +194,7 @@
     display: flex;
 }
 .microsite-event-location:before {
-    content: "\f041";
+    content: "\f041" / "";
     font-family: 'FontAwesome';
     font-size: 1.1rem;
     color: var(--color-hero-text, #fff);

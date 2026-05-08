@@ -29,6 +29,7 @@
                 aria-selected="{% if loop.first %}true{% else %}false{% endif %}"
                 aria-controls="{{ tab_id }}--panel"
                 id="{{ tab_id }}--tab"
+                tabindex="{% if loop.first %}0{% else %}-1{% endif %}"
                 data-tab="{{ tab_id }}">
           <span class="tab-day-name">{{ day_name_short }}</span>
           <span class="tab-month-day">{{ month_day }}</span>
@@ -47,7 +48,9 @@
         <div class="agenda-panel {% if loop.first %}active{% endif %}"
              role="tabpanel"
              id="{{ tab_id }}--panel"
-             aria-labelledby="{{ tab_id }}--tab">
+             aria-labelledby="{{ tab_id }}--tab"
+             tabindex="0"
+             {% if not loop.first %}aria-hidden="true"{% endif %}>
 
           {# Schedule Timeline per day #}
           {% if schedule_items is not empty %}
@@ -133,34 +136,57 @@
 
 <script>
 (function() {
-  const tabs = document.querySelectorAll('.agenda-tab');
-  const panels = document.querySelectorAll('.agenda-panel');
+  const agenda = document.currentScript.closest('.subsite-agenda');
+  if (!agenda) return;
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      const targetId = this.getAttribute('data-tab');
-      const targetPanel = document.getElementById(targetId + '--panel');
-      if (!targetPanel || targetPanel.classList.contains('active')) return;
+  const tabs   = Array.from(agenda.querySelectorAll('.agenda-tab'));
+  const panels = Array.from(agenda.querySelectorAll('.agenda-panel'));
 
-      const currentPanel = document.querySelector('.agenda-panel.active');
+  function activateTab(tab) {
+    const targetId    = tab.getAttribute('data-tab');
+    const targetPanel = document.getElementById(targetId + '--panel');
+    if (!targetPanel || targetPanel.classList.contains('active')) return;
 
-      tabs.forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      this.classList.add('active');
-      this.setAttribute('aria-selected', 'true');
+    const currentPanel = agenda.querySelector('.agenda-panel.active');
 
-      if (currentPanel) {
-        currentPanel.classList.add('fading-out');
-        currentPanel.classList.remove('active');
-        setTimeout(() => {
-          currentPanel.classList.remove('fading-out');
-          targetPanel.classList.add('active');
-        }, 250);
-      } else {
+    tabs.forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+      t.setAttribute('tabindex', '-1');
+    });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    tab.setAttribute('tabindex', '0');
+
+    if (currentPanel) {
+      currentPanel.classList.add('fading-out');
+      currentPanel.classList.remove('active');
+      setTimeout(() => {
+        currentPanel.classList.remove('fading-out');
+        currentPanel.setAttribute('aria-hidden', 'true');
         targetPanel.classList.add('active');
-      }
+        targetPanel.removeAttribute('aria-hidden');
+      }, 250);
+    } else {
+      targetPanel.classList.add('active');
+      targetPanel.removeAttribute('aria-hidden');
+    }
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateTab(tab));
+
+    tab.addEventListener('keydown', e => {
+      let next;
+      if      (e.key === 'ArrowRight' || e.key === 'ArrowDown')  next = (index + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')    next = (index - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home')                                  next = 0;
+      else if (e.key === 'End')                                   next = tabs.length - 1;
+      else return;
+
+      e.preventDefault();
+      activateTab(tabs[next]);
+      tabs[next].focus();
     });
   });
 })();

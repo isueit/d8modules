@@ -20,6 +20,91 @@
  */
 
 /**
+ * Returns preset color palettes for the group color chooser.
+ *
+ * Colors are keyed by CSS-map field name (field_subsite_color_*).
+ * Add more entries here to offer additional palette choices in the UI.
+ */
+function regcytes_color_palettes(): array {
+  return [
+    [
+      'id'     => 'coastal_signal',
+      'label'  => 'Coastal Signal',
+      'colors' => [
+        'field_subsite_color_primary'     => '#167e6b',
+        'field_subsite_color_secondary'   => '#D33003',
+        'field_subsite_color_accent'      => '#F7B733',
+        'field_subsite_color_link'        => '#D33003',
+        'field_subsite_color_btn_success' => '#243B53',
+        'field_subsite_color_btn_danger'  => '#5c6bba',
+        'field_subsite_color_btn_primary' => '#167e6b',
+        'field_subsite_color_btn_second'  => '#7c2529',
+      ],
+    ],
+
+    [
+      'id'     => 'rust_linen',
+      'label'  => 'Rust & Linen',
+      'colors' => [
+        'field_subsite_color_primary'     => '#76323F',
+        'field_subsite_color_secondary'   => '#565656',
+        'field_subsite_color_accent'      => '#E1D0CC',
+        'field_subsite_color_link'        => '#565656',
+        'field_subsite_color_btn_success' => '#B7A08E',
+        'field_subsite_color_btn_danger'  => '#7a8b74',
+        'field_subsite_color_btn_primary' => '#76323F',
+        'field_subsite_color_btn_second'  => '#565656',
+      ],
+    ],
+
+    [
+      'id'     => 'solid_power',
+      'label'  => 'Solid Power',
+      'colors' => [
+        'field_subsite_color_primary'     => '#C34341',
+        'field_subsite_color_secondary'   => '#30415D',
+        'field_subsite_color_accent'      => '#031424',
+        'field_subsite_color_link'        => '#30415D',
+        'field_subsite_color_btn_success' => '#F2EFEA',
+        'field_subsite_color_btn_danger'  => '#5F748F',
+        'field_subsite_color_btn_primary' => '#C34341',
+        'field_subsite_color_btn_second'  => '#30415D',
+      ],
+    ],
+
+    [
+      'id'     => 'vintage_charm',
+      'label'  => 'Vintage Charm',
+      'colors' => [
+        'field_subsite_color_primary'     => '#636B46',
+        'field_subsite_color_secondary'   => '#373f27',
+        'field_subsite_color_accent'      => '#F2E7D4',
+        'field_subsite_color_link'        => '#373f27',
+        'field_subsite_color_btn_success' => '#F3ebdd',
+        'field_subsite_color_btn_danger'  => '#6e7c8f',
+        'field_subsite_color_btn_primary' => '#636B46',
+        'field_subsite_color_btn_second'  => '#373f27',
+      ],
+    ],
+
+    [
+      'id'     => 'calm_current',
+      'label'  => 'Calm Current',
+      'colors' => [
+        'field_subsite_color_primary'     => '#007849',
+        'field_subsite_color_secondary'   => '#0375b4',
+        'field_subsite_color_accent'      => '#FFE0EC',
+        'field_subsite_color_link'        => '#3F6F78',
+        'field_subsite_color_btn_success' => '#F5F1E8',
+        'field_subsite_color_btn_danger'  => '#1F2F2C',
+        'field_subsite_color_btn_primary' => '#007849',
+        'field_subsite_color_btn_second'  => '#0375b4',
+      ],
+    ],
+  ];
+}
+
+/**
  * Default color values matching the ISU theme variables.
  */
 function regcytes_color_defaults(): array {
@@ -117,9 +202,13 @@ function regcytes_group_color_after_build(array $form, \Drupal\Core\Form\FormSta
   $field_backgrounds = [
     'field_subsite_color_link'    => $link_backgrounds,
     'field_subsite_color_primary' => [
-      ['hex' => '#ffffff', 'label' => 'Used as link hover + agenda date/time text on a white background'],
-      ['hex' => '#f5f5f5', 'label' => 'Used as link hover text on a light gray section background'],
+      ['hex' => '#ffffff', 'label' => 'Primary as text on a white background (link hover, agenda dates)'],
+      ['hex' => '#f5f5f5', 'label' => 'Primary as text on a light gray section background'],
+      ['fg' => '#ffffff', 'label' => 'White text on primary background (footer, hero label container)'],
     ],
+    // Accent is only used decoratively or as hero date text on the primary background.
+    // The only meaningful contrast check is the dynamicBg check below.
+    'field_subsite_color_accent'  => [],
   ];
   $default_backgrounds = [['hex' => '#ffffff', 'label' => 'This color as text on a white background']];
 
@@ -132,6 +221,7 @@ function regcytes_group_color_after_build(array $form, \Drupal\Core\Form\FormSta
   foreach (regcytes_color_css_map() as $field_name => $css_var) {
     $actual = $entity_names[$field_name] ?? $field_name;
     $entry = [
+      'cssKey'        => $field_name,
       'fieldName'     => $actual,
       'inputSelector' => 'input[name="' . $actual . '[0][color]"], input[name="' . $actual . '[0][value]"]',
       'default'       => $defaults[$field_name],
@@ -140,16 +230,18 @@ function regcytes_group_color_after_build(array $form, \Drupal\Core\Form\FormSta
     ];
     if ($field_name === 'field_subsite_color_accent') {
       $entry['dynamicBg'] = [
-        'selector' => $primary_selector,
-        'label'    => 'As hero date text on the primary color background',
-        'default'  => $defaults['field_subsite_color_primary'],
+        'selector'     => $primary_selector,
+        'label'        => 'As hero date text on the primary color background',
+        'default'      => $defaults['field_subsite_color_primary'],
+        'showFallback' => TRUE,
       ];
     }
     $fields_config[] = $entry;
   }
 
   $form['#attached']['drupalSettings']['regcytesGroupColors'] = [
-    'fields' => $fields_config,
+    'fields'   => $fields_config,
+    'palettes' => regcytes_color_palettes(),
   ];
   $form['#attached']['library'][] = 'regcytes/group_color_picker';
 

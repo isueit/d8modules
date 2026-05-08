@@ -19,12 +19,13 @@
   {% endif %}
 
   <div class="microsite-hero-wrapper{{ header_image_url is not defined ? ' microsite-hero-wrapper--no-image' : '' }}"{% if header_image_url is defined %} style="background-image: url('{{ header_image_url }}')"{% endif %}>
+    {% if not custom_theme %}
       <div class="microsite-hero-label-wrapper isueo-callout-stat">
         <div class="microsite-hero-label container">
 
           {% if group.field_subsite_logo_graphic[0].entity %}
             <div class="microsite-hero-logo">
-              <img src="{{ file_url(group.field_subsite_logo_graphic[0].entity.uri.value) }}" alt="{{ group.field_subsite_logo_graphic[0].alt }}" class="microsite-hero-logo__img">
+              <img src="{{ file_url(group.field_subsite_logo_graphic[0].entity.uri.value) }}" alt="{{ group.field_subsite_logo_graphic[0].alt ?: label }}" class="microsite-hero-logo__img">
             </div>
           {% endif %}
 
@@ -67,7 +68,7 @@
               {% set registration_close = reg_paragraph.field_subsite_registration_close.0.value %}
               {% set current_date = "now"|date('Y-m-d') %}
 
-              {% if registration_open <= current_date and registration_close >= current_date %}
+              {% if registration_open <= current_date and (not registration_close or registration_close >= current_date) %}
                 <div class="microsite-registration">
                   <a class="btn btn-outline-danger" href="{{ registration_url }}">Register Now <i class="fa-solid fa-angle-right"></i></a>
                 </div>
@@ -77,6 +78,7 @@
 
         </div>
       </div>
+    {% endif %}
     </div>
 
 </div>
