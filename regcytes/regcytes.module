@@ -180,15 +180,12 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
       $alias_el = &$form['path']['widget'][0]['alias'];
       $alias_el['#required'] = TRUE;
 
-      // The PathWidget validates alias uniqueness against the group's own path.
-      // Since we redirect the alias to the event_homepage node, that check
-      // always fails. Strip it — our own required validator is enough.
-      if (!empty($alias_el['#element_validate'])) {
-        $alias_el['#element_validate'] = array_filter(
-          $alias_el['#element_validate'],
-          fn($cb) => !(is_array($cb) && ($cb[0] ?? '') === \Drupal\path\Plugin\Field\FieldWidget\PathWidget::class)
-        );
-      }
+      // PathWidget::validateFormElement() lives on the OUTER container element
+      // (path[widget][0]), not on the alias textfield. It reads
+      // $element['alias']['#value'] directly and validates uniqueness against
+      // the group's source path — which always fails because the alias belongs
+      // to the event_homepage node. Clear it from the container.
+      $form['path']['widget'][0]['#element_validate'] = [];
 
       $form['#validate'][] = 'regcytes_group_alias_required_validate';
 
@@ -336,7 +333,7 @@ function _regcytes_description_before(array &$element): void {
 }
 
 /**
- * Validation handler — ensures the alias field is not empty.
+ * Validation handler — ensures the URL alias field is not empty.
  */
 function regcytes_group_alias_required_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state)
 {
@@ -730,6 +727,7 @@ function regcytes_group_update(Group $group): void {
   $store['alias'] = NULL;
 
   $alias_cleaner = \Drupal::service('pathauto.alias_cleaner');
+  $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
 
   foreach (\Drupal::entityTypeManager()
     ->getStorage('group_relationship')
@@ -739,29 +737,47 @@ function regcytes_group_update(Group $group): void {
       continue;
     }
 
-    $node_path = '/node/' . $entity->id();
-    $existing = \Drupal::entityTypeManager()
-      ->getStorage('path_alias')
-      ->loadByProperties(['path' => $node_path]);
-    foreach ($existing as $old) {
-      $old->delete();
-    }
-
     if ($entity->bundle() === 'event_homepage') {
-      \Drupal\path_alias\Entity\PathAlias::create([
-        'path'     => $node_path,
-        'alias'    => $alias,
-        'langcode' => 'en',
-      ])->save();
+      _regcytes_upsert_alias('/node/' . $entity->id(), $alias, $path_alias_storage);
     }
     elseif ($entity->bundle() === 'microsite_page') {
       $slug = $alias_cleaner->cleanString($entity->getTitle());
-      \Drupal\path_alias\Entity\PathAlias::create([
-        'path'     => $node_path,
-        'alias'    => $alias . '/' . $slug,
-        'langcode' => 'en',
-      ])->save();
+      _regcytes_upsert_alias('/node/' . $entity->id(), $alias . '/' . $slug, $path_alias_storage);
     }
+  }
+}
+
+/**
+ * Creates or updates a single path alias, skipping if the value is unchanged.
+ *
+ * Using an update instead of delete+create avoids tripping Drupal's path_alias
+ * unique constraint when the same alias is saved more than once in a request.
+ */
+function _regcytes_upsert_alias(string $system_path, string $new_alias, $path_alias_storage): void {
+  $existing = $path_alias_storage->loadByProperties([
+    'path'     => $system_path,
+    'langcode' => 'en',
+  ]);
+
+  if (!empty($existing)) {
+    $alias_entity = reset($existing);
+    // Delete any duplicates beyond the first.
+    foreach (array_slice($existing, 1) as $extra) {
+      $extra->delete();
+    }
+    // Only write if the alias actually changed.
+    if ($alias_entity->getAlias() === $new_alias) {
+      return;
+    }
+    $alias_entity->setAlias($new_alias);
+    $alias_entity->save();
+  }
+  else {
+    \Drupal\path_alias\Entity\PathAlias::create([
+      'path'     => $system_path,
+      'alias'    => $new_alias,
+      'langcode' => 'en',
+    ])->save();
   }
 }
 

@@ -125,9 +125,20 @@ function regcytes_update_9002(): string {
       $slug = $alias_cleaner->cleanString($entity->getTitle());
       $new_alias = $homepage_alias . '/' . $slug;
 
-      // Delete any existing alias for this node.
-      foreach ($path_alias_storage->loadByProperties(['path' => $node_path]) as $old) {
-        $old->delete();
+      // Update existing alias or create a new one.
+      $existing = $path_alias_storage->loadByProperties(['path' => $node_path, 'langcode' => 'en']);
+      if (!empty($existing)) {
+        $alias_entity = reset($existing);
+        foreach (array_slice($existing, 1) as $extra) {
+          $extra->delete();
+        }
+        if ($alias_entity->getAlias() === $new_alias) {
+          continue;
+        }
+        $alias_entity->setAlias($new_alias);
+        $alias_entity->save();
+        $updated++;
+        continue;
       }
 
       \Drupal\path_alias\Entity\PathAlias::create([
