@@ -73,3 +73,72 @@ function regcytes_update_9001(): string {
 
   return "Updated {$updated} node(s), skipped {$skipped} node(s) with no layout_onecol sections.";
 }
+
+/**
+ * Rebuild microsite_page path aliases using the group's event_homepage alias
+ * as the prefix, replacing any stale /group/{id}/... aliases.
+ */
+function regcytes_update_9002(): string {
+  $alias_manager = \Drupal::service('path_alias.manager');
+  $alias_cleaner = \Drupal::service('pathauto.alias_cleaner');
+  $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  $relationship_storage = \Drupal::entityTypeManager()->getStorage('group_relationship');
+
+  $updated = 0;
+  $skipped = 0;
+
+  $group_ids = \Drupal::entityQuery('group')
+    ->condition('type', 'isu_event_website')
+    ->accessCheck(FALSE)
+    ->execute();
+
+  foreach ($group_ids as $gid) {
+    $relationships = $relationship_storage->loadByProperties(['gid' => $gid]);
+
+    // Find the event_homepage alias for this group first.
+    $homepage_alias = NULL;
+    foreach ($relationships as $rel) {
+      $entity = $rel->getEntity();
+      if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'event_homepage') {
+        $path = '/node/' . $entity->id();
+        $resolved = $alias_manager->getAliasByPath($path);
+        if ($resolved !== $path) {
+          $homepage_alias = $resolved;
+        }
+        break;
+      }
+    }
+
+    if (!$homepage_alias) {
+      $skipped++;
+      continue;
+    }
+
+    // Rebuild aliases for every microsite_page in this group.
+    foreach ($relationships as $rel) {
+      $entity = $rel->getEntity();
+      if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'microsite_page') {
+        continue;
+      }
+
+      $node_path = '/node/' . $entity->id();
+      $slug = $alias_cleaner->cleanString($entity->getTitle());
+      $new_alias = $homepage_alias . '/' . $slug;
+
+      // Delete any existing alias for this node.
+      foreach ($path_alias_storage->loadByProperties(['path' => $node_path]) as $old) {
+        $old->delete();
+      }
+
+      \Drupal\path_alias\Entity\PathAlias::create([
+        'path'     => $node_path,
+        'alias'    => $new_alias,
+        'langcode' => 'en',
+      ])->save();
+
+      $updated++;
+    }
+  }
+
+  return "Rebuilt aliases for {$updated} microsite_page node(s); skipped {$skipped} group(s) with no homepage alias.";
+}

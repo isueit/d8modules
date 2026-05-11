@@ -19,7 +19,7 @@ require_once __DIR__ . '/regcytes.group_colors.inc';
  * Their URL is the group's alias; the node itself has no independent public URL.
  */
 function regcytes_node_presave(\Drupal\node\NodeInterface $node): void {
-  if ($node->bundle() === 'event_homepage') {
+  if (in_array($node->bundle(), ['event_homepage', 'microsite_page'])) {
     $node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
   }
 }
@@ -633,10 +633,12 @@ function regcytes_group_insert(Group $group)
   // Apply the alias the admin entered on the group form to the event_homepage
   // node so it becomes the public URL (e.g. /conference-slug).
   $store = &_regcytes_alias_store();
+  $homepage_alias = NULL;
   if (!empty($store['alias'])) {
+    $homepage_alias = $store['alias'];
     \Drupal\path_alias\Entity\PathAlias::create([
       'path'     => '/node/' . $node->id(),
-      'alias'    => $store['alias'],
+      'alias'    => $homepage_alias,
       'langcode' => 'en',
     ])->save();
     $store['alias'] = NULL;
@@ -675,6 +677,16 @@ function regcytes_group_insert(Group $group)
     // Add it to the group using Group 3.x API.
     // Plugin ID format: 'group_node:{node_type}'
     $group->addRelationship($node, 'group_node:' . 'microsite_page');
+
+    // Set a pretty alias using the group's homepage alias as the prefix.
+    if ($homepage_alias) {
+      $slug = \Drupal::service('pathauto.alias_cleaner')->cleanString($page_title);
+      \Drupal\path_alias\Entity\PathAlias::create([
+        'path'     => '/node/' . $node->id(),
+        'alias'    => $homepage_alias . '/' . $slug,
+        'langcode' => 'en',
+      ])->save();
+    }
 
     // And create the Menu Link for each node
     if (!empty($menu_name)) {
@@ -717,11 +729,13 @@ function regcytes_group_update(Group $group): void {
   $alias = $store['alias'];
   $store['alias'] = NULL;
 
+  $alias_cleaner = \Drupal::service('pathauto.alias_cleaner');
+
   foreach (\Drupal::entityTypeManager()
     ->getStorage('group_relationship')
     ->loadByProperties(['gid' => $group->id()]) as $relationship) {
     $entity = $relationship->getEntity();
-    if ($entity->getEntityTypeId() !== 'node' || $entity->bundle() !== 'event_homepage') {
+    if ($entity->getEntityTypeId() !== 'node') {
       continue;
     }
 
@@ -733,12 +747,21 @@ function regcytes_group_update(Group $group): void {
       $old->delete();
     }
 
-    \Drupal\path_alias\Entity\PathAlias::create([
-      'path'     => $node_path,
-      'alias'    => $alias,
-      'langcode' => 'en',
-    ])->save();
-    break;
+    if ($entity->bundle() === 'event_homepage') {
+      \Drupal\path_alias\Entity\PathAlias::create([
+        'path'     => $node_path,
+        'alias'    => $alias,
+        'langcode' => 'en',
+      ])->save();
+    }
+    elseif ($entity->bundle() === 'microsite_page') {
+      $slug = $alias_cleaner->cleanString($entity->getTitle());
+      \Drupal\path_alias\Entity\PathAlias::create([
+        'path'     => $node_path,
+        'alias'    => $alias . '/' . $slug,
+        'langcode' => 'en',
+      ])->save();
+    }
   }
 }
 
