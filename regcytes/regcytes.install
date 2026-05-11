@@ -1,0 +1,75 @@
+<?php
+
+use Drupal\layout_builder\Section;
+
+/**
+ * Replace layout_onecol default sections with layout_base_onecol on
+ * event_homepage, microsite_page, and layout_ct nodes.
+ */
+function regcytes_update_9001(): string {
+  $new_settings = [
+    'label'                    => '',
+    'background'               => 'layout--background--none',
+    'background_attachment'    => 'layout--background-attachment--default',
+    'background_position'      => 'layout--background-position--center',
+    'background_size'          => 'layout--background-size--cover',
+    'background_overlay'       => 'layout--background-overlay--none',
+    'equal_top_bottom_paddings' => 'layout--top-bottom-padding--small',
+    'equal_left_right_paddings' => 'layout--left-right-padding--small',
+    'container'                => 'layout--container--none',
+    'content_container'        => 'layout--content-container--default',
+    'height'                   => 'layout--height--default',
+    'color'                    => 'layout--color--default',
+  ];
+
+  $bundles  = ['event_homepage', 'microsite_page', 'layout_ct'];
+  $updated  = 0;
+  $skipped  = 0;
+
+  foreach ($bundles as $bundle) {
+    $nids = \Drupal::entityQuery('node')
+      ->condition('type', $bundle)
+      ->accessCheck(FALSE)
+      ->execute();
+
+    foreach ($nids as $nid) {
+      $node  = \Drupal\node\Entity\Node::load($nid);
+      $field = $node->get('layout_builder__layout');
+
+      $changed  = FALSE;
+      $sections = $field->getSections();
+
+      foreach ($sections as $delta => $section) {
+        if ($section->getLayoutId() !== 'layout_onecol') {
+          continue;
+        }
+
+        $tps = [];
+        foreach ($section->getThirdPartyProviders() as $provider) {
+          $tps[$provider] = $section->getThirdPartySettings($provider);
+        }
+
+        $replacement = new Section(
+          'layout_base_onecol',
+          $new_settings,
+          $section->getComponents(),
+          $tps
+        );
+
+        $field->removeSection($delta);
+        $field->insertSection($delta, $replacement);
+        $changed = TRUE;
+      }
+
+      if ($changed) {
+        $node->save();
+        $updated++;
+      }
+      else {
+        $skipped++;
+      }
+    }
+  }
+
+  return "Updated {$updated} node(s), skipped {$skipped} node(s) with no layout_onecol sections.";
+}

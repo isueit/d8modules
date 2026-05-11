@@ -29,7 +29,10 @@ function regcytes_node_presave(\Drupal\node\NodeInterface $node): void {
  */
 function regcytes_preprocess_node(&$variables)
 {
-  $variables['#attached']['library'][] = 'regcytes/regcytes';
+  $bundle = $variables['node']->bundle();
+  if (in_array($bundle, ['event_homepage', 'microsite_page'])) {
+    $variables['#attached']['library'][] = 'regcytes/regcytes';
+  }
 }
 
 /**
