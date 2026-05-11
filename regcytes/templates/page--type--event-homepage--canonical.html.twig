@@ -142,9 +142,7 @@
 				</div>
 			{% endif %}
 			{% if page.content|render %}
-				<div class="isu-page-column isu-content-column {{ content_classes }}">
 					{{ page.content|without('iastate_theme_page_title') }}
-				</div>
 			{% endif %}
 
 			{% if page.sidebar_second|render %}
