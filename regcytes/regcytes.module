@@ -322,7 +322,7 @@ function regcytes_group_form_after_build(array $form, \Drupal\Core\Form\FormStat
  */
 function _regcytes_description_before(array &$element): void {
   foreach (array_keys($element) as $key) {
-    if ($key[0] === '#' || !is_array($element[$key])) {
+    if ((is_string($key) && $key[0] === '#') || !is_array($element[$key])) {
       continue;
     }
     if (isset($element[$key]['#description'])) {
