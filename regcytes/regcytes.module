@@ -64,6 +64,14 @@ function regcytes_theme($existing, $type, $theme, $path)
       'template' => 'group--agenda',
       'base hook' => 'group',
     ],
+    'group__micro_banner' => [
+      'template' => 'group--micro-banner',
+      'base hook' => 'group',
+    ],
+    'group__event_details' => [
+      'template' => 'group--event-details',
+      'base hook' => 'group',
+    ],
   ];
 }
 
@@ -120,11 +128,14 @@ function regcytes_preprocess_menu__group_menu(array &$variables): void {
       return;
     }
 
+    /*
     $open_date = $reg_paragraph->get('field_subsite_registration_open')->value;
     $close_date = $reg_paragraph->get('field_subsite_registration_close')->value;
     $current_date = date('Y-m-d');
 
     if ($open_date && $close_date && $open_date <= $current_date && $close_date >= $current_date) {
+    */
+    if ($group->hasField('field_subsite_open_close') && (bool) $group->get('field_subsite_open_close')->value) {
       $variables['registration_is_open'] = TRUE;
       $variables['registration_url'] = $link_field->first()->getUrl()->toString();
     }
@@ -454,8 +465,11 @@ function regcytes_preprocess_page(array &$variables): void {
       && $group->get('field_subsite_design_type')->value === 'custom_theme';
     $variables['custom_theme'] = $is_custom;
 
+    // Always expose the group label so menu-navbar can show it in place of
+    // the linked site name on all group pages (custom-themed or not).
+    $variables['subsite_group_label'] = $group->label();
+
     if ($is_custom) {
-      $variables['subsite_group_label'] = $group->label();
 
       // Logo.
       if ($group->hasField('field_subsite_logo_graphic')
@@ -501,10 +515,13 @@ function regcytes_preprocess_page(array &$variables): void {
         if ($reg_para
             && $reg_para->hasField('field_subsite_registration_link')
             && !$reg_para->get('field_subsite_registration_link')->isEmpty()) {
+          /*
           $open  = $reg_para->get('field_subsite_registration_open')->value  ?? '';
           $close = $reg_para->get('field_subsite_registration_close')->value ?? '';
           $today = date('Y-m-d');
           if ($open && $open <= $today && (!$close || $close >= $today)) {
+          */
+          if ($group->hasField('field_subsite_open_close') && (bool) $group->get('field_subsite_open_close')->value) {
             $raw_uri = $reg_para->get('field_subsite_registration_link')->first()->uri;
             try {
               $variables['subsite_registration_url'] = \Drupal\Core\Url::fromUri($raw_uri)->toString();
@@ -520,9 +537,14 @@ function regcytes_preprocess_page(array &$variables): void {
     if ($group->bundle() === 'isu_event_website') {
       $variables['show_site_contact_info'] = TRUE;
 
+      $variables['subsite_contacts'] = [];
       if ($group->hasField('field_subsite_contact')
         && !$group->get('field_subsite_contact')->isEmpty()) {
-        $variables['subsite_contact'] = $group->field_subsite_contact->entity;
+        foreach ($group->get('field_subsite_contact') as $item) {
+          if ($item->entity) {
+            $variables['subsite_contacts'][] = $item->entity;
+          }
+        }
       }
     }
 
