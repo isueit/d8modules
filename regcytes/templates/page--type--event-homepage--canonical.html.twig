@@ -110,8 +110,22 @@
 		{% include '@iastate_theme/parts/site-navbar.html.twig' %}
 	{% endif %}
 
-	{# menu-navbar.html.twig contains the main menu #}
-	{% include '@iastate_theme/parts/menu-navbar.html.twig' %}
+	<div>
+		<div class="navbar navbar-expand-lg isu-menu-navbar">
+			<div class="container isu-menu-navbar_container">
+				<header class="isu-wordmark-sitename">
+					{% if subsite_group_label %}
+						<span class="navbar-brand isu-navbar-brand">{{ subsite_group_label }}</span>
+					{% else %}
+						<a rel="home" class="navbar-brand isu-navbar-brand" href="{{ path('<front>') }}">{{ site_name }}</a>
+					{% endif %}
+				</header>
+				<div class="isu-menu-navbar_collapse collapse navbar-collapse isu-menu-navbar_wrap" id="isu-menu-navbar_collapse">
+					{{ page.menu_navbar }}
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<main class="isu-main" role="main">
 
@@ -161,26 +175,26 @@
 		<section class="site-contact-info{% if custom_theme %} site-contact-info--custom-theme{% endif %}" aria-label="Contact information">
 			<div class="site-contact-info__inner">
 
-				{% if subsite_contact %}
+				{% for contact in subsite_contacts %}
 					<div class="site-contact-info__column">
 
-						{% if subsite_contact.field_microsite_contact_heading.value %}
-							<p class="site-contact-info__label">{{ subsite_contact.field_microsite_contact_heading.value }}</p>
+						{% if contact.field_microsite_contact_heading.value %}
+							<p class="site-contact-info__label">{{ contact.field_microsite_contact_heading.value }}</p>
 						{% endif %}
 
-						{% if subsite_contact.field_microsite_contact_name.value %}
-							<p class="site-contact-info__name">{{ subsite_contact.field_microsite_contact_name.value }}</p>
+						{% if contact.field_microsite_contact_name.value %}
+							<p class="site-contact-info__name">{{ contact.field_microsite_contact_name.value }}</p>
 						{% endif %}
 
-						{% if subsite_contact.field_microsite_contact_title.value %}
-							<p class="site-contact-info__meta">{{ subsite_contact.field_microsite_contact_title.value }}</p>
+						{% if contact.field_microsite_contact_title.value %}
+							<p class="site-contact-info__meta">{{ contact.field_microsite_contact_title.value }}</p>
 						{% endif %}
 
-						{% if subsite_contact.field_microsite_contact_org.value %}
-							<p class="site-contact-info__meta">{{ subsite_contact.field_microsite_contact_org.value }}</p>
+						{% if contact.field_microsite_contact_org.value %}
+							<p class="site-contact-info__meta">{{ contact.field_microsite_contact_org.value }}</p>
 						{% endif %}
 
-						{% set addr = subsite_contact.field_microsite_contact_address[0] %}
+						{% set addr = contact.field_microsite_contact_address[0] %}
 						{% if addr and addr.address_line1 %}
 							<p class="site-contact-info__meta">
 								{{- addr.address_line1 -}}
@@ -191,30 +205,30 @@
 							</p>
 						{% endif %}
 
-						{% if subsite_contact.field_microsite_contact_phone.value %}
+						{% if contact.field_microsite_contact_phone.value %}
 							<p class="site-contact-info__link">
-								<a href="tel:{{ subsite_contact.field_microsite_contact_phone.value|replace({' ': '', '(': '', ')': '', '-': ''}) }}">{{ subsite_contact.field_microsite_contact_phone.value }}</a>
+								<a href="tel:{{ contact.field_microsite_contact_phone.value|replace({' ': '', '(': '', ')': '', '-': ''}) }}">{{ contact.field_microsite_contact_phone.value }}</a>
 							</p>
 						{% endif %}
 
-						{% if subsite_contact.field_microsite_contact_email.value %}
+						{% if contact.field_microsite_contact_email.value %}
 							<p class="site-contact-info__link">
-								<a href="mailto:{{ subsite_contact.field_microsite_contact_email.value }}">{{ subsite_contact.field_microsite_contact_email.value }}</a>
+								<a href="mailto:{{ contact.field_microsite_contact_email.value }}">{{ contact.field_microsite_contact_email.value }}</a>
 							</p>
 						{% endif %}
 
-						{% if subsite_contact.field_microsite_contact_website.uri %}
+						{% if contact.field_microsite_contact_website.uri %}
 							<p class="site-contact-info__link">
-								<a href="{{ subsite_contact.field_microsite_contact_website.uri }}" rel="noopener noreferrer">
-									{{- subsite_contact.field_microsite_contact_website.title ?: subsite_contact.field_microsite_contact_website.uri -}}
+								<a href="{{ contact.field_microsite_contact_website.uri }}" rel="noopener noreferrer">
+									{{- contact.field_microsite_contact_website.title ?: contact.field_microsite_contact_website.uri -}}
 								</a>
 							</p>
 						{% endif %}
 
 					</div>
-				{% endif %}
+				{% endfor %}
 
-				<div class="site-contact-info__column {% if subsite_contact %}site-contact-info__column--divided{% endif %}">
+				<div class="site-contact-info__column">
 					<p class="site-contact-info__label">Registration Questions</p>
 					<p class="site-contact-info__name">Registration Services</p>
 					<p class="site-contact-info__meta">Iowa State University Extension and Outreach</p>

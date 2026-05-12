@@ -1,0 +1,20 @@
+{#
+  Template for a group entity rendered in the "micro_banner" view mode.
+
+  Renders a short decorative banner using field_subsite_micro_banner as a
+  background image. No content is displayed inside the banner by default.
+
+  Available variables:
+    - group:   The raw Group entity object.
+    - content: Rendered field output for this view mode.
+    - label:   The group label (name).
+    - url:     Canonical URL of the group.
+#}
+
+{% set image_entity = group.field_subsite_micro_banner[0].entity %}
+{% if image_entity and image_entity.uri.value %}
+  {% set banner_image_url = file_url(image_entity.uri.value) %}
+{% endif %}
+
+<div{{ attributes.addClass('microsite-micro-banner') }}{% if banner_image_url is defined %} style="background-image: url('{{ banner_image_url }}')"{% endif %}>
+</div>

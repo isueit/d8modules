@@ -1,0 +1,99 @@
+{#
+  Template for a group entity rendered in the "event_details" view mode.
+
+  Outputs the same markup as the custom-theme site header so this block can
+  be placed anywhere the event details header is needed (e.g. non-custom-theme
+  pages, embedded views, etc.).
+
+  All field values are read directly from the group entity rather than from
+  preprocess variables, so this template is self-contained.
+
+  Available variables:
+    - group:  The raw Group entity object.
+    - label:  The group label (name).
+    - url:    Canonical URL of the group.
+#}
+
+{# Logo #}
+{% set logo_entity = group.field_subsite_logo_graphic[0].entity %}
+{% if logo_entity and logo_entity.uri.value %}
+  {% set logo_url = file_url(logo_entity.uri.value) %}
+  {% set logo_alt = group.field_subsite_logo_graphic[0].alt ?: label %}
+{% endif %}
+
+{# Formatted date range — same logic as hero banner and page preprocess #}
+{% if group.field_subsite_dates.0.value %}
+  {% set start_date = group.field_subsite_dates.0.value %}
+  {% set end_date   = group.field_subsite_dates.0.end_value %}
+
+  {% set start_month = start_date|date('F') %}
+  {% set start_day   = start_date|date('j') %}
+  {% set start_year  = start_date|date('Y') %}
+
+  {% set end_month = end_date|date('F') %}
+  {% set end_day   = end_date|date('j') %}
+  {% set end_year  = end_date|date('Y') %}
+
+  {% if start_month == end_month and start_year == end_year %}
+    {% set dates_formatted = start_month ~ ' ' ~ start_day ~ '–' ~ end_day ~ ', ' ~ start_year %}
+  {% elseif start_year == end_year %}
+    {% set dates_formatted = start_month ~ ' ' ~ start_day ~ ' – ' ~ end_month ~ ' ' ~ end_day ~ ', ' ~ start_year %}
+  {% else %}
+    {% set dates_formatted = start_month ~ ' ' ~ start_day ~ ', ' ~ start_year ~ ' – ' ~ end_month ~ ' ' ~ end_day ~ ', ' ~ end_year %}
+  {% endif %}
+{% endif %}
+
+{# Location #}
+{% if group.field_subsite_location.value %}
+  {% set location = group.field_subsite_location.value %}
+{% endif %}
+
+{# Registration URL — only when the open/close toggle is on #}
+{% if group.field_subsite_open_close.value and group.field_subsite_registration_deets.0.entity %}
+  {% set reg_paragraph = group.field_subsite_registration_deets.0.entity %}
+  {% if reg_paragraph.field_subsite_registration_link is not empty %}
+    {% set registration_url = reg_paragraph.field_subsite_registration_link.0.uri %}
+  {% endif %}
+{% endif %}
+
+<header{{ attributes.addClass('regcytes-custom-header') }} role="banner" aria-label="Site header">
+  <div class="container">
+    <div class="regcytes-custom-header__inner">
+
+      <div class="regcytes-custom-header__brand">
+        {% if logo_url is defined %}
+          <img src="{{ logo_url }}" alt="{{ logo_alt }}" class="regcytes-custom-header__logo">
+        {% endif %}
+        <div class="regcytes-custom-header__info">
+          {% if dates_formatted is defined or location is defined %}
+            <p class="regcytes-custom-header__meta">
+              {{- dates_formatted is defined ? dates_formatted : '' -}}
+              {%- if dates_formatted is defined and location is defined %} &nbsp;·&nbsp; {% endif -%}
+              {{- location is defined ? location : '' -}}
+            </p>
+          {% endif %}
+          {% if label %}
+            <p class="regcytes-custom-header__title">{{ label }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="regcytes-custom-header__actions">
+        {% if registration_url is defined %}
+          <a href="{{ registration_url }}" class="btn regcytes-register-btn">
+            Register Now <i class="fa-solid fa-angle-right"></i>
+          </a>
+        {% endif %}
+        <button class="navbar-toggler isu-menu-navbar_toggler" type="button" data-toggle="collapse" id="isu-menu-navbar_toggler" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="isu-menu-navbar_toggler-label sr-only">Menu</span>
+          <div class="navbar-toggler-icon isu-menu-navbar_toggler-icon">
+            <span class="mm-line-1"></span>
+            <span class="mm-line-2"></span>
+            <span class="mm-line-3"></span>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
