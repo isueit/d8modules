@@ -41,14 +41,6 @@
   {% set location = group.field_subsite_location.value %}
 {% endif %}
 
-{# Registration URL — only when the open/close toggle is on #}
-{% if group.field_subsite_registration_deets.0.entity %}
-  {% set reg_paragraph = group.field_subsite_registration_deets.0.entity %}
-  {% if reg_paragraph.field_subsite_open_close.value and reg_paragraph.field_subsite_registration_link is not empty %}
-    {% set registration_url = reg_paragraph.field_subsite_registration_link.0.uri %}
-  {% endif %}
-{% endif %}
-
 <header{{ attributes.addClass('regcytes-custom-header regcytes-custom-header--event-details') }} aria-label="Event details">
   <div class="container">
     <div class="regcytes-custom-header__inner">
@@ -69,11 +61,6 @@
       </div>
 
       <div class="regcytes-custom-header__actions">
-        {% if registration_url is defined %}
-          <a href="{{ registration_url }}" class="btn regcytes-register-btn">
-            Register Now <i class="fa-solid fa-angle-right"></i>
-          </a>
-        {% endif %}
         <button class="navbar-toggler isu-menu-navbar_toggler" type="button" data-toggle="collapse" id="isu-menu-navbar_toggler" aria-expanded="false" aria-label="Toggle navigation">
           <span class="isu-menu-navbar_toggler-label sr-only">Menu</span>
           <div class="navbar-toggler-icon isu-menu-navbar_toggler-icon">
