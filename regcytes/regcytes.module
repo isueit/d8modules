@@ -838,56 +838,56 @@ function regcytes_group_predelete(\Drupal\group\Entity\Group $group) {
 * Implements hook_ENTITY_TYPE_insert().
 */
 
-function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $entity) {
+function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $entity)
+{
   // Get the layout field from the entity.
-    $layout_field = $entity->get('layout_builder__layout');
-    if (!$layout_field) {
-      return;
-    }
+  $layout_field = $entity->get('layout_builder__layout');
+  if (!$layout_field) {
+    return;
+  }
 
     // Get all existing sections.
-    /** @var \Drupal\layout_builder\Section[] $sections */
-    $sections = $layout_field->getSections();
+  /** @var \Drupal\layout_builder\Section[] $sections */
+  $sections = $layout_field->getSections();
 
-    if (empty($sections)) {
-      //throw new \RuntimeException('No sections found on this entity layout.' . $entity->bundle());
-      //return;
-      $sections[0] = new Section('layout_base_onecol');
+  if (empty($sections)) {
+    //throw new \RuntimeException('No sections found on this entity layout.' . $entity->bundle());
+    //return;
+    $sections[0] = new Section('layout_base_onecol');
+  }
+
+  // Get the first section.
+  $first_section = $sections[0];
+
+  // Weight determines order — find the highest existing weight and add 1.
+  $existing_components = $first_section->getComponents();
+  $max_weight = 0;
+  foreach ($existing_components as $component) {
+    $weight = $component->getWeight();
+    if ($weight >= $max_weight) {
+      $max_weight = $weight + 1;
     }
+  }
 
-    // Get the first section.
-    $first_section = $sections[0];
-
-    // Weight determines order — find the highest existing weight and add 1.
-    $existing_components = $first_section->getComponents();
-    $max_weight = 0;
-    foreach ($existing_components as $component) {
-      $weight = $component->getWeight();
-      if ($weight >= $max_weight) {
-        $max_weight = $weight + 1;
-      }
-    }
-
-    $title = $entity->getTitle();
-    if ($title == 'Homepage') {
+  $title = $entity->getTitle();
+  if ($title == 'Homepage') {
     $component = regcytes_create_section_component('hero_banner', $max_weight);
     $first_section->appendComponent($component);
-    } elseif ($title == 'Agenda'){
-    $component = regcytes_create_section_component('hero_banner', $max_weight);
+  } elseif ($title == 'Agenda') {
+    $component = regcytes_create_section_component('micro_banner', $max_weight);
     $first_section->appendComponent($component);
     $component = regcytes_create_section_component('agenda', $max_weight + 1);
     $first_section->appendComponent($component);
-    } else {
-    $component = regcytes_create_section_component('hero_banner', $max_weight);
+  } else {
+    $component = regcytes_create_section_component('micro_banner', $max_weight);
     $first_section->appendComponent($component);
-    }
+  }
 
-    $sections[0] = $first_section;
+  $sections[0] = $first_section;
 
-    // Save the updated layout back to the entity.
-    $entity->set('layout_builder__layout', $sections);
-    $entity->save();
-
+  // Save the updated layout back to the entity.
+  $entity->set('layout_builder__layout', $sections);
+  $entity->save();
 }
 
 /**
