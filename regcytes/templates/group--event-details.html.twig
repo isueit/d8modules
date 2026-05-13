@@ -14,13 +14,6 @@
     - url:    Canonical URL of the group.
 #}
 
-{# Logo #}
-{% set logo_entity = group.field_subsite_logo_graphic[0].entity %}
-{% if logo_entity and logo_entity.uri.value %}
-  {% set logo_url = file_url(logo_entity.uri.value) %}
-  {% set logo_alt = group.field_subsite_logo_graphic[0].alt ?: label %}
-{% endif %}
-
 {# Formatted date range — same logic as hero banner and page preprocess #}
 {% if group.field_subsite_dates.0.value %}
   {% set start_date = group.field_subsite_dates.0.value %}
@@ -49,21 +42,18 @@
 {% endif %}
 
 {# Registration URL — only when the open/close toggle is on #}
-{% if group.field_subsite_open_close.value and group.field_subsite_registration_deets.0.entity %}
+{% if group.field_subsite_registration_deets.0.entity %}
   {% set reg_paragraph = group.field_subsite_registration_deets.0.entity %}
-  {% if reg_paragraph.field_subsite_registration_link is not empty %}
+  {% if reg_paragraph.field_subsite_open_close.value and reg_paragraph.field_subsite_registration_link is not empty %}
     {% set registration_url = reg_paragraph.field_subsite_registration_link.0.uri %}
   {% endif %}
 {% endif %}
 
-<header{{ attributes.addClass('regcytes-custom-header') }} role="banner" aria-label="Site header">
+<header{{ attributes.addClass('regcytes-custom-header regcytes-custom-header--event-details') }} aria-label="Event details">
   <div class="container">
     <div class="regcytes-custom-header__inner">
 
       <div class="regcytes-custom-header__brand">
-        {% if logo_url is defined %}
-          <img src="{{ logo_url }}" alt="{{ logo_alt }}" class="regcytes-custom-header__logo">
-        {% endif %}
         <div class="regcytes-custom-header__info">
           {% if dates_formatted is defined or location is defined %}
             <p class="regcytes-custom-header__meta">

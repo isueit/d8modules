@@ -32,15 +32,22 @@
 }
 .regcytes-custom-header__meta {
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-primary, #c8102e);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
+.microsite-micro-banner-details__overlay .regcytes-custom-header__meta {
+    font-size: 1.3rem;
+}
+.microsite-micro-banner-details__overlay .regcytes-custom-header__title {
+    font-size: 3rem;
+    margin-top: 0.5rem;
+}
 .regcytes-custom-header__title {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--color-primary, #c8102e);
     line-height: 1.2;
@@ -67,6 +74,16 @@
     .regcytes-custom-header__meta { font-size: 0.72rem; }
     .regcytes-custom-header__title { font-size: 1rem; }
     .regcytes-register-btn { font-size: 0.78rem; padding: 0.25rem 0.6rem; }
+}
+
+/* Event details variant — no border, transparent background, inherits section color */
+.regcytes-custom-header--event-details {
+    background: transparent;
+    border-bottom: none;
+}
+.regcytes-custom-header--event-details .regcytes-custom-header__meta,
+.regcytes-custom-header--event-details .regcytes-custom-header__title {
+    color: inherit;
 }
 
 /* --------------------------------------  */
@@ -212,17 +229,100 @@ body.group-site header.isu-wordmark-sitename {
 }
 
 /* --------------------------------------  */
+/* ## LAYOUT BUILDER PREVIEW OVERRIDES
+/* --------------------------------------  */
+
+/* Disable full-bleed so elements stay within the LB editor canvas. */
+.layout-builder .microsite-hero-wrapper,
+.layout-builder .microsite-micro-banner,
+.layout-builder .microsite-micro-banner-details {
+    width: 100%;
+    margin-left: 0;
+}
+
+/* Give image-driven banners a visible minimum height when no image is set. */
+.layout-builder .microsite-micro-banner,
+.layout-builder .microsite-micro-banner-details {
+    min-height: 80px;
+}
+
+/* Constrain the hero banner height so it doesn't dominate the editor. */
+.layout-builder .microsite-hero-wrapper {
+    min-height: 160px;
+}
+
+/* --------------------------------------  */
+/* ## MICRO BANNER PAGE TITLE
+/* --------------------------------------  */
+
+.micro-banner-page-title {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+}
+.micro-banner-page-title .isu-page-title {
+    margin: 0;
+}
+
+/* --------------------------------------  */
 /* ## MICROSITE MICRO BANNER
 /* --------------------------------------  */
 
 .microsite-micro-banner {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    min-height: 120px;
+    max-height: 30vh;
+    overflow: hidden;
     background-color: var(--color-primary, #c8102e);
+    line-height: 0;
+}
+.microsite-micro-banner__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 30vh;
+    object-fit: cover;
+}
+
+/* --------------------------------------  */
+/* ## MICROSITE MICRO BANNER + DETAILS
+/* --------------------------------------  */
+
+.microsite-micro-banner-details {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    max-height: 30vh;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--color-primary, #c8102e);
+    line-height: 0;
+}
+.microsite-micro-banner-details__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 30vh;
+    object-fit: cover;
+}
+/* Tint pseudo-element sits above the img, below the text overlay */
+.microsite-micro-banner-details::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(7, 51, 62, 0.5);
+    z-index: 1;
+}
+.microsite-micro-banner-details__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    line-height: normal;
+    z-index: 2;
+    padding: 1rem 0;
+}
+.microsite-micro-banner-details__overlay .regcytes-custom-header__meta,
+.microsite-micro-banner-details__overlay .regcytes-custom-header__title {
+    color: var(--color-hero-text, #fff);
 }
 
 /* --------------------------------------  */
@@ -427,7 +527,7 @@ body.group-site header.isu-wordmark-sitename {
 .site-contact-info__column {
     position: relative;
 }
-.site-contact-info__column:not(:nth-child(4n+1))::before {
+.site-contact-info__column:not(:nth-child(3n+1))::before {
     content: '';
     position: absolute;
     left: -2rem;

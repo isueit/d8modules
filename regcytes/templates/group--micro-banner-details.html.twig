@@ -1,0 +1,99 @@
+{#
+  Template for a group entity rendered in the "micro_banner_details" view mode.
+
+  Combines the micro banner image with event details (dates, location, title,
+  register button) overlaid on top of the image.
+
+  Available variables:
+    - group:  The raw Group entity object.
+    - label:  The group label (name).
+    - url:    Canonical URL of the group.
+#}
+
+{# Banner image #}
+{% set image_entity = group.field_subsite_micro_banner[0].entity %}
+{% if image_entity and image_entity.uri.value %}
+  {% set banner_image_url = file_url(image_entity.uri.value) %}
+{% endif %}
+
+{# Formatted date range — same logic as hero banner and page preprocess #}
+{% if group.field_subsite_dates.0.value %}
+  {% set start_date = group.field_subsite_dates.0.value %}
+  {% set end_date   = group.field_subsite_dates.0.end_value %}
+
+  {% set start_month = start_date|date('F') %}
+  {% set start_day   = start_date|date('j') %}
+  {% set start_year  = start_date|date('Y') %}
+
+  {% set end_month = end_date|date('F') %}
+  {% set end_day   = end_date|date('j') %}
+  {% set end_year  = end_date|date('Y') %}
+
+  {% if start_month == end_month and start_year == end_year %}
+    {% set dates_formatted = start_month ~ ' ' ~ start_day ~ '–' ~ end_day ~ ', ' ~ start_year %}
+  {% elseif start_year == end_year %}
+    {% set dates_formatted = start_month ~ ' ' ~ start_day ~ ' – ' ~ end_month ~ ' ' ~ end_day ~ ', ' ~ start_year %}
+  {% else %}
+    {% set dates_formatted = start_month ~ ' ' ~ start_day ~ ', ' ~ start_year ~ ' – ' ~ end_month ~ ' ' ~ end_day ~ ', ' ~ end_year %}
+  {% endif %}
+{% endif %}
+
+{# Location #}
+{% if group.field_subsite_location.value %}
+  {% set location = group.field_subsite_location.value %}
+{% endif %}
+
+{# Registration URL — only when the open/close toggle is on #}
+{% if group.field_subsite_registration_deets.0.entity %}
+  {% set reg_paragraph = group.field_subsite_registration_deets.0.entity %}
+  {% if reg_paragraph.field_subsite_open_close.value and reg_paragraph.field_subsite_registration_link is not empty %}
+    {% set registration_url = reg_paragraph.field_subsite_registration_link.0.uri %}
+  {% endif %}
+{% endif %}
+
+<div{{ attributes.addClass('microsite-micro-banner-details') }}>
+
+  {% if banner_image_url is defined %}
+    <img src="{{ banner_image_url }}" alt="" class="microsite-micro-banner-details__img" aria-hidden="true">
+  {% endif %}
+
+  <div class="microsite-micro-banner-details__overlay">
+    <div class="container">
+      <div class="regcytes-custom-header__inner">
+
+        <div class="regcytes-custom-header__brand">
+          <div class="regcytes-custom-header__info">
+            {% if dates_formatted is defined or location is defined %}
+              <p class="regcytes-custom-header__meta">
+                {{- dates_formatted is defined ? dates_formatted : '' -}}
+                {%- if dates_formatted is defined and location is defined %} &nbsp;·&nbsp; {% endif -%}
+                {{- location is defined ? location : '' -}}
+              </p>
+            {% endif %}
+            {% if label %}
+              <p class="regcytes-custom-header__title">{{ label }}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="regcytes-custom-header__actions">
+          {% if registration_url is defined %}
+            <a href="{{ registration_url }}" class="btn regcytes-register-btn">
+              Register Now <i class="fa-solid fa-angle-right"></i>
+            </a>
+          {% endif %}
+          <button class="navbar-toggler isu-menu-navbar_toggler" type="button" data-toggle="collapse" id="isu-menu-navbar_toggler" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="isu-menu-navbar_toggler-label sr-only">Menu</span>
+            <div class="navbar-toggler-icon isu-menu-navbar_toggler-icon">
+              <span class="mm-line-1"></span>
+              <span class="mm-line-2"></span>
+              <span class="mm-line-3"></span>
+            </div>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

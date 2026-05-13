@@ -32,6 +32,8 @@ function regcytes_preprocess_node(&$variables)
   $bundle = $variables['node']->bundle();
   if (in_array($bundle, ['event_homepage', 'microsite_page'])) {
     $variables['#attached']['library'][] = 'regcytes/regcytes';
+    $variables['#attached']['library'][] = 'regcytes/micro_banner';
+    $variables['#attached']['drupalSettings']['regcytes']['nodeTitle'] = $variables['node']->getTitle();
   }
 }
 
@@ -68,6 +70,10 @@ function regcytes_theme($existing, $type, $theme, $path)
     ],
     'group__event_details' => [
       'template' => 'group--event-details',
+      'base hook' => 'group',
+    ],
+    'group__micro_banner_details' => [
+      'template' => 'group--micro-banner-details',
       'base hook' => 'group',
     ],
   ];
@@ -126,20 +132,13 @@ function regcytes_preprocess_menu__group_menu(array &$variables): void {
       return;
     }
 
-    /*
-    $open_date = $reg_paragraph->get('field_subsite_registration_open')->value;
-    $close_date = $reg_paragraph->get('field_subsite_registration_close')->value;
-    $current_date = date('Y-m-d');
-
-    if ($open_date && $close_date && $open_date <= $current_date && $close_date >= $current_date) {
-    */
-    if ($group->hasField('field_subsite_open_close') && (bool) $group->get('field_subsite_open_close')->value) {
+    if ((bool) $reg_paragraph->get('field_subsite_open_close')->value) {
       $variables['registration_is_open'] = TRUE;
       $variables['registration_url'] = $link_field->first()->getUrl()->toString();
     }
   }
   catch (\Throwable $e) {
-    // Context not available; leave defaults.
+    \Drupal::logger('regcytes')->error('regcytes_preprocess_menu__group_menu failed: @msg', ['@msg' => $e->getMessage()]);
   }
 }
 
@@ -453,6 +452,14 @@ function regcytes_preprocess_page(array &$variables): void {
       return;
     }
 
+    // Vary per URL path and invalidate when the group is saved so toggle
+    // changes (field_subsite_open_close, etc.) are reflected immediately.
+    $variables['#cache']['contexts'][] = 'url.path';
+    $variables['#cache']['tags'] = \Drupal\Core\Cache\Cache::mergeTags(
+      $variables['#cache']['tags'] ?? [],
+      $group->getCacheTags()
+    );
+
     if ($group->hasField('field_hide_default_footer')
       && !$group->get('field_hide_default_footer')->isEmpty()
       && (bool) $group->get('field_hide_default_footer')->value) {
@@ -513,13 +520,7 @@ function regcytes_preprocess_page(array &$variables): void {
         if ($reg_para
             && $reg_para->hasField('field_subsite_registration_link')
             && !$reg_para->get('field_subsite_registration_link')->isEmpty()) {
-          /*
-          $open  = $reg_para->get('field_subsite_registration_open')->value  ?? '';
-          $close = $reg_para->get('field_subsite_registration_close')->value ?? '';
-          $today = date('Y-m-d');
-          if ($open && $open <= $today && (!$close || $close >= $today)) {
-          */
-          if ($group->hasField('field_subsite_open_close') && (bool) $group->get('field_subsite_open_close')->value) {
+          if ((bool) $reg_para->get('field_subsite_open_close')->value) {
             $raw_uri = $reg_para->get('field_subsite_registration_link')->first()->uri;
             try {
               $variables['subsite_registration_url'] = \Drupal\Core\Url::fromUri($raw_uri)->toString();
@@ -561,7 +562,45 @@ function regcytes_preprocess_page(array &$variables): void {
     }
   }
   catch (\Throwable $e) {
-    // Context unavailable — leave defaults.
+    \Drupal::logger('regcytes')->error('regcytes_preprocess_page failed: @msg', ['@msg' => $e->getMessage()]);
+  }
+
+  // On Layout Builder admin routes the path-prefix context never fires because
+  // the URL is /node/{nid}/layout, not the group's alias. Resolve the group
+  // from the node being edited so color custom properties are injected and
+  // blocks preview with the correct group styles.
+  try {
+    if (str_contains(\Drupal::routeMatch()->getRouteName(), 'layout_builder')) {
+      $variables['#attached']['library'][] = 'regcytes/regcytes';
+      $variables['#attached']['library'][] = 'regcytes/micro_banner';
+      $node = \Drupal::routeMatch()->getParameter('node');
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        foreach (\Drupal::entityTypeManager()
+          ->getStorage('group_relationship')
+          ->loadByEntity($node) as $rel) {
+          $group = $rel->getGroup();
+          if (!$group instanceof GroupInterface) {
+            continue;
+          }
+          $css = regcytes_group_color_css($group);
+          if ($css !== '') {
+            $variables['#attached']['html_head'][] = [
+              [
+                '#type'       => 'html_tag',
+                '#tag'        => 'style',
+                '#value'      => $css,
+                '#attributes' => ['data-regcytes-group-colors' => $group->id()],
+              ],
+              'regcytes_group_colors_' . $group->id(),
+            ];
+          }
+          break;
+        }
+      }
+    }
+  }
+  catch (\Throwable $e) {
+    // Group not resolvable on this route — leave defaults.
   }
 }
 
@@ -574,6 +613,7 @@ function regcytes_preprocess_group(array &$variables): void {
   $group = $variables['group'];
   $variables['custom_theme'] = $group->hasField('field_subsite_design_type')
     && $group->get('field_subsite_design_type')->value === 'custom_theme';
+
 }
 
 function regcytes_get_group()

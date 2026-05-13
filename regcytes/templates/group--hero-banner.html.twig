@@ -60,20 +60,12 @@
             </div>
           </div>
 
-          {% if group.field_subsite_open_close.value and group.field_subsite_registration_deets.0.entity %}
+          {% if group.field_subsite_registration_deets.0.entity %}
             {% set reg_paragraph = group.field_subsite_registration_deets.0.entity %}
-            {% if reg_paragraph.field_subsite_registration_link is not empty %}
-              {% set registration_url = reg_paragraph.field_subsite_registration_link.0.uri %}
-              {#
-              {% set registration_open  = reg_paragraph.field_subsite_registration_open.0.value %}
-              {% set registration_close = reg_paragraph.field_subsite_registration_close.0.value %}
-              {% set current_date = "now"|date('Y-m-d') %}
-              {% if registration_open <= current_date and (not registration_close or registration_close >= current_date) %}
-              #}
+            {% if reg_paragraph.field_subsite_open_close.value and reg_paragraph.field_subsite_registration_link is not empty %}
               <div class="microsite-registration">
-                <a class="btn btn-outline-danger" href="{{ registration_url }}">Register Now <i class="fa-solid fa-angle-right"></i></a>
+                <a class="btn btn-outline-danger" href="{{ reg_paragraph.field_subsite_registration_link.0.uri }}">Register Now <i class="fa-solid fa-angle-right"></i></a>
               </div>
-              {# {% endif %} #}
             {% endif %}
           {% endif %}
 

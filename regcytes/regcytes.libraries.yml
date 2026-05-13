@@ -13,6 +13,15 @@ group_autocomplete:
     - core/drupalSettings
     - core/once
 
+micro_banner:
+  js:
+    js/micro-banner.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+
 group_color_picker:
   version: 1.x
   js:
