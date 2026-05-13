@@ -9,6 +9,8 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\group_content_menu\Entity\GroupContentMenu;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
 
 require_once __DIR__ . '/regcytes.group_colors.inc';
 
@@ -243,15 +245,15 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
   if (!preg_match('/^group_.+_(add|edit)_form$/', $form_id)) {
     return;
   }
- 
+
   // Only attach if the color fields are present on this group type.
   if (!isset($form['field_color_enabled'])) {
     return;
   }
- 
+
   $defaults = regcytes_color_defaults();
   $css_map  = regcytes_color_css_map();
- 
+
   $color_fields = [];
   foreach ($css_map as $field => $css_var) {
     $color_fields[] = [
@@ -262,7 +264,7 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
       'isButton'      => str_starts_with($field, 'field_color_btn_'),
     ];
   }
- 
+
   $form['#attached']['library'][] = 'regcytes/group_color_picker';
   $form['#attached']['drupalSettings']['regcytesGroupColors'] = [
     'fields'          => $color_fields,
@@ -688,6 +690,7 @@ function regcytes_group_insert(Group $group)
   ]);
   $node->save();
   $group->addRelationship($node, 'group_node:event_homepage');
+  regcytes_node_auto_add_blocks($node);
 
   // Apply the alias the admin entered on the group form to the event_homepage
   // node so it becomes the public URL (e.g. /conference-slug).
@@ -736,6 +739,7 @@ function regcytes_group_insert(Group $group)
     // Add it to the group using Group 3.x API.
     // Plugin ID format: 'group_node:{node_type}'
     $group->addRelationship($node, 'group_node:' . 'microsite_page');
+    regcytes_node_auto_add_blocks($node);
 
     // Set a pretty alias using the group's homepage alias as the prefix.
     if ($homepage_alias) {
@@ -870,3 +874,108 @@ function regcytes_group_predelete(\Drupal\group\Entity\Group $group) {
   }
 }
 */
+/**
+* Implements hook_ENTITY_TYPE_insert().
+*/
+
+function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $entity)
+{
+  // Get the layout field from the entity.
+  $layout_field = $entity->get('layout_builder__layout');
+  if (!$layout_field) {
+    return;
+  }
+
+    // Get all existing sections.
+  /** @var \Drupal\layout_builder\Section[] $sections */
+  $sections = $layout_field->getSections();
+
+  if (empty($sections)) {
+    //throw new \RuntimeException('No sections found on this entity layout.' . $entity->bundle());
+    //return;
+    $sections[0] = new Section('layout_base_onecol');
+  }
+
+  // Get the first section.
+  $first_section = $sections[0];
+
+  // Weight determines order — find the highest existing weight and add 1.
+  $existing_components = $first_section->getComponents();
+  $max_weight = 0;
+  foreach ($existing_components as $component) {
+    $weight = $component->getWeight();
+    if ($weight >= $max_weight) {
+      $max_weight = $weight + 1;
+    }
+  }
+
+  $title = $entity->getTitle();
+  if ($title == 'Homepage') {
+    $component = regcytes_create_section_component('hero_banner', $max_weight);
+    $first_section->appendComponent($component);
+  } elseif ($title == 'Agenda') {
+    $component = regcytes_create_section_component('micro_banner', $max_weight);
+    $first_section->appendComponent($component);
+    $component = regcytes_create_section_component('agenda', $max_weight + 1);
+    $first_section->appendComponent($component);
+  } else {
+    $component = regcytes_create_section_component('micro_banner', $max_weight);
+    $first_section->appendComponent($component);
+  }
+
+  $sections[0] = $first_section;
+
+  // Save the updated layout back to the entity.
+  $entity->set('layout_builder__layout', $sections);
+  $entity->save();
+}
+
+/**
+* Implements hook_rebuild().
+*/
+
+function regcytes_rebuild() {
+  /*
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->execute();
+  $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
+  foreach ($nodes as $node) {
+    $layout_field = $node->get('layout_builder__layout');
+    $sections = $layout_field->getSections();
+
+    foreach ($sections as $section) {
+      $components = $section->getComponents();
+      foreach ($components as $component) {
+        if ($component->getPluginId() == 'regcytes_group_view_block') {
+          echo $node->id() . ': ' . $component->getUuid() . PHP_EOL;
+          $config = $component->get('configuration');
+          echo $config['view_mode'] . PHP_EOL;
+        }
+      }
+    }
+
+  }
+  */
+}
+
+function regcytes_create_section_component(string $view_mode, int $weight = 0) {
+    // Generate a unique UUID for the new component.
+    $uuid = \Drupal::service('uuid')->generate();
+
+    // Default block configuration.
+    $block_config = [
+      'id' => 'regcytes_group_view_block',
+      'label' => '',
+      'label_display' => FALSE,
+      //'provider' => 'block_content', // adjust to your block's provider
+      'provider' => 'regcytes_group_view_block', // adjust to your block's provider
+      'context_mapping' => [],
+      'view_mode' => $view_mode,
+    ];
+
+    // Create a new SectionComponent (block) and append to the first section.
+    $weight = $weight + 1;
+    $component = new SectionComponent($uuid,'content', $block_config);
+    $component->setWeight($weight);
+
+    return $component;
+}
