@@ -1,16 +1,17 @@
 <?php
 
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\Group;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
+
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\group_content_menu\Entity\GroupContentMenu;
-use Drupal\layout_builder\Section;
-use Drupal\layout_builder\SectionComponent;
 
 require_once __DIR__ . '/regcytes.group_colors.inc';
 
@@ -167,15 +168,6 @@ function regcytes_theme_suggestions_group_alter(array &$suggestions, array $vari
   }
 }
 
-/**
- * Implements hook_path_alias_insert().
- * Implements hook_path_alias_update().
- */
-function regcytes_path_alias_insert(\Drupal\path_alias\Entity\PathAlias $path_alias) {
-}
-
-function regcytes_path_alias_update(\Drupal\path_alias\Entity\PathAlias $path_alias) {
-}
 
 /**
  * Implements hook_form_alter().
@@ -234,8 +226,6 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
     }
   }
 
-    //if ($form_id === 'menu_link_content_menu_link_content_form'
-    //  || $form_id === 'menu_link_content_memu_link_content_edit_form') {
     if (strpos($form_id, 'menu_link_content_') === 0) {
 
     $group = _regcytes_get_group_from_request();
@@ -279,24 +269,6 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
     'enabledSelector' => '[name="field_color_enabled[value]"]',
     'webaim_api_base' => 'https://webaim.org/resources/contrastchecker/',
   ];
-/*
-  // Targets group content menu link add/edit forms.
-  if (in_array($form_id, ['menu_link_content_menu_link_content_form'])) {
-
-    $group = _regcytes_get_group_from_request();
-    echo "I am here";
-    if ($group) {
-      echo "Group is " . $group->id();
-
-      // Store group id for the autocomplete route.
-      $form['link']['widget'][0]['uri']['#autocomplete_route_name'] =
-        'regcytes.group_node_autocomplete';
-      $form['link']['widget'][0]['uri']['#autocomplete_route_parameters'] = [
-        'group' => $group->id(),
-      ];
-    }
-  }
-*/
 }
 
 function regcytes_field_widget_single_element_form_alter(
@@ -646,48 +618,12 @@ function regcytes_preprocess_page_title(array &$variables): void {
   }
 }
 
-function regcytes_get_group()
-{
-  /*
-  $group = null;
-  switch (Drupal::routeMatch()->getRouteName()) {
-    case 'entity.node.canonical':
-      $node = \Drupal::routeMatch()->getParameter('node');
-      if ($node) {
-        $storage = \Drupal::entityTypeManager()->getStorage('group_relationship');
-
-        $group_contents = $storage->loadByProperties([
-          'entity_id' => $node->id(),
-        ]);
-
-        foreach ($group_contents as $gc) {
-          $group = $gc->getGroup();
-          $gid = $group->id();
-        }
-      }
-      break;
-    case 'entity.group.canonical':
-    case 'view.group_nodes.page_1':
-      $group = Drupal::routeMatch()->getParameter('group');
-      if ($group instanceof Group) {
-        $gid = $group->id();
-      }
-      break;
-    default:
-      break;
-  }
-
-  return $group;
-  */
-}
 function _regcytes_get_group_from_request() {
   $request = \Drupal::request();
 
   // group_content_menu passes ?destination= or is accessed via
   // /group/{group}/content paths — check route params first.
   $route_match = \Drupal::routeMatch();
-//\Drupal::messenger()->addMessage('Route name: ' . $route_match->getRouteName());
-//\Drupal::messenger()->addMessage('Raw params: ' . print_r($route_match->getRawParameters()->all(), TRUE));
 
   $group = $route_match->getParameter('group');
   if ($group instanceof \Drupal\group\Entity\GroupInterface) {
@@ -876,33 +812,6 @@ function _regcytes_upsert_alias(string $system_path, string $new_alias, $path_al
 }
 
 /**
- * Implements hook_ENTITY_TYPE_predelete() for group entities.
- */
-/*
-function regcytes_group_predelete(\Drupal\group\Entity\Group $group) {
-  Drupal::messenger()->addStatus('I am here now: ' . count($group->getRelationships()));
-  foreach ($group->getRelationships() as $relationship) {
-    Drupal::messenger()->addStatus('Got a relationship');
-    $entity = $relationship->getEntity();
-
-    if (!($entity instanceof \Drupal\node\Entity\Node)) {
-      continue;
-    }
-
-    // Check if this node belongs to any other groups.
-    $other_groups = \Drupal::service('group.membership_loader')
-      ->loadByEntity($entity);
-
-      Drupal::messenger()->addStatus($entity->id() . ': ' . count($other_groups));
-
-    // Only delete if this was the node's only group.
-    if (count($other_groups) <= 1) {
-      $entity->delete();
-    }
-  }
-}
-*/
-/**
 * Implements hook_ENTITY_TYPE_insert().
 */
 
@@ -958,32 +867,6 @@ function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $enti
   $entity->save();
 }
 
-/**
-* Implements hook_rebuild().
-*/
-
-function regcytes_rebuild() {
-  /*
-  $nids = \Drupal::entityQuery('node')->accessCheck(false)->execute();
-  $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
-  foreach ($nodes as $node) {
-    $layout_field = $node->get('layout_builder__layout');
-    $sections = $layout_field->getSections();
-
-    foreach ($sections as $section) {
-      $components = $section->getComponents();
-      foreach ($components as $component) {
-        if ($component->getPluginId() == 'regcytes_group_view_block') {
-          echo $node->id() . ': ' . $component->getUuid() . PHP_EOL;
-          $config = $component->get('configuration');
-          echo $config['view_mode'] . PHP_EOL;
-        }
-      }
-    }
-
-  }
-  */
-}
 
 function regcytes_create_section_component(string $view_mode, int $weight = 0) {
     // Generate a unique UUID for the new component.
