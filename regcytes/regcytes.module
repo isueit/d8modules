@@ -176,7 +176,6 @@ function regcytes_theme_suggestions_group_alter(array &$suggestions, array $vari
  */
 function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
 {
-  //\Drupal::messenger()->addMessage('Form ID: ' . $form_id);
   // Target group add/edit forms. Optionally restrict to a specific group type:
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
   if (preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
@@ -851,12 +850,12 @@ function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $enti
     $component = regcytes_create_section_component('hero_banner', $max_weight);
     $first_section->appendComponent($component);
   } elseif ($title == 'Agenda') {
-    $component = regcytes_create_section_component('micro_banner', $max_weight);
+    $component = regcytes_create_section_component('micro_banner_details', $max_weight);
     $first_section->appendComponent($component);
     $component = regcytes_create_section_component('agenda', $max_weight + 1);
     $first_section->appendComponent($component);
   } else {
-    $component = regcytes_create_section_component('micro_banner', $max_weight);
+    $component = regcytes_create_section_component('micro_banner_details', $max_weight);
     $first_section->appendComponent($component);
   }
 

@@ -27,7 +27,9 @@
   {% set end_day   = end_date|date('j') %}
   {% set end_year  = end_date|date('Y') %}
 
-  {% if start_month == end_month and start_year == end_year %}
+  {% if start_month == end_month and start_year == end_year and start_day == end_day %}
+    {% set dates_formatted = start_month ~ ' ' ~ start_day ~ ', ' ~ start_year %}
+  {% elseif start_month == end_month and start_year == end_year %}
     {% set dates_formatted = start_month ~ ' ' ~ start_day ~ '–' ~ end_day ~ ', ' ~ start_year %}
   {% elseif start_year == end_year %}
     {% set dates_formatted = start_month ~ ' ' ~ start_day ~ ' – ' ~ end_month ~ ' ' ~ end_day ~ ', ' ~ start_year %}
