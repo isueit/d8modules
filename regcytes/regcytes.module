@@ -35,7 +35,15 @@ function regcytes_preprocess_node(&$variables)
   if (in_array($bundle, ['event_homepage', 'microsite_page'])) {
     $variables['#attached']['library'][] = 'regcytes/regcytes';
     $variables['#attached']['library'][] = 'regcytes/micro_banner';
-    $variables['#attached']['drupalSettings']['regcytes']['nodeTitle'] = $variables['node']->getTitle();
+    $node = $variables['node'];
+    $excluded = FALSE;
+    try {
+      $excluded = \Drupal::service('exclude_node_title.manager')->isTitleExcluded($node);
+    }
+    catch (\Throwable $e) {}
+    if (!$excluded) {
+      $variables['#attached']['drupalSettings']['regcytes']['nodeTitle'] = $node->getTitle();
+    }
   }
 }
 
@@ -616,6 +624,26 @@ function regcytes_preprocess_group(array &$variables): void {
   $variables['custom_theme'] = $group->hasField('field_subsite_design_type')
     && $group->get('field_subsite_design_type')->value === 'custom_theme';
 
+}
+
+/**
+ * Implements hook_preprocess_page_title().
+ *
+ * Suppresses the page title for nodes that have "Exclude node title" enabled.
+ */
+function regcytes_preprocess_page_title(array &$variables): void {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+  try {
+    if (\Drupal::service('exclude_node_title.manager')->isTitleExcluded($node)) {
+      $variables['title'] = '';
+    }
+  }
+  catch (\Throwable $e) {
+    // Service unavailable — do nothing.
+  }
 }
 
 function regcytes_get_group()
