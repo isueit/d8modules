@@ -1,16 +1,17 @@
 <?php
 
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\Group;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
+
+use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\group_content_menu\Entity\GroupContentMenu;
-use Drupal\layout_builder\Section;
-use Drupal\layout_builder\SectionComponent;
 
 require_once __DIR__ . '/regcytes.group_colors.inc';
 
@@ -20,7 +21,8 @@ require_once __DIR__ . '/regcytes.group_colors.inc';
  * Prevent pathauto from ever auto-generating an alias for event_homepage nodes.
  * Their URL is the group's alias; the node itself has no independent public URL.
  */
-function regcytes_node_presave(\Drupal\node\NodeInterface $node): void {
+function regcytes_node_presave(\Drupal\node\NodeInterface $node): void
+{
   if (in_array($node->bundle(), ['event_homepage', 'microsite_page'])) {
     $node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
   }
@@ -39,8 +41,8 @@ function regcytes_preprocess_node(&$variables)
     $excluded = FALSE;
     try {
       $excluded = \Drupal::service('exclude_node_title.manager')->isTitleExcluded($node);
+    } catch (\Throwable $e) {
     }
-    catch (\Throwable $e) {}
     if (!$excluded) {
       $variables['#attached']['drupalSettings']['regcytes']['nodeTitle'] = $node->getTitle();
     }
@@ -102,7 +104,8 @@ function regcytes_theme($existing, $type, $theme, $path)
  * Passes registration open/closed state to the template so the Register link
  * can be shown only when registration is active.
  */
-function regcytes_preprocess_menu__group_menu(array &$variables): void {
+function regcytes_preprocess_menu__group_menu(array &$variables): void
+{
   $variables['registration_is_open'] = FALSE;
   $variables['registration_url'] = '';
 
@@ -146,8 +149,7 @@ function regcytes_preprocess_menu__group_menu(array &$variables): void {
       $variables['registration_is_open'] = TRUE;
       $variables['registration_url'] = $link_field->first()->getUrl()->toString();
     }
-  }
-  catch (\Throwable $e) {
+  } catch (\Throwable $e) {
     \Drupal::logger('regcytes')->error('regcytes_preprocess_menu__group_menu failed: @msg', ['@msg' => $e->getMessage()]);
   }
 }
@@ -155,7 +157,8 @@ function regcytes_preprocess_menu__group_menu(array &$variables): void {
 /**
  * Implements hook_theme_suggestions_group_alter().
  */
-function regcytes_theme_suggestions_group_alter(array &$suggestions, array $variables) {
+function regcytes_theme_suggestions_group_alter(array &$suggestions, array $variables)
+{
   $view_mode = $variables['elements']['#view_mode'] ?? NULL;
   if (!$view_mode) {
     return;
@@ -167,15 +170,6 @@ function regcytes_theme_suggestions_group_alter(array &$suggestions, array $vari
   }
 }
 
-/**
- * Implements hook_path_alias_insert().
- * Implements hook_path_alias_update().
- */
-function regcytes_path_alias_insert(\Drupal\path_alias\Entity\PathAlias $path_alias) {
-}
-
-function regcytes_path_alias_update(\Drupal\path_alias\Entity\PathAlias $path_alias) {
-}
 
 /**
  * Implements hook_form_alter().
@@ -184,7 +178,6 @@ function regcytes_path_alias_update(\Drupal\path_alias\Entity\PathAlias $path_al
  */
 function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
 {
-  //\Drupal::messenger()->addMessage('Form ID: ' . $form_id);
   // Target group add/edit forms. Optionally restrict to a specific group type:
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
   if (preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
@@ -216,9 +209,11 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
       if ($form_object instanceof \Drupal\Core\Entity\EntityFormInterface) {
         $group_entity = $form_object->getEntity();
         if (!$group_entity->isNew()) {
-          foreach (\Drupal::entityTypeManager()
-            ->getStorage('group_relationship')
-            ->loadByProperties(['gid' => $group_entity->id()]) as $rel) {
+          foreach (
+            \Drupal::entityTypeManager()
+              ->getStorage('group_relationship')
+              ->loadByProperties(['gid' => $group_entity->id()]) as $rel
+          ) {
             $node = $rel->getEntity();
             if ($node->getEntityTypeId() === 'node' && $node->bundle() === 'event_homepage') {
               $current = \Drupal::service('path_alias.manager')
@@ -234,22 +229,20 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
     }
   }
 
-    //if ($form_id === 'menu_link_content_menu_link_content_form'
-    //  || $form_id === 'menu_link_content_memu_link_content_edit_form') {
-    if (strpos($form_id, 'menu_link_content_') === 0) {
+  if (strpos($form_id, 'menu_link_content_') === 0) {
 
     $group = _regcytes_get_group_from_request();
     if ($group) {
 
-    $url = \Drupal\Core\Url::fromRoute('regcytes.group_node_autocomplete', ['group' => $group->id()])
-      ->toString();
+      $url = \Drupal\Core\Url::fromRoute('regcytes.group_node_autocomplete', ['group' => $group->id()])
+        ->toString();
 
-    $form['#attached']['library'][] = 'regcytes/group_autocomplete';
-    $form['#attached']['drupalSettings']['regcytes']['groupAutocompleteUrl'] = $url;
+      $form['#attached']['library'][] = 'regcytes/group_autocomplete';
+      $form['#attached']['drupalSettings']['regcytes']['groupAutocompleteUrl'] = $url;
     }
-    }
+  }
 
-    // Target group entity add/edit forms only.
+  // Target group entity add/edit forms only.
   if (!preg_match('/^group_.+_(add|edit)_form$/', $form_id)) {
     return;
   }
@@ -279,24 +272,6 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
     'enabledSelector' => '[name="field_color_enabled[value]"]',
     'webaim_api_base' => 'https://webaim.org/resources/contrastchecker/',
   ];
-/*
-  // Targets group content menu link add/edit forms.
-  if (in_array($form_id, ['menu_link_content_menu_link_content_form'])) {
-
-    $group = _regcytes_get_group_from_request();
-    echo "I am here";
-    if ($group) {
-      echo "Group is " . $group->id();
-
-      // Store group id for the autocomplete route.
-      $form['link']['widget'][0]['uri']['#autocomplete_route_name'] =
-        'regcytes.group_node_autocomplete';
-      $form['link']['widget'][0]['uri']['#autocomplete_route_parameters'] = [
-        'group' => $group->id(),
-      ];
-    }
-  }
-*/
 }
 
 function regcytes_field_widget_single_element_form_alter(
@@ -304,27 +279,26 @@ function regcytes_field_widget_single_element_form_alter(
   \Drupal\Core\Form\FormStateInterface $form_state,
   array $context
 ) {
-    $field_definition = $context['items']->getFieldDefinition();
+  $field_definition = $context['items']->getFieldDefinition();
 
-    if ($field_definition->getName() !== 'link') {
-      return;
-    }
-    if ($field_definition->getTargetEntityTypeId() !== 'menu_link_content') {
-      return;
-    }
+  if ($field_definition->getName() !== 'link') {
+    return;
+  }
+  if ($field_definition->getTargetEntityTypeId() !== 'menu_link_content') {
+    return;
+  }
 
-    $group = _regcytes_get_group_from_request();
-    if (!$group) {
-      return;
-    }
+  $group = _regcytes_get_group_from_request();
+  if (!$group) {
+    return;
+  }
 
-    // Keep this in case it ever starts working, but the real
-    // override is now done via JS attached in hook_form_alter.
-    $element['uri']['#autocomplete_route_name'] = 'regcytes.group_node_autocomplete';
-    $element['uri']['#autocomplete_route_parameters'] = [
-      'group' => $group->id(),
-    ];
-
+  // Keep this in case it ever starts working, but the real
+  // override is now done via JS attached in hook_form_alter.
+  $element['uri']['#autocomplete_route_name'] = 'regcytes.group_node_autocomplete';
+  $element['uri']['#autocomplete_route_parameters'] = [
+    'group' => $group->id(),
+  ];
 }
 
 
@@ -332,7 +306,8 @@ function regcytes_field_widget_single_element_form_alter(
 /**
  * #after_build callback — moves all field descriptions above the input.
  */
-function regcytes_group_form_after_build(array $form, \Drupal\Core\Form\FormStateInterface $form_state): array {
+function regcytes_group_form_after_build(array $form, \Drupal\Core\Form\FormStateInterface $form_state): array
+{
   _regcytes_description_before($form);
   return $form;
 }
@@ -340,7 +315,8 @@ function regcytes_group_form_after_build(array $form, \Drupal\Core\Form\FormStat
 /**
  * Recursively sets #description_display to 'before' on all form elements.
  */
-function _regcytes_description_before(array &$element): void {
+function _regcytes_description_before(array &$element): void
+{
   foreach (array_keys($element) as $key) {
     if ((is_string($key) && $key[0] === '#') || !is_array($element[$key])) {
       continue;
@@ -372,7 +348,8 @@ function regcytes_group_alias_required_validate(&$form, \Drupal\Core\Form\FormSt
  * Stash/retrieve the alias the admin typed on a group form.
  * Used to bridge group_presave → group_insert/group_update.
  */
-function &_regcytes_alias_store(): array {
+function &_regcytes_alias_store(): array
+{
   static $store = ['alias' => NULL];
   return $store;
 }
@@ -384,7 +361,8 @@ function &_regcytes_alias_store(): array {
  * group itself never gets a Drupal path alias, and stash it for group_insert /
  * group_update to apply to the event_homepage node instead.
  */
-function regcytes_group_presave(\Drupal\group\Entity\Group $group): void {
+function regcytes_group_presave(\Drupal\group\Entity\Group $group): void
+{
   if ($group->bundle() !== 'isu_event_website') {
     return;
   }
@@ -408,7 +386,8 @@ function regcytes_group_presave(\Drupal\group\Entity\Group $group): void {
  * Adds a 'group-site' body class on any page within a group URL prefix so
  * theme CSS can suppress the global site name in the navbar.
  */
-function regcytes_preprocess_html(array &$variables): void {
+function regcytes_preprocess_html(array &$variables): void
+{
   try {
     $contexts = \Drupal::service('regcytes.path_prefix_context')
       ->getRuntimeContexts(['group']);
@@ -420,13 +399,14 @@ function regcytes_preprocess_html(array &$variables): void {
     $group = $contexts['group']->getContextValue();
     if ($group instanceof GroupInterface) {
       $variables['attributes']['class'][] = 'group-site';
-      if ($group->hasField('field_subsite_design_type')
-          && $group->get('field_subsite_design_type')->value === 'custom_theme') {
+      if (
+        $group->hasField('field_subsite_design_type')
+        && $group->get('field_subsite_design_type')->value === 'custom_theme'
+      ) {
         $variables['attributes']['class'][] = 'custom-theme';
       }
     }
-  }
-  catch (\Throwable $e) {
+  } catch (\Throwable $e) {
     // Context unavailable — do nothing.
   }
 }
@@ -437,7 +417,8 @@ function regcytes_preprocess_html(array &$variables): void {
  * Passes hide_default_footer and subsite_contact to page templates based on
  * the current group resolved via the regcytes path-prefix context.
  */
-function regcytes_preprocess_page(array &$variables): void {
+function regcytes_preprocess_page(array &$variables): void
+{
   $variables['hide_default_footer'] = FALSE;
   $variables['show_site_contact_info'] = FALSE;
   $variables['subsite_contact'] = NULL;
@@ -470,9 +451,11 @@ function regcytes_preprocess_page(array &$variables): void {
       $group->getCacheTags()
     );
 
-    if ($group->hasField('field_hide_default_footer')
+    if (
+      $group->hasField('field_hide_default_footer')
       && !$group->get('field_hide_default_footer')->isEmpty()
-      && (bool) $group->get('field_hide_default_footer')->value) {
+      && (bool) $group->get('field_hide_default_footer')->value
+    ) {
       $variables['hide_default_footer'] = TRUE;
     }
 
@@ -487,8 +470,10 @@ function regcytes_preprocess_page(array &$variables): void {
     if ($is_custom) {
 
       // Logo.
-      if ($group->hasField('field_subsite_logo_graphic')
-          && !$group->get('field_subsite_logo_graphic')->isEmpty()) {
+      if (
+        $group->hasField('field_subsite_logo_graphic')
+        && !$group->get('field_subsite_logo_graphic')->isEmpty()
+      ) {
         $logo_item   = $group->get('field_subsite_logo_graphic')->first();
         $logo_entity = $logo_item ? $logo_item->entity : NULL;
         if ($logo_entity) {
@@ -499,43 +484,52 @@ function regcytes_preprocess_page(array &$variables): void {
       }
 
       // Formatted date range.
-      if ($group->hasField('field_subsite_dates')
-          && !$group->get('field_subsite_dates')->isEmpty()) {
+      if (
+        $group->hasField('field_subsite_dates')
+        && !$group->get('field_subsite_dates')->isEmpty()
+      ) {
         $di    = $group->get('field_subsite_dates')->first();
         $start = new \DateTime($di->value);
         $end   = new \DateTime($di->end_value);
-        $sm = $start->format('F'); $sd = $start->format('j'); $sy = $start->format('Y');
-        $em = $end->format('F');   $ed = $end->format('j');   $ey = $end->format('Y');
+        $sm = $start->format('F');
+        $sd = $start->format('j');
+        $sy = $start->format('Y');
+        $em = $end->format('F');
+        $ed = $end->format('j');
+        $ey = $end->format('Y');
         if ($sm === $em && $sy === $ey) {
           $variables['subsite_dates_formatted'] = "{$sm} {$sd}–{$ed}, {$sy}";
-        }
-        elseif ($sy === $ey) {
+        } elseif ($sy === $ey) {
           $variables['subsite_dates_formatted'] = "{$sm} {$sd} – {$em} {$ed}, {$sy}";
-        }
-        else {
+        } else {
           $variables['subsite_dates_formatted'] = "{$sm} {$sd}, {$sy} – {$em} {$ed}, {$ey}";
         }
       }
 
       // Location.
-      if ($group->hasField('field_subsite_location')
-          && !$group->get('field_subsite_location')->isEmpty()) {
+      if (
+        $group->hasField('field_subsite_location')
+        && !$group->get('field_subsite_location')->isEmpty()
+      ) {
         $variables['subsite_location'] = $group->get('field_subsite_location')->value;
       }
 
       // Registration URL if window is currently open.
-      if ($group->hasField('field_subsite_registration_deets')
-          && !$group->get('field_subsite_registration_deets')->isEmpty()) {
+      if (
+        $group->hasField('field_subsite_registration_deets')
+        && !$group->get('field_subsite_registration_deets')->isEmpty()
+      ) {
         $reg_para = $group->get('field_subsite_registration_deets')->first()->entity;
-        if ($reg_para
-            && $reg_para->hasField('field_subsite_registration_link')
-            && !$reg_para->get('field_subsite_registration_link')->isEmpty()) {
+        if (
+          $reg_para
+          && $reg_para->hasField('field_subsite_registration_link')
+          && !$reg_para->get('field_subsite_registration_link')->isEmpty()
+        ) {
           if ((bool) $reg_para->get('field_subsite_open_close')->value) {
             $raw_uri = $reg_para->get('field_subsite_registration_link')->first()->uri;
             try {
               $variables['subsite_registration_url'] = \Drupal\Core\Url::fromUri($raw_uri)->toString();
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
               $variables['subsite_registration_url'] = $raw_uri;
             }
           }
@@ -547,8 +541,10 @@ function regcytes_preprocess_page(array &$variables): void {
       $variables['show_site_contact_info'] = TRUE;
 
       $variables['subsite_contacts'] = [];
-      if ($group->hasField('field_subsite_contact')
-        && !$group->get('field_subsite_contact')->isEmpty()) {
+      if (
+        $group->hasField('field_subsite_contact')
+        && !$group->get('field_subsite_contact')->isEmpty()
+      ) {
         foreach ($group->get('field_subsite_contact') as $item) {
           if ($item->entity) {
             $variables['subsite_contacts'][] = $item->entity;
@@ -570,8 +566,7 @@ function regcytes_preprocess_page(array &$variables): void {
         'regcytes_group_colors_' . $group->id(),
       ];
     }
-  }
-  catch (\Throwable $e) {
+  } catch (\Throwable $e) {
     \Drupal::logger('regcytes')->error('regcytes_preprocess_page failed: @msg', ['@msg' => $e->getMessage()]);
   }
 
@@ -585,9 +580,11 @@ function regcytes_preprocess_page(array &$variables): void {
       $variables['#attached']['library'][] = 'regcytes/micro_banner';
       $node = \Drupal::routeMatch()->getParameter('node');
       if ($node instanceof \Drupal\node\NodeInterface) {
-        foreach (\Drupal::entityTypeManager()
-          ->getStorage('group_relationship')
-          ->loadByEntity($node) as $rel) {
+        foreach (
+          \Drupal::entityTypeManager()
+            ->getStorage('group_relationship')
+            ->loadByEntity($node) as $rel
+        ) {
           $group = $rel->getGroup();
           if (!$group instanceof GroupInterface) {
             continue;
@@ -608,8 +605,7 @@ function regcytes_preprocess_page(array &$variables): void {
         }
       }
     }
-  }
-  catch (\Throwable $e) {
+  } catch (\Throwable $e) {
     // Group not resolvable on this route — leave defaults.
   }
 }
@@ -619,11 +615,11 @@ function regcytes_preprocess_page(array &$variables): void {
  *
  * Passes custom_theme flag to group entity templates (e.g. hero banner).
  */
-function regcytes_preprocess_group(array &$variables): void {
+function regcytes_preprocess_group(array &$variables): void
+{
   $group = $variables['group'];
   $variables['custom_theme'] = $group->hasField('field_subsite_design_type')
     && $group->get('field_subsite_design_type')->value === 'custom_theme';
-
 }
 
 /**
@@ -631,7 +627,8 @@ function regcytes_preprocess_group(array &$variables): void {
  *
  * Suppresses the page title for nodes that have "Exclude node title" enabled.
  */
-function regcytes_preprocess_page_title(array &$variables): void {
+function regcytes_preprocess_page_title(array &$variables): void
+{
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!$node instanceof \Drupal\node\NodeInterface) {
     return;
@@ -640,54 +637,18 @@ function regcytes_preprocess_page_title(array &$variables): void {
     if (\Drupal::service('exclude_node_title.manager')->isTitleExcluded($node)) {
       $variables['title'] = '';
     }
-  }
-  catch (\Throwable $e) {
+  } catch (\Throwable $e) {
     // Service unavailable — do nothing.
   }
 }
 
-function regcytes_get_group()
+function _regcytes_get_group_from_request()
 {
-  /*
-  $group = null;
-  switch (Drupal::routeMatch()->getRouteName()) {
-    case 'entity.node.canonical':
-      $node = \Drupal::routeMatch()->getParameter('node');
-      if ($node) {
-        $storage = \Drupal::entityTypeManager()->getStorage('group_relationship');
-
-        $group_contents = $storage->loadByProperties([
-          'entity_id' => $node->id(),
-        ]);
-
-        foreach ($group_contents as $gc) {
-          $group = $gc->getGroup();
-          $gid = $group->id();
-        }
-      }
-      break;
-    case 'entity.group.canonical':
-    case 'view.group_nodes.page_1':
-      $group = Drupal::routeMatch()->getParameter('group');
-      if ($group instanceof Group) {
-        $gid = $group->id();
-      }
-      break;
-    default:
-      break;
-  }
-
-  return $group;
-  */
-}
-function _regcytes_get_group_from_request() {
   $request = \Drupal::request();
 
   // group_content_menu passes ?destination= or is accessed via
   // /group/{group}/content paths — check route params first.
   $route_match = \Drupal::routeMatch();
-//\Drupal::messenger()->addMessage('Route name: ' . $route_match->getRouteName());
-//\Drupal::messenger()->addMessage('Raw params: ' . print_r($route_match->getRawParameters()->all(), TRUE));
 
   $group = $route_match->getParameter('group');
   if ($group instanceof \Drupal\group\Entity\GroupInterface) {
@@ -746,12 +707,12 @@ function regcytes_group_insert(Group $group)
   $menu_name = null;
   $menus = $group->getRelationships('group_content_menu:microsite_menu');
   if (!empty($menus)) {
-      // Get the first (usually only) menu for this group.
-      $relationship = reset($menus);
-      $menu_entity  = $relationship->getEntity();
+    // Get the first (usually only) menu for this group.
+    $relationship = reset($menus);
+    $menu_entity  = $relationship->getEntity();
 
-      // The menu name used by MenuLinkContent is derived from the entity ID.
-      $menu_name = 'group_menu_link_content-' . $menu_entity->id();
+    // The menu name used by MenuLinkContent is derived from the entity ID.
+    $menu_name = 'group_menu_link_content-' . $menu_entity->id();
   }
 
   // Step through each of the selected labels
@@ -790,7 +751,6 @@ function regcytes_group_insert(Group $group)
       ])->save();
       $weight += 5;
     }
-
   }
 }
 
@@ -800,7 +760,8 @@ function regcytes_group_insert(Group $group)
  * When an existing group is saved with a new alias, apply it to the
  * event_homepage node and remove any lingering alias from the group itself.
  */
-function regcytes_group_update(Group $group): void {
+function regcytes_group_update(Group $group): void
+{
   if ($group->bundle() !== 'isu_event_website') {
     return;
   }
@@ -823,9 +784,11 @@ function regcytes_group_update(Group $group): void {
   $alias_cleaner = \Drupal::service('pathauto.alias_cleaner');
   $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
 
-  foreach (\Drupal::entityTypeManager()
-    ->getStorage('group_relationship')
-    ->loadByProperties(['gid' => $group->id()]) as $relationship) {
+  foreach (
+    \Drupal::entityTypeManager()
+      ->getStorage('group_relationship')
+      ->loadByProperties(['gid' => $group->id()]) as $relationship
+  ) {
     $entity = $relationship->getEntity();
     if ($entity->getEntityTypeId() !== 'node') {
       continue;
@@ -833,8 +796,7 @@ function regcytes_group_update(Group $group): void {
 
     if ($entity->bundle() === 'event_homepage') {
       _regcytes_upsert_alias('/node/' . $entity->id(), $alias, $path_alias_storage);
-    }
-    elseif ($entity->bundle() === 'microsite_page') {
+    } elseif ($entity->bundle() === 'microsite_page') {
       $slug = $alias_cleaner->cleanString($entity->getTitle());
       _regcytes_upsert_alias('/node/' . $entity->id(), $alias . '/' . $slug, $path_alias_storage);
     }
@@ -847,7 +809,8 @@ function regcytes_group_update(Group $group): void {
  * Using an update instead of delete+create avoids tripping Drupal's path_alias
  * unique constraint when the same alias is saved more than once in a request.
  */
-function _regcytes_upsert_alias(string $system_path, string $new_alias, $path_alias_storage): void {
+function _regcytes_upsert_alias(string $system_path, string $new_alias, $path_alias_storage): void
+{
   $existing = $path_alias_storage->loadByProperties([
     'path'     => $system_path,
     'langcode' => 'en',
@@ -865,8 +828,7 @@ function _regcytes_upsert_alias(string $system_path, string $new_alias, $path_al
     }
     $alias_entity->setAlias($new_alias);
     $alias_entity->save();
-  }
-  else {
+  } else {
     \Drupal\path_alias\Entity\PathAlias::create([
       'path'     => $system_path,
       'alias'    => $new_alias,
@@ -876,35 +838,8 @@ function _regcytes_upsert_alias(string $system_path, string $new_alias, $path_al
 }
 
 /**
- * Implements hook_ENTITY_TYPE_predelete() for group entities.
+ * Implements hook_ENTITY_TYPE_insert().
  */
-/*
-function regcytes_group_predelete(\Drupal\group\Entity\Group $group) {
-  Drupal::messenger()->addStatus('I am here now: ' . count($group->getRelationships()));
-  foreach ($group->getRelationships() as $relationship) {
-    Drupal::messenger()->addStatus('Got a relationship');
-    $entity = $relationship->getEntity();
-
-    if (!($entity instanceof \Drupal\node\Entity\Node)) {
-      continue;
-    }
-
-    // Check if this node belongs to any other groups.
-    $other_groups = \Drupal::service('group.membership_loader')
-      ->loadByEntity($entity);
-
-      Drupal::messenger()->addStatus($entity->id() . ': ' . count($other_groups));
-
-    // Only delete if this was the node's only group.
-    if (count($other_groups) <= 1) {
-      $entity->delete();
-    }
-  }
-}
-*/
-/**
-* Implements hook_ENTITY_TYPE_insert().
-*/
 
 function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $entity)
 {
@@ -942,12 +877,12 @@ function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $enti
     $component = regcytes_create_section_component('hero_banner', $max_weight);
     $first_section->appendComponent($component);
   } elseif ($title == 'Agenda') {
-    $component = regcytes_create_section_component('micro_banner', $max_weight);
+    $component = regcytes_create_section_component('micro_banner_details', $max_weight);
     $first_section->appendComponent($component);
     $component = regcytes_create_section_component('agenda', $max_weight + 1);
     $first_section->appendComponent($component);
   } else {
-    $component = regcytes_create_section_component('micro_banner', $max_weight);
+    $component = regcytes_create_section_component('micro_banner_details', $max_weight);
     $first_section->appendComponent($component);
   }
 
@@ -958,52 +893,27 @@ function regcytes_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $enti
   $entity->save();
 }
 
-/**
-* Implements hook_rebuild().
-*/
 
-function regcytes_rebuild() {
-  /*
-  $nids = \Drupal::entityQuery('node')->accessCheck(false)->execute();
-  $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
-  foreach ($nodes as $node) {
-    $layout_field = $node->get('layout_builder__layout');
-    $sections = $layout_field->getSections();
+function regcytes_create_section_component(string $view_mode, int $weight = 0)
+{
+  // Generate a unique UUID for the new component.
+  $uuid = \Drupal::service('uuid')->generate();
 
-    foreach ($sections as $section) {
-      $components = $section->getComponents();
-      foreach ($components as $component) {
-        if ($component->getPluginId() == 'regcytes_group_view_block') {
-          echo $node->id() . ': ' . $component->getUuid() . PHP_EOL;
-          $config = $component->get('configuration');
-          echo $config['view_mode'] . PHP_EOL;
-        }
-      }
-    }
+  // Default block configuration.
+  $block_config = [
+    'id' => 'regcytes_group_view_block',
+    'label' => '',
+    'label_display' => FALSE,
+    //'provider' => 'block_content', // adjust to your block's provider
+    'provider' => 'regcytes_group_view_block', // adjust to your block's provider
+    'context_mapping' => [],
+    'view_mode' => $view_mode,
+  ];
 
-  }
-  */
-}
+  // Create a new SectionComponent (block) and append to the first section.
+  $weight = $weight + 1;
+  $component = new SectionComponent($uuid, 'content', $block_config);
+  $component->setWeight($weight);
 
-function regcytes_create_section_component(string $view_mode, int $weight = 0) {
-    // Generate a unique UUID for the new component.
-    $uuid = \Drupal::service('uuid')->generate();
-
-    // Default block configuration.
-    $block_config = [
-      'id' => 'regcytes_group_view_block',
-      'label' => '',
-      'label_display' => FALSE,
-      //'provider' => 'block_content', // adjust to your block's provider
-      'provider' => 'regcytes_group_view_block', // adjust to your block's provider
-      'context_mapping' => [],
-      'view_mode' => $view_mode,
-    ];
-
-    // Create a new SectionComponent (block) and append to the first section.
-    $weight = $weight + 1;
-    $component = new SectionComponent($uuid,'content', $block_config);
-    $component->setWeight($weight);
-
-    return $component;
+  return $component;
 }
