@@ -20,7 +20,7 @@ function contact_creator_install()
   $block = Block::create([
     'id' => 'contact_us',
     'plugin' => 'block_content:' . $block_content->uuid(),
-    'region' => 'footer_third',
+    'region' => 'footer_forth',
     'provider' => 'block_content',
     'weight' => -100,
     'theme' => \Drupal::config('system.theme')->get('default'),
