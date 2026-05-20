@@ -165,6 +165,21 @@ body.custom-theme .isu-menu-navbar .nav-item.active > .isu-nav-link {
     align-items: center;
     overflow: hidden;
 }
+.microsite-hero-wrapper--no-image {
+    justify-content: flex-start;
+}
+.microsite-hero-wrapper--no-image .microsite-hero-label-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.microsite-hero-wrapper--no-image .microsite-hero-logo__img {
+    display: inline-block;
+}
+.microsite-hero-wrapper--no-image .microsite-event-details--wrapper {
+    justify-content: left;
+}
 .microsite-hero-label-wrapper.isueo-callout-stat {
     background-color: var(--color-primary, #c8102e);
     text-align: center;
@@ -212,15 +227,11 @@ body.custom-theme .isu-menu-navbar .nav-item.active > .isu-nav-link {
     padding-right: .5rem;
 }
 /* No hero image — outer wrapper becomes the primary color background. */
-.microsite-hero-wrapper--no-image {
+.microsite-hero-wrapper--no-image, .microsite-micro-banner-details--no-image, .microsite-micro-banner--no-image {
     background-color: var(--color-primary, var(--primary-color));
 }
-/* When there's no image the callout would blend into the same primary background,
-   so strip its fill and use an accent border to visually separate it. */
-.microsite-hero-wrapper--no-image .microsite-hero-label-wrapper.isueo-callout-stat {
-    background-color: transparent;
-    border: 3px solid var(--color-accent, #f1be48);
-    border-radius: 4px;
+.microsite-micro-banner-details--no-image::after {
+    display: none;
 }
 
 .microsite-event-website header.isu-wordmark-sitename,
@@ -308,7 +319,7 @@ body.group-site header.isu-wordmark-sitename {
     object-fit: cover;
 }
 .microsite-micro-banner-details--no-image {
-    min-height: 8vh;
+    min-height: 20vh;
     max-height: 30vh;
 }
 /* Tint pseudo-element sits above the img, below the text overlay */
