@@ -838,6 +838,58 @@ function _regcytes_upsert_alias(string $system_path, string $new_alias, $path_al
 }
 
 /**
+ * Implements hook_group_relationship_insert().
+ *
+ * When a microsite_page node is added to an isu_event_website group after the
+ * initial group creation, assign it a path alias using the group's homepage
+ * alias as the prefix.
+ */
+function regcytes_group_relationship_insert(\Drupal\group\Entity\GroupRelationshipInterface $relationship): void
+{
+  $group = $relationship->getGroup();
+  if (!$group instanceof GroupInterface || $group->bundle() !== 'isu_event_website') {
+    return;
+  }
+
+  $entity = $relationship->getEntity();
+  if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'microsite_page') {
+    return;
+  }
+
+  // Find the homepage alias from the event_homepage node in this group.
+  $homepage_alias = NULL;
+  foreach (
+    \Drupal::entityTypeManager()
+      ->getStorage('group_relationship')
+      ->loadByProperties(['gid' => $group->id()]) as $rel
+  ) {
+    $node = $rel->getEntity();
+    if ($node instanceof \Drupal\node\NodeInterface && $node->bundle() === 'event_homepage') {
+      $candidate = \Drupal::service('path_alias.manager')
+        ->getAliasByPath('/node/' . $node->id());
+      if ($candidate !== '/node/' . $node->id()) {
+        $homepage_alias = $candidate;
+      }
+      break;
+    }
+  }
+
+  if (!$homepage_alias) {
+    return;
+  }
+
+  $slug = \Drupal::service('pathauto.alias_cleaner')->cleanString($entity->getTitle());
+  $new_alias = $homepage_alias . '/' . $slug;
+  $system_path = '/node/' . $entity->id();
+
+  _regcytes_upsert_alias(
+    $system_path,
+    $new_alias,
+    \Drupal::entityTypeManager()->getStorage('path_alias')
+  );
+}
+
+/**
  * Implements hook_ENTITY_TYPE_insert().
  */
 
