@@ -20,7 +20,7 @@
 
   <div class="microsite-hero-wrapper{{ header_image_url is not defined ? ' microsite-hero-wrapper--no-image' : '' }}"{% if header_image_url is defined %} style="background-image: url('{{ header_image_url }}')"{% endif %}>
     {% if not custom_theme %}
-      <div class="microsite-hero-label-wrapper isueo-callout-stat">
+      <div class="microsite-hero-label-wrapper{{ header_image_url is defined ? ' isueo-callout-stat' : '' }}">
         <div class="microsite-hero-label container">
 
           {% if group.field_subsite_logo_graphic[0].entity %}
