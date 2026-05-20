@@ -16,7 +16,7 @@
   {% set banner_image_url = file_url(image_entity.uri.value) %}
 {% endif %}
 
-<div{{ attributes.addClass('microsite-micro-banner') }}>
+<div{{ attributes.addClass('microsite-micro-banner' ~ (banner_image_url is not defined ? ' microsite-micro-banner--no-image' : '')) }}>
   {% if banner_image_url is defined %}
     <img src="{{ banner_image_url }}" alt="" class="microsite-micro-banner__img" aria-hidden="true">
   {% endif %}

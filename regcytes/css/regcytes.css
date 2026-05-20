@@ -282,6 +282,10 @@ body.group-site header.isu-wordmark-sitename {
     max-height: 30vh;
     object-fit: cover;
 }
+.microsite-micro-banner--no-image {
+    min-height: 8vh;
+    max-height: 30vh;
+}
 
 /* --------------------------------------  */
 /* ## MICROSITE MICRO BANNER + DETAILS
@@ -302,6 +306,10 @@ body.group-site header.isu-wordmark-sitename {
     display: block;
     max-height: 30vh;
     object-fit: cover;
+}
+.microsite-micro-banner-details--no-image {
+    min-height: 8vh;
+    max-height: 30vh;
 }
 /* Tint pseudo-element sits above the img, below the text overlay */
 .microsite-micro-banner-details::after {

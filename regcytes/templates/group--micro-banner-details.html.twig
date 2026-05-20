@@ -43,7 +43,7 @@
   {% set location = group.field_subsite_location.value %}
 {% endif %}
 
-<div{{ attributes.addClass('microsite-micro-banner-details') }}>
+<div{{ attributes.addClass('microsite-micro-banner-details' ~ (banner_image_url is not defined ? ' microsite-micro-banner-details--no-image' : '')) }}>
 
   {% if banner_image_url is defined %}
     <img src="{{ banner_image_url }}" alt="" class="microsite-micro-banner-details__img" aria-hidden="true">
