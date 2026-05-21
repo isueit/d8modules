@@ -1,0 +1,79 @@
+{#
+  Template for a group entity rendered in the "hero_banner" view mode.
+
+  Available variables:
+    - group:       The raw Group entity object. Use for raw field values:
+                   group.field_name.0.value
+    - content:     Rendered field output for fields enabled in this view mode's
+                   manage display. Use for rendered output:
+                   content.field_name
+    - label:       The group label (name).
+    - url:         Canonical URL of the group.
+    - attributes:  HTML attributes for the wrapper element.
+#}
+<div{{ attributes.addClass('subsite-banner') }}>
+
+  {% set image_entity = group.field_subsite_header_image[0].entity %}
+  {% if image_entity and image_entity.uri.value %}
+    {% set header_image_url = file_url(image_entity.uri.value) %}
+  {% endif %}
+
+  <div class="microsite-hero-wrapper{{ header_image_url is not defined ? ' microsite-hero-wrapper--no-image' : '' }}"{% if header_image_url is defined %} style="background-image: url('{{ header_image_url }}')"{% endif %}>
+    {% if not custom_theme %}
+      <div class="microsite-hero-label-wrapper{{ header_image_url is defined ? ' isueo-callout-stat' : '' }}">
+        <div class="microsite-hero-label container">
+
+          {% if group.field_subsite_logo_graphic[0].entity %}
+            <div class="microsite-hero-logo">
+              <img src="{{ file_url(group.field_subsite_logo_graphic[0].entity.uri.value) }}" alt="{{ group.field_subsite_logo_graphic[0].alt ?: label }}" class="microsite-hero-logo__img">
+            </div>
+          {% endif %}
+
+          <div class="microsite-date-wrapper">
+            {% if group.field_subsite_dates.0.value %}
+              {% set start_date = group.field_subsite_dates.0.value %}
+              {% set end_date = group.field_subsite_dates.0.end_value %}
+
+              {% set start_month = start_date|date('F') %}
+              {% set start_day   = start_date|date('j') %}
+              {% set start_year  = start_date|date('Y') %}
+
+              {% set end_month = end_date|date('F') %}
+              {% set end_day   = end_date|date('j') %}
+              {% set end_year  = end_date|date('Y') %}
+
+              {% if start_month == end_month and start_year == end_year and start_day == end_day %}
+                {{ start_month }} {{ start_day }}, {{ start_year }}
+              {% elseif start_month == end_month and start_year == end_year %}
+                {{ start_month }} {{ start_day }}-{{ end_day }}, {{ start_year }}
+              {% elseif start_year == end_year %}
+                {{ start_month }} {{ start_day }} - {{ end_month }} {{ end_day }}, {{ start_year }}
+              {% else %}
+                {{ start_month }} {{ start_day }}, {{ start_year }} - {{ end_month }} {{ end_day }}, {{ end_year }}
+              {% endif %}
+            {% endif %}
+          </div>
+
+          <h1 class="isu-page-title">{{ label }}</h1>
+
+          <div class="microsite-event-details--wrapper">
+            <div class="microsite-event-location">
+              {{ group.field_subsite_location.value }}
+            </div>
+          </div>
+
+          {% if group.field_subsite_registration_deets.0.entity %}
+            {% set reg_paragraph = group.field_subsite_registration_deets.0.entity %}
+            {% if reg_paragraph.field_subsite_open_close.value and reg_paragraph.field_subsite_registration_link is not empty %}
+              <div class="microsite-registration">
+                <a class="btn btn-outline-danger" href="{{ reg_paragraph.field_subsite_registration_link.0.uri }}">Register Now <i class="fa-solid fa-angle-right"></i></a>
+              </div>
+            {% endif %}
+          {% endif %}
+
+        </div>
+      </div>
+    {% endif %}
+    </div>
+
+</div>

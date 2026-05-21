@@ -1,0 +1,6 @@
+regcytes.group_node_autocomplete:
+  path: '/regcytes/autocomplete/group-nodes/{group}'
+  defaults:
+    _controller: '\Drupal\regcytes\Controller\GroupNodeAutocompleteController::autocomplete'
+  requirements:
+    _permission: 'access content'

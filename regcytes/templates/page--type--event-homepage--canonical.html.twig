@@ -56,7 +56,7 @@
  */
 #}
 
-<div class="isu-page-wrap regcytes-microsite">
+<div class="isu-page-wrap regcytes-microsite-homepage">
 
 	{# ISU Navbar is suppressed entirely for custom-themed microsites #}
 	{% if isu_navbar and not custom_theme %}
@@ -156,7 +156,7 @@
 				</div>
 			{% endif %}
 			{% if page.content|render %}
-					{{ page.content }}
+					{{ page.content|without('iastate_theme_page_title') }}
 			{% endif %}
 
 			{% if page.sidebar_second|render %}

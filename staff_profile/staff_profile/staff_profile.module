@@ -2,6 +2,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
+use Drupal\isueo_helpers\ISUEOHelpers;
 
 /*
  * Implements hook_preprocess_node()
@@ -10,9 +11,146 @@ use Drupal\node\Entity\Node;
 function staff_profile_preprocess_node(&$variables)
 {
   $node = $variables['node'];
-  //check content type
   if ($node->getType() == 'staff_profile') {
     $variables['#attached']['library'][] = 'staff_profile/staff_profile';
+
+    // Twig's sandbox blocks .view() calls on field objects. Pre-render each
+    // field we need in the template as a standalone render array so the
+    // template can use {{ sp_fields.body }} etc. without hitting sandbox limits.
+
+    // Build staff photo directly — same pattern as StaffContactBlock.php.
+    $smugmug_id = $node->get('field_staff_profile_smugmug')->value;
+    if (!empty($smugmug_id)) {
+      $variables['sp_fields']['field_staff_profile_smugmug'] = [
+        '#markup' => '<img class="staff_profile_smugmug" src="'
+          . ISUEOHelpers\General::build_smugmug_url($smugmug_id, 'XL')
+          . '" alt="' . htmlspecialchars($node->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '" />',
+      ];
+    }
+    else {
+      $variables['sp_fields']['field_staff_profile_smugmug'] = [
+        '#markup' => '<img class="staff_profile_smugmug staff_profile_blank_image" src="'
+          . \Drupal::request()->getBaseUrl()
+          . '/modules/custom/d8modules/staff_profile/staff_profile/images/blank_image.png" alt="" />',
+      ];
+    }
+
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+    $fields = [
+      'field_staff_profile_pref_title',
+      'field_staff_profile_cty_dept',
+      'field_staff_profile_email',
+      'field_staff_profile_pref_phone',
+      'field_staff_profile_addr',
+      'field_staff_profile_college',
+      'field_staff_profile_pgm_areas',
+      'field_staff_profile_region',
+      'field_staff_profile_base_county',
+      'field_staff_profile_cty_served',
+      'field_custodian_of_public_record',
+      'body',
+    ];
+    foreach ($fields as $field_name) {
+      if ($node->hasField($field_name)) {
+        $variables['sp_fields'][$field_name] = $view_builder->viewField(
+          $node->get($field_name),
+          ['type' => NULL, 'label' => 'hidden']
+        );
+      }
+    }
+
+    // Teams & Groups: collect term labels as a plain array for joining in Twig.
+    $variables['sp_teams_groups'] = [];
+    if ($node->hasField('field_staff_profile_teams_groups')) {
+      foreach ($node->get('field_staff_profile_teams_groups')->referencedEntities() as $term) {
+        $variables['sp_teams_groups'][] = $term->label();
+      }
+    }
+
+    // For scalar text fields also expose the raw value directly.
+    $scalar_fields = [
+      'field_staff_profile_pref_title',
+      'field_staff_profile_job_title',
+      'field_staff_profile_cty_dept',
+      'field_staff_profile_email',
+      'field_staff_profile_pref_phone',
+      'field_staff_profile_phone',
+      'field_staff_profile_region',
+      'field_staff_profile_pref_name',
+      'field_staff_profile_first_name',
+      'field_staff_profile_last_name',
+    ];
+    foreach ($scalar_fields as $field_name) {
+      if ($node->hasField($field_name)) {
+        $variables['sp_values'][$field_name] = $node->get($field_name)->value;
+      }
+    }
+
+    // Boolean field.
+    if ($node->hasField('field_custodian_of_public_record')) {
+      $variables['sp_values']['field_custodian_of_public_record'] = (bool) $node->get('field_custodian_of_public_record')->value;
+    }
+
+    // Computed display values used in the template.
+
+    // Display name: preferred name (first) + last name, falling back to
+    // first name + last name, then the node title.
+    $first = $node->hasField('field_staff_profile_pref_name')
+      ? trim($node->get('field_staff_profile_pref_name')->value ?? '')
+      : '';
+    if (empty($first) && $node->hasField('field_staff_profile_first_name')) {
+      $first = trim($node->get('field_staff_profile_first_name')->value ?? '');
+    }
+    $last = $node->hasField('field_staff_profile_last_name')
+      ? trim($node->get('field_staff_profile_last_name')->value ?? '')
+      : '';
+    $variables['sp_display_name'] = ($first || $last)
+      ? trim($first . ' ' . $last)
+      : $node->getTitle();
+
+    // Display title: preferred title, falling back to job title.
+    $variables['sp_display_title'] = trim($node->hasField('field_staff_profile_pref_title')
+      ? ($node->get('field_staff_profile_pref_title')->value ?? '')
+      : '');
+    if (empty($variables['sp_display_title']) && $node->hasField('field_staff_profile_job_title')) {
+      $variables['sp_display_title'] = trim($node->get('field_staff_profile_job_title')->value ?? '');
+    }
+
+    // Display phone: preferred phone, falling back to main phone.
+    $variables['sp_display_phone'] = trim($node->hasField('field_staff_profile_pref_phone')
+      ? ($node->get('field_staff_profile_pref_phone')->value ?? '')
+      : '');
+    if (empty($variables['sp_display_phone']) && $node->hasField('field_staff_profile_phone')) {
+      $variables['sp_display_phone'] = trim($node->get('field_staff_profile_phone')->value ?? '');
+    }
+
+    // Flag for whether a bio exists — used to collapse the top grid to 2 columns.
+    $variables['staff_profile_has_bio'] = !empty(trim(strip_tags($node->get('body')->value ?? '')));
+
+    // Flag for whether the articles view exists on this site — prevents fatal
+    // errors on sites that don't have the list_of_articles_by_author view.
+    $variables['sp_has_articles_view'] = \Drupal::service('entity_type.manager')
+      ->getStorage('view')
+      ->load('list_of_articles_by_author') !== NULL;
+
+    // Build county links from the field_website field on the counties_in_iowa
+    // taxonomy term, for base county and counties served.
+    $county_fields = [
+      'field_staff_profile_base_county' => 'sp_base_county_links',
+      'field_staff_profile_cty_served'  => 'sp_cty_served_links',
+    ];
+    foreach ($county_fields as $field_name => $var_name) {
+      $links = [];
+      if ($node->hasField($field_name)) {
+        foreach ($node->get($field_name)->referencedEntities() as $term) {
+          $url = $term->hasField('field_website') && !$term->get('field_website')->isEmpty()
+            ? $term->get('field_website')->uri
+            : NULL;
+          $links[] = ['name' => $term->label(), 'url' => $url];
+        }
+      }
+      $variables[$var_name] = $links;
+    }
   }
 }
 
@@ -114,12 +252,61 @@ function staff_profile_mark_database_fields_readonly(&$form)
 }
 
 /**
+ * Implements hook_views_data_alter().
+ */
+function staff_profile_views_data_alter(array &$data) {
+  $data['taxonomy_term_field_data']['parent_term'] = [
+    'title' => t('Parent term'),
+    'help' => t('Relates a taxonomy term to its parent term.'),
+    'relationship' => [
+      'base' => 'taxonomy_term_field_data',
+      'base field' => 'tid',
+      'relationship table' => 'taxonomy_term__parent',
+      'relationship field' => 'parent_target_id',
+      'id' => 'standard',
+      'label' => t('Parent term'),
+    ],
+  ];
+}
+
+function staff_profile_views_query_alter($view, $query) {
+  if ($view->id() == 'list_of_articles_by_author') {
+    $query->query()->distinct(TRUE);
+  }
+}
+
+function staff_profile_preprocess_views_view_field(&$variables) {
+  if ($variables['view']->id() == 'list_of_articles_by_author' && $variables['field']->field == 'name') {
+    $row = $variables['row'];
+    $tid = $row->taxonomy_term_field_data_node__field_category_topic_tid;
+    $parent_tid = $row->taxonomy_term_field_data_taxonomy_term__parent_tid;
+    
+    if ($tid) {
+      if ($parent_tid) {
+        $parent_term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($parent_tid);
+        if ($parent_term) {
+          $variables['output'] = \Drupal\Core\Render\Markup::create($parent_term->getName());
+        }
+      }
+      // If no parent_tid, term is already top level, leave output as is
+    }
+  }
+}
+/**
  * Implements hook_theme().
  */
 
 function staff_profile_theme($existing, $type, $theme, $path)
 {
   return [
+    'page__type__staff_profile__canonical' => [
+      'template' => 'page--type--staff-profile--canonical',
+      'base hook' => 'page',
+    ],
+    'node__staff_profile' => [
+      'template' => 'node--staff-profile',
+      'base hook' => 'node',
+    ],
     'node__staff_profile__staff_author' => [
       'template' => 'node--staff-profile--staff-author',
       'base hook' => 'node',

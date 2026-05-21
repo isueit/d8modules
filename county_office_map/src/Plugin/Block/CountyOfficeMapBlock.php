@@ -50,7 +50,7 @@ class CountyOfficeMapBlock extends BlockBase {
       }
       
       if ($term->hasField('field_website') && !$term->get('field_website')->isEmpty()) {
-        $county_data['website'] = $term->get('field_website')->uri;
+        $county_data['website'] = rtrim($term->get('field_website')->uri, '/') . '/';
       }
       
       // Find Regional Director for this county
@@ -209,6 +209,8 @@ class CountyOfficeMapBlock extends BlockBase {
       'Buena Vista' => 'buenavista',
       'Palo Alto' => 'paloalto',
       'Des Moines' => 'desmoines',
+      'Pottawattamie - East' => 'eastpottawattamie',
+      'Pottawattamie - West' => 'westpottawattamie',
     ];
     
     return $special_cases[$name] ?? strtolower(str_replace(' ', '', $name));

@@ -1,29 +1,57 @@
 {#
-/**
- * @file
- * Default theme implementation to display a menu.
- *
- * Available variables:
- * - classes: A list of classes to apply to the top level <ul> element.
- * - dropdown_classes: A list of classes to apply to the dropdown <ul> element.
- * - menu_name: The machine name of the menu.
- * - items: A nested list of menu items. Each menu item contains:
- *   - attributes: HTML attributes for the menu item.
- *   - below: The menu item child items.
- *   - title: The menu link title.
- *   - url: The menu link url, instance of \Drupal\Core\Url
- *   - localized_options: Menu link localized options.
- *
- * @ingroup templates
- */
+  Group navigation menu.
+
+  Extends the rendering logic of menu--main.html.twig and appends a
+  "Register" link when registration is currently open.
+
+  Extra variables supplied by regcytes_preprocess_menu__group_menu():
+    - registration_is_open: TRUE when today is between the open and close dates.
+    - registration_url:     Resolved URL string for the registration link.
 #}
-{# Works well in a Bootstrap based theme. Other themes it might not be as pretty. #}
-{% extends "menu--main.html.twig" %}
-{%
-  set classes = [
-    'menu',
-    'group-menu',
-    'nav',
-    'navbar-nav',
-  ]
-%}
+{% import _self as menus %}
+
+{{ menus.menu_links(items, attributes, 0, registration_is_open, registration_url) }}
+
+{% macro menu_links(items, attributes, menu_level, reg_open, reg_url) %}
+  {% import _self as menus %}
+  {% if items or (menu_level == 0 and reg_open) %}
+
+    {% if menu_level == 0 %}
+      <ul role="menubar" {{ attributes.addClass('nav navbar-nav menubar group-menu') }}>
+    {% elseif menu_level == 1 %}
+      <ul role="menu" class="isu-dropdown-menu">
+    {% else %}
+      <ul role="submenu" class="isu-dropdown-menu isu-dropdown-submenu">
+    {% endif %}
+
+    {% for item in items %}
+      {%
+        set li_classes = [
+          menu_level ? 'dropdown-item isu-dropdown-item' : 'nav-item',
+          item.below ? 'isu-dropdown',
+        ]
+      %}
+
+      {% if item.below %}
+        <li role="menuitem" {{ item.attributes.addClass(li_classes).setAttribute('aria-expanded', 'false').setAttribute('aria-haspopup', 'true') }}>
+          <div role="none" class="isu-dropdown-toggle_wrapper {{ menu_level ? 'divsub' }}">
+            <a class="nav-link isu-nav-link isu-dropdown-toggle {{ menu_level ? 'sub' }}" href="{{ item.url|render|trim ?: '#' }}">{{ item.title }}</a>
+            <button class="isu-dropdown-toggle_mobile"><span class="fa fa-angle-down"></span><span class="sr-only">Open dropdown menu</span></button>
+          </div>
+          {{ menus.menu_links(item.below, item.attributes, menu_level + 1) }}
+      {% else %}
+        <li role="menuitem" {{ item.attributes.addClass(li_classes).setAttribute('aria-haspopup', 'false') }}>
+          <a class="nav-link isu-nav-link" href="{{ item.url|render|trim ?: '#' }}">{{ item.title }}</a>
+      {% endif %}
+      </li>
+    {% endfor %}
+
+    {% if menu_level == 0 and reg_open %}
+      <li class="nav-item register-nav-item" role="menuitem">
+        <a class="nav-link isu-nav-link" href="{{ reg_url }}">Register</a>
+      </li>
+    {% endif %}
+
+    </ul>
+  {% endif %}
+{% endmacro %}
