@@ -303,8 +303,12 @@ function staff_profile_theme($existing, $type, $theme, $path)
       'template' => 'page--type--staff-profile--canonical',
       'base hook' => 'page',
     ],
-    'node__staff_profile' => [
-      'template' => 'node--staff-profile',
+    'node__staff_profile__full' => [
+      'template' => 'node--staff-profile--full',
+      'base hook' => 'node',
+    ],
+    'node__staff_profile__default' => [
+      'template' => 'node--staff-profile--full',
       'base hook' => 'node',
     ],
     'node__staff_profile__staff_author' => [
