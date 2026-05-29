@@ -1497,7 +1497,7 @@ display:
           exclude: true
           alter:
             alter_text: true
-            text: "{{ field_featured_content_body|striptags|replace({'Image': ''})|trim }}"
+            text: "{{ field_featured_content_body|render|striptags|replace({'Image': ''})|replace({'\\_': ' '})|replace({\"\\u00A0\": \" \"})|trim }}"
             make_link: false
             path: ''
             absolute: false
@@ -2012,8 +2012,8 @@ display:
           label: ''
           exclude: false
           alter:
-            alter_text: false
-            text: ''
+            alter_text: true
+            text: "{{ field_featured_content_body|render|striptags|replace({'Image': ''})|replace({'\\_': ' '})|replace({\"\\u00A0\": \" \"})|trim }}"
             make_link: false
             path: ''
             absolute: false

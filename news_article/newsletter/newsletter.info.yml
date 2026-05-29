@@ -19,7 +19,6 @@ dependencies:
   - drupal:paragraphs
   - drupal:paragraphs_ee
   - drupal:paragraphs_features
-  - isueo_news_article:isueo_news_article
   - drupal:quick_node_clone
   - drupal:select_or_other
   - drupal:taxonomy

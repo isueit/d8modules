@@ -1,0 +1,21 @@
+<?php
+
+/**
+* Implements hook_modules_installed().
+*/
+function isueo_helpers_modules_installed($modules) {
+  if (in_array('exclude_node_title', $modules)) {
+    // exclude_node_title has been installed, modify some configurations
+    $config = Drupal::configFactory()->getEditable('exclude_node_title.settings');
+
+    $config->set('type', 'hidden');
+    $config->set('content_types.layout_ct', 'user');
+    $config->set('content_types.page', 'none');
+    $config->set('content_types.staff_profile', 'none');
+    $config->set('content_type_modes.layout_ct', ['full']);
+    $config->set('content_type_modes.page', []);
+    $config->set('content_type_modes.staff_profile', []);
+    $config->save();
+  }
+}
+

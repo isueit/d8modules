@@ -5,7 +5,6 @@
   "require": {
     "drupal/address": "^2.0",
     "drupal/allowed_formats": "^1.2 || ^3.0",
-    "drupal/block_content_permissions": "^1.10",
     "drupal/bpmn_io": "^2.0",
     "drupal/ckeditor_html_embed": "^2.0",
     "drupal/diff": "^1.9",
@@ -37,6 +36,7 @@
     "drupal/webform": "^6.2@RC",
     "drupal/weight": "^3.1",
     "php-http/curl-client": "^2.3",
+    "sabre/vobject": "^4.5",
     "symfony/http-client": "^6.4",
     "typesense/typesense-php": "^4.9"
   }

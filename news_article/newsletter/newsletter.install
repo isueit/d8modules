@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\taxonomy\Entity\Term;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_install().
@@ -27,8 +28,22 @@ function newsletter_install()
     ])->save();
   }
 
-
   newsletter_handle_permissions(true);
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+
+function newsletter_modules_installed($modules)
+{
+  if (in_array('newsletter', $modules)) {
+    if (!in_array('isueo_news_article', $modules)) {
+      if (!Drupal::moduleHandler()->moduleExists('isueo_news_article')) {
+        Drupal::service('module_installer')->install(['isueo_news_article'], true);
+      }
+    }
+  }
 }
 
 /**
@@ -69,31 +84,18 @@ function newsletter_uninstall()
  */
 function newsletter_handle_permissions(bool $grant_permissions)
 {
-  $role = Drupal\user\Entity\Role::load('content_editor');
+  $permissions = [
+    'clone newsletter content',
+    'create newsletter content',
+    'delete any newsletter content',
+    'edit any newsletter content',
+    'override newsletter authored on option',
+    'override newsletter published option',
+    'override newsletter sticky option',
+    'view any unpublished newsletter content',
+    'export newsletter content',
+    'create terms in newsletter',
+  ];
 
-  if ($role) {
-    $permissions = [
-      'clone newsletter content',
-      'create newsletter content',
-      'delete any newsletter content',
-      'edit any newsletter content',
-      'override newsletter authored on option',
-      'override newsletter published option',
-      'override newsletter sticky option',
-      'view any unpublished newsletter content',
-      'export newsletter content',
-    ];
-
-    foreach ($permissions as $permission) {
-      if ($grant_permissions) {
-        $role->grantPermission($permission);
-      } else {
-        if ($role->hasPermission($permission)) {
-          $role->revokePermission($permission);
-        }
-      }
-    }
-
-    $role->save();
-  }
+  Wrappers::changeRolePermissions('content_editor', $permissions, $grant_permissions);
 }

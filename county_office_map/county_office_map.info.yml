@@ -1,0 +1,10 @@
+name: County Office Map
+description: Interactive county services map.
+package: ISUEO
+type: module
+core_version_requirement: ^8 || ^9 || ^10
+dependencies:
+  - drupal:taxonomy
+  - d8modules:staff_profile:county_addresses
+
+

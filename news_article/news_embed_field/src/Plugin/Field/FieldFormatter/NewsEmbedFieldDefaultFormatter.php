@@ -39,6 +39,7 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     $elements['#cache']['max-age'] = 0;
     $elements['#cache']['contexts'] = [];
     $elements['#cache']['tags'] = [];
+    $elements['#attached']['library'] = ['news_embed_field/news_embed_field', ];
 
     foreach ($items as $delta => $item) {
       // Render output
@@ -51,11 +52,15 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
           }
           $output .= '<div class="embedded_article">' . $embeddedPage['article'] . '</div>' . PHP_EOL;
           //$output .= '<div class="embedded_article">' . htmlentities($embeddedPage['article']) . '</div>' . PHP_EOL;
+          $this::handlePageNotFoundDate(TRUE);
+
+        } else {
+          $this::handlePageNotFoundDate(FALSE);
         }
         $tags = FieldFilteredMarkup::allowedTags();
-        array_push($tags, 'iframe', 'div', 'h2', 'h3', 'h4', 'h5', 'h5', 'h6', 'footer', 'article', 'table', 'tbody', 'th', 'td', 'tr');
-        while (preg_match('/<iframe[a-zA-Z0-9\" =\/\._\?\%]+\/>/', $output, $matches, PREG_OFFSET_CAPTURE)) {
-          $output = substr_replace($output, "> </iframe>", strlen($matches[0][0])+$matches[0][1]-2, 11);
+        array_push($tags, 'iframe', 'div', 'h2', 'h3', 'h4', 'h5', 'h5', 'h6', 'footer', 'article', 'table', 'tbody', 'th', 'td', 'tr', 'aside', 'figure', 'figcaption', 'section');
+        while (preg_match('/<iframe[^>]*\/>/', $output, $matches, PREG_OFFSET_CAPTURE)) {
+          $output = substr_replace($output, "> </iframe>", strlen($matches[0][0])+$matches[0][1]-2, 2);
         }
         $elements[$delta] = array('#markup' => $output, '#allowed_tags' => $tags);
       }
@@ -69,6 +74,7 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     //open connection
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'ISU Extension');
 
     //So that curl_exec returns the contents of the cURL; rather than echoing it
     curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
@@ -154,5 +160,48 @@ class NewsEmbedFieldDefaultFormatter extends FormatterBase {
     @$dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_NOWARNING|LIBXML_NOERROR);
     libxml_clear_errors();
     return $dom;
+  }
+
+  private function handlePageNotFoundDate($pageFound) {
+    // Get the current Node ID, return if it's already unpublished
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if (!$node || !$node->IsPublished()) {
+      return;
+    }
+    $nodeID = $node->id();
+
+    // Get the notFoundDates from State
+    $notFoundDates = \Drupal::state()->get('news_embed_field.not_found_dates');
+    if (empty($notFoundDates)) {
+      $notFoundDates = [];
+    }
+
+    if ($pageFound) {
+      // Embedded Article was displayed, so remove it from $notFoundDates if it exists there
+      if (array_key_exists($nodeID, $notFoundDates)) {
+        unset($notFoundDates[$nodeID]);
+        \Drupal::state()->set('news_embed_field.not_found_dates', $notFoundDates);
+      }
+    } else {
+      if (array_key_exists($nodeID, $notFoundDates)) {
+        $offset = 1 * 86400;  // 86,400 seconds in a day
+        if (time() - $offset > $notFoundDates[$nodeID]) {
+          // Article hasn't existed for some time, so should be unpublished
+          $node->setUnpublished();
+          $node->save();
+
+          // Node is unpublished, take it out of $notFoundDates
+          unset($notFoundDates[$nodeID]);
+          \Drupal::state()->set('news_embed_field.not_found_dates', $notFoundDates);
+
+          // Log what we did
+          \Drupal::logger('news_embed_field')->info('Unpublished node: ' . $nodeID . ' - ' . $node->getTitle());
+        }
+      } else {
+        // First time the embeded article hasn't existed, so add it to the $notFoundDates
+        $notFoundDates[$nodeID] = time();
+        \Drupal::state()->set('news_embed_field.not_found_dates', $notFoundDates);
+      }
+    }
   }
 }

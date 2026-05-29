@@ -77,15 +77,19 @@
 			{{ page.post_nav }}
 		{% endif %}
 
+		{% if show_archive_message %}
+  			<div role="contentinfo" aria-label="Status message"class="archive-message alert alert-warning">
+        		<div class="archive-message-wrapper">
+    				<span class="archive-message-notice"><i class="fa-solid fa-circle-info"></i> <p>This page has been archived and may contain outdated content, links, or resources.</p></span>
+ 			  	</div>
+      		</div>
+		{% endif %}
+
 		{{ page.breadcrumbs }}
 
 		{# Title section with featured image background #}
 		{# Wherever you want it to appear #}
-		{% if show_archive_message %}
-  			<div class="archive-message alert alert-warning">
-    			<span class="archive-message-notice row"><strong>Archive Notice:</strong> This page has been archived and may contain outdated information. It is retained for historical or reference purposes.</span>
- 			 </div>
-		{% endif %}
+		
 		{% if featured_image_url %}
 			{% set image_name_clean = featured_image_name|replace({'.png': '', '.jpg': '', '.jpeg': '', '.gif': '', '.webp': '', '.svg': ''}) %}
 			{# Show title with background image wrapper #}
@@ -94,7 +98,7 @@
 					<div class="newsletter-hero-label container">
 					<h1 class="isu-page-title">
 						{% if show_clover_logo %}
-							<img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt=" ">
+							<img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="4-H clover emblem.">
 						{% endif %}
 						{{ node.label }}
 					</h1>

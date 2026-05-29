@@ -93,7 +93,7 @@
   {% endif %}
   <div class="isueo-staff-author--body">
     <div class="isueo-staff-author--header">
-      <p><strong><a href="{{ url }}" rel="bookmark">{{ node.label|trim }},</a></strong>
+      <p><strong><a href="{{ url }}" rel="bookmark">{{ node.label|trim }}</a></strong><br>
         {{ node.field_staff_profile_pref_title.value|trim ?: node.field_staff_profile_job_title.value|trim }}
       </p>
     </div>

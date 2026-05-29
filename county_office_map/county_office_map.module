@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * County Office Map module.
+ */
+
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_theme().
+ */
+function county_office_map_theme($existing, $type, $theme, $path) {
+  return [
+    'block__county_office_map_block' => [
+      'base hook' => 'block',
+      'template' => 'block--county-office-map-block',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function county_office_map_page_attachments(array &$attachments) {
+  // Always attach the library on pages that might have the block
+  // We'll do this smarter later, but for now just attach it everywhere
+  $attachments['#attached']['library'][] = 'county_office_map/map';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for block templates.
+ */
+function county_office_map_preprocess_block(&$variables) {
+  // Check if this is our block by plugin_id
+  if (isset($variables['plugin_id']) && $variables['plugin_id'] == 'county_office_map_block') {
+    // Pass our custom variables from nested content to the template
+    if (isset($variables['content']['content'])) {
+      if (is_array($variables['content']['content'])) {
+        if (isset($variables['content']['content']['#svg_content'])) {
+          $variables['svg_content'] = $variables['content']['content']['#svg_content'];
+        }
+        if (isset($variables['content']['content']['#counties_count'])) {
+          $variables['counties_count'] = $variables['content']['content']['#counties_count'];
+        }
+      }
+    }
+    
+    // Also attach drupalSettings here
+    if (isset($variables['content']['content']['#attached']['drupalSettings'])) {
+      $variables['#attached']['drupalSettings'] = $variables['content']['content']['#attached']['drupalSettings'];
+    }
+  }
+}

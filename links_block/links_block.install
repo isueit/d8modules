@@ -2,38 +2,17 @@
 
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
-use function Drupal\Core\Session\user_role_permissions;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 /**
  * Implements hook_install().
  */
-function links_block_install() {
-  $block_content = BlockContent::create([
-	'type' => 'links_block',
-	'info' => 'linksblock'
-  ]);
-
-  $block_content->save();
-
-  $block = Block::create([
-    'id' => 'linksblock',
-    'plugin' => 'block_content:' . $block_content->uuid(),
-	'region' => 'footer_fourth',
-    'provider' => 'block_content',
-    'weight' => -100,
-    'theme' => \Drupal::config('system.theme')->get('default'),
-    'visibility' => [],
-    'settings' => [
-      'label' => 'Links Block',
-      'label_display' => 'visible',
-    ],
-  ]);
-  $block->save();
-
-// Set up permissions for content editors
-  user_role_grant_permissions('content_editor', [
+function links_block_install()
+{
+  // Set up permissions for content editors
+  $permissions = [
     'create links_block block content',
     'delete any links_block block content',
-  ]);
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }
-

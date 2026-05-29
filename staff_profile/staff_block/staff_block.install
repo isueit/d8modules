@@ -1,26 +1,32 @@
 <?php
 
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+
 /**
-* Implements hook_install().
-*/
+ * Implements hook_install().
+ */
 function staff_block_install()
 {
-  // Set up permissions, allow editors to create, update and delete staff blocks
-  user_role_grant_permissions('content_editor', array(
+  // Add a few permissions to Content Editor role
+  $permissions = [
+    'access block library',
     'create staff_contact_block block content',
     'delete any staff_contact_block block content',
-    'update any staff_contact_block block content',
-  ));
+    'edit any staff_contact_block block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }
 
 /**
-* Implements hook_uninstall().
-*/
-function staff_block_uninstall() {
-  // Set up permissions, allow editors to create, update and delete staff blocks
-  user_role_revoke_permissions('content_editor', array(
+ * Implements hook_uninstall().
+ */
+function staff_block_uninstall()
+{
+  // Remove a few permissions from Content Editor role
+  $permissions = [
     'create staff_contact_block block content',
     'delete any staff_contact_block block content',
-    'update any staff_contact_block block content',
-  ));
+    'edit any staff_contact_block block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, FALSE);
 }

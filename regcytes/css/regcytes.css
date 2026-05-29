@@ -1,0 +1,622 @@
+/* --------------------------------------  */
+/* ## CUSTOM THEME HEADER
+/* --------------------------------------  */
+
+.regcytes-custom-header {
+    background: #ffffff;
+    border-bottom: 2px solid var(--color-primary, #c8102e);
+    padding: 1rem;
+}
+.regcytes-custom-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    gap: 1rem;
+}
+.regcytes-custom-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.regcytes-custom-header__logo {
+    max-height: 56px;
+    width: auto;
+    display: block;
+    flex-shrink: 0;
+}
+.regcytes-custom-header__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.regcytes-custom-header__meta {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-primary, #c8102e);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.microsite-micro-banner-details__overlay .regcytes-custom-header__meta {
+    font-size: 1.3rem;
+}
+.microsite-micro-banner-details__overlay .regcytes-custom-header__title {
+    font-size: 3rem;
+    margin-top: 0.5rem;
+}
+.regcytes-custom-header__title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary, #c8102e);
+    line-height: 1.2;
+}
+.regcytes-custom-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+.regcytes-register-btn {
+    background-color: var(--color-primary, #c8102e);
+    border-color: var(--color-primary, #c8102e);
+    color: var(--color-hero-text, #ffffff);
+    white-space: nowrap;
+}
+.regcytes-register-btn:hover,
+.regcytes-register-btn:focus {
+    background-color: var(--color-secondary, #7c2529);
+    border-color: var(--color-secondary, #7c2529);
+    color: var(--color-hero-text, #ffffff);
+}
+@media (max-width: 768px) {
+    .regcytes-custom-header__meta { font-size: 0.72rem; }
+    .regcytes-custom-header__title { font-size: 1rem; }
+    .regcytes-register-btn { font-size: 0.78rem; padding: 0.25rem 0.6rem; }
+}
+
+/* Event details variant — no border, transparent background, inherits section color */
+.regcytes-custom-header--event-details {
+    background: transparent;
+    border-bottom: none;
+}
+.regcytes-custom-header--event-details .regcytes-custom-header__meta,
+.regcytes-custom-header--event-details .regcytes-custom-header__title {
+    color: inherit;
+}
+
+/* --------------------------------------  */
+/* ## CUSTOM THEME FOOTER
+/* --------------------------------------  */
+
+.site-contact-info.site-contact-info--custom-theme {
+    background-color: var(--color-primary, #c8102e);
+}
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__label,
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__name,
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__meta {
+    color: var(--color-hero-text, #ffffff);
+}
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__link a {
+    color: var(--color-hero-text, #ffffff);
+}
+.site-contact-info.site-contact-info--custom-theme .site-contact-info__column::before {
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* --------------------------------------  */
+/* ## CUSTOM THEME MENU
+/* --------------------------------------  */
+
+/* Left-align nav items under the custom header */
+body.custom-theme .isu-menu-navbar_wrap {
+    justify-content: flex-start;
+}
+body.custom-theme .isu-menu-navbar_wrap .navbar-nav {
+    margin-right: auto;
+}
+
+/* Link color */
+body.custom-theme .isu-menu-navbar .nav-link,
+body.custom-theme .isu-menu-navbar .isu-nav-link {
+    color: var(--color-link, #c8102e);
+}
+
+/* Hover / focus / active */
+body.custom-theme .isu-menu-navbar .nav-link:hover,
+body.custom-theme .isu-menu-navbar .nav-link:focus,
+body.custom-theme .isu-menu-navbar .isu-nav-link:hover,
+body.custom-theme .isu-menu-navbar .isu-nav-link:focus,
+body.custom-theme .isu-menu-navbar .nav-item.active > .nav-link,
+body.custom-theme .isu-menu-navbar .nav-item.active > .isu-nav-link {
+    color: var(--color-primary, #c8102e);
+}
+
+/* --------------------------------------  */
+/* ## MICROSITE BANNER
+/* --------------------------------------  */
+
+/* The microsite homepage content column must be full-width so the hero
+   banner's calc(50% - 50vw) full-bleed resolves correctly. Without this,
+   the theme's max-width: 75% on .isu-page-column shifts the hero off-center. */
+.regcytes-microsite-homepage .isu-page-column {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Hero Header */
+.microsite-hero-label-wrapper {
+    z-index: 2;
+}
+.microsite-hero-wrapper {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    min-height: 400px;
+    position: relative;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.microsite-hero-wrapper--no-image {
+    justify-content: flex-start;
+}
+.microsite-hero-wrapper--no-image .microsite-hero-label-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.microsite-hero-wrapper--no-image .microsite-hero-logo__img {
+    display: inline-block;
+}
+.microsite-hero-wrapper--no-image .microsite-event-details--wrapper {
+    justify-content: left;
+}
+.microsite-hero-label-wrapper.isueo-callout-stat {
+    background-color: var(--color-primary, #c8102e);
+    text-align: center;
+    width: 100%;
+    max-width: 45%;
+    animation: fadeIn 0.6s ease-out;
+}
+.microsite-hero-label-wrapper h1.isu-page-title {
+    color: var(--color-hero-text, #fff);
+    margin: 0;
+    padding-bottom: 0.5rem;
+    font-weight: 700;
+}
+.microsite-event-details--wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 35px;
+    font-weight: 500;
+}
+.microsite-hero-logo {
+    margin-bottom: 1rem;
+}
+.microsite-hero-logo__img {
+    max-height: 80px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+}
+.microsite-date-wrapper {
+    color: var(--color-hero-date, var(--primary-accent-color));
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.microsite-event-location {
+    color: var(--color-hero-text, #fff);
+    font-weight: 500;
+    display: flex;
+}
+.microsite-event-location:before {
+    content: "\f041" / "";
+    font-family: 'FontAwesome';
+    font-size: 1.1rem;
+    color: var(--color-hero-text, #fff);
+    padding-right: .5rem;
+}
+/* No hero image — outer wrapper becomes the primary color background. */
+.microsite-hero-wrapper--no-image, .microsite-micro-banner-details--no-image, .microsite-micro-banner--no-image {
+    background-color: var(--color-primary, var(--primary-color));
+}
+.microsite-micro-banner-details--no-image::after {
+    display: none;
+}
+
+.microsite-event-website header.isu-wordmark-sitename,
+body.group-site header.isu-wordmark-sitename {
+    color: var(--link-color);
+}
+
+/* --------------------------------------  */
+/* ## LAYOUT BUILDER PREVIEW OVERRIDES
+/* --------------------------------------  */
+
+/* Disable full-bleed so elements stay within the LB editor canvas. */
+.layout-builder .microsite-hero-wrapper,
+.layout-builder .microsite-micro-banner,
+.layout-builder .microsite-micro-banner-details {
+    width: 100%;
+    margin-left: 0;
+}
+
+/* Give image-driven banners a visible minimum height when no image is set. */
+.layout-builder .microsite-micro-banner,
+.layout-builder .microsite-micro-banner-details {
+    min-height: 80px;
+}
+
+/* Constrain the hero banner height so it doesn't dominate the editor. */
+.layout-builder .microsite-hero-wrapper {
+    min-height: 160px;
+}
+
+/* --------------------------------------  */
+/* ## MICRO BANNER PAGE TITLE
+/* --------------------------------------  */
+
+.micro-banner-page-title {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+}
+.micro-banner-page-title .isu-page-title {
+    margin: 0;
+}
+
+/* --------------------------------------  */
+/* ## MICROSITE MICRO BANNER
+/* --------------------------------------  */
+
+.microsite-micro-banner {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    max-height: 30vh;
+    overflow: hidden;
+    background-color: var(--color-primary, #c8102e);
+    line-height: 0;
+}
+.microsite-micro-banner__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 30vh;
+    object-fit: cover;
+}
+.microsite-micro-banner--no-image {
+    min-height: 8vh;
+    max-height: 30vh;
+}
+
+/* --------------------------------------  */
+/* ## MICROSITE MICRO BANNER + DETAILS
+/* --------------------------------------  */
+
+.microsite-micro-banner-details {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    max-height: 30vh;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--color-primary, #c8102e);
+    line-height: 0;
+}
+.microsite-micro-banner-details__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 30vh;
+    object-fit: cover;
+}
+.microsite-micro-banner-details--no-image {
+    min-height: 20vh;
+    max-height: 30vh;
+}
+/* Tint pseudo-element sits above the img, below the text overlay */
+.microsite-micro-banner-details::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(7, 51, 62, 0.5);
+    z-index: 1;
+}
+.microsite-micro-banner-details__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    line-height: normal;
+    z-index: 2;
+    padding: 1rem 0;
+}
+.microsite-micro-banner-details__overlay .regcytes-custom-header__meta,
+.microsite-micro-banner-details__overlay .regcytes-custom-header__title {
+    color: var(--color-hero-text, #fff);
+}
+
+/* --------------------------------------  */
+/* ## MICROSITE - AGENDA
+/* --------------------------------------  */
+.subsite-agenda {
+    box-shadow: 0.5625rem 0.5625rem 1.25rem rgb(0 0 0 / 20%);
+    border-radius: 0.25rem;
+}
+.subsite-agenda .agenda-content {
+    position: relative;
+}
+.subsite-agenda .agenda-panel {
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease;
+}
+.subsite-agenda .agenda-panel.active {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+    transition: opacity 0.3s ease;
+}
+.subsite-agenda .agenda-panel.fading-out {
+    opacity: 0;
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+    transition: opacity 0.25s ease;
+}
+.subsite-agenda .schedule-timeline {
+    border-radius: 0 0 .25rem .25rem;
+    padding: 2rem;
+    border-top: none;
+}
+.subsite-agenda .schedule-item {
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-bottom: 0.125rem solid #ebebeb;
+    position: relative;
+    align-items: baseline;
+}
+.subsite-agenda .schedule-item:last-child {
+    border-bottom: none;
+}
+.subsite-agenda .schedule-time {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    position: relative;
+    padding-left: 2rem;
+}
+.subsite-agenda .schedule-time::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.2);
+}
+.subsite-agenda .schedule-details {
+    flex: 1;
+}
+.subsite-agenda h3.schedule-title {
+    font-size: 1.18rem;
+    color: #000;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    margin-top: 0.2rem;
+}
+.subsite-agenda .schedule-location {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+.subsite-agenda .schedule-description {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+.subsite-agenda .schedule-description p {
+    margin-bottom: 0.5rem;
+}
+.subsite-agenda .schedule-description ul,
+.subsite-agenda .schedule-description ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.subsite-agenda .schedule-speakers {
+    color: #666;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+.subsite-agenda .schedule-speakers strong {
+    font-style: normal;
+    color: #000;
+}
+/* In Page Navigation */
+.subsite-agenda .agenda-tabs {
+    display: flex;
+    margin-bottom: 0;
+}
+.subsite-agenda .agenda-tab {
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border-radius: .25rem .25rem 0 0;
+    transition: all 0.3s;
+    background: #f5f5f5;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-bottom: -2px;
+    border: none;
+}
+.subsite-agenda .agenda-tab span.tab-day-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #666;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.subsite-agenda .agenda-tab span.tab-month-day {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #666;
+    display: block;
+}
+.subsite-agenda .agenda-tab.active {
+  background: white;
+  z-index: 2;
+}
+.subsite-agenda .agenda-tab.active .tab-day-name,
+.subsite-agenda .agenda-tab.active .tab-month-day {
+  color: var(--primary-color);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .agenda-tabs {
+    flex-wrap: wrap;
+  }
+  .agenda-tab {
+    padding: 1rem 1.5rem;
+  }
+  .agenda-tab .tab-day-name {
+    font-size: 1.5rem;
+  }
+  .agenda-tab .tab-month-day {
+    font-size: 0.9rem;
+  }
+  .schedule-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .schedule-time {
+    padding-left: 2rem;
+  }
+  .schedule-timeline {
+    padding: 1.5rem;
+  }
+  .schedule-title {
+    font-size: 1.15rem;
+  }
+}
+
+/* --------------------------------------  */
+/* ## SITE CONTACT INFO
+/* --------------------------------------  */
+
+.site-contact-info {
+    background-color: var(--lt-gray, #f5f5f5);
+    padding: 2rem;
+}
+.site-contact-info__inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(25%, 1fr));
+    gap: 3rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.site-contact-info__column {
+    position: relative;
+}
+.site-contact-info__column:not(:nth-child(3n+1))::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: #d0d0d0;
+}
+.site-contact-info__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dk-gray, #4a4a4a);
+    margin-bottom: 0.75rem;
+}
+.site-contact-info__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 0.25rem;
+}
+.site-contact-info__meta {
+    font-size: 0.95rem;
+    color: var(--dk-gray, #4a4a4a);
+    margin-bottom: 0.15rem;
+    line-height: 1.5;
+}
+.site-contact-info__link {
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+}
+.site-contact-info__link a {
+    color: var(--link-color);
+    text-decoration: none;
+    overflow-wrap: break-word;
+}
+.site-contact-info__link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .site-contact-info__inner {
+        grid-template-columns: 1fr;
+        gap: 4rem 0;
+    }
+    .site-contact-info__column:not(:first-child)::before {
+        top: -2rem;
+        bottom: auto;
+        left: 0;
+        right: 0;
+        width: auto;
+        height: 1px;
+    }
+}
+
+/* Print Styles */
+@media print {
+  .agenda-tab {
+    display: none;
+  }
+  .agenda-panel {
+    display: block !important;
+    page-break-before: always;
+  }
+  .agenda-panel:first-child {
+    page-break-before: avoid;
+  }
+  .schedule-time::before {
+    background-color: #000;
+    box-shadow: none;
+  }
+}

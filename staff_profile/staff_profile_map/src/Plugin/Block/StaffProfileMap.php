@@ -34,7 +34,7 @@ class StaffProfileMap extends BlockBase
     $node = \Drupal::routeMatch()->getParameter('node');
     if ($node instanceof \Drupal\node\NodeInterface) {
       //Handle Counties Served
-      foreach ($node->get('field_staff_profile_cty_served') as $ctyServed) {
+      foreach ($node->hasField('field_staff_profile_cty_served') ? $node->get('field_staff_profile_cty_served') : [] as $ctyServed) {
         $county_name = $ctyServed->entity->label();
         if (!empty($county_name)) {
           $styles .= '#' . $this->fixCounty($county_name) . ' polygon {fill:' . $config['served_color'] . '}' . PHP_EOL;
@@ -44,7 +44,7 @@ class StaffProfileMap extends BlockBase
       }
 
       //Handle Base County
-      if ($node->get('field_staff_profile_base_county')->entity != null) {
+      if ($node->hasField('field_staff_profile_base_county') && $node->get('field_staff_profile_base_county')->entity != null) {
         $base_county = $node->field_staff_profile_base_county->entity->label();
         if (!empty($base_county)) {
           $styles .= '#' . $this->fixCounty($base_county) . ' polygon {fill:' . $config['base_color'] . ';}' . PHP_EOL;

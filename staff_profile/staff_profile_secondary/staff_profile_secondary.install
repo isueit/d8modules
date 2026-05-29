@@ -1,36 +1,30 @@
 <?php
 
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+
 /**
  * Implements hook_install().
  */
-function staff_profile_secondary_install() {
+function staff_profile_secondary_install()
+{
   // Set up permissions, allow users to edit their own staff profile
-  user_role_grant_permissions('content_editor', array(
-    'edit any staff_profile content',
-  ));
-
-  user_role_revoke_permissions('content_editor', array(
-    'create staff_profile content',
-  ));
+  Wrappers::changeRolePermissions('content_editor', ['edit any staff_profile content',], TRUE);
+  Wrappers::changeRolePermissions('content_editor', ['create staff_profile content',], FALSE);
 }
 
 /**
-* Implements hook_uninstall().
-*/
-function staff_profile_secondary_uninstall() {
+ * Implements hook_uninstall().
+ */
+function staff_profile_secondary_uninstall()
+{
   // Delete all staff_profile nodes
-  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type','staff_profile')->execute();
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->execute();
   $nodes =  \Drupal\node\Entity\Node::loadMultiple($nids);
   foreach ($nodes as $node) {
     $node->delete();
   }
 
   // Set up permissions, allow users to edit their own staff profile
-  user_role_revoke_permissions('content_editor', array(
-    'edit any staff_profile content',
-  ));
-
-  user_role_grant_permissions('content_editor', array(
-    'create staff_profile content',
-  ));
+  Wrappers::changeRolePermissions('content_editor', ['edit any staff_profile content',], FALSE);
+  Wrappers::changeRolePermissions('content_editor', ['create staff_profile content',], TRUE);
 }

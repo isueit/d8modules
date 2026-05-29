@@ -94,7 +94,11 @@
   <div{{ content_attributes }}>
   <div class="newsletter col-1">
     <div class="field-content newsletter-page-thumbnail">{{ content.field_thumbnail }}</div>
-    <h2{{ title_attributes.addClass('isu-block-title', 'h4') }}>{{ label }}</h2>
+    {% if preceded_by_section_heading %}
+      <h3{{ title_attributes.addClass('isu-block-title', 'h4') }}>{{ label }}</h3>
+    {% else %}
+      <h2{{ title_attributes.addClass('isu-block-title', 'h4') }}>{{ label }}</h2>
+    {% endif %}
     <div class="views-field-created">
       <em>{{ revision_authored_date }}</em>
     </div>

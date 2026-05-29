@@ -17,7 +17,7 @@ function editor_login_signoff_install() {
   $block = Block::create([
 	'id' => 'staff_links',
 	'plugin' => 'block_content:' . $block_content->uuid(),
-	'region' => 'sign_off',
+	'region' => 'footer_third',
 	'provider' => 'block_content',
 	'weight' => -100,
 	'theme' => \Drupal::config('system.theme')->get('default'),

@@ -1,23 +1,15 @@
 <?php
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy_import\Form\ImportForm;
-use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
 
 function county_job_openings_install() {
-  $roles = Role::loadMultiple([
-    'content_editor'
-  ]);
-
-  $issueAccessPermissions = [
+  // Add permissions to content_editor role
+  $permissions = [
     "edit own county_job_opening content",
     "delete own county_job_opening content"
   ];
-
-  foreach ($issueAccessPermissions as $permission) {
-    $roles['content_editor']->grantPermission($permission);
-  }
-  $roles['content_editor']->save();
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 
   $name = "Counties in Iowa";
   $vid = "counties_in_iowa";

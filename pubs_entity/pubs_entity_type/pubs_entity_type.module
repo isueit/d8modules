@@ -23,7 +23,6 @@ function validatePubsEntity($validateID, $curEntity) {
     } else {
       $raw = "";
     }
-    //$raw = file_get_contents($url);
 
     $decoded = json_decode($raw);
     if (is_object($decoded) && get_class($decoded) == 'stdClass') {
