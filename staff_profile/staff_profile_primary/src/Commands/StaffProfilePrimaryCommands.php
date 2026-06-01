@@ -28,7 +28,7 @@ class StaffProfilePrimaryCommands extends DrushCommands {
   public function addeditor($netid, $options = ['course' => ""]) {
     $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'staff_profile')->condition('field_staff_profile_netid', $netid)->execute();
 
-    if ($nid = reset($nids) && $nid !== FALSE) {
+    if (($nid = reset($nids)) && $nid !== FALSE) {
       $node =  Node::load(reset($nids));
 
       $qual_objs = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('editor_qualifications');

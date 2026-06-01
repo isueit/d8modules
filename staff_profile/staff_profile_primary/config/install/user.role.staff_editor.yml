@@ -17,7 +17,6 @@ dependencies:
     - help
     - node
     - section_lib_importer
-    - siteimprove
     - system
     - toolbar
 id: staff_editor

@@ -11,6 +11,7 @@ use Drupal\smugmug_media_type\Plugin\media\Source\SmugmugEmbedField;
 use Drupal\media_library\MediaLibraryUiBuilder;
 use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\media\OEmbed\ResourceException;
 
 /**
  * Creates a form to create media entities from Smugmug URLs.

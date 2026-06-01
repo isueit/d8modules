@@ -131,8 +131,8 @@ class CountyJobsBlock extends BlockBase
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration()
-  {
+  //public function defaultConfiguration()
+  //{
     /*
     return array(
       'max_size' => '400',
@@ -141,10 +141,10 @@ class CountyJobsBlock extends BlockBase
 
     );
     */
-  }
+  //}
 
-  private function fixCounty($county_name)
-  {
+  //private function fixCounty($county_name)
+  //{
     /*
     $county_name = str_replace(' ', '_', $county_name);
     $county_name = str_replace('\'', '', $county_name);
@@ -153,6 +153,6 @@ class CountyJobsBlock extends BlockBase
 
     return $county_name;
     */
-  }
+  //}
 }
 

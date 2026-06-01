@@ -6,7 +6,7 @@ use Drupal\smugmug_media_type\ProviderPluginBase;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\ImageEffect\ScaleImageEffect;
 use Drupal\image\Plugin\ImageEffect\CropImageEffect;
-use Drupal\Component\Utility\HTML;
+use Drupal\Component\Utility\Html;
 use Drupal\isueo_helpers\ISUEOHelpers;
 use Drupal\isueo_helpers\ISUEOHelpers\Files;
 
@@ -101,7 +101,7 @@ class SmugmugAPI extends ProviderPluginBase {
       '#type' => 'smugmug_embed_image',
       '#provider' => 'smugmugapi',
       '#url' => ISUEOHelpers\General::build_smugmug_url($this->getImageId(), $size_char),
-      '#alt' => HTML::escape($alt), //htmlspecialchars()
+      '#alt' => Html::escape($alt), //htmlspecialchars()
       '#height' => $height,
       '#width' => $width,
       '#cropped' => $using_crop,
