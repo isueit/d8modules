@@ -108,10 +108,10 @@ class SmugmugEmbedField extends MediaSourceBase {
           return $provider->getIdFromInput($url);
         }
         return FALSE;
-        
+
       case 'alternative_text':
       case 'alt_text':
-        $alt_field = $this->getAltText();
+        $alt_field = $this->getAltText($media);
         if ($alt_field && $alt_field != '') {
           return $alt_field;
         } else if ($provider = $this->providerManager->loadProviderFromInput($url)) {
@@ -178,7 +178,7 @@ class SmugmugEmbedField extends MediaSourceBase {
     $image_url = $media->{$field_name}->value;
     return !empty($image_url) ? $image_url : FALSE;
   }
-  
+
   /**
    * Get the image alt text from a media entity.
    *
@@ -217,11 +217,11 @@ class SmugmugEmbedField extends MediaSourceBase {
     }
     return NULL;
   }
-  
+
   public function getProviders() {
     return $this->providerManager->getProvidersOptionList();
   }
-  
+
   public function getDefinitions($input) {
     return $this->providerManager->loadDefinitionFromInput($input);
   }

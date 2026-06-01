@@ -16,14 +16,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Creates a form to create media entities from Smugmug URLs.
  */
 class SmugmugMediaLibraryForm extends AddFormBase {
-  
+
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return $this->getBaseFormId() . '_smugmug';
   }
-  
+
   /**
    * Constructs a new SmugmugMediaLibraryForm.
    *
@@ -48,7 +48,7 @@ class SmugmugMediaLibraryForm extends AddFormBase {
       $container->get('media_library.opener_resolver')
     );
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -56,14 +56,14 @@ class SmugmugMediaLibraryForm extends AddFormBase {
     if ($this->mediaType) {
       return $this->mediaType;
     }
-  
+
     $media_type = parent::getMediaType($form_state);
     if (!$media_type->getSource() instanceof SmugmugEmbedField) {
       throw new \InvalidArgumentException('Can only add media types which use an SmugmugEmbedField.');
     }
     return $media_type;
   }
-  
+
   /**
    * {@inheritdoc}
    */
@@ -71,12 +71,12 @@ class SmugmugMediaLibraryForm extends AddFormBase {
     $media_type = $this->getMediaType($form_state);
 
     $providers = $media_type->getSource()->getProviders();
-  
+
     // Add a container to group the input elements for styling purposes.
     $form['container'] = [
       '#type' => 'container',
     ];
-  
+
     $form['container']['url'] = [
       '#type' => 'url',
       '#title' => $this->t('Add @type via URL', [
@@ -97,7 +97,7 @@ class SmugmugMediaLibraryForm extends AddFormBase {
       '#maxlength' => 255,
       '#required' => TRUE
     ];
-  
+
     $form['container']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add'),
@@ -117,7 +117,7 @@ class SmugmugMediaLibraryForm extends AddFormBase {
     ];
     return $form;
   }
-  
+
   /**
    * Validates the Smugmug URL.
    *
@@ -141,7 +141,7 @@ class SmugmugMediaLibraryForm extends AddFormBase {
       }
     }
   }
-  
+
   /**
    * Submit handler for the add button.
    *

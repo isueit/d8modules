@@ -69,7 +69,7 @@ class Typesense
       if ($node) {
         $client = Typesense::getClient($api_key);
         $render_array = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, 'default');
-        $content = \Drupal::service('renderer')->renderPlain($render_array);
+        $content = \Drupal::service('renderer')->renderInIsolation($render_array);
         $record = [
           'id' => $site_name . ':' . $node->id(),
           'title' => $node->getTitle(),
