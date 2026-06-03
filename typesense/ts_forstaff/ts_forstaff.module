@@ -65,6 +65,9 @@ function ts_forstaff_index_all_nodes()
 function ts_forstaff_delete_all_from_collection($sitename = '')
 {
   $config = Drupal::config('ts_forstaff.settings');
+  if (empty($config->get('api_key'))) {
+    return;
+  }
   $client = Typesense::getClient($config->get('api_key'));
   $sitename = empty($sitename) ? $config->get('site_name') : $sitename;
   $client->collections[$config->get('collection')]->documents->delete(['filter_by' => 'site_name:=' . $sitename,]);
