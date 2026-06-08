@@ -49,8 +49,37 @@ class TypesenseCollectionSchemas
 
   private static function getDefinition(string $collection)
   {
+    /*
+     * Yank this framework, and paste it at the end of this function
+     * 22 lines
+     */
+    /*
+
+      'collection' => [
+        'default_sorting_field' => 'sort_order',
+
+        // Define the fields
+        'fields' => [
+          'sort_order' => 'int32',
+        ],
+
+        // Sort fields
+        'sort' => [
+          'sort_order',
+        ],
+
+        // Fields that are facets
+        'facets' => [
+        ],
+
+        // Optional fields
+        'optional' => [
+        ],
+      ],
+
+    */
     $definitions = [
-      'deleteme_brian' => [
+      'events' => [
         'default_sorting_field' => 'sort_order',
 
         // Sort fields
@@ -132,8 +161,96 @@ class TypesenseCollectionSchemas
           'Registration_Deadline__c',
           'Registration_Link__c',
         ],
-      ]
+      ],
+
+      'plp_programs' => [
+        'default_sorting_field' => 'field_plp_program_sort_calc',
+
+        // Define the fields
+        'fields' => [
+          'type' => 'string',
+          'body' => 'string',
+          'category_name' => 'string',
+          'children_body' => 'string[]',
+          'children_title' => 'string[]',
+          'field_plp_program_category' => 'int32',
+          'field_plp_program_num_events' => 'int32',
+          'field_plp_program_search_terms' => 'string',
+          'field_plp_program_smugmug' => 'string',
+          'field_plp_program_sort_calc' => 'int32',
+          'field_plp_program_topics' => 'int32[]',
+          'program_area' => 'string',
+          'summary' => 'string',
+          'title' => 'string',
+          'topic_names' => 'string[]',
+          'audiences' => 'string[]',
+          'url' => 'string',
+        ],
+
+        // Sort fields
+        'sort' => [
+          'field_plp_program_sort_calc',
+          'field_plp_program_category',
+          'field_plp_program_num_events',
+        ],
+
+        // Fields that are facets
+        'facets' => [
+          'type',
+          'category_name',
+          'program_area',
+          'topic_names',
+          'audiences',
+        ],
+
+        // Optional fields
+        'optional' => [
+          'type',
+        ],
+      ],
+
+      'extension_content' => [
+        'default_sorting_field' => '',
+
+        // Define the fields
+        'fields' => [
+          'text_content' => 'string',
+          'title' => 'string',
+          'changed' => 'string',
+          'created' => 'string',
+          'site_name' => 'string',
+          'url' => 'string',
+          'content_type' => 'string',
+          'summary' => 'string',
+          'rendered_content' => 'string',
+          'published' => 'bool',
+        ],
+
+        // Sort fields
+        'sort' => [
+          'published',
+        ],
+
+        // Fields that are facets
+        'facets' => [
+          'content_type',
+          'published',
+          'site_name',
+        ],
+
+        // Optional fields
+        'optional' => [
+          'text_content',
+        ],
+      ],
+
+      // Add new Definitions here
     ];
+
+    // ForStaff collection should be the exact same as extension_content
+    if ($collection == 'ForStaff') {
+      $collection = 'extension_content';
+    }
 
     if (array_key_exists($collection, $definitions)) {
       return $definitions[$collection];
