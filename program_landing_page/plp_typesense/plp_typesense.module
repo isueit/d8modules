@@ -158,6 +158,6 @@ function plp_typesense_get_typesense_collection_name()
 
 function plp_typesense_get_typesense_client()
 {
-  return Typesense::getClient('KPwl7XwGfNLPjKdRtZSL1H0Rb1YeApcD'); // plp_programs
-  //return Typesense::getClient('FcwLwSWecQh91ElQtZjm0lGRv8cW2t1T'); // deleteme_brian
+  return Typesense::getClient('plp_programs');
+  //return Typesense::getClient('deleteme_brian');
 }

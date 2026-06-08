@@ -12,16 +12,44 @@ use Drupal\Core\Entity\EntityInterface;
 class Typesense
 {
   // Get the Client for our Typesense search server
-  public static function getClient(string $api_key = '')
+  public static function getClient(string $collection_name = '')
   {
     $config = \Drupal::config('isueo_helpers.settings');
-    if ($config == null || empty($config->get('typesense.api_key'))) {
+    if (!$config) {
       Drupal::logger('isueo_helpers')->alert('Please enter a Typesense API Key');
+      return null;
+    }
+    $api_key = '';
+
+    switch ($collection_name) {
+      case 'events':
+        $api_key = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI'; // Admin events
+        break;
+      case 'extension_content':
+        $api_key = 'eS90dAFa47TIaOa1gm21fskmfTgwAUBE'; // Admin extension_content
+        break;
+      case 'ForStaff':
+        $api_key = 'Zdlpn5NWOD2eCsCU6MCA9xLphzGlNn0A'; // Admin ForStaff
+        break;
+      case 'plp_programs':
+        $api_key = 'KPwl7XwGfNLPjKdRtZSL1H0Rb1YeApcD'; // Admin plp_programs
+        break;
+      case 'products':
+        break;
+      case 'Admin':
+        $api_key = 'O1tfLS2ZsKlYlDpLq16ZYaiB2m2doa9o'; // Admin
+        break;
+      case 'SearchAll':
+        $api_key = 'bilLvsiWoO1EqcM21L8XrzofmVBYfyB9'; // search all
+        break;
+      case 'deleteme_brian':
+        $api_key = 'FcwLwSWecQh91ElQtZjm0lGRv8cW2t1T'; // Admin deleteme_brian
+        break;
+      default:
+        $api_key = $config->get('typesense.api_key');
+        break;
     }
 
-    $api_key = !empty($api_key) ? $api_key : $config->get('typesense.api_key');
-
-    $number_of_blocks = $config->get('number_of_blocks');
     $client = new Client(
       [
         'api_key' => $api_key,
@@ -41,7 +69,7 @@ class Typesense
   public static function searchCollection(string $collection, string $q = '*', string $query_by = '*', string $sort_by = '', int $per_page = 10, int $page = 1, string $filter_by = '', bool $exhaustive_search = false)
   {
     try {
-      $client = self::getClient();
+      $client = self::getClient('');
       if ($client) {
         $query_array = [
           'q' => $q,
@@ -60,14 +88,13 @@ class Typesense
     return (null);
   }
 
-  //public static function index_node(int $nid, string $api_key, string $collection, string $site_name, string $base_url)
-  public static function index_node(EntityInterface $node, string $api_key, string $collection, string $site_name, string $base_url)
+  public static function index_node(EntityInterface $node, string $collection, string $site_name, string $base_url)
   {
     try {
       //      $node = Drupal::entityTypeManager()->getStorage('node')->load($nid);
 
       if ($node) {
-        $client = Typesense::getClient($api_key);
+        $client = Typesense::getClient($collection);
         $render_array = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, 'default');
         $content = \Drupal::service('renderer')->renderInIsolation($render_array);
         $record = [

@@ -24,8 +24,7 @@ function ts_events_collection_index_events()
   $now = time();
   $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
   $events = json_decode($raw, true);
-  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
-  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+  $client = ISUEOHelpers\Typesense::getClient('events');
 
   foreach ($events as $event) {
     if ($event['Cancelled_Program__c'] || !$event['Public_Event__c']) {
@@ -153,8 +152,7 @@ function ts_events_collection_get_sessions($event)
 
 function ts_events_collection_create_collection()
 {
-  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
-  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+  $client = ISUEOHelpers\Typesense::getClient('events');
 
   // Start with the base schema
   $schema = [
@@ -277,8 +275,7 @@ function ts_events_collection_create_collection()
 
 function ts_events_collection_delete_collection()
 {
-  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
-  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+  $client = ISUEOHelpers\Typesense::getClient('events');
 
   try {
     $client->collections['events']->delete();
