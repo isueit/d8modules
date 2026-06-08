@@ -52,24 +52,24 @@
 
   <div class="microsite-micro-banner-details__overlay">
     <div class="container">
-      <div class="regcytes-custom-header__inner">
+      <div class="microsite-micro-banner-details__inner">
 
-        <div class="regcytes-custom-header__brand">
-          <div class="regcytes-custom-header__info">
+        <div class="microsite-micro-banner-details__brand">
+          <div class="microsite-micro-banner-details__info">
             {% if dates_formatted is defined or location is defined %}
-              <p class="regcytes-custom-header__meta">
+              <p class="microsite-micro-banner-details__meta">
                 {{- dates_formatted is defined ? dates_formatted : '' -}}
                 {%- if dates_formatted is defined and location is defined %} &nbsp;·&nbsp; {% endif -%}
                 {{- location is defined ? location : '' -}}
               </p>
             {% endif %}
             {% if label %}
-              <p class="regcytes-custom-header__title">{{ label }}</p>
+              <p class="microsite-micro-banner-details__title">{{ label }}</p>
             {% endif %}
           </div>
         </div>
 
-        <div class="regcytes-custom-header__actions">
+        <div class="microsite-micro-banner-details__actions">
           <button class="navbar-toggler isu-menu-navbar_toggler" type="button" data-toggle="collapse" id="isu-menu-navbar_toggler" aria-expanded="false" aria-label="Toggle navigation">
             <span class="isu-menu-navbar_toggler-label sr-only">Menu</span>
             <div class="navbar-toggler-icon isu-menu-navbar_toggler-icon">

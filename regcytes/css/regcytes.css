@@ -38,12 +38,44 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
-.microsite-micro-banner-details__overlay .regcytes-custom-header__meta {
-    font-size: 1.3rem;
+.microsite-micro-banner-details__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    gap: 1rem;
 }
-.microsite-micro-banner-details__overlay .regcytes-custom-header__title {
-    font-size: 3rem;
+.microsite-micro-banner-details__brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.microsite-micro-banner-details__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.microsite-micro-banner-details__meta {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.microsite-micro-banner-details__title {
+    margin: 0;
     margin-top: 0.5rem;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+}
+.microsite-micro-banner-details__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
 }
 .regcytes-custom-header__title {
     margin: 0;
@@ -106,6 +138,24 @@
 }
 
 /* --------------------------------------  */
+/* ## CUSTOM THEME VARIABLE REMAPPING
+/* Remap ISU theme CSS variables to the group's color variables so every
+/* theme component (block titles, buttons, links, underlines, etc.) inherits
+/* the group palette automatically without per-rule overrides.
+/* --------------------------------------  */
+
+body.custom-theme {
+    --primary-color:        var(--color-primary);
+    --secondary-color:      var(--color-secondary);
+    --primary-accent-color: var(--color-accent);
+    --link-color:           var(--color-link);
+    --btn-success-color:    var(--color-btn-success);
+    --btn-danger-color:     var(--color-btn-danger);
+    --btn-primary-color:    var(--color-btn-primary);
+    --btn-secondary-color:  var(--color-btn-secondary);
+}
+
+/* --------------------------------------  */
 /* ## CUSTOM THEME MENU
 /* --------------------------------------  */
 
@@ -131,6 +181,24 @@ body.custom-theme .isu-menu-navbar .isu-nav-link:focus,
 body.custom-theme .isu-menu-navbar .nav-item.active > .nav-link,
 body.custom-theme .isu-menu-navbar .nav-item.active > .isu-nav-link {
     color: var(--color-primary, #c8102e);
+}
+
+/* Hide the global site name in the navbar on custom-themed group pages */
+body.custom-theme header.isu-wordmark-sitename {
+    display: none;
+}
+
+/* Mobile menu — use neutral background instead of primary color on custom themes */
+body.custom-theme .isu-menu-navbar_show.isu-menu-navbar_wrap {
+    background-color: #f5f5f5;
+}
+body.custom-theme .isu-menu-navbar_show.isu-menu-navbar_wrap .navbar-expand-lg .navbar-nav .nav-link {
+    color: #333333;
+}
+
+/* Mobile menu toggle — use group primary color on custom themes */
+body.custom-theme .isu-menu-navbar_toggler-icon span {
+    border-bottom-color: var(--color-primary, #c8102e);
 }
 
 /* --------------------------------------  */
