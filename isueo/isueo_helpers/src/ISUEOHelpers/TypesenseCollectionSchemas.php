@@ -1,0 +1,144 @@
+<?php
+
+namespace Drupal\isueo_helpers\ISUEOHelpers;
+
+use Drupal;
+use Exception;
+use Symfony\Component\HttpClient\HttplugClient;
+use Typesense\Client;
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+class TypesenseCollectionSchemas
+{
+  public static function getSchema(string $collection)
+  {
+    $definition = self::getDefinition($collection);
+    if (empty($definition)) {
+      Drupal::messenger()->addError('Not Found: Definition for ' . $collection);
+      return [];
+    }
+    $schema = [
+      'name' => $collection,
+      'fields' => [],
+      'default_sorting_field' => $definition['default_sorting_field'],
+      'enable_nested_fields' => false,
+      'symbols_to_index' => [],
+      'token_separators' => []
+    ];
+
+    // Add the fields to the schema
+    foreach ($definition['fields'] as $field => $type) {
+      $schema['fields'][] =
+        [
+          'name' => $field,
+          'type' => $type,
+          'facet' => in_array($field, $definition['facets']),
+          'optional' => in_array($field, $definition['optional']),
+          'index' => true,
+          'sort' => in_array($field, $definition['sort']),
+          'infix' => false,
+          'locale' => '',
+          'stem' => false,
+          'stem_dictionary' => '',
+          'store' => true
+        ];
+    }
+    return $schema;
+  }
+
+  private static function getDefinition(string $collection)
+  {
+    $definitions = [
+      'deleteme_brian' => [
+        'default_sorting_field' => 'sort_order',
+
+        // Sort fields
+        'sort' => [
+          'sort_order',
+        ],
+
+        // Define the fields
+        'fields' => [
+          'title' => 'string',
+          'description' => 'string',
+          'delivery_method' => 'string',
+          'Program_State__c' => 'string',
+          'Event_Location__c' => 'string',
+          'PrimaryProgramUnit__c' => 'string',
+          'category' => 'string',
+          'topics' => 'string[]',
+          'county' => 'string[]',
+          'smugmug_id' => 'string',
+          'sort_order' => 'int32',
+          'last_updated_time' => 'int32',
+          'Next_Start_Date__c' => 'int64',
+          'sessions' => 'int64[]',
+          'sessions_end_date_time' => 'int64[]',
+          'Contact_Information_Name__c' => 'string',
+          'Contact_Information_Email__c' => 'string',
+          'Contact_Information_Phone__c' => 'string',
+          'Delivery_Language__c' => 'string',
+          'Instructor_Information_Name__c' => 'string',
+          'Instructor_Information_Email__c' => 'string',
+          'Instructor_Information_Phone__c' => 'string',
+          'End_Date_and_Time__c' => 'int64',
+          'Start_Time_and_Date__c' => 'int64',
+          'Event_Location_Site_Building__c' => 'string',
+          'Event_Location_Street_Address__c' => 'string',
+          'Event_Location_Zip_Code__c' => 'string',
+          'plp_program' => 'string',
+          'Planned_Program_Website__c' => 'string',
+          'Program_Offering_Website__c' => 'string',
+          'Registration_Opens__c' => 'int64',
+          'Registration_Deadline__c' => 'int64',
+          'Registration_Link__c' => 'string',
+        ],
+
+        // Fields that are facets
+        'facets' => [
+          'delivery_method',
+          'Delivery_Language__c',
+          'PrimaryProgramUnit__c',
+          'plp_program',
+          'category',
+          'topics',
+          'county',
+        ],
+
+        // Optional fields
+        'optional' => [
+          'Program_State__c',
+          'category',
+          'topics',
+          'county',
+          'Contact_Information_Name__c',
+          'Contact_Information_Email__c',
+          'Contact_Information_Phone__c',
+          'Delivery_Language__c',
+          'Instructor_Information_Name__c',
+          'Instructor_Information_Email__c',
+          'Instructor_Information_Phone__c',
+          'End_Date_and_Time__c',
+          'Start_Time_and_Date__c',
+          'Event_Location_Site_Building__c',
+          'Event_Location_Street_Address__c',
+          'Event_Location_Zip_Code__c',
+          'smugmug_id',
+          'plp_program',
+          'Planned_Program_Website__c',
+          'Program_Offering_Website__c',
+          'Registration_Opens__c',
+          'Registration_Deadline__c',
+          'Registration_Link__c',
+        ],
+      ]
+    ];
+
+    if (array_key_exists($collection, $definitions)) {
+      return $definitions[$collection];
+    } else {
+      return [];
+    }
+  }
+}

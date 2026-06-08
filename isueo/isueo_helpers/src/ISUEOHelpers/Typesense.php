@@ -8,6 +8,7 @@ use Symfony\Component\HttpClient\HttplugClient;
 use Typesense\Client;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\isueo_helpers\ISUEOHelpers\TypesenseCollectionSchemas;
 
 class Typesense
 {
@@ -86,6 +87,18 @@ class Typesense
       Drupal::logger('isueo_helpers')->info('Error in searchCollection: ' . $e->getMessage());
     }
     return (null);
+  }
+
+  public static function createCollection(string $collection)
+  {
+    $client = self::getClient($collection);
+    $schema = TypesenseCollectionSchemas::getSchema($collection);
+    try {
+      $client->collections->create($schema);
+    }
+    catch (Exception $e) {
+      Drupal::messenger()->addError($e->getMessage());
+    }
   }
 
   public static function index_node(EntityInterface $node, string $collection, string $site_name, string $base_url)
