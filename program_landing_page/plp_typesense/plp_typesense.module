@@ -68,16 +68,17 @@ function plp_typesense_index_all_programs()
 {
   // Only do this from the production server
   if (!ISUEOHelpers\General::is_production_server()) {
+    Drupal::messenger()->addStatus('Not on production server');
     return;
   }
 
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
+  $nodes =  Node::loadMultiple($nids);
 
   $client->collections[$collection_name]->documents->delete(['filter_by' => 'field_plp_program_sort_calc:>=0', ]);
 
-  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
-  $nodes =  Node::loadMultiple($nids);
   foreach ($nodes as $node) {
     plp_typesense_index_program($client, $collection_name, $node);
   }
