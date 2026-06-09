@@ -68,7 +68,6 @@ function plp_typesense_index_all_programs()
 {
   // Only do this from the production server
   if (!ISUEOHelpers\General::is_production_server()) {
-    Drupal::messenger()->addStatus('Not on production server');
     return;
   }
 
@@ -107,6 +106,7 @@ function plp_typesense_index_program($client, $collection_name, $node, $type = '
     'field_plp_program_category' => intval($node->get('field_plp_program_category')->getString()),
     'field_plp_program_smugmug' => $node->get('field_plp_program_smugmug')->getString(),
     'field_plp_program_search_terms' => $node->get('field_plp_program_search_terms')->getString(),
+    'field_plp_program_event_pgm_ids' => $node->get('field_plp_program_search_event_pgm_ids')->getString(),
     'category_name' => Term::load(intval($node->get('field_plp_program_category')->getString()))->getName(),
     'body' => empty($node->get('body')->value) ? 'N/A' : $node->get('body')->value,
     'summary' => empty($node->get('body')->summary) ? 'N/A' : $node->get('body')->summary,

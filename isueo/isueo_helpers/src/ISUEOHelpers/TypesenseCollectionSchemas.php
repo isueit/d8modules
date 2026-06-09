@@ -207,7 +207,6 @@ class TypesenseCollectionSchemas
         // Optional fields
         'optional' => [
           'type',
-          'field_plp_program_event_pgm_ids',
         ],
       ],
 
