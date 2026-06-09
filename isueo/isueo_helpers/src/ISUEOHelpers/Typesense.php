@@ -93,10 +93,25 @@ class Typesense
   {
     $client = self::getClient($collection);
     $schema = TypesenseCollectionSchemas::getSchema($collection);
+    $synonyms = TypesenseCollectionSchemas::getSynonyms($collection);
+
     try {
       $client->collections->create($schema);
+      self::upsertSynonyms($collection);
+    } catch (Exception $e) {
+      Drupal::messenger()->addError($e->getMessage());
     }
-    catch (Exception $e) {
+  }
+
+  public static function upsertSynonyms(string $collection)
+  {
+    $client = self::getClient($collection);
+    $synonyms = TypesenseCollectionSchemas::getSynonyms($collection);
+    try {
+      foreach ($synonyms as $key => $value) {
+        $client->collections[$collection]->synonyms->upsert($key, $value);
+      }
+    } catch (Exception $e) {
       Drupal::messenger()->addError($e->getMessage());
     }
   }

@@ -258,4 +258,23 @@ class TypesenseCollectionSchemas
       return [];
     }
   }
+
+  public static function getSynonyms(string $collection)
+  {
+    return [
+      'stem_synonyms' => ['synonyms' => ['stem', 'scie', 'scienc', 'science', 'sciences']],
+      'spanish_synonyms' => ['synonyms' => ['Spanish', 'Latino', 'Latina', 'Latinx']],
+      'beef_synonyms' => ['synonyms' => ['beef', 'cow', 'cows', 'calf', 'calv', 'calve', 'calves', 'calvi', 'calvin', 'calving', 'catt', 'cattl', 'cattle']],
+      'canning_synonyms' => ['synonyms' => ['canning', 'preserve']],
+      'certificate_synonyms' => ['synonyms' => ['certificate', 'certification']],
+      'disability_synonyms' => ['synonyms' => ['disability', 'disable', 'disabled', 'disabilities']],
+      'elderly_synonyms' => ['synonyms' => ['elderly', 'elderl', 'elder', 'aging', 'older']],
+      'garden_synonyms' => ['synonyms' => ['gard', 'garde', 'garden', 'gardeni', 'gardenin', 'gardening', 'gardene', 'gardener', 'gardeners']],
+      'horse_synonyms' => ['synonyms' => ['hors', 'horse', 'equin', 'equine']],
+      'kids_synonyms' => ['synonyms' => ['kid', 'kids', 'child', 'childr', 'childre', 'children']],
+      'pig_synonyms' => ['synonyms' => ['pork', 'pig', 'pigs', 'swine', 'hog', 'hogs']],
+      'tax_synonyms' => ['synonyms' => ['tax', 'taxe', 'taxes']]
+      //'_synonyms' => ['synonyms' => ['', '', '', '', ]],
+    ];
+  }
 }
