@@ -38,6 +38,14 @@ final class ISUEOHelpersCommands extends DrushCommands {
   #[CLI\Usage(name: 'isueo_helpers:typesense_information', description: 'Information on working with Typesense collections')]
   public function typesense_information($options = []) {
     $this->logger()->notice('Typesense: working with collections');
+    $this->output()->writeln('');
+    $this->output()->writeln(' Functions:');
+    $this->output()->writeln('   - getClient(string $collection)');
+    $this->output()->writeln('   - createCollections(string $collection)');
+    $this->output()->writeln('   - upsertSynonyms(string $collection)');
+    $this->output()->writeln('   - searchCollection(string $collection, string $q = \'*\', string $query_by = \'*\', string $sort_by = \'\', int $per_page = 10, int $page = 1, string $filter_by = \'\', bool $exhaustive_search = false)');
+
+    $this->output()->writeln('');
     $this->output()->writeln(' We don\'t have drush commands to create collections');
     $this->output()->writeln(' If the collection already exists, use the web interface to delete it prior to running the following drush command');
     $this->output()->writeln('');
