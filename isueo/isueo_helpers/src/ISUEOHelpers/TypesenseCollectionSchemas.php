@@ -176,7 +176,7 @@ class TypesenseCollectionSchemas
           'field_plp_program_category' => 'int32',
           'field_plp_program_num_events' => 'int32',
           'field_plp_program_search_terms' => 'string',
-          'field_plp_program_event_pgm_ids' => 'string',
+          'field_plp_program_event_pgm_ids' => 'string[]',
           'field_plp_program_smugmug' => 'string',
           'field_plp_program_sort_calc' => 'int32',
           'field_plp_program_topics' => 'int32[]',
