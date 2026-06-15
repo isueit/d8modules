@@ -9,6 +9,7 @@ use Drupal\node\Entity\Node;
 function ts_events_collection_rebuild()
 {
   ts_events_collection_index_events();
+  ts_events_collection_index_events_past();
 }
 /**
  * Implements hook_cron().
@@ -17,6 +18,7 @@ function ts_events_collection_rebuild()
 function ts_events_collection_cron()
 {
   ts_events_collection_index_events();
+  ts_events_collection_index_events_past();
 }
 
 function ts_events_collection_index_events()
@@ -201,4 +203,19 @@ function ts_events_collection_get_planned_program($programId, $title)
   }
 
   return $plannedProgram;
+}
+
+function ts_events_collection_index_events_past() {
+  $queue = \Drupal::queue('ts_events_collection_events_past');
+
+  $now = time();
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/PastEvents.json');
+  $events_past = json_decode($raw, true);
+
+  echo count($events_past) . PHP_EOL;
+
+  foreach ($events_past as $event_past) {
+    $queue->createItem($event_past);
+  }
+  echo $queue->numberOfItems() . PHP_EOL;
 }

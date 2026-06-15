@@ -24,7 +24,8 @@ class Typesense
 
     switch ($collection_name) {
       case 'events':
-        $api_key = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI'; // Admin events
+      case 'events_past':
+        $api_key = '93puZ47qEFCl3WCKWB3SwWLY7hI0Ig66';
         break;
       case 'extension_content':
         $api_key = 'eS90dAFa47TIaOa1gm21fskmfTgwAUBE'; // Admin extension_content
