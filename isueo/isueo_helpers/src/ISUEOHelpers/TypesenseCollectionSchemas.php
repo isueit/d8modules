@@ -245,6 +245,30 @@ class TypesenseCollectionSchemas
         ],
       ],
 
+      'events_programs' => [
+        'default_sorting_field' => '',
+
+        // Define the fields
+        'fields' => [
+          'last_updated_time' => 'int32',
+          'Title' => 'string',
+          'Planned_Program__c' => 'string',
+          'end_date_time' => 'int64',
+        ],
+
+        // Sort fields
+        'sort' => [
+        ],
+
+        // Fields that are facets
+        'facets' => [
+        ],
+
+        // Optional fields
+        'optional' => [
+        ],
+      ],
+
       // Add new Definitions here
     ];
 

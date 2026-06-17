@@ -9,7 +9,8 @@ use Drupal\node\Entity\Node;
 function ts_events_collection_rebuild()
 {
   ts_events_collection_index_events();
-  ts_events_collection_index_events_past();
+  ts_events_collection_index_events_programs();
+  exec('drush queue:run ts_events_collection_events_programs > /dev/null 2>&1 &');
 }
 /**
  * Implements hook_cron().
@@ -18,7 +19,8 @@ function ts_events_collection_rebuild()
 function ts_events_collection_cron()
 {
   ts_events_collection_index_events();
-  ts_events_collection_index_events_past();
+  ts_events_collection_index_events_programs();
+  exec('drush queue:run ts_events_collection_events_programs > /dev/null 2>&1 &');
 }
 
 function ts_events_collection_index_events()
@@ -175,6 +177,9 @@ function ts_events_collection_get_registration_deadline($event)
 function ts_events_collection_get_planned_program($programId, $title)
 {
   $plannedProgram = '';
+  if (empty($programId)) {
+    return $plannedProgram;
+  }
 
   // Make sure the plp_program module is enabled
   if (function_exists('plp_programs_getprograms')) {
@@ -205,17 +210,40 @@ function ts_events_collection_get_planned_program($programId, $title)
   return $plannedProgram;
 }
 
-function ts_events_collection_index_events_past() {
-  $queue = \Drupal::queue('ts_events_collection_events_past');
-
+function ts_events_collection_index_events_programs() {
+  $queue = \Drupal::queue('ts_events_collection_events_programs');
   $now = time();
-  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/PastEvents.json');
-  $events_past = json_decode($raw, true);
+  $chunk_size = 500;
+  $chunk = [];
+  $count = 0;
 
-  echo count($events_past) . PHP_EOL;
+  // Get the file from MyData
+  //$raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/PastEvents.json');
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
+  $events = json_decode($raw, true);
 
-  foreach ($events_past as $event_past) {
-    $queue->createItem($event_past);
+  // Step through the events, and put them in the queue in chunks
+  foreach ($events as $event) {
+    if ($event['Planned_Program__c']) {
+        $tmparray = [
+          'id' => $event['Id'],
+          'Title' => $event['Name_Placeholder__c'],
+          'Planned_Program__c' => $event['Planned_Program__c'],
+          'end_date_time' => strtotime($event['End_Date_and_Time__c']),
+          'last_updated_time' => $now,
+        ];
+      $chunk[] = $tmparray;
+      $count = $count + 1;
+
+      if ($count % $chunk_size == 0) {
+        $queue->createItem($chunk);
+        $chunk = [];
+      }
+    }
   }
-  echo $queue->numberOfItems() . PHP_EOL;
+
+  // Put the last chunk in the queue
+  if ($chunk) {
+    $queue->createItem($chunk);
+  }
 }

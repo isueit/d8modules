@@ -24,8 +24,8 @@ class Typesense
 
     switch ($collection_name) {
       case 'events':
-      case 'events_past':
-        $api_key = '93puZ47qEFCl3WCKWB3SwWLY7hI0Ig66';
+      case 'events_programs':
+        $api_key = 'k1GtDXaYFcjqUnG0CFWJ9YTqWLr5pfXm';
         break;
       case 'extension_content':
         $api_key = 'eS90dAFa47TIaOa1gm21fskmfTgwAUBE'; // Admin extension_content
@@ -102,6 +102,11 @@ class Typesense
     } catch (Exception $e) {
       Drupal::messenger()->addError($e->getMessage());
     }
+  }
+
+  public static function truncateCollection(string $collection) {
+    $client = self::getClient($collection);
+    $client->collections[$collection]->documents->delete(['truncate' => true, ]);
   }
 
   public static function upsertSynonyms(string $collection)
