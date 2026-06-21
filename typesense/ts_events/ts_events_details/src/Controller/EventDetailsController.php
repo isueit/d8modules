@@ -25,7 +25,7 @@ class EventDetailsController extends ControllerBase
     $client = ISUEOHelpers\Typesense::getClient('events');
 
     try {
-      $event = $client->collections['events']->documents[$eventID]->retrieve();
+      $event = $client->collections['events_programs']->documents[$eventID]->retrieve();
 
       $element = array(
         '#theme' => 'ts_events_details',

@@ -138,7 +138,7 @@ searchResults.addWidgets([
           <div class="ts-events-item card">
             <div class="ts-event-details">
               <div class="card-body">
-                <h2 class="hit-name card-title"><a href="ts-event-details/${item.id}/${item.title.replaceAll('/', '-')}"> ${item._highlightResult.title.value} ${sessionString}</a></h2>
+                <h2 class="hit-name card-title"><a href="calendar/event-details/${item.id}/${item.title.replaceAll('/', '-')}"> ${item._highlightResult.title.value} ${sessionString}</a></h2>
                   <div class="ts-events-date">
                     <span class="icon">
                       <svg id="SVG_Time_Icon" xmlns="http://www.w3.org/2000/svg" width="42.262" height="42.304" viewBox="0 0 42.262 42.304"><path id="Oval_27_-_Outline" data-name="Oval 27 - Outline" d="M21.131,2A19.156,19.156,0,0,0,7.6,34.695,19.141,19.141,0,0,0,34.658,7.609,19,19,0,0,0,21.131,2m0-2A21.152,21.152,0,1,1,0,21.152,21.141,21.141,0,0,1,21.131,0Z" transform="translate(0)"></path><path id="Path_3472" data-name="Path 3472" d="M5756.131,1591.968a1,1,0,0,1-1-1v-13.16a1,1,0,1,1,2,0V1589.5l8.839-3.465a1,1,0,1,1,.729,1.862l-10.2,4A1,1,0,0,1,5756.131,1591.968Z" transform="translate(-5735 -1567.816)"></path></svg>
@@ -194,14 +194,14 @@ searchResults.addWidgets([
     container: "#delivery-language",
     attribute: "Delivery_Language__c",
   }),
-  
+
   /* categoriesDropdown({
     container: "#categories",
     attribute: "category",
     sortBy: ['name:asc'],
     limit: 3000,
   }),
-  
+
   topicsDropdown({
     container: "#topics",
     attribute: "topics",
