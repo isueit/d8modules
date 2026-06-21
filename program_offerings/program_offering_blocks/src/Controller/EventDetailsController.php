@@ -5,6 +5,8 @@ namespace Drupal\program_offering_blocks\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\isueo_helpers\ISUEOHelpers;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Exception;
+use Drupal\Core\Routing\TrustedRedirectResponse as RoutingTrustedRedirectResponse;
 
 /**
  * Provides route responses for the program_offering_blocks  module.
@@ -66,6 +68,16 @@ class EventDetailsController extends ControllerBase
 
     // If we don't have a title, then throw a 404 exception
     if (empty($title)) {
+    // If we get here, it means the event wasn't in the events collection
+    try {
+    $client = ISUEOHelpers\Typesense::getClient('events');
+      $past_event = $client->collections['events_programs']->documents[$eventID]->retrieve();
+      $raw = ISUEOHelpers\Typesense::searchCollection('plp_programs', $past_event['Planned_Program__c'], 'field_plp_program_event_pgm_ids');
+      $program = $raw['hits'][0]['document'];
+      return new RoutingTrustedRedirectResponse('https://www.extension.iastate.edu' . $program['url']);
+    } catch (Exception $ex) {
+      return new RoutingTrustedRedirectResponse('https://www.extension.iastate.edu/calendar');
+    }
       throw new NotFoundHttpException();
     }
 
@@ -267,7 +279,7 @@ private function generate_ics($event)
 
   // Build description
   $description = strip_tags($event['Program_Description__c'] ?? '');
-  
+
   // Add contact info to description
   if (!empty($event['Contact_Information_Name__c'])) {
     $description .= "\n\nContact: " . $event['Contact_Information_Name__c'];
@@ -306,7 +318,7 @@ private function generate_ics($event)
   $vevent->LOCATION = $location;
   $vevent->URL = $url;
   $vevent->STATUS = 'CONFIRMED';
-  
+
   // Add dates in UTC format
   $vevent->DTSTART = $start_utc;
   $vevent->DTEND = $end_utc;
@@ -361,7 +373,7 @@ private function generate_multisession_ics($event, $sessions)
   $location = implode(', ', $location_parts);
 
   $description = strip_tags($event['Program_Description__c'] ?? '');
-  
+
   if (!empty($event['Contact_Information_Name__c'])) {
     $description .= "\n\nContact: " . $event['Contact_Information_Name__c'];
     if (!empty($event['Contact_Information_Email__c'])) {
@@ -383,7 +395,7 @@ private function generate_multisession_ics($event, $sessions)
     $session_start = new \DateTime();
     $session_start->setTimestamp($timestamp);
     $session_start->setTimezone(new \DateTimeZone('America/Chicago'));
-    
+
     // Assume 1-hour duration if not specified
     $session_end = clone $session_start;
     $session_end->modify('+1 hour');
@@ -403,7 +415,7 @@ private function generate_multisession_ics($event, $sessions)
     $vevent->URL = $url;
     $vevent->STATUS = 'CONFIRMED';
     $vevent->SEQUENCE = 0;
-    
+
     // Add dates in UTC
     $vevent->DTSTART = $session_start_utc;
     $vevent->DTEND = $session_end_utc;
@@ -438,7 +450,7 @@ private function generate_multisession_ics($event, $sessions)
     $filename = preg_replace('/-+/', '-', $filename);
     // Trim hyphens from ends
     $filename = trim($filename, '-');
-    
+
     return $filename;
   }
 }
