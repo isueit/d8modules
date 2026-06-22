@@ -42,6 +42,7 @@ final class ISUEOHelpersCommands extends DrushCommands {
     $this->output()->writeln(' Functions:');
     $this->output()->writeln('   - getClient(string $collection)');
     $this->output()->writeln('   - createCollections(string $collection)');
+    $this->output()->writeln('   - truncateCollection(string $collection)');
     $this->output()->writeln('   - upsertSynonyms(string $collection)');
     $this->output()->writeln('   - searchCollection(string $collection, string $q = \'*\', string $query_by = \'*\', string $sort_by = \'\', int $per_page = 10, int $page = 1, string $filter_by = \'\', bool $exhaustive_search = false)');
 
