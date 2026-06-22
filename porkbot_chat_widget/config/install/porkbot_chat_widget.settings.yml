@@ -1,0 +1,9 @@
+enabled: true
+load_admin: false
+script_url: ''
+init_method: ''
+init_options: '{}'
+api_base_url: 'https://porkbot-extension-f0edf7egf8d5c3e2.canadacentral-01.azurewebsites.net'
+api_prefix: '/api'
+default_mode: 'widget'
+open_by_default: false
