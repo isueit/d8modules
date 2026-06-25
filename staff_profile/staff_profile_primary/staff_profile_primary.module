@@ -58,7 +58,19 @@ function staff_profile_primary_profile_from_database()
   $primary_config = \Drupal::config('staff_profile_primary.settings');
 
   // Get entries from Setwise
-  $raw = ISUEOHelpers\Files::fetch_url('https://directory.extension.iastate.edu/api/employees?token=mC5EFLgaEkTEcnFc3qhzs2mAtRtjP6fF');
+  $raw = '';
+  for ($i = 0; $i < 3; $i = $i + 1) {
+    $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/StaffDir/SetWise.json');
+    if ($raw && strlen($raw) > 20000) {
+      $i = 100;
+    } elseif ($i == 2) {
+      Drupal::logger('staff_profile_primary')->info('Having trouble getting information from SetWise file, -- exiting');
+      return;
+    } else {
+      sleep(5);
+    }
+  }
+
   $entries = json_decode($raw, true);
   $address_fields = ['CITY', 'ADDRESS STREET 1', 'ADDRESS STREET 2',];
   foreach ($entries as $entry) {
