@@ -1,0 +1,6 @@
+microsites.group_node_autocomplete:
+  path: '/microsites/autocomplete/group-nodes/{group}'
+  defaults:
+    _controller: '\Drupal\microsites\Controller\GroupNodeAutocompleteController::autocomplete'
+  requirements:
+    _permission: 'access content'

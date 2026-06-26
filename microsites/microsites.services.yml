@@ -1,0 +1,21 @@
+services:
+  microsites.repository:
+    class: Drupal\microsites\GroupPathPrefixRepository
+    arguments:
+      - '@database'
+      - '@entity_type.manager'
+      - '@entity_field.manager'
+      - '@entity.repository'
+      - '@request_stack'
+  microsites.path_prefix_context:
+    class: Drupal\microsites\Context\GroupContextPathPrefix
+    arguments:
+      - '@request_stack'
+      - '@current_route_match'
+      - '@microsites.repository'
+    tags:
+      - { name: 'context_provider' }
+  microsites.route_subscriber:
+    class: Drupal\microsites\Routing\GroupHomepageRouteSubscriber
+    tags:
+      - { name: event_subscriber }

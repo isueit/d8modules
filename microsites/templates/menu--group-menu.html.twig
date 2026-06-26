@@ -1,0 +1,48 @@
+{#
+  Group navigation menu.
+
+  Renders the group's menu with support for one level of nested dropdowns.
+  Extend this template in your theme to add site-specific items (e.g. a
+  "Register" button) by overriding menu--group-menu.html.twig there.
+#}
+{% import _self as menus %}
+
+{{ menus.menu_links(items, attributes, 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% import _self as menus %}
+  {% if items %}
+
+    {% if menu_level == 0 %}
+      <ul role="menubar" {{ attributes.addClass('nav navbar-nav menubar group-menu') }}>
+    {% elseif menu_level == 1 %}
+      <ul role="menu" class="isu-dropdown-menu">
+    {% else %}
+      <ul role="submenu" class="isu-dropdown-menu isu-dropdown-submenu">
+    {% endif %}
+
+    {% for item in items %}
+      {%
+        set li_classes = [
+          menu_level ? 'dropdown-item isu-dropdown-item' : 'nav-item',
+          item.below ? 'isu-dropdown',
+        ]
+      %}
+
+      {% if item.below %}
+        <li role="menuitem" {{ item.attributes.addClass(li_classes).setAttribute('aria-expanded', 'false').setAttribute('aria-haspopup', 'true') }}>
+          <div role="none" class="isu-dropdown-toggle_wrapper {{ menu_level ? 'divsub' }}">
+            <a class="nav-link isu-nav-link isu-dropdown-toggle {{ menu_level ? 'sub' }}" href="{{ item.url|render|trim ?: '#' }}">{{ item.title }}</a>
+            <button class="isu-dropdown-toggle_mobile"><span class="fa fa-angle-down"></span><span class="sr-only">Open dropdown menu</span></button>
+          </div>
+          {{ menus.menu_links(item.below, item.attributes, menu_level + 1) }}
+      {% else %}
+        <li role="menuitem" {{ item.attributes.addClass(li_classes).setAttribute('aria-haspopup', 'false') }}>
+          <a class="nav-link isu-nav-link" href="{{ item.url|render|trim ?: '#' }}">{{ item.title }}</a>
+      {% endif %}
+      </li>
+    {% endfor %}
+
+    </ul>
+  {% endif %}
+{% endmacro %}

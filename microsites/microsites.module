@@ -1,0 +1,442 @@
+<?php
+
+use Drupal\node\Entity\Node;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Entity\Group;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
+
+/**
+ * The node bundle used as each group's homepage.
+ *
+ * This node type is auto-created when a new group is saved and receives the
+ * group's base URL alias. Change this constant if your site uses a different
+ * machine name for landing pages.
+ */
+const MICROSITES_HOMEPAGE_BUNDLE = 'landing_page';
+
+/**
+ * Implements hook_node_presave().
+ *
+ * Prevents pathauto from auto-generating an alias for nodes that already
+ * belong to a group. Their aliases are managed by this module.
+ */
+function microsites_node_presave(\Drupal\node\NodeInterface $node): void {
+  if ($node->isNew()) {
+    return;
+  }
+  if (!class_exists('\Drupal\pathauto\PathautoState')) {
+    return;
+  }
+  $in_group = (bool) \Drupal::entityTypeManager()
+    ->getStorage('group_relationship')
+    ->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('entity_id', $node->id())
+    ->count()
+    ->execute();
+  if ($in_group) {
+    $node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function microsites_theme($existing, $type, $theme, $path): array {
+  return [
+    'menu__group_menu' => [
+      'template' => 'menu--group-menu',
+      'base hook' => 'menu',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_group_alter().
+ *
+ * Generates view-mode-based template suggestions for group entities so themes
+ * can provide templates like group--{bundle}--{view-mode}.html.twig.
+ */
+function microsites_theme_suggestions_group_alter(array &$suggestions, array $variables): void {
+  $view_mode = $variables['elements']['#view_mode'] ?? NULL;
+  if (!$view_mode) {
+    return;
+  }
+  $group = $variables['elements']['#group'] ?? NULL;
+  $suggestions[] = 'group__' . $view_mode;
+  if ($group instanceof GroupInterface) {
+    $suggestions[] = 'group__' . $group->bundle() . '__' . $view_mode;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * - Requires a URL alias on all group add/edit forms.
+ * - Pre-populates the alias field from the current homepage node's alias.
+ * - Attaches the group-node autocomplete library to menu link forms.
+ */
+function microsites_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, string $form_id): void {
+  if (preg_match('/^group_.+_(add|edit)_form$/', $form_id)) {
+    $form['#after_build'][] = 'microsites_group_form_after_build';
+
+    if (isset($form['path'])) {
+      $form['path']['#open'] = TRUE;
+    }
+
+    if (isset($form['path']['widget'][0]['alias'])) {
+      $alias_el = &$form['path']['widget'][0]['alias'];
+      $alias_el['#required'] = TRUE;
+
+      // The path widget's own validation checks the alias against the group's
+      // source path which always fails (the alias lives on the homepage node).
+      $form['path']['widget'][0]['#element_validate'] = [];
+      $form['#validate'][] = 'microsites_group_alias_required_validate';
+
+      // For existing groups, pre-populate the field from the homepage node's
+      // current alias so editors can see and change the public URL.
+      $form_object = $form_state->getFormObject();
+      if ($form_object instanceof \Drupal\Core\Entity\EntityFormInterface) {
+        $group_entity = $form_object->getEntity();
+        if (!$group_entity->isNew()) {
+          foreach (
+            \Drupal::entityTypeManager()
+              ->getStorage('group_relationship')
+              ->loadByProperties(['gid' => $group_entity->id()]) as $rel
+          ) {
+            $node = $rel->getEntity();
+            if (
+              $node->getEntityTypeId() === 'node'
+              && $node->bundle() === MICROSITES_HOMEPAGE_BUNDLE
+            ) {
+              $current = \Drupal::service('path_alias.manager')
+                ->getAliasByPath('/node/' . $node->id());
+              if ($current !== '/node/' . $node->id()) {
+                $alias_el['#default_value'] = $current;
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (str_starts_with($form_id, 'menu_link_content_')) {
+    $group = _microsites_get_group_from_request();
+    if ($group) {
+      $url = \Drupal\Core\Url::fromRoute(
+        'microsites.group_node_autocomplete',
+        ['group' => $group->id()]
+      )->toString();
+      $form['#attached']['library'][] = 'microsites/group_autocomplete';
+      $form['#attached']['drupalSettings']['microsites']['groupAutocompleteUrl'] = $url;
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_single_element_form_alter().
+ *
+ * Wires the group-node autocomplete route to the URI field on menu link forms
+ * so editors can easily link to nodes within the current group.
+ */
+function microsites_field_widget_single_element_form_alter(
+  array &$element,
+  \Drupal\Core\Form\FormStateInterface $form_state,
+  array $context
+): void {
+  $field_definition = $context['items']->getFieldDefinition();
+  if ($field_definition->getName() !== 'link') {
+    return;
+  }
+  if ($field_definition->getTargetEntityTypeId() !== 'menu_link_content') {
+    return;
+  }
+  $group = _microsites_get_group_from_request();
+  if (!$group) {
+    return;
+  }
+  $element['uri']['#autocomplete_route_name'] = 'microsites.group_node_autocomplete';
+  $element['uri']['#autocomplete_route_parameters'] = ['group' => $group->id()];
+}
+
+/**
+ * #after_build callback — moves all form field descriptions above the input.
+ */
+function microsites_group_form_after_build(array $form, \Drupal\Core\Form\FormStateInterface $form_state): array {
+  _microsites_description_before($form);
+  return $form;
+}
+
+/**
+ * Recursively sets #description_display = 'before' on all form elements.
+ */
+function _microsites_description_before(array &$element): void {
+  foreach (array_keys($element) as $key) {
+    if (is_string($key) && $key[0] === '#') {
+      continue;
+    }
+    if (!is_array($element[$key])) {
+      continue;
+    }
+    if (isset($element[$key]['#description'])) {
+      $element[$key]['#description_display'] = 'before';
+    }
+    _microsites_description_before($element[$key]);
+  }
+}
+
+/**
+ * Validation handler — ensures the URL alias is not empty on group forms.
+ */
+function microsites_group_alias_required_validate(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
+  $path_values = $form_state->getValue(['path', 0]);
+  $alias = trim($path_values['alias'] ?? '');
+  if (empty($alias)) {
+    $form_state->setError(
+      $form['path']['widget'][0]['alias'],
+      t('The URL alias field is required.')
+    );
+  }
+}
+
+/**
+ * Stash/retrieve the alias typed on a group form.
+ *
+ * Bridges group_presave → group_insert / group_update so the alias can be
+ * applied to the homepage node after the group entity is persisted.
+ */
+function &_microsites_alias_store(): array {
+  static $store = ['alias' => NULL];
+  return $store;
+}
+
+/**
+ * Implements hook_group_presave().
+ *
+ * Captures the URL alias entered on the group form, clears it from the group
+ * entity (so the group itself never claims the public URL), and stashes it for
+ * group_insert / group_update to apply to the homepage node.
+ */
+function microsites_group_presave(Group $group): void {
+  $alias = $group->get('path')->alias ?? '';
+  if ($alias === '') {
+    return;
+  }
+  $store = &_microsites_alias_store();
+  $store['alias'] = $alias;
+  $group->get('path')->alias = '';
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for group entities.
+ *
+ * Auto-creates a homepage node (MICROSITES_HOMEPAGE_BUNDLE) and assigns it
+ * the alias entered on the group form. Skipped silently when the content type
+ * does not exist on this site.
+ */
+function microsites_group_insert(Group $group): void {
+  $store = &_microsites_alias_store();
+  $homepage_alias = $store['alias'] ?? NULL;
+  $store['alias'] = NULL;
+
+  if (!$homepage_alias) {
+    return;
+  }
+
+  // Only auto-create when the configured homepage bundle exists on this site.
+  $node_type = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->load(MICROSITES_HOMEPAGE_BUNDLE);
+  if (!$node_type) {
+    return;
+  }
+
+  $node = Node::create([
+    'type'   => MICROSITES_HOMEPAGE_BUNDLE,
+    'title'  => $group->label(),
+    'status' => 1,
+    'uid'    => $group->getOwnerId(),
+  ]);
+  // Prevent pathauto from generating an alias on this initial save.
+  if (class_exists('\Drupal\pathauto\PathautoState')) {
+    $node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
+  }
+  $node->save();
+
+  try {
+    $group->addRelationship($node, 'group_node:' . MICROSITES_HOMEPAGE_BUNDLE);
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('microsites')->notice(
+      'Could not add @bundle node to group @id (plugin not configured): @msg',
+      ['@bundle' => MICROSITES_HOMEPAGE_BUNDLE, '@id' => $group->id(), '@msg' => $e->getMessage()]
+    );
+  }
+
+  \Drupal\path_alias\Entity\PathAlias::create([
+    'path'     => '/node/' . $node->id(),
+    'alias'    => $homepage_alias,
+    'langcode' => 'en',
+  ])->save();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for group entities.
+ *
+ * When the group's alias changes, re-derives aliases for all nodes in the
+ * group: homepage → new base alias; others → new base alias + title slug.
+ */
+function microsites_group_update(Group $group): void {
+  // Delete any lingering alias that may have been saved on the group entity.
+  $group_aliases = \Drupal::entityTypeManager()
+    ->getStorage('path_alias')
+    ->loadByProperties(['path' => '/group/' . $group->id()]);
+  foreach ($group_aliases as $old) {
+    $old->delete();
+  }
+
+  $store = &_microsites_alias_store();
+  if (empty($store['alias'])) {
+    return;
+  }
+  $alias = $store['alias'];
+  $store['alias'] = NULL;
+
+  $alias_cleaner = \Drupal::service('pathauto.alias_cleaner');
+  $path_alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+
+  foreach (
+    \Drupal::entityTypeManager()
+      ->getStorage('group_relationship')
+      ->loadByProperties(['gid' => $group->id()]) as $relationship
+  ) {
+    $entity = $relationship->getEntity();
+    if (!$entity instanceof \Drupal\node\NodeInterface) {
+      continue;
+    }
+    if ($entity->bundle() === MICROSITES_HOMEPAGE_BUNDLE) {
+      _microsites_upsert_alias('/node/' . $entity->id(), $alias, $path_alias_storage);
+    }
+    else {
+      $slug = $alias_cleaner->cleanString($entity->getTitle());
+      _microsites_upsert_alias('/node/' . $entity->id(), $alias . '/' . $slug, $path_alias_storage);
+    }
+  }
+}
+
+/**
+ * Implements hook_group_relationship_insert().
+ *
+ * When any node is added to a group after initial group creation, auto-assigns
+ * a path alias using the group's homepage alias as the prefix.
+ */
+function microsites_group_relationship_insert(\Drupal\group\Entity\GroupRelationshipInterface $relationship): void {
+  $entity = $relationship->getEntity();
+  if (!$entity instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+
+  // Homepage nodes have their alias set in microsites_group_insert; skip here.
+  if ($entity->bundle() === MICROSITES_HOMEPAGE_BUNDLE && $entity->isNew()) {
+    return;
+  }
+
+  $group = $relationship->getGroup();
+  if (!$group instanceof GroupInterface) {
+    return;
+  }
+
+  // Find the homepage node's alias — that IS the group's path prefix.
+  $homepage_alias = _microsites_get_group_prefix($group);
+  if (!$homepage_alias) {
+    return;
+  }
+
+  $slug = \Drupal::service('pathauto.alias_cleaner')->cleanString($entity->getTitle());
+  _microsites_upsert_alias(
+    '/node/' . $entity->id(),
+    $homepage_alias . '/' . $slug,
+    \Drupal::entityTypeManager()->getStorage('path_alias')
+  );
+}
+
+/**
+ * Creates or updates a single path alias, skipping when the value is unchanged.
+ */
+function _microsites_upsert_alias(string $system_path, string $new_alias, $path_alias_storage): void {
+  $existing = $path_alias_storage->loadByProperties([
+    'path'     => $system_path,
+    'langcode' => 'en',
+  ]);
+
+  if (!empty($existing)) {
+    $alias_entity = reset($existing);
+    foreach (array_slice($existing, 1) as $extra) {
+      $extra->delete();
+    }
+    if ($alias_entity->getAlias() === $new_alias) {
+      return;
+    }
+    $alias_entity->setAlias($new_alias);
+    $alias_entity->save();
+  }
+  else {
+    \Drupal\path_alias\Entity\PathAlias::create([
+      'path'     => $system_path,
+      'alias'    => $new_alias,
+      'langcode' => 'en',
+    ])->save();
+  }
+}
+
+/**
+ * Returns the path prefix (base alias) for a group by finding its homepage
+ * node's path alias. Returns NULL when none is set.
+ */
+function _microsites_get_group_prefix(GroupInterface $group): ?string {
+  foreach (
+    \Drupal::entityTypeManager()
+      ->getStorage('group_relationship')
+      ->loadByProperties(['gid' => $group->id()]) as $rel
+  ) {
+    $node = $rel->getEntity();
+    if (
+      $node instanceof \Drupal\node\NodeInterface
+      && $node->bundle() === MICROSITES_HOMEPAGE_BUNDLE
+    ) {
+      $candidate = \Drupal::service('path_alias.manager')
+        ->getAliasByPath('/node/' . $node->id());
+      if ($candidate !== '/node/' . $node->id()) {
+        return $candidate;
+      }
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Returns the group from the current request's route parameters, if any.
+ */
+function _microsites_get_group_from_request(): ?GroupInterface {
+  $group = \Drupal::routeMatch()->getParameter('group');
+  return $group instanceof GroupInterface ? $group : NULL;
+}
+
+/**
+ * Implements hook_entity_access().
+ *
+ * Users with the 'administrator' role automatically have full access to all
+ * group entities, regardless of group membership.
+ */
+function microsites_entity_access(EntityInterface $entity, string $operation, AccountInterface $account): AccessResult {
+  if ($entity instanceof GroupInterface && $account->hasRole('administrator')) {
+    return AccessResult::allowed()
+      ->cachePerUser()
+      ->addCacheContexts(['user.roles']);
+  }
+  return AccessResult::neutral();
+}
