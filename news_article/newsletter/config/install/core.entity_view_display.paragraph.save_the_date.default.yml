@@ -5,6 +5,7 @@ dependencies:
     - field.field.paragraph.save_the_date.field_newsletter_event_date
     - field.field.paragraph.save_the_date.field_newsletter_event_link
     - field.field.paragraph.save_the_date.field_newsletter_event_location
+    - field.field.paragraph.save_the_date.field_newsletter_event_time
     - field.field.paragraph.save_the_date.field_newsletter_event_title
     - paragraphs.paragraphs_type.save_the_date
   module:
@@ -37,14 +38,26 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
   field_newsletter_event_location:
     type: string
     label: hidden
     settings:
       link_to_entity: false
-    third_party_settings: {  }
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 3
+    region: content
+  field_newsletter_event_time:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
     weight: 2
     region: content
   field_newsletter_event_title:

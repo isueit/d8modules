@@ -74,7 +74,7 @@ searchResults.addWidgets([
     autofocus: true,
     showReset: false,
     searchAsYouType: false,
-    placeholder: "Search Programs",
+    placeholder: "Search programs to help you grow, learn, and thrive",
     queryHook(query, search) {
       document.getElementById("isueo-searchall").innerHTML='<a href="https://www.extension.iastate.edu/search-results?as_q=' + query + '">Search all of Extension</a>';
       search(query);

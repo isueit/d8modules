@@ -6,8 +6,9 @@ use Drupal\smugmug_media_type\ProviderPluginBase;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\ImageEffect\ScaleImageEffect;
 use Drupal\image\Plugin\ImageEffect\CropImageEffect;
-use Drupal\Component\Utility\HTML;
+use Drupal\Component\Utility\Html;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\Files;
 
 /**
  * A Smugmug provider plugin.
@@ -100,7 +101,7 @@ class SmugmugAPI extends ProviderPluginBase {
       '#type' => 'smugmug_embed_image',
       '#provider' => 'smugmugapi',
       '#url' => ISUEOHelpers\General::build_smugmug_url($this->getImageId(), $size_char),
-      '#alt' => HTML::escape($alt), //htmlspecialchars()
+      '#alt' => Html::escape($alt), //htmlspecialchars()
       '#height' => $height,
       '#width' => $width,
       '#cropped' => $using_crop,
@@ -158,7 +159,7 @@ class SmugmugAPI extends ProviderPluginBase {
     $config = \Drupal::config('smugmug_media_type.settings');
     $smugmug_api_key = $config->get('smugmug_api_key');
     if ($smugmug_api_key != '') {
-      $data = file_get_contents('https://api.smugmug.com/api/v2/image/' . $this->getIdFromInput($this->getInput()) . '?APIKey=' . $smugmug_api_key . '&_accept=application/json');
+      $data = Files::fetch_url('https://api.smugmug.com/api/v2/image/' . $this->getIdFromInput($this->getInput()) . '?APIKey=' . $smugmug_api_key . '&_accept=application/json', FALSE);
       return json_decode($data);
     } else {
       return null;

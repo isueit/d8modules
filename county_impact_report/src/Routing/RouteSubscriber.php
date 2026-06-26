@@ -1,0 +1,23 @@
+<?php
+
+namespace Drupal\county_impact_report\Routing;
+
+use Drupal\Core\Routing\RouteSubscriberBase;
+use Symfony\Component\Routing\RouteCollection;
+
+/**
+ * Listens to the dynamic route events.
+ */
+class RouteSubscriber extends RouteSubscriberBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function alterRoutes(RouteCollection $collection) {
+    // Alter the entity.node.canonical route to allow /print suffix
+    if ($route = $collection->get('entity.node.canonical')) {
+      $route->setOption('_admin_route', FALSE);
+    }
+  }
+
+}

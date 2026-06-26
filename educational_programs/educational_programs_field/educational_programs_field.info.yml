@@ -2,7 +2,7 @@ name: Educational Programs Field
 type: module
 description: 'Provide a field type, used to display pull Program information from MyData and display it'
 package: ISUEO
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10 || ^11
 dependencies:
   - drupal:field
   - drupal:system

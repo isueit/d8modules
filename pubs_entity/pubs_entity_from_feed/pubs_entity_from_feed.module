@@ -119,46 +119,6 @@ function pubs_entity_from_feed_rebuild() {
   }
 
 }
-  /**
-   * Pull in pubs entities from feed based on feed url
-   */
-/*
-  public function createPubsFromUrl($url) {
-    $url_host = parse_url($url, PHP_URL_HOST);
-    //Only allow approved hosts
-    if ($url_host == 'store.extension.iastate.edu' || $url_host == 'localhost') {
-      try {
-        $raw = file_get_contents($url);
-        $items = json_decode($raw, TRUE);
-        $entity_config = \Drupal::service('config.factory')->getEditable('pubs_entity_type.settings');
-        $saved_url = $entity_config->get('pubs_details_url');
-        $entity_config->set('pubs_details_url', $url);
-        $entity_config->save();
-
-        foreach ($items as $item) {
-          //Prevent duplicates
-          $existing = \Drupal::entityTypeManager()->getStorage('pubs_entity')->loadByProperties(['field_product_id' => $item['productID']]);
-          if (count($existing) == 0) {
-            $newEntity = \Drupal\pubs_entity_type\Entity\PubsEntity::create([
-              'field_product_id' => $item['productID'],
-              'field_from_feed' => 1,
-            ]);//Post save finds the other fields
-            $newEntity->setPublished();
-            $newEntity->save();
-          }
-        }
-        $entity_config->set('pubs_details_url', $saved_url);
-        $entity_config->save();
-      } catch (\Exception $e) {
-        $entity_config->set('pubs_details_url', $saved_url);
-        $entity_config->save();
-        \Drupal::messenger()->addStatus(t('An Error occured pulling data from the given url'), 'error');
-      }
-    } else {
-      \Drupal::messenger()->addStatus(t('Only feeds from Extension Store allowed'), 'error');
-    }
-  }
-*/
 
 /**
 * Implements hook_cron().

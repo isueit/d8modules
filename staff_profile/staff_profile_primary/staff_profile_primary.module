@@ -58,10 +58,23 @@ function staff_profile_primary_profile_from_database()
   $primary_config = \Drupal::config('staff_profile_primary.settings');
 
   // Get entries from Setwise
-  $raw = ISUEOHelpers\Files::fetch_url('https://directory.extension.iastate.edu/api/employees?token=mC5EFLgaEkTEcnFc3qhzs2mAtRtjP6fF');
+  $raw = '';
+  for ($i = 0; $i < 3; $i = $i + 1) {
+    $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/StaffDir/SetWise.json');
+    if ($raw && strlen($raw) > 20000) {
+      $i = 100;
+    } elseif ($i == 2) {
+      Drupal::logger('staff_profile_primary')->info('Having trouble getting information from SetWise file, -- exiting');
+      return;
+    } else {
+      sleep(5);
+    }
+  }
+
   $entries = json_decode($raw, true);
   $address_fields = ['CITY', 'ADDRESS STREET 1', 'ADDRESS STREET 2',];
   foreach ($entries as $entry) {
+    $entry['EMAIL ADDRESS'] = strtolower($entry['EMAIL ADDRESS']);
     if (str_contains($entry['EMAIL ADDRESS'], '@iastate.edu')) {
       if (array_key_exists('PHONE', $entry) && !empty($entry['PHONE'])) {
         $entry['PHONE'] = ISUEOHelpers\General::format_phone_number($entry['PHONE']);
@@ -114,8 +127,8 @@ function staff_profile_primary_profile_from_database()
     // Try to find an existing node, otherwise create one
     if (array_key_exists($netid, $nodes_netid)) {
       $node = $nodes_netid[$netid];
-          } elseif (array_key_exists($setwise['STAFFID'], $nodes_staffid)) {
-            $node = $nodes_staffid[$setwise['STAFFID']];
+    } elseif (array_key_exists($setwise['STAFFID'], $nodes_staffid)) {
+      $node = $nodes_staffid[$setwise['STAFFID']];
     } else {
       $node = Node::create(array('type' => 'staff_profile', 'title' => $setwise['LAST NAME'] . ', ' . $setwise['FIRST NAME']));
       $node->set('field_staff_profile_netid', $netid);
@@ -228,7 +241,7 @@ function staff_profile_primary_profile_from_database()
       $raw = str_replace('Youth and 4-H', '4-H Youth Development', $raw);
       $raw = str_replace(' (ANR)', '', $raw);
       $raw = str_replace('Communities and Economic Development (CED)', 'Community and Economic Development', $raw);
-      $raw = str_replace('Human Sciences Extension and Outreach (HSEO)', 'Human Sciences', $raw);
+      $raw = str_replace('Human Sciences Extension and Outreach (HSEO)', 'Health and Human Sciences', $raw);
     }
     $newArray = [];
     foreach (explode(',', $raw) as $program_area) {
@@ -330,7 +343,7 @@ function staff_profile_primary_profile_from_database()
 function staff_profile_primary_preprocess_views_view(&$variables)
 {
   $variables['#cache']['contexts'][] = 'route';
-  if ($variables['view_array']['#name'] == 'staff_directory') {
+  if (($variables['view_array']['#name'] ?? '') == 'staff_directory') {
     $variables['#attached']['library'][] = 'staff_profile_primary/staff_directory';
   }
 }
@@ -424,65 +437,81 @@ function rand_string($strength = 40)
 function staff_profile_primary_web_editor_training()
 {
   $editor_qualifications = ISUEOHelpers\Taxonomy::get_terms('editor_qualifications');
+  $today = date('Ymd');
+  $cutoff = mktime(0, 0, 0, date('n') - 1, 1, date('Y'));
 
-  $buffer = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/StaffDir/WebEditorTraining.json');
-  $json_trainings = json_decode($buffer, TRUE);
+  // Get the file from the datastore
+  $url = 'https://datastore.exnet.iastate.edu/Moodle/Reports/9-' . $today . '-020000.csv';
+  $raw = ISUEOHelpers\Files::fetch_url($url);
 
-  foreach ($json_trainings as $training) {
+  // Open a secure, memory-only stream
+  $stream = fopen('php://temp', 'r+');
+  fwrite($stream, $raw);
+  rewind($stream); // Reset pointer to the start
+
+  // Parse line by line natively
+  while (($row = fgetcsv($stream)) !== false) {
     //Skip the headers, also don't need Advanced (1048) or WordPress (3700)
-    if ($training['Email'] == 'Email') continue;
-    if ($training['coursemoduleid'] == '1048' || $training['coursemoduleid'] == '3700') continue;
-
-    // Get taxonomy term id, and skip record if it's not found
-    $course = 0;
-    switch ($training['coursemoduleid']) {
-      case '10712':  // Drupal 8/9/10
-        $course = $editor_qualifications['Drupal 8 Training'];
-        break;
-      case '1041':  // Drupal 7
-        $course = $editor_qualifications['Drupal 7 Training'];
-        break;
-      case '1044':  // Drupal 6
-        $course = $editor_qualifications['Drupal 6 Training'];
-        break;
-      default:
-        \Drupal::logger('staff_profile_primary')->info('Course is unknown, not sure why');
-        $course = 0;
+    if ($row[3] == 'Email') {
+      continue;
     }
-    if ($course == 0) continue;
+    if ($row[4] == '1048' || $row[4] == '3700') continue;
 
-    //Get the node for this user, if one exists
-    $usernodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['field_staff_profile_email' => $training['Email']]);
-    $usernode = reset($usernodes);
-    if ($usernode) {
-      // Get the existing qualifications
-      $existing_terms = array();
-      $qualifications = $usernode->get('field_staff_profile_quals');
-      foreach ($qualifications as $qualification) {
-        $existing_terms[] = intval($qualification->get('target_id')->getValue());
+    // Only process recently changed records, don't need to do them all
+    if ($row[6] >= $cutoff) {
+
+      // Get taxonomy term id, and skip record if it's not found
+      $course = 0;
+      switch ($row[4]) {
+        case '10712':  // Drupal 8/9/10
+          $course = $editor_qualifications['Drupal 8 Training'];
+          break;
+        case '1041':  // Drupal 7
+          $course = $editor_qualifications['Drupal 7 Training'];
+          break;
+        case '1044':  // Drupal 6
+          $course = $editor_qualifications['Drupal 6 Training'];
+          break;
+        default:
+          \Drupal::logger('staff_profile_primary')->info('Course is unknown, not sure why');
+          $course = 0;
       }
+      if ($course == 0) continue;
 
-      $changed = false;
-      // Check if we should add this qualification to the staff profile
-      if (!in_array($course, $existing_terms)) {
-        $usernode->field_staff_profile_quals[] = ['target_id' => $course];
-        \Drupal::logger('staff_profile_primary')->info('Adding ' . $course . ' to ' . $usernode->get('field_staff_profile_netid')->value);
-        $changed = true;
-      }
+      //Get the node for this user, if one exists
+      $usernodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['field_staff_profile_email' => $row[3]]);
+      $usernode = reset($usernodes);
+      if ($usernode) {
+        // Get the existing qualifications
+        $existing_terms = array();
+        $qualifications = $usernode->get('field_staff_profile_quals');
+        foreach ($qualifications as $qualification) {
+          $existing_terms[] = intval($qualification->get('target_id')->getValue());
+        }
 
-      // See if we should add Web Editor qualification to the staff profile
-      if (!in_array($editor_qualifications['Web Editor'], $existing_terms)) {
-        $usernode->field_staff_profile_quals[] = ['target_id' => $editor_qualifications['Web Editor']];
-        \Drupal::logger('staff_profile_primary')->info('Adding "Web Editor" to ' . $usernode->get('field_staff_profile_netid')->value);
-        $changed = true;
-      }
+        $changed = false;
+        // Check if we should add this qualification to the staff profile
+        if (!in_array($course, $existing_terms)) {
+          $usernode->field_staff_profile_quals[] = ['target_id' => $course];
+          \Drupal::logger('staff_profile_primary')->info('Adding ' . $course . ' to ' . $usernode->get('field_staff_profile_netid')->value);
+          $changed = true;
+        }
 
-      // Save it if changed
-      if ($changed) {
-        $usernode->save();
+        // See if we should add Web Editor qualification to the staff profile
+        if (!in_array($editor_qualifications['Web Editor'], $existing_terms)) {
+          $usernode->field_staff_profile_quals[] = ['target_id' => $editor_qualifications['Web Editor']];
+          \Drupal::logger('staff_profile_primary')->info('Adding "Web Editor" to ' . $usernode->get('field_staff_profile_netid')->value);
+          $changed = true;
+        }
+
+        // Save it if changed
+        if ($changed) {
+          $usernode->save();
+        }
       }
     }
   }
+  fclose($stream);
 }
 
 /*

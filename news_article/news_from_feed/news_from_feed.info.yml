@@ -1,6 +1,6 @@
 name: 'News From Feed'
 type: module
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10 || ^11
 description: 'Creates block of news articles using feed from the news site'
 version: '9.x-1.0-dev'
 package: 'ISUEO'

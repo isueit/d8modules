@@ -7,6 +7,7 @@ use Drupal\file\Entity\File;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 
 /**
@@ -116,7 +117,7 @@ class ImportForm extends FormBase {
   }
 
   function validataForm(array &$form, FormStateInterface $form_state) {
-    $path = getFilePath(trim($form_state->getValues('filename')));
+    $path = $this->getFilePath(trim($form_state->getValues('filename')));
     if (!file_exists($path)) {
       $form_state->setErrorByName('filename', t('Error: File not Found'));
     }
@@ -176,7 +177,7 @@ class ImportForm extends FormBase {
       }
       //Only use $this when in the form
       if (debug_backtrace()[1]['function'] == 'submitForm') {
-        \Drupal::messenger()->addMessage($this->t('The Taxonomy Vocabulary %vocab added %added terms, skipping %skipped terms and %blank lines.', ['%vocab' => $name, '%added' => $count_added, '%skipped' => $count_skipped, '%blank' => $count_blank]));
+        \Drupal::messenger()->addMessage(new TranslatableMarkup('The Taxonomy Vocabulary %vocab added %added terms, skipping %skipped terms and %blank lines.', ['%vocab' => $name, '%added' => $count_added, '%skipped' => $count_skipped, '%blank' => $count_blank]));
       }
       fclose($file);
     }

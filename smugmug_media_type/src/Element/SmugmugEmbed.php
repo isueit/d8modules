@@ -2,7 +2,7 @@
 
 namespace Drupal\smugmug_media_type\Element;
 
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -10,7 +10,7 @@ use Drupal\Core\Template\Attribute;
  *
  * @RenderElement("smugmug_embed_image")
  */
-class SmugmugEmbed extends RenderElement {
+class SmugmugEmbed extends RenderElementBase {
 
   /**
    * {@inheritdoc}

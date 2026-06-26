@@ -1,0 +1,46 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.products_slideshow.field_product_slides
+    - paragraphs.paragraphs_type.products_slideshow
+  module:
+    - field_delimiter
+    - field_formatter_class
+    - slick_paragraphs
+id: paragraph.products_slideshow.default
+targetEntityType: paragraph
+bundle: products_slideshow
+mode: default
+content:
+  field_product_slides:
+    type: slick_paragraphs_vanilla
+    label: above
+    settings:
+      optionset: products_carousel
+      view_mode: default
+      cache: 0
+      admin_uri: '/clay/admin/structure/paragraphs_type/products_slideshow/display?ajax_form=1&_wrapper_format=drupal_ajax'
+      use_lb: false
+      use_theme_field: false
+      skin: classic
+      overridables:
+        arrows: '0'
+        autoplay: '0'
+        dots: '0'
+        draggable: '0'
+        infinite: '0'
+        mouseWheel: '0'
+        randomize: '0'
+        variableWidth: '0'
+      override: false
+      skin_arrows: ''
+      skin_dots: ''
+    third_party_settings:
+      field_delimiter:
+        delimiter: ''
+      field_formatter_class:
+        class: ''
+    weight: 0
+    region: content
+hidden: {  }

@@ -1,19 +1,142 @@
 <?php
-use \Drupal\section_library\Entity\SectionLibraryTemplate;
-use \Drupal\Core\File\FileSystemInterface;
-use \Drupal\layout_builder\Section;
-use \Drupal\layout_builder\SectionComponent;
-use \Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use function Drupal\Core\Session\user_role_permissions;
 use Drupal\isueo_helpers\ISUEOHelpers;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
 use GuzzleHttp\Promise\Is;
+use Drupal\Core\File\FileExists;
 
 // ADD NEW UPDATES HERE
 // function section_lib_importer_update_8001() {
 // }
+
+// To add missing 4-column section, run the following command on that site:
+// drush eval 'module_load_include("install", "section_lib_importer", "section_lib_importer"); section_lib_importer_create_FOUR(); '
+function section_lib_importer_create_FOUR() {
+$templates = [
+[
+  'label' => 'Four Column Layout',
+  'type' => 'section',
+  'filename' => 'fourColumn.png',
+  'sections' => [[
+      'label' => 'Four Column Layout',
+      'type' => 'section',
+      'section_id' => 'layout_base_fourcol',
+      'section' =>[
+        'label' => 'Four Column Layout',
+        'column_widths' => NULL,
+        'column_gap' => 'layout--column-gap--none',
+        'row_gap' => 'layout--row-gap--none',
+        'column_width' => '',
+        'column_breakpoint' => 'layout--column-breakpoint--medium',
+        'align_items' => 'layout--align-items--normal',
+        'background' => 'layout--background--none',
+        'background_image' => '',
+        'background_image_style' => '',
+        'background_attachment' => 'layout--background-attachment--default',
+        'background_position' => 'layout--background-position--center',
+        'background_size' => 'layout--background-size--cover',
+        'background_overlay' => 'layout--background-overlay--none',
+        'equal_top_bottom_margins' => '',
+        'equal_left_right_margins' => '',
+        'top_margin' => '',
+        'right_margin' => '',
+        'bottom_margin' => '',
+        'left_margin' => '',
+        'equal_top_bottom_paddings' => 'layout--top-bottom-padding--small',
+        'equal_left_right_paddings' => 'layout--left-right-padding--small',
+        'top_padding' => '',
+        'right_padding' => '',
+        'bottom_padding' => '',
+        'left_padding' => '',
+        'container' => 'layout--container--none',
+        'content_container' => 'layout--content-container--default',
+        'height' => 'layout--height--default',
+        'color' => 'layout--color--default',
+        'alignment' => '',
+        'modifier' => '',
+        'customizable_columns' => '',
+        'modifiers' => '',
+      ],
+	'blocks' => []
+      ]
+  ]
+],
+[
+	'label' => 'Left Column Template',
+	'type' => 'section',
+	'filename' => 'leftColumn.png',
+	'sections' => [[
+		'label' => 'Left Column Template',
+		'type' => 'section',
+		'section_id' => 'layout_base_twocol',
+		'section' => [
+			'label' => '',
+			'column_widths' => null,
+			'column_gap' => 'layout--column-gap--small',
+			'row_gap' => 'layout--row-gap--none',
+			'column_width' => 'layout--column-width--25-75',
+			'column_breakpoint' => 'layout--column-breakpoint--medium',
+			'align_items' => 'layout--align-items--normal',
+			'background' => 'layout--background--none',
+			'background_image' => '','background_image_style' => '',
+			'background_attachment' => 'layout--background-attachment--default',
+			'background_position' => 'layout--background-position--center',
+			'background_size' => 'layout--background-size--cover',
+			'background_overlay' => 'layout--background-overlay--none',
+			'equal_top_bottom_margins' => '',
+			'equal_left_right_margins' => '',
+			'top_margin' => '',
+			'right_margin' => '',
+			'bottom_margin' => '',
+			'left_margin' => '',
+			'equal_top_bottom_paddings' => 'layout--top-bottom-padding--small',
+			'equal_left_right_paddings' => 'layout--left-right-padding--small',
+			'top_padding' => '',
+			'right_padding' => '',
+			'bottom_padding' => '',
+			'left_padding' => '',
+			'container' => 'layout--container--none',
+			'content_container' => 'layout--content-container--default',
+			'height' => 'layout--height--default',
+			'color' => 'layout--color--default',
+			'alignment' => '',
+			'modifier' => '',
+			'customizable_columns' => '',
+			'modifiers' => ''
+		],
+		'blocks' => [
+			[
+				'region' => 'first',
+				'id' => 'inline_block:basic_content',
+				'label' => 'Placeholder Content',
+				'provider' => 'layout_builder',
+				'label_display' => 0,
+				'view_mode' => 'full',
+				'info' => 'Float Left',
+				'body' => '<p><This is the left column template. Remove the placeholder text and replace with your own text and/or image.</p><p>This is a helpful way to insert image and text with appropriate padding and alignment properties. If you wish to have two columns of equal width, try using the two column template provided instead.</p>'
+				],[
+				'region' => 'second',
+				'id' => 'inline_block:basic_content',
+				'label' => 'Placeholder Content',
+				'provider' => 'layout_builder',
+				'label_display' => 'visible',
+				'view_mode' => 'full',
+				'info' => 'Placeholder Content',
+				'body' => '<p><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>'
+			]
+		]
+	]]
+]
+];
+addSectionTemplates($templates, true);
+}
+
 
 // If you want the VITA section on a site, run the following command on that site:
 // drush eval 'module_load_include("install", "section_lib_importer", "section_lib_importer"); section_lib_importer_create_VITA(); '
@@ -356,14 +479,16 @@ addSectionTemplates($templates, true);
 
 
 function section_lib_importer_install() {
-  // Set up permissions for content editors
-   user_role_grant_permissions('content_editor', [
+  // Add a few permissions to Content Editor role
+  $permissions = [
+    'access block library',
     'import template from section_library',
     'view section_library templates',
     'create basic_content block content',
     'delete any basic_content block content',
-    'update any basic_content block content',
-  ]);
+    'edit any basic_content block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 
   //Prepare for images
   $uri_file = 'public://section_library/';
@@ -846,7 +971,7 @@ function addSectionTemplates($templates, bool $create_blocks = false) {
       //Load images and set them to be used as thumbnails
       $file_loc = \Drupal::service('file_system')->realpath(\Drupal::service('extension.list.module')->getPath('section_lib_importer')) . '/resources/' . $sectlibtemplate['filename'];
       $file_data = ISUEOHelpers\Files::fetch_url($file_loc);
-      $file_saved = \Drupal::service('file.repository')->writeData($file_data, "public://section_library/" . $sectlibtemplate['filename'], FileSystemInterface::EXISTS_REPLACE);
+      $file_saved = \Drupal::service('file.repository')->writeData($file_data, "public://section_library/" . $sectlibtemplate['filename'], FileExists::Replace);
 
       $data = [
         'type' => $sectlibtemplate['type'],

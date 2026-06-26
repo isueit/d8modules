@@ -8,7 +8,6 @@ dependencies:
     - node.type.staff_profile
   module:
     - block_content
-    - block_content_permissions
     - contact_creator
     - exclude_node_title
     - file
@@ -18,7 +17,6 @@ dependencies:
     - help
     - node
     - section_lib_importer
-    - siteimprove
     - system
     - toolbar
 id: staff_editor

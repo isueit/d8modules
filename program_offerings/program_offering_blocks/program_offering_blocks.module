@@ -21,6 +21,7 @@ function program_offering_blocks_theme($existing, $type, $theme, $path) {
     'program_offering_details_multisession' => [
       'variables' => [
         'title' => '',
+        'eventID' => '',
         'smugmug_id' => '',
         'date' => [],
         'online' => false,
@@ -36,6 +37,7 @@ function program_offering_blocks_theme($existing, $type, $theme, $path) {
     'program_offering_details_singlesession' => [
       'variables' => [
         'title' => '',
+        'eventID' => '',
         'smugmug_id' => '',
         'date' => [],
         'online' => false,

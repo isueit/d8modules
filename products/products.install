@@ -1,0 +1,30 @@
+<?php
+
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+
+/**
+ * Implements hook_uninstall().
+ */
+function products_uninstall()
+{
+  // Delete all the products_blocks
+  $blocks = products_get_all_blocks();
+  foreach ($blocks as $block) {
+    $block->delete();
+  }
+}
+
+/**
+ * Implements hook_install().
+ */
+
+function products_install()
+{
+  // Add a few permissions to Content Editor role
+  $permissions = [
+    'access block library',
+    'edit any products_block block content',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
+
+}

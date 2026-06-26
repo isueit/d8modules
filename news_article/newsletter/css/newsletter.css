@@ -20,10 +20,32 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
     margin-left: auto;
     margin-right: auto;
 }
-/* Archive Message */
-.archive-message.alert.alert-warning {
-    margin-bottom: 0;
-    display: flex;
+/* Style for archive notice */
+.archive-message-wrapper {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+.archive-message-notice {
+	display: flex;
+	align-items: center;
+	position: relative;
+	top: 0;
+	left: 0;
+	z-index: 0;
+	vertical-align: middle;
+}
+.archive-message-notice p {
+	padding-left: .25rem;
+	font-family: var(--serif-font);
+	font-weight: 700;
+	line-height: 1.625;
+	margin-bottom: 0;
+}
+.archive-message-notice svg {
+	width: 1.25em;
+	flex: 0 0 auto;
+	font-size: 1.5rem;
 }
 
 /* --------------------------------------  */
@@ -34,7 +56,7 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
   background-position: center;
   background-repeat: no-repeat;
   width: 100vw;
-  min-height: 200px;
+  min-height: 250px;
   position: relative;
 }
 .newsletter-hero-wrapper h1.isu-page-title {
@@ -52,6 +74,7 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
 .newsletter-hero-label.container h1.isu-page-title img {
     max-width: 6rem;
     margin-right: 1rem;
+    float: left;
 }
 .newsletter-date-wrapper p {
     color: #fff;
@@ -60,7 +83,9 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
 .newsletter-hero-label .newsletter-issue-wrapper, .newsletter-hero-label .newsletter-date-wrapper {
     color: #fff;
     font-size: 1.5rem;
-    margin-left: 10%;
+}
+.newsletter-hero-label .newsletter-issue-wrapper, .newsletter-hero-label .newsletter-date-wrapper--with-clover {
+  margin-left: 10%;
 }
 
 /* --------------------------------------  */
@@ -139,12 +164,18 @@ ul.newsletter-section-index li::before {
     margin: 2.5rem 0;
     background: #008540;
 }
+.newsletter-section-heading-wrapper--with-clover {
+  background: #008540;
+}
 h2.newsletter-section-heading {
     color: #fff;
     margin-top: .4rem;
+    padding: 0 1rem;
+    font-size: 2.2rem;
+}
+.newsletter-section-heading-wrapper--with-clover h2.newsletter-section-heading {
     padding-bottom: 0;
     padding-left: .4rem;
-    font-size: 2.2rem;
 }
 .logo-circle img {
     object-fit: contain;
@@ -202,8 +233,14 @@ h2.newsletter-section-heading {
   align-items: center;
   gap: .5rem;
   background: var(--lt-gray);
+  align-items: stretch;
 }
-.save-the-date-date {
+.save-the-date-item p {
+  margin-bottom: 0;
+  line-height: 1.3;
+  font-size: .9rem;
+}
+.save-the-date-date--wrapper {
   flex-shrink: 0;
   width: 60px;
   text-align: center;
@@ -211,6 +248,9 @@ h2.newsletter-section-heading {
   color: #fff;
   padding: 0.3rem;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 .save-the-date-date .date-month {
   font-size: 0.875rem;
@@ -225,6 +265,7 @@ h2.newsletter-section-heading {
 }
 .save-the-date-title {
   flex: 1;
+  padding: .5rem 0;
 }
 .save-the-date-title .event-link {
   color: var(--secondary-color);
@@ -234,12 +275,15 @@ h2.newsletter-section-heading {
   color: #c8102e;
   text-decoration: underline;
 }
-span.save-the-date-location {
+.save-the-date-location {
     font-style: italic;
-    font-size: 1rem;
+    line-height: 1.3;
+    font-size: .9rem;
 }
 
-/* Responsive design */
+/* --------------------------------------  */
+/* ## RESPONSIVE
+/* --------------------------------------  */
 @media (max-width: 576px) {
   .save-the-date-item {
     gap: 1rem;
@@ -255,5 +299,44 @@ span.save-the-date-location {
   
   .save-the-date-title {
     font-size: 1rem;
+  }
+}
+
+/* --------------------------------------  */
+/* ## PRINT
+/* --------------------------------------  */
+@media print {
+	@page {
+		margin: 0.5cm;
+	}
+  .newsletter-hero-wrapper h1.isu-page-title {
+    font-size: 24pt;
+    font-weight: bold;
+    line-height: 1.2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  h2.newsletter-section-heading {
+    font-size: 22pt;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .newsletter-section-heading-wrapper {
+    margin: 0;
+    margin: 0.5em 0;
+  }
+  .newsletter h2.isu-block-title h4 {
+    margin: 1rem 0 0.5625rem;
+  }
+  .paragraph--type--create-content h2.isu-block-title.h4, .paragraph--type--existing-content h3.isu-block-title.h4 {
+    margin-bottom: 0;
+  }
+  .block-save-the-date h2.isu-block-title.h4 {
+    margin: 0;
+  }
+  .newsletter-index-wrapper {
+    margin-top: 2rem;
+  }
+  .isueo-staff-author--header p {
+    font-size: 12pt;
   }
 }

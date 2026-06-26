@@ -13,7 +13,7 @@ entity_type: node
 bundle: newsletter
 label: 'Featured Article'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -44,6 +44,9 @@ settings:
         enabled: true
       featured_image:
         weight: 12
+        enabled: false
+      save_the_date:
+        weight: 18
         enabled: false
       section_heading:
         weight: 13

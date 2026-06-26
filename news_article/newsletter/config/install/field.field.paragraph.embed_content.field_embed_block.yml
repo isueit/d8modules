@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_embed_block
+    - filter.format.code_embed
+    - paragraphs.paragraphs_type.embed_content
+  module:
+    - text
+id: paragraph.embed_content.field_embed_block
+field_name: field_embed_block
+entity_type: paragraph
+bundle: embed_content
+label: 'Embed Block'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats:
+    - code_embed
+field_type: text_long

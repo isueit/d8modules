@@ -3,6 +3,11 @@
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -43,9 +48,21 @@ function newsletter_theme($existing, $type, $theme, $path)
       'base hook' => 'node',
     ],
 
+    'node__newsletter__newsletter_export' => [
+      'template' => 'node--newsletter--newsletter-export',
+      'base hook' => 'node',
+    ],
+
     'block__field_block__node__newsletter__field_newsletter_save_the_date' => [
       'template' => 'block--field-block--node--newsletter--field-newsletter-save-the-date',
       'base hook' => 'block',
+    ],
+    'newsletter_export' => [
+      'variables' => [
+        'html' => NULL,
+        'node' => NULL,
+      ],
+      'template' => 'newsletter-export',
     ],
   ];
 }
@@ -167,6 +184,23 @@ function newsletter_preprocess_paragraph(&$variables) {
       $variables['section_headings'] = $section_headings;
     }
   }
+    $parent = $paragraph->getParentEntity();
+  
+  if ($parent && $parent->hasField('field_newsletter_type') && !$parent->get('field_newsletter_type')->isEmpty()) {
+    foreach ($parent->get('field_newsletter_type') as $term) {
+      $term_name = '';
+      if (!empty($term->target_id)) {
+        $term_entity = $term->entity ? $term->entity : \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->target_id);
+        if ($term_entity) {
+          $term_name = strtolower($term_entity->getName());
+        }
+      }
+      if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
+        $variables['show_clover_logo'] = true;
+        break;
+      }
+    }
+  }
 }
 
 /**
@@ -180,6 +214,7 @@ function _newsletter_create_slug($text) {
 }
 
 function newsletter_preprocess_page(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
   // Only for newsletter content type
   if (isset($variables['node']) && $variables['node']->bundle() == 'newsletter') {
     $node = $variables['node'];
@@ -231,6 +266,21 @@ function newsletter_preprocess_page(&$variables) {
         }
       }
   }
+    if ($node && $node->hasField('field_newsletter_type') && !$node->get('field_newsletter_type')->isEmpty()) {
+    foreach ($node->get('field_newsletter_type') as $term) {
+      $term_name = '';
+      if (!empty($term->target_id)) {
+        $term_entity = $term->entity ? $term->entity : \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->target_id);
+        if ($term_entity) {
+          $term_name = strtolower($term_entity->getName());
+        }
+      }
+      if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
+        $variables['show_clover_logo'] = true;
+        break;
+      }
+    }
+  }
 }
 
 /**
@@ -259,6 +309,7 @@ function newsletter_preprocess_block(&$variables) {
             $date_value = $paragraph->field_newsletter_event_date->value ?? '';
             $title = $paragraph->field_newsletter_event_title->value ?? '';
             $location = $paragraph->field_newsletter_event_location->value ?? '';
+            $time = $paragraph->field_newsletter_event_time->value ?? '';
             
             // Format date
             $month = '';
@@ -284,6 +335,7 @@ function newsletter_preprocess_block(&$variables) {
               'month' => $month,
               'day' => $day,
               'title' => $title,
+              'time' => $time,
               'link' => $link_url,
               'location' => $location,
             ];
@@ -300,6 +352,27 @@ function newsletter_preprocess_block(&$variables) {
  * Implements hook_preprocess_field().
  */
 function newsletter_preprocess_field(&$variables) {
+  $element = $variables['element'];
+    // Target the specific entity reference field in the existing_content paragraph
+  // Target the specific entity reference field in the existing_content paragraph
+  if ($element['#field_name'] == 'field_existing_content_search' && 
+      $element['#bundle'] == 'existing_content') {
+    
+    // Get the paragraph entity
+    $paragraph = $element['#object'];
+    $parent = $paragraph->getParentEntity();
+    
+    // Check if parent is a newsletter
+    if ($parent && $parent->getEntityTypeId() == 'node' && $parent->bundle() == 'newsletter') {
+      // Add context to all child items
+      foreach ($variables['items'] as $delta => &$item) {
+        if (isset($item['content']['#node'])) {
+          $item['content']['#is_in_newsletter'] = TRUE;
+          $item['content']['#newsletter_node'] = $parent;
+        }
+      }
+    }
+  }
   if ($variables['field_name'] == 'field_section_heading' && 
       isset($variables['element']['#bundle']) && 
       $variables['element']['#bundle'] == 'section_heading') {
@@ -337,5 +410,88 @@ function newsletter_preprocess_field(&$variables) {
         }
       }
     }
+  }
+
+    if ($variables['field_name'] == 'field_section_heading') {
+    $entity = $variables['element']['#object'];
+    
+    if ($entity && method_exists($entity, 'getParentEntity')) {
+      $parent = $entity->getParentEntity();
+      
+      if ($parent && $parent->hasField('field_newsletter_type') && !$parent->get('field_newsletter_type')->isEmpty()) {
+        foreach ($parent->get('field_newsletter_type') as $term) {
+          $term_name = '';
+          if (!empty($term->target_id)) {
+            $term_entity = $term->entity ? $term->entity : \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($term->target_id);
+            if ($term_entity) {
+              $term_name = strtolower($term_entity->getName());
+            }
+          }
+          if (strpos($term_name, '4-h') !== false || strpos($term_name, 'clover kids') !== false) {
+            $variables['show_clover_logo'] = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+/**
+ * Implements hook_entity_operation().
+ * 
+ * Adds a "Newsletter Export" operation link to nodes.
+ */
+function newsletter_entity_operation($entity) {
+  $operations = [];
+  
+  // Only add for nodes and if user has permission
+  if ($entity instanceof NodeInterface && \Drupal::currentUser()->hasPermission('export newsletter content')) {
+    if ($entity->bundle() == 'newsletter') {
+      
+      $operations['newsletter_export'] = [
+        'title' => t('Newsletter Export'),
+        'url' => \Drupal\Core\Url::fromRoute('newsletter.export', [
+          'node' => $entity->id(),
+        ]),
+        'weight' => 50,
+      ];
+    }
+  }
+  
+  return $operations;
+}
+
+/**
+ * Implements hook_plugin_filter_block__layout_builder_alter().
+ */
+function newsletter_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra, $consumer) {
+  // Get current user
+  $account = \Drupal::currentUser();
+  
+  // If user has permission, ensure newsletter block is in the definitions
+  if ($account->hasPermission('place newsletter blocks') || $account->hasPermission('administer blocks')) {
+    // Make sure our block isn't filtered out
+    // This hook runs after restrictions, so we're re-adding it if needed
+    if (!isset($definitions['newsletter_archive_block'])) {
+      $block_manager = \Drupal::service('plugin.manager.block');
+      $all_definitions = $block_manager->getDefinitions();
+      if (isset($all_definitions['newsletter_archive_block'])) {
+        $definitions['newsletter_archive_block'] = $all_definitions['newsletter_archive_block'];
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_layout_builder_restrictions_allowed_block_keys_alter().
+ */
+function newsletter_layout_builder_restrictions_allowed_block_keys_alter(array &$allowed_blocks, $context) {
+  $account = \Drupal::currentUser();
+  
+  // If user has permission, add newsletter block to allowed list
+  if ($account->hasPermission('place newsletter blocks') || $account->hasPermission('administer blocks')) {
+    $allowed_blocks[] = 'newsletter_archive_block';
   }
 }

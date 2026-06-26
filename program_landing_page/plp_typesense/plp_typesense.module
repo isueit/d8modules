@@ -73,11 +73,11 @@ function plp_typesense_index_all_programs()
 
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
+  $nodes =  Node::loadMultiple($nids);
 
   $client->collections[$collection_name]->documents->delete(['filter_by' => 'field_plp_program_sort_calc:>=0', ]);
 
-  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
-  $nodes =  Node::loadMultiple($nids);
   foreach ($nodes as $node) {
     plp_typesense_index_node($client, $collection_name, $node, 'Program');
   }
@@ -106,6 +106,7 @@ function plp_typesense_index_node($client, $collection_name, $node, $type = 'Pro
     'field_plp_program_category' => intval($node->get('field_plp_program_category')->getString()),
     'field_plp_program_smugmug' => $node->get('field_plp_program_smugmug')->getString(),
     'field_plp_program_search_terms' => $node->get('field_plp_program_search_terms')->getString(),
+    'field_plp_program_event_pgm_ids' => unserialize($node->get('field_plp_program_event_pgm_ids')->getString()),
     'category_name' => Term::load(intval($node->get('field_plp_program_category')->getString()))->getName(),
     'body' => empty($node->get('body')->value) ? 'N/A' : $node->get('body')->value,
     'summary' => empty($node->get('body')->summary) ? 'N/A' : $node->get('body')->summary,
@@ -158,6 +159,6 @@ function plp_typesense_get_typesense_collection_name()
 
 function plp_typesense_get_typesense_client()
 {
-  return Typesense::getClient('KPwl7XwGfNLPjKdRtZSL1H0Rb1YeApcD'); // plp_programs
-  //return Typesense::getClient('FcwLwSWecQh91ElQtZjm0lGRv8cW2t1T'); // deleteme_brian
+  return Typesense::getClient('plp_programs');
+  //return Typesense::getClient('deleteme_brian');
 }

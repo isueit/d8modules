@@ -1,13 +1,38 @@
 /* ------------------------------------- */
 /* ## RESULTS
 /* ------------------------------------- */
+.ts-events-date .icon svg, .ts-event-location .icon svg {
+    vertical-align: middle;
+    width: 1.4rem;
+    margin-right: .3rem;
+}
+.ts-events-item.card {
+    margin: 1.125rem 1.1rem 0.5rem 0;
+    box-shadow: none;
+}
+.visible-for-screen-readers {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+.ts-events-date, .ts-event-location {
+    display: flex;
+    align-items: center;
+}
+.search-results-facets #program {
+    display: none;
+}
 .search-results {
     max-width: 1140px;
     margin: 1.125rem 1.1rem .5rem;
 }
-.search-results .ais-InfiniteHits li {
+.ts-events-wrapper.search-results .ais-InfiniteHits li {
     list-style: none;
-    margin: 1.125rem 1.1rem 0.5rem 0;
+    border-bottom: 1px solid #ddd;
 }
 .search-results .ais-InfiniteHits ol {
     padding-left: 0;
@@ -22,9 +47,8 @@
 .search-results .card .card-body {
     text-align: left;
 }
-.search-results h2.card-title a {
+.ts-events h2.card-title a {
     color: var(--cardinal);
-    font-size: clamp(1.3rem, 2vw, 1.5rem);
 }
 .search-results h2.card-title a:hover {
     color: var(--burgundy);
@@ -34,7 +58,7 @@
     line-height: 1;
 }
 .search-results h2 {
-    padding-bottom: 0.5rem;
+    padding-bottom: 0;
 }
 .search-results .hit-summary {
     line-height: 1.3;

@@ -1,0 +1,91 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.newsletter_export
+    - field.field.node.newsletter.field_newsletter_archive_exclude
+    - field.field.node.newsletter.field_newsletter_content
+    - field.field.node.newsletter.field_newsletter_exclude
+    - field.field.node.newsletter.field_newsletter_featured
+    - field.field.node.newsletter.field_newsletter_hero
+    - field.field.node.newsletter.field_newsletter_issue_date
+    - field.field.node.newsletter.field_newsletter_issue_number
+    - field.field.node.newsletter.field_newsletter_save_the_date
+    - field.field.node.newsletter.field_newsletter_thumbnail
+    - field.field.node.newsletter.field_newsletter_type
+    - node.type.newsletter
+  module:
+    - entity_reference_revisions
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.newsletter.newsletter_export
+targetEntityType: node
+bundle: newsletter
+mode: newsletter_export
+content:
+  field_newsletter_content:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_newsletter_featured:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_newsletter_hero:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_newsletter_issue_date:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_newsletter_issue_number:
+    type: string
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_newsletter_save_the_date:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_newsletter_archive_exclude: true
+  field_newsletter_exclude: true
+  field_newsletter_thumbnail: true
+  field_newsletter_type: true

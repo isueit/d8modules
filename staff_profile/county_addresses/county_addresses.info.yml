@@ -1,0 +1,6 @@
+name: 'County Addresses'
+type: module
+core_version_requirement: ^10 || ^11
+description: 'Added address fields to the Counties in Iowa Taxonomy'
+version: '8.x-1.1-dev'
+package: 'ISUEO'

@@ -1,0 +1,101 @@
+{#
+/**
+ * @file
+ * Template for printing county impact reports.
+ *
+ * Available variables:
+ * - node: The node entity
+ * - site_name: The site name from token
+ * - year: Current year
+ */
+#}
+{% set base_url = url('<front>')|render %}
+{% set theme_path = active_theme_path() %}
+{% set image_path = base_url ~ '/' ~ theme_path ~ '/images/real-impact-print-banner.png' %}
+
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <title>Print Impact Report - {{ site_name }}</title>
+</head>
+<div class="print-wrapper">
+  <div class="print-page page-1">
+    <div class="header-section">
+      <div class="header-top">
+        <div class="site-branding">
+          <img src="{{ image_path }}" alt="{{ site_name }}'s Real Impact - a report for stakeholders" class="header-banner-image">
+        </div>
+      </div>
+      
+      <div class="report-title">
+        <h1>REAL IMPACT IN {{ site_name|upper }}</h1>
+        <p class="subtitle">Iowa State University Extension and Outreach delivers education, facilitates collaboration, and sparks action for Iowans. This report shares examples of Iowa State University and the {{ site_name }} Agricultural Extension District making a difference and creating real impact in {{ site_name }}.</p>
+      </div>
+      
+  <div class="stats-container">
+        {% if top_impact_data is not empty %}
+          {% for impact in top_impact_data %}
+            <div class="stat-box stat-box-top">
+              <div class="stat-header">
+                {% if impact.icon is not empty %}
+                  <div class="stat-icon">{{ impact.icon|raw }}</div>
+                {% endif %}
+                <div class="stat-number">{{ impact.value }}</div>
+              </div>
+              <div class="stat-label">{{ impact.label|replace({'<br>': ' ', '<br/>': ' ', '<br />': ' '})|striptags|raw }}</div>
+            </div>
+          {% endfor %}
+        {% endif %}
+        
+        {% if bottom_impact_data is not empty %}
+          {% for impact in bottom_impact_data %}
+            <div class="stat-box stat-box-bottom">
+              <div class="stat-header">
+                {% if impact.icon is not empty %}
+                  <div class="stat-icon">{{ impact.icon|raw }}</div>
+                {% endif %}
+                <div class="stat-number">{{ impact.value }}</div>
+              </div>
+              <div class="stat-label">{{ impact.label|striptags|raw }}</div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    {# All stories using the same small layout #}
+    {% for key, item in node.field_impact_story %}
+      {% set story = item.entity %}
+      
+      <div class="story-section story-small">
+        {% if story.field_county_impact_story_title is not empty %}
+        <h2 class="story-title">{{ story.field_county_impact_story_title.value }}</h2>
+        {% endif %}
+        
+        <div class="story-layout-small">
+          {% if story.field_county_impact_story_image is not empty and loop.first %}
+          <div class="story-image-small">
+            {{ story.field_county_impact_story_image|view }}
+          </div>
+          {% endif %}
+          
+          <div class="story-text">
+            {{ story.field_county_impact_story_body.value|raw }}
+          </div>
+          <div style="clear: both;"></div>
+        </div>
+      </div>
+    {% endfor %}
+
+      {# Footer section #}
+    <div class="footer-section">
+      <div class="footer-contact">
+        <h3>IOWA STATE UNIVERSITY EXTENSION AND OUTREACH {{ site_name|upper }}</h3>
+        <div class="contact-info">{{ drupal_entity('block', 'contact_us') }}</div>
+        <p class="page-url">{{ drupal_token('site:base-url') }}</p>
+        <p class="footer-legal">
+          This institution is an equal opportunity provider. For the full non-discrimination statement or accommodation inquiries, go to www.extension.iastate.edu/legal.
+        </p>
+      </div>
+  </div>
+</div>

@@ -5,6 +5,9 @@ dependencies:
     - 'file:file:12e4abe2-6dda-4057-a3b8-b048becabcb5'
   module:
     - paragraphs_ee
+  enforced:
+    config:
+      - node.type.newsletter
 third_party_settings:
   paragraphs_ee:
     paragraphs_categories:

@@ -1,0 +1,12 @@
+map:
+  version: 1.x
+  css:
+    theme:
+      css/map.css: {}
+  js:
+    js/map.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/once
+    - core/drupalSettings

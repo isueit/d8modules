@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+
 /**
  * @file
  * Install file for educational_programs_page.
@@ -10,24 +12,25 @@
  *
  * @ingroup educational_programs_page
  */
-function educational_programs_page_install() {
-
+function educational_programs_page_install()
+{
   $locked = Drupal::state()->get('node.type.locked');
   $locked['educational_programs_page'] = 'educational_programs_page';
   Drupal::state()->set('node.type.locked', $locked);
 
-  user_role_grant_permissions('content_editor', array(
-	'create educational_programs_page content',
-	'delete any educational_programs_page content',
-	'edit any educational_programs_page content',
-	'override educational_programs_page authored on option',
-	'override educational_programs_page published option',
-	'configure editable educational_programs_page node layout overrides',
+  // Add some permissions to content_editor role
+  $permissions = [
+    'create educational_programs_page content',
+    'delete any educational_programs_page content',
+    'edit any educational_programs_page content',
+    'override educational_programs_page authored on option',
+    'override educational_programs_page published option',
+    'configure editable educational_programs_page node layout overrides',
     'view any unpublished educational_programs_page content',
-  ));
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 
   drupal_flush_all_caches();
-
 }
 
 /**
@@ -43,11 +46,12 @@ function educational_programs_page_install() {
  *
  * @ingroup educational_programs_page
  */
-function educational_programs_page_uninstall() {
+function educational_programs_page_uninstall()
+{
   $locked = Drupal::state()->get('node.type.locked');
   unset($locked['educational_programs_page']);
   Drupal::state()->set('node.type.locked', $locked);
-  
+
   $storage_handler = \Drupal::entityTypeManager()
     ->getStorage('node');
   $nodes = $storage_handler->loadByProperties(['type' => 'educational_programs_page']);
@@ -58,4 +62,3 @@ function educational_programs_page_uninstall() {
     ->load('educational_programs_page');
   $content_type->delete();
 }
-

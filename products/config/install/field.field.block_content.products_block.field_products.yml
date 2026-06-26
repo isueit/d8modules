@@ -1,0 +1,63 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.products_block
+    - field.storage.block_content.field_products
+    - paragraphs.paragraphs_type.products_slideshow
+  module:
+    - entity_reference_revisions
+id: block_content.products_block.field_products
+field_name: field_products
+entity_type: block_content
+bundle: products_block
+label: Products
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      products_slideshow: products_slideshow
+    negate: 0
+    target_bundles_drag_drop:
+      county_impact_story:
+        weight: 13
+        enabled: false
+      create_content:
+        weight: 14
+        enabled: false
+      data_points_selector:
+        weight: 15
+        enabled: false
+      embed_content:
+        weight: 16
+        enabled: false
+      existing_content:
+        weight: 17
+        enabled: false
+      featured_content:
+        weight: 18
+        enabled: false
+      featured_image:
+        weight: 19
+        enabled: false
+      product:
+        weight: 20
+        enabled: false
+      products_slideshow:
+        weight: 21
+        enabled: true
+      save_the_date:
+        weight: 22
+        enabled: false
+      section_heading:
+        weight: 23
+        enabled: false
+      staff_information:
+        weight: 24
+        enabled: false
+field_type: entity_reference_revisions

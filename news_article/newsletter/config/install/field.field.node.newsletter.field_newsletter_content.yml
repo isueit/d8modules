@@ -5,6 +5,7 @@ dependencies:
     - field.storage.node.field_newsletter_content
     - node.type.newsletter
     - paragraphs.paragraphs_type.create_content
+    - paragraphs.paragraphs_type.embed_content
     - paragraphs.paragraphs_type.existing_content
     - paragraphs.paragraphs_type.section_heading
     - paragraphs.paragraphs_type.staff_information
@@ -25,6 +26,7 @@ settings:
   handler_settings:
     target_bundles:
       create_content: create_content
+      embed_content: embed_content
       existing_content: existing_content
       section_heading: section_heading
       staff_information: staff_information
@@ -41,7 +43,7 @@ settings:
         enabled: false
       embed_content:
         weight: 8
-        enabled: false
+        enabled: true
       existing_content:
         weight: 9
         enabled: true
@@ -50,6 +52,9 @@ settings:
         enabled: false
       featured_image:
         weight: 12
+        enabled: false
+      save_the_date:
+        weight: 18
         enabled: false
       section_heading:
         weight: 11

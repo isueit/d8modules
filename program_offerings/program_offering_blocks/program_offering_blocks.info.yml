@@ -1,6 +1,6 @@
 name: 'Program Offering Blocks'
 type: module
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10 || ^11
 description: 'Creates Blocks to display Program Offerings from MyData'
 version: '8.x-1.0-dev'
 package: 'ISUEO'

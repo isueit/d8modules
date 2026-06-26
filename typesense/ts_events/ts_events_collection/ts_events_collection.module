@@ -9,6 +9,8 @@ use Drupal\node\Entity\Node;
 function ts_events_collection_rebuild()
 {
   ts_events_collection_index_events();
+  ts_events_collection_index_events_programs();
+  exec('drush queue:run ts_events_collection_events_programs > /dev/null 2>&1 &');
 }
 /**
  * Implements hook_cron().
@@ -17,6 +19,8 @@ function ts_events_collection_rebuild()
 function ts_events_collection_cron()
 {
   ts_events_collection_index_events();
+  ts_events_collection_index_events_programs();
+  exec('drush queue:run ts_events_collection_events_programs > /dev/null 2>&1 &');
 }
 
 function ts_events_collection_index_events()
@@ -24,8 +28,7 @@ function ts_events_collection_index_events()
   $now = time();
   $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
   $events = json_decode($raw, true);
-  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
-  $client = ISUEOHelpers\Typesense::getClient($apiKey);
+  $client = ISUEOHelpers\Typesense::getClient('events');
 
   foreach ($events as $event) {
     if ($event['Cancelled_Program__c'] || !$event['Public_Event__c']) {
@@ -40,7 +43,9 @@ function ts_events_collection_index_events()
     $tmp['last_updated_time'] = $now;
     $tmp['description'] = ts_events_collection_get_description($event);
     $tmp['county'] = ts_events_collection_get_counties($event);
-    $tmp['sessions'] = ts_events_collection_get_sessions($event);
+    $sessions = ts_events_collection_get_sessions($event);
+    $tmp['sessions'] = array_keys($sessions);
+    $tmp['sessions_end_date_time'] = array_values(($sessions));
     $tmp['category'] = $event['Planned_Program__r.Program_landing_Page_Category__c'];
     $tmp['topics'] = empty($event['Planned_Program__r.Program_Landing_Page_Topic__c']) ? [] : explode(';', $event['Planned_Program__r.Program_Landing_Page_Topic__c']);
     $tmp['delivery_method'] = $event['Event_Location__c'] == 'Online' ? 'Online' : 'In Person';
@@ -51,7 +56,7 @@ function ts_events_collection_index_events()
     $tmp['Registration_Opens__c'] = ts_events_collection_get_registration_opens($event);
     $tmp['Registration_Deadline__c'] = ts_events_collection_get_registration_deadline($event);
     $tmp['smugmug_id'] = $event['Planned_Program__r.Smugmug_ID__c'];
-    $tmp['plp_program'] = ts_events_collection_get_planned_progam($event['Planned_Program__c']);
+    $tmp['plp_program'] = ts_events_collection_get_planned_program($event['Planned_Program__c'], $tmp['title']);
 
     // Handle fields that get copied straight over using the same field name
     $field_names = [
@@ -117,166 +122,36 @@ function ts_events_collection_get_counties($event)
   return $tmpcounties;
 }
 
+/**
+ * Get a copy of the sessions associated with this event
+ * Both arrays have the start as the key, and the end as the value
+ */
 function ts_events_collection_get_sessions($event)
 {
   $tmparray = [];
   $session_names = [
-    'Start_Time_and_Date__c',
-    'Second_Session_Date_Time__c',
-    'Third_Session_Begining_Date_and_Time__c',
-    'Fourth_Session_Beginning_Date_and_Time__c',
-    'Fifth_Session_Beginning_Date_and_Time__c',
-    'Sixth_Session_Beginning_Date_and_Time__c',
-    'Seventh_Session_Beginning_Date_and_Time__c',
-    'Eighth_Session_Beginning_Date_and_Time__c',
-    'Ninth_Session_Beginning_Date_and_Time__c',
-    'Tenth_Session_Beginning_Date_and_Time__c',
-    'Eleventh_Session_Start_Date__c',
-    'Twelfth_Session_Start_Date__c',
+    'Start_Time_and_Date__c' => 'First_Session_End_Date_Time__c',
+    'Second_Session_Date_Time__c' => 'Second_Session_End_Date_Time__c',
+    'Third_Session_Begining_Date_and_Time__c' => 'Third_Session_End_Date_and_Time__c',
+    'Fourth_Session_Beginning_Date_and_Time__c' => 'Fourth_Session_End_Date_and_Time__c',
+    'Fifth_Session_Beginning_Date_and_Time__c' => 'Fifth_Session_End_Date_and_Time__c',
+    'Sixth_Session_Beginning_Date_and_Time__c' => 'Sixth_Session_End_Date_and_Time__c',
+    'Seventh_Session_Beginning_Date_and_Time__c' => 'Seventh_Session_End_Date_and_Time__c',
+    'Eighth_Session_Beginning_Date_and_Time__c' => 'Eighth_Session_End_Date_and_Time__c',
+    'Ninth_Session_Beginning_Date_and_Time__c' => 'Ninth_Session_End_Date_and_Time__c',
+    'Tenth_Session_Beginning_Date_and_Time__c' => 'Tenth_Session_End_Date_and_Time__c',
+    'Eleventh_Session_Start_Date__c' => 'Eleventh_Session_End_Date__c',
+    'Twelfth_Session_Start_Date__c' => 'Twelfth_Session_End_Date__c',
   ];
 
-  foreach ($session_names as $session) {
-    if (!empty($event[$session])) {
-      $tmparray[] = strtotime($event[$session]);
+  foreach ($session_names as $start => $end) {
+    if (!empty($event[$start])) {
+      $tmparray[strtotime($event[$start])] = strtotime($event[$end]);
     }
   }
 
-  sort($tmparray);
+  ksort($tmparray);
   return $tmparray;
-}
-
-function ts_events_collection_create_collection()
-{
-  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
-  $client = ISUEOHelpers\Typesense::getClient($apiKey);
-
-  // Start with the base schema
-  $schema = [
-    "name" => "events",
-    "fields" => [],
-    "default_sorting_field" => "sort_order",
-    "enable_nested_fields" => false,
-    "symbols_to_index" => [],
-    "token_separators" => []
-  ];
-
-  // Define the fields
-  $fields = [
-    'title' => 'string',
-    'description' => 'string',
-    'delivery_method' => 'string',
-    'Program_State__c' => 'string',
-    'Event_Location__c' => 'string',
-    'PrimaryProgramUnit__c' => 'string',
-    'category' => 'string',
-    'topics' => 'string[]',
-    'county' => 'string[]',
-    'smugmug_id' => 'string',
-    'sort_order' => 'int32',
-    'last_updated_time' => 'int32',
-    'Next_Start_Date__c' => 'int64',
-    'sessions' => 'int64[]',
-    'Contact_Information_Name__c' => 'string',
-    'Contact_Information_Email__c' => 'string',
-    'Contact_Information_Phone__c' => 'string',
-    'Delivery_Language__c' => 'string',
-    'Instructor_Information_Name__c' => 'string',
-    'Instructor_Information_Email__c' => 'string',
-    'Instructor_Information_Phone__c' => 'string',
-    'End_Date_and_Time__c' => 'int64',
-    'Start_Time_and_Date__c' => 'int64',
-    'Event_Location_Site_Building__c' => 'string',
-    'Event_Location_Street_Address__c' => 'string',
-    'Event_Location_Zip_Code__c' => 'string',
-    'plp_program' => 'string',
-    'Planned_Program_Website__c' => 'string',
-    'Program_Offering_Website__c' => 'string',
-    'Registration_Opens__c' => 'int64',
-    'Registration_Deadline__c' => 'int64',
-    'Registration_Link__c' => 'string',
-  ];
-
-  // Fields that are facets
-  $facets = [
-    'delivery_method',
-    'Delivery_Language__c',
-    'PrimaryProgramUnit__c',
-    'plp_program',
-    'category',
-    'topics',
-    'county',
-  ];
-
-  // Optional fields
-  $optional = [
-    'Program_State__c',
-    'category',
-    'topics',
-    'county',
-    'Contact_Information_Name__c',
-    'Contact_Information_Email__c',
-    'Contact_Information_Phone__c',
-    'Delivery_Language__c',
-    'Instructor_Information_Name__c',
-    'Instructor_Information_Email__c',
-    'Instructor_Information_Phone__c',
-    'End_Date_and_Time__c',
-    'Start_Time_and_Date__c',
-    'Event_Location_Site_Building__c',
-    'Event_Location_Street_Address__c',
-    'Event_Location_Zip_Code__c',
-    'smugmug_id',
-    'plp_program',
-    'Planned_Program_Website__c',
-    'Program_Offering_Website__c',
-    'Registration_Opens__c',
-    'Registration_Deadline__c',
-    'Registration_Link__c',
-  ];
-
-  // Sort fields
-  $sort = [
-    'sort_order',
-  ];
-
-  // Add the fields to the schema
-  foreach ($fields as $field => $type) {
-    $schema['fields'][] =
-      [
-        "name" => $field,
-        "type" => $type,
-        "facet" => in_array($field, $facets),
-        "optional" => in_array($field, $optional),
-        "index" => true,
-        "sort" => in_array($field, $sort),
-        "infix" => false,
-        "locale" => "",
-        "stem" => false,
-        "stem_dictionary" => "",
-        "store" => true
-      ];
-  }
-
-  ts_events_collection_delete_collection();
-
-  try {
-    $client->collections->create($schema);
-    ts_events_collection_index_events();
-  } catch (Exception $e) {
-    echo $e->getMessage();
-  }
-}
-
-
-function ts_events_collection_delete_collection()
-{
-  $apiKey = 'lxNsXNmctmYuG3TQUpk6CpiPkF7dU8YI';
-  $client = ISUEOHelpers\Typesense::getClient($apiKey);
-
-  try {
-    $client->collections['events']->delete();
-  } catch (Exception $e) {
-  }
 }
 
 function ts_events_collection_get_registration_opens($event)
@@ -299,9 +174,12 @@ function ts_events_collection_get_registration_deadline($event)
   return $open;
 }
 
-function ts_events_collection_get_planned_progam($programId)
+function ts_events_collection_get_planned_program($programId, $title)
 {
   $plannedProgram = '';
+  if (empty($programId)) {
+    return $plannedProgram;
+  }
 
   // Make sure the plp_program module is enabled
   if (function_exists('plp_programs_getprograms')) {
@@ -313,7 +191,7 @@ function ts_events_collection_get_planned_progam($programId)
       ->condition('status', 1)
       ->execute();
     if ($nids && count($nids) == 1) {
-      $plannedProgram = $programId;
+      $plannedProgram = $title;
     }
 
     // Check if the $programID refers to a Child Program in the PLP
@@ -325,9 +203,47 @@ function ts_events_collection_get_planned_progam($programId)
       ->execute();
     if ($nids && count($nids) == 1) {
       $node = Node::load(reset($nids));
-      $plannedProgram = $node->get('field_plp_program_mydata_id')->getString();
+      $plannedProgram = $node->getTitle();
     }
   }
 
   return $plannedProgram;
+}
+
+function ts_events_collection_index_events_programs() {
+  $queue = \Drupal::queue('ts_events_collection_events_programs');
+  $now = time();
+  $chunk_size = 500;
+  $chunk = [];
+  $count = 0;
+
+  // Get the file from MyData
+  //$raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/PastEvents.json');
+  $raw = ISUEOHelpers\Files::fetch_url('https://datastore.exnet.iastate.edu/mydata/UpcomingProgramOfferings.json');
+  $events = json_decode($raw, true);
+
+  // Step through the events, and put them in the queue in chunks
+  foreach ($events as $event) {
+    if ($event['Planned_Program__c']) {
+        $tmparray = [
+          'id' => $event['Id'],
+          'Title' => $event['Name_Placeholder__c'],
+          'Planned_Program__c' => $event['Planned_Program__c'],
+          'end_date_time' => strtotime($event['End_Date_and_Time__c']),
+          'last_updated_time' => $now,
+        ];
+      $chunk[] = $tmparray;
+      $count = $count + 1;
+
+      if ($count % $chunk_size == 0) {
+        $queue->createItem($chunk);
+        $chunk = [];
+      }
+    }
+  }
+
+  // Put the last chunk in the queue
+  if ($chunk) {
+    $queue->createItem($chunk);
+  }
 }

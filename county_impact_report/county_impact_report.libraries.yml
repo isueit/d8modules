@@ -3,3 +3,8 @@ county_impact_report:
   css:
     layout:
       css/county_impact_report.css: {}
+
+print_styles:
+  css:
+    theme:
+      css/print.css: {}

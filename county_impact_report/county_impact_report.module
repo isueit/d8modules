@@ -70,6 +70,14 @@ function county_impact_report_theme($existing, $type, $theme, $path)
       'template' => 'page--type--county-impact-report--canonical',
       'base hook' => 'node',
     ],
+    'county_impact_report_print' => [
+      'variables' => [
+        'node' => NULL,
+        'site_name' => NULL,
+        'year' => NULL,
+      ],
+      'template' => 'county-impact-report-print',
+    ],
   ];
 }
 
@@ -160,6 +168,75 @@ function county_impact_report_preprocess_page__type__county_impact_report__canon
   $variables['bottom_impact_data'] = $impacts;
 }
 
+/**
+ * Implements hook_preprocess_HOOK() for county_impact_report_print theme.
+ */
+function county_impact_report_preprocess_county_impact_report_print(&$variables) {
+  $node = $variables['node'];
+  
+  if (!$node) {
+    return;
+  }
+  
+  // Process top data points (for stats bar)
+  if ($node->hasField('field_top_data_points') && !$node->get('field_top_data_points')->isEmpty()) {
+    $top_data_points = $node->get('field_top_data_points')[0]->entity;
+    $data_point_1 = $top_data_points->get('field_data_point_1')->value;
+    $data_point_2 = $top_data_points->get('field_data_point_2')->value;
+    $data_point_3 = $top_data_points->get('field_data_point_3')->value;
+
+    // Get the impact data
+    $impactData = county_impact_report_find_county_impacts();
+    $top_impacts = [];
+    
+    if ($data_point_1 != '') {
+      $top_impacts[0]['label'] = $impactData[0][$data_point_1];
+      $top_impacts[0]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_1]);
+      $top_impacts[0]['value'] = county_impact_report_format_value($impactData[1][$data_point_1], $impactData[0][$data_point_1]);
+    }
+    if ($data_point_2 != '') {
+      $top_impacts[1]['label'] = $impactData[0][$data_point_2];
+      $top_impacts[1]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_2]);
+      $top_impacts[1]['value'] = county_impact_report_format_value($impactData[1][$data_point_2], $impactData[0][$data_point_2]);
+    }
+    if ($data_point_3 != '') {
+      $top_impacts[2]['label'] = $impactData[0][$data_point_3];
+      $top_impacts[2]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_3]);
+      $top_impacts[2]['value'] = county_impact_report_format_value($impactData[1][$data_point_3], $impactData[0][$data_point_3]);
+    }
+    $variables['top_impact_data'] = $top_impacts;
+  }
+  
+  // Process bottom data points (for footer stats)
+  if ($node->hasField('field_bottom_data_points') && !$node->get('field_bottom_data_points')->isEmpty()) {
+    $bottom_data_points = $node->get('field_bottom_data_points')[0]->entity;
+    $data_point_1 = $bottom_data_points->get('field_data_point_1')->value;
+    $data_point_2 = $bottom_data_points->get('field_data_point_2')->value;
+    $data_point_3 = $bottom_data_points->get('field_data_point_3')->value;
+
+    // Get the impact data
+    $impactData = county_impact_report_find_county_impacts();
+    $bottom_impacts = [];
+    
+    if ($data_point_1 != '') {
+      $bottom_impacts[0]['label'] = $impactData[0][$data_point_1];
+      $bottom_impacts[0]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_1]);
+      $bottom_impacts[0]['value'] = county_impact_report_format_value($impactData[1][$data_point_1], $impactData[0][$data_point_1]);
+    }
+    if ($data_point_2 != '') {
+      $bottom_impacts[1]['label'] = $impactData[0][$data_point_2];
+      $bottom_impacts[1]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_2]);
+      $bottom_impacts[1]['value'] = county_impact_report_format_value($impactData[1][$data_point_2], $impactData[0][$data_point_2]);
+    }
+    if ($data_point_3 != '') {
+      $bottom_impacts[2]['label'] = $impactData[0][$data_point_3];
+      $bottom_impacts[2]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_3]);
+      $bottom_impacts[2]['value'] = county_impact_report_format_value($impactData[1][$data_point_3], $impactData[0][$data_point_3]);
+    }
+    $variables['bottom_impact_data'] = $bottom_impacts;
+  }
+}
+
 /*
  * Read the county's data from the data file
  */
@@ -232,7 +309,7 @@ function county_impact_report_find_icon($label)
       $icon = '<img loading="lazy" src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="4-H clover emblem" style="height:4.5rem">';
       break;
     case 'volunteer hours':
-      $icon = '<svg class="svg-inline--fa fa-person-circle-question fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="person-circle-question" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M208 48c0 26.5-21.5 48-48 48s-48-21.5-48-48s21.5-48 48-48s48 21.5 48 48zM152 352V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V256.9L59.4 304.5c-9.1 15.1-28.8 20-43.9 10.9s-20-28.8-10.9-43.9l58.3-97c17.4-28.9 48.6-46.6 82.3-46.6h29.7c33.7 0 64.9 17.7 82.3 46.6l44.9 74.7c-16.1 17.6-28.6 38.5-36.6 61.5c-1.9-1.8-3.5-3.9-4.9-6.3L232 256.9V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V352H152zM432 512c-79.5 0-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144s-64.5 144-144 144zm0-48c13.3 0 24-10.7 24-24s-10.7-24-24-24s-24 10.7-24 24s10.7 24 24 24zM368 321.6V328c0 8.8 7.2 16 16 16s16-7.2 16-16v-6.4c0-5.3 4.3-9.6 9.6-9.6h40.5c7.7 0 13.9 6.2 13.9 13.9c0 5.2-2.9 9.9-7.4 12.3l-32 16.8c-5.3 2.8-8.6 8.2-8.6 14.2V384c0 8.8 7.2 16 16 16s16-7.2 16-16v-5.1l23.5-12.3c15.1-7.9 24.5-23.6 24.5-40.6c0-25.4-20.6-45.9-45.9-45.9H409.6c-23 0-41.6 18.6-41.6 41.6z"></path></svg>';
+      $icon = '<svg class="svg-inline--fa fa-user-clock fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-clock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" data-fa-i2svg=""><path fill="currentColor" d="M256 72C322.3 72 376 125.7 376 192C376 258.3 322.3 312 256 312C189.7 312 136 258.3 136 192C136 125.7 189.7 72 256 72zM226.3 368L285.7 368C289.6 368 293.6 368.1 297.5 368.4C281.3 396.6 272 429.2 272 464C272 505.8 285.4 544.5 308 576L77.7 576C61.3 576 48 562.7 48 546.3C48 447.8 127.8 368 226.3 368zM320 464C320 384.5 384.5 320 464 320C543.5 320 608 384.5 608 464C608 543.5 543.5 608 464 608C384.5 608 320 543.5 320 464zM464 384C455.2 384 448 391.2 448 400L448 464C448 472.8 455.2 480 464 480L512 480C520.8 480 528 472.8 528 464C528 455.2 520.8 448 512 448L480 448L480 400C480 391.2 472.8 384 464 384z"></path></svg>';
       break;
     case 'value of volunteer time':
       $icon = '<svg class="svg-inline--fa fa-clock fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="clock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path></svg>';
@@ -240,7 +317,7 @@ function county_impact_report_find_icon($label)
     case 'number of volunteers':
       $icon = '<svg class="svg-inline--fa fa-user-plus fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg>';
       break;
-    case 'evaluated 4-H exhibits':
+    case 'evaluated 4-h exhibits':
       $icon = '<svg class="svg-inline--fa fa-award fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="award" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"></path></svg>';
       break;
     case 'events':
@@ -248,6 +325,9 @@ function county_impact_report_find_icon($label)
       break;
     case 'workforce certifications':
       $icon = '<svg class="svg-inline--fa fa-calendar-alt fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon=“calendar-“alt role="img" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M97.12 362.63c-8.69-8.69-4.16-6.24-25.12-11.85-9.51-2.55-17.87-7.45-25.43-13.32L1.2 448.7c-4.39 10.77 3.81 22.47 15.43 22.03l52.69-2.01L105.56 507c8 8.44 22.04 5.81 26.43-4.96l52.05-127.62c-10.84 6.04-22.87 9.58-35.31 9.58-19.5 0-37.82-7.59-51.61-21.37zM382.8 448.7l-45.37-111.24c-7.56 5.88-15.92 10.77-25.43 13.32-21.07 5.64-16.45 3.18-25.12 11.85-13.79 13.78-32.12 21.37-51.62 21.37-12.44 0-24.47-3.55-35.31-9.58L252 502.04c4.39 10.77 18.44 13.4 26.43 4.96l36.25-38.28 52.69 2.01c11.62.44 19.82-11.27 15.43-22.03zM263 340c15.28-15.55 17.03-14.21 38.79-20.14 13.89-3.79 24.75-14.84 28.47-28.98 7.48-28.4 5.54-24.97 25.95-45.75 10.17-10.35 14.14-25.44 10.42-39.58-7.47-28.38-7.48-24.42 0-52.83 3.72-14.14-.25-29.23-10.42-39.58-20.41-20.78-18.47-17.36-25.95-45.75-3.72-14.14-14.58-25.19-28.47-28.98-27.88-7.61-24.52-5.62-44.95-26.41-10.17-10.35-25-14.4-38.89-10.61-27.87 7.6-23.98 7.61-51.9 0-13.89-3.79-28.72.25-38.89 10.61-20.41 20.78-17.05 18.8-44.94 26.41-13.89 3.79-24.75 14.84-28.47 28.98-7.47 28.39-5.54 24.97-25.95 45.75-10.17 10.35-14.15 25.44-10.42 39.58 7.47 28.36 7.48 24.4 0 52.82-3.72 14.14.25 29.23 10.42 39.59 20.41 20.78 18.47 17.35 25.95 45.75 3.72 14.14 14.58 25.19 28.47 28.98C104.6 325.96 106.27 325 121 340c13.23 13.47 33.84 15.88 49.74 5.82a39.676 39.676 0 0 1 42.53 0c15.89 10.06 36.5 7.65 49.73-5.82zM97.66 175.96c0-53.03 42.24-96.02 94.34-96.02s94.34 42.99 94.34 96.02-42.24 96.02-94.34 96.02-94.34-42.99-94.34-96.02z"></path></svg>';
+      break;
+    case 'pounds of produce donated':
+      $icon = '<svg class="svg-inline--fa fa-utensils fa-4x" aria-hidden="true" focusable="false" data-prefix="fas" data-icon=“utensils“ alt role="img" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 416 512" data-fa-i2svg=""><path fill="currentColor" d="M207.9 15.2c.8 4.7 16.1 94.5 16.1 128.8 0 52.3-27.8 89.6-68.9 104.6L168 486.7c.7 13.7-10.2 25.3-24 25.3H80c-13.7 0-24.7-11.5-24-25.3l12.9-238.1C27.7 233.6 0 196.2 0 144 0 109.6 15.3 19.9 16.1 15.2 19.3-5.1 61.4-5.4 64 16.3v141.2c1.3 3.4 15.1 3.2 16 0 1.4-25.3 7.9-139.2 8-141.8 3.3-20.8 44.7-20.8 47.9 0 .2 2.7 6.6 116.5 8 141.8.9 3.2 14.8 3.4 16 0V16.3c2.6-21.6 44.8-21.4 48-1.1zm119.2 285.7l-15 185.1c-1.2 14 9.9 26 23.9 26h56c13.3 0 24-10.7 24-24V24c0-13.2-10.7-24-24-24-82.5 0-221.4 178.5-64.9 300.9z"></path></svg>';
       break;
   }
   return $icon;
@@ -287,5 +367,17 @@ function county_impact_report_field_widget_single_element_form_alter(array &$ele
         unset($element['subform']['field_data_point_3']['widget']['#options'][$i]);
       }
     }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function county_impact_report_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'node_county_impact_report_edit_form') {
+    // Hide the preview button by setting #access to FALSE.
+    $form['actions']['preview']['#access'] = FALSE;
+    // Or unset it completely.
+    // unset($form['actions']['preview']);
   }
 }

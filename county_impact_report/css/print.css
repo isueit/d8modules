@@ -1,0 +1,306 @@
+@page {
+  padding: 0 !important;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.isu-main {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+p, ol, ul {
+  font-size: 16pt !important; /* Override theme's 12pt */
+}
+
+ol,ul {
+  margin-top: 1rem;
+}
+
+/* Reset and base styles */
+body {
+  margin: 0;
+  padding: 0;
+}
+h1.isu-page-title {
+    display: none;
+}
+
+/* Print Styles for County Impact Report */
+
+.print-wrapper {
+  max-width: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.print-page {
+  page-break-after: auto;
+  padding: 0.5in;
+  box-sizing: border-box;
+}
+
+.print-page:last-child {
+  page-break-after: auto;
+}
+
+/* Header section */
+.header-section {
+  margin-bottom: 20px;
+}
+
+.header-banner-image {
+    width: 100%;
+    max-width: 100%;
+    height: 1.5in;
+    display: block;
+    object-fit: cover;
+}
+
+.report-title h1 {
+  font-size: 24pt;
+  font-weight: bold;
+  color: #c8102e;
+  margin: 20px 0 10px 0;
+  line-height: 1.2;
+  font-family: Arial, Helvetica, sans-serif;
+  border-bottom: 2px solid #f1be48;
+}
+
+/* Stats Container - All 6 stats at top */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.stat-box {
+  border: 3px solid #c8102e;
+  border-radius: 8px;
+  padding: .1in;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #c8102e;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.stat-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.stat-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #c8102e;
+}
+
+.stat-icon img {
+  width: 100%;
+  height: auto !important;
+  max-height: 36px;
+  filter: brightness(0) saturate(100%) invert(32%) sepia(55%) saturate(1410%) hue-rotate(116deg) brightness(96%) contrast(102%);
+}
+
+.stat-icon img.green-icon {
+  filter: none;
+  border: 2px solid #008540;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: bold;
+  line-height: 1;
+  color: #c8102e;
+}
+
+.stat-label {
+  font-size: 13pt;
+  line-height: 1;
+  font-weight: 500;
+  color: #c8102e;
+}
+
+p.page-url {
+  font-size: 10pt !important;
+  color: #666;
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+/* Story sections */
+.story-section {
+  orphans: 2;
+  widows: 2;
+  padding-bottom: 1.3rem;
+}
+
+.story-section:last-of-type,
+.story-section:last-of-type + .footer-section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.story-title {
+  font-size: 22pt;
+  font-weight: bold;
+  color: #c8102e;
+  margin-bottom: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  page-break-inside: avoid;
+  page-break-after: avoid;
+}
+
+.story-layout-small {
+  overflow: hidden;
+  orphans: 2;
+  widows: 2;
+}
+
+.story-image-small {
+  float: right;
+  width: 40%;
+  margin: 0 0 10px 10px;
+}
+
+.story-image-small img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.story-image-small + * {
+  page-break-inside: avoid;
+}
+
+.story-text, .subtitle {
+    width: 100%;
+    line-height: 1.4;
+    orphans: 2;
+    widows: 2;
+}
+.story-text p:last-child {
+    margin-bottom: 0;
+}
+.story-text p {
+    orphans: 2;
+    widows: 2;
+}
+
+/* Footer section */
+.footer-section {
+  margin-top: 20px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.footer-contact {
+  font-size: 14pt;
+  line-height: 1.6;
+  border-top: 2px solid #c8102e;
+}
+
+.footer-contact h3 {
+  font-size: 14pt;
+  font-weight: bold;
+  margin: 0.8rem 0 0 0;
+  color: #c8102e;
+}
+
+.page-url {
+    font-weight: 600;
+    font-size: 11pt;
+    color: #666;
+}
+
+p.footer-legal {
+  font-size: 10pt !important;
+  color: #666;
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.contact-info #block-contact-us .isu-footer_contact-address-title {
+    display: none;
+  }
+.contact-info {
+    font-size: 12pt;
+    line-height: 1.8;
+  }
+.contact-info #block-contact-us div {
+    display: inline;
+  }
+.contact-info #block-contact-us br {
+    display: none !important;
+  }
+.contact-info #block-contact-us > div:not(.contextual)::after {
+    content: " | ";
+}
+.contact-info #block-contact-us > div:last-of-type:not(.contextual)::after,
+.contact-info #block-contact-us > div:nth-last-of-type(2):has(+ .contextual)::after {
+    content: none;
+}
+.contact-info #block-contact-us div.contextual {
+  display: none;
+}
+.contact-info #block-contact-us.isu-footer_contact-address:after {
+  display:none;
+}
+footer.isu-footer, .isu-navbar, .isu-site-navbar, .isu-menu-navbar {
+  display: none !important;
+}
+
+@media print {
+.no-print {
+  display: none !important;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+.print-page {
+  padding: 0.5in;
+  margin: 0;
+  page-break-after: always;
+  box-sizing: border-box;
+  padding-bottom: 0;
+}
+.print-page.page-2 {
+  page-break-after: auto;
+}
+.stat-box {
+  border: 3px solid #c8102e !important;
+  color: #c8102e !important;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+.stat-number {
+  color: #c8102e !important;
+}
+.stat-label {
+  color: #c8102e !important;
+}
+.stat-icon svg {
+  fill: #c8102e !important;
+}
+}

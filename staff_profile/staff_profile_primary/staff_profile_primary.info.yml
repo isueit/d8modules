@@ -1,6 +1,6 @@
 name: 'Staff Profile Primary'
 type: module
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10 || ^11
 description: 'Reads from Staff Directory Database, and populates Staff Profiles'
 version: '8.x-1.1-dev'
 package: 'ISUEO'

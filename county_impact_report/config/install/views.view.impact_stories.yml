@@ -720,8 +720,9 @@ display:
         title: false
         css_class: false
         fields: false
-      css_class: ext-news-feed
+      css_class: ''
       display_extenders:
+        simple_sitemap_display_extender: {  }
         matomo:
           enabled: false
           keyword_gets: ''
@@ -733,7 +734,6 @@ display:
           category_fallback: ''
           category_facets: {  }
           category_facets_concat_separator: ', '
-        simple_sitemap_display_extender: {  }
       block_description: 'Impact Story Feed'
       block_hide_empty: true
     cache_metadata:

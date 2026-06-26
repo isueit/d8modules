@@ -1,19 +1,16 @@
 <?php
 
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\File\FileSystem;
-
-use function Drupal\Core\Session\user_role_permissions;
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+use Drupal\isueo_helpers\ISUEOHelpers\Files;
 
 /**
  * Implements hook_install().
  */
 
 function webform_permissions_install() {
-  user_role_grant_permissions('authenticated', ['view the administration theme']);
-
-  user_role_grant_permissions('content_editor', [
+  // Changed some permissions
+  $permissions = [
     'view the administration theme',
     'access webform overview',
     'access webform submission user',
@@ -23,7 +20,9 @@ function webform_permissions_install() {
     'edit any webform',
     'edit any webform submission',
     'view any webform submission',
-  ]);
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
+  Wrappers::changeRolePermissions('authenticated', ['view the administration theme'], TRUE);
 
   $config = \Drupal::service('config.factory')->getEditable('system.mail');
   if (!empty($config)) {
@@ -34,7 +33,7 @@ function webform_permissions_install() {
   $module_path = \Drupal::service('extension.list.module')->getPath('webform_permissions');
   $config_files = \Drupal::service('file_system')->scanDirectory($module_path . '/config/overriden', '/.yml/');
   foreach ($config_files as $config_id) {
-    $raw_data = file_get_contents($module_path . '/config/overriden/' . $config_id->filename);
+    $raw_data = Files::fetch_url($module_path . '/config/overriden/' . $config_id->filename, FALSE);
     \Drupal::configFactory()->getEditable(str_replace('.yml', '', $config_id->filename))
       ->setData(Yaml::decode($raw_data))
       ->save();

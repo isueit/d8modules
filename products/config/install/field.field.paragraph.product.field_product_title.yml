@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_product_title
+    - paragraphs.paragraphs_type.product
+id: paragraph.product.field_product_title
+field_name: field_product_title
+entity_type: paragraph
+bundle: product
+label: 'Product Title'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 'Title Placeholder'
+default_value_callback: ''
+settings: {  }
+field_type: string

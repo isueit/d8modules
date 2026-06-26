@@ -3,7 +3,7 @@ description: Custom list of links with icons
 package: Custom
 type: module
 version: 1.0
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^10 || ^11
 dependencies:
   - block
   - block_content
