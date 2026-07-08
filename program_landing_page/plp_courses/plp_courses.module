@@ -10,7 +10,7 @@ use Drupal\isueo_helpers\ISUEOHelpers;
  */
 function plp_courses_rebuild()
 {
-  plp_courses_getcourses();
+  //plp_courses_getcourses();
   //plp_typesense_index_all_courses();
 }
 
@@ -19,7 +19,7 @@ function plp_courses_rebuild()
  */
 function plp_courses_cron()
 {
-  plp_courses_getcourses();
+  //plp_courses_getcourses();
 }
 
 function plp_courses_getcourses()
