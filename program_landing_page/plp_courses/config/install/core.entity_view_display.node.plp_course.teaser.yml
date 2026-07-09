@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.plp_course.field_plp_course_mydata_id
     - field.field.node.plp_course.field_plp_course_program_area
     - field.field.node.plp_course.field_plp_course_program_id
+    - field.field.node.plp_course.field_plp_course_program_node_id
     - field.field.node.plp_course.field_plp_course_reg_link
     - field.field.node.plp_course.field_plp_course_reg_text
     - field.field.node.plp_course.field_plp_course_search_terms
@@ -44,6 +45,7 @@ hidden:
   field_plp_course_mydata_id: true
   field_plp_course_program_area: true
   field_plp_course_program_id: true
+  field_plp_course_program_node_id: true
   field_plp_course_reg_link: true
   field_plp_course_reg_text: true
   field_plp_course_search_terms: true

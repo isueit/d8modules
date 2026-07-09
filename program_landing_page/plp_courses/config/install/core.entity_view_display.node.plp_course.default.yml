@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.plp_course.field_plp_course_mydata_id
     - field.field.node.plp_course.field_plp_course_program_area
     - field.field.node.plp_course.field_plp_course_program_id
+    - field.field.node.plp_course.field_plp_course_program_node_id
     - field.field.node.plp_course.field_plp_course_reg_link
     - field.field.node.plp_course.field_plp_course_reg_text
     - field.field.node.plp_course.field_plp_course_search_terms
@@ -62,6 +63,15 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 111
+    region: content
+  field_plp_course_program_node_id:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 112
     region: content
   field_plp_course_reg_link:
     type: link
