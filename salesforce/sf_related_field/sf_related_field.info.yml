@@ -1,6 +1,0 @@
-name: 'My Salesforce Extensions'
-type: module
-description: 'Adds a related field mapping plugin for Salesforce Suite.'
-core_version_requirement: ^10.3 || ^11
-dependencies:
-  - drupal:salesforce_mapping
