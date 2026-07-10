@@ -78,7 +78,7 @@ function plp_courses_getcourses()
     }
 
     // Only include courses for programs that are in the PLP
-    $program_node = plp_courses_get_program_node($course);
+    $program_node = plp_courses_get_program_node($course['hed__Course__c']);
     if ($program_node == null) {
       continue;
     }
@@ -148,7 +148,7 @@ function plp_courses_getcourses()
     ];
     foreach ($fields as $key => $value) {
       if ($mynode->get($key)->uri != $program_node->get($value)->uri) {
-        $mynode->set($key, ['uri' => 'external:' . $program_node->get($value)->uri, 'title' => 'More About ' . $mynode->getTitle(), ]);
+        $mynode->set($key, ['uri' => 'external:' . $program_node->get($value)->uri, 'title' => 'More About ' . $mynode->getTitle(),]);
         $save = true;
       }
     }
@@ -356,18 +356,39 @@ function plp_courses_get_existing_nodes(string $content_type, string $mydata_id_
 }
 
 // Get the Mydata ID of the program for this course, this program must be a published Program in the PLP
-function plp_courses_get_program_node($course)
+function plp_courses_get_program_node(string $program_id)
 {
   $program_node = null;
   $nids = \Drupal::entityQuery('node')
     ->accessCheck(false)
     ->condition('type', 'plp_program')
     ->condition('status', 1)
-    ->condition('field_plp_program_event_pgm_ids', $course['hed__Course__c'], 'CONTAINS')
+    ->condition('field_plp_program_event_pgm_ids', $program_id, 'CONTAINS')
     ->execute();
   if (count($nids) == 1) {
     $program_node = Node::load(reset($nids));
   }
 
   return $program_node;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+
+function plp_courses_node_presave(Drupal\Core\Entity\EntityInterface $entity)
+{
+  if ($entity->bundle() !== 'plp_course') {
+    return;
+  }
+
+  $program_id = $entity->get('field_plp_course_program_id')->value;
+  $program_node = plp_courses_get_program_node($program_id);
+  if ($program_node) {
+    $entity->set('field_plp_course_program_node_id', $program_node->id());
+    $entity->set('field_plp_course_program_id', $program_node->get('field_plp_program_mydata_id')->value);
+    $entity->setPublished();
+  } else {
+    $entity->setUnpublished();
+  }
 }
