@@ -53,7 +53,7 @@ final class ISUEOHelpersCommands extends DrushCommands {
     $this->output()->writeln('drush eval \'');
     $this->output()->writeln('  use Drupal\isueo_helpers\ISUEOHelpers\Typesense;');
     $this->output()->writeln('  Typesense::createCollection("plp_programs");');
-    $this->output()->writeln('  plp_typesense_index_all_programs();');
+    $this->output()->writeln('  plp_typesense_index_all_nodes("plp_program", "Programs");');
     $this->output()->writeln('\'');
     $this->output()->writeln('');
   }

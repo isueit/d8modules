@@ -25,6 +25,9 @@ function plp_typesense_node_delete(Drupal\Core\Entity\EntityInterface $entity)
       case 'plp_program':
         $client->collections[$collection_name]->documents['plp_program:' . $entity->id()]->delete();
         break;
+      case 'plp_course':
+        $client->collections[$collection_name]->documents['plp_course:' . $entity->id()]->delete();
+        break;
       default:
         break;
     }
@@ -54,6 +57,13 @@ function plp_typesense_entity_presave(Drupal\Core\Entity\EntityInterface $entity
           $client->collections[$collection_name]->documents['plp_program:' . $entity->id()]->delete();
         }
         break;
+      case 'plp_course':
+        if ($entity->isPublished()) {
+          plp_typesense_index_course($client, $collection_name, $entity, 'Course');
+        } elseif ($entity->original->isPublished()) {
+          $client->collections[$collection_name]->documents['plp_course:' . $entity->id()]->delete();
+        }
+        break;
       default:
         break;
     }
@@ -62,9 +72,9 @@ function plp_typesense_entity_presave(Drupal\Core\Entity\EntityInterface $entity
   }
 }
 
-// Index all programs to typesense
+// Index all nodes of a type to typesense
 // Currently not used, but it could be, either in a cron command, hook_rebuild, and/or hook_cron
-function plp_typesense_index_all_programs()
+function plp_typesense_index_all_nodes(string $content_type='plp_program', string $type='Program')
 {
   // Only do this from the production server
   if (!ISUEOHelpers\General::is_production_server()) {
@@ -73,13 +83,20 @@ function plp_typesense_index_all_programs()
 
   $client = plp_typesense_get_typesense_client();
   $collection_name = plp_typesense_get_typesense_collection_name();
-  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', 'plp_program')->condition('status', true)->execute();
+  $nids = \Drupal::entityQuery('node')->accessCheck(false)->condition('type', $content_type)->condition('status', true)->execute();
   $nodes =  Node::loadMultiple($nids);
 
-  $client->collections[$collection_name]->documents->delete(['filter_by' => 'field_plp_program_sort_calc:>=0', ]);
+  $client->collections[$collection_name]->documents->delete(['filter_by' => 'type:=' . $type, ]);
 
   foreach ($nodes as $node) {
-    plp_typesense_index_program($client, $collection_name, $node, 'Program');
+    switch ($type) {
+      case 'Program':
+        plp_typesense_index_program($client, $collection_name, $node, $type);
+        break;
+      case 'Course':
+        plp_typesense_index_course($client, $collection_name, $node, $type);
+        break;
+    }
   }
 }
 
@@ -147,6 +164,81 @@ function plp_typesense_index_program($client, $collection_name, $node, $type = '
     //$record['audiences'][] = 'Other Youth';
     $record['audiences'][] = 'Youth - Other Programs';
   }
+
+  $client->collections[$collection_name]->documents->upsert($record);
+}
+
+// Index a single program
+function plp_typesense_index_course($client, $collection_name, $node, $type = 'Course')
+{
+  // Only do this from the production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
+  // An empty id means it's a new program, and we don't yet have all the info we need yet
+  // Don't worry, it will get saved again with the correct info almost immediately
+  if (empty($node->id())) {
+    return;
+  }
+  // Handle the easy fields
+  $record = [
+    'id' => 'plp_course:' . $node->id(),
+    'title' => $node->getTitle(),
+    'type' => $type,
+    'field_plp_program_sort_calc' => 0,
+    //'field_plp_program_sort_calc' => intval($node->field_plp_program_sort_calc->value),
+    //'field_plp_program_num_events' => intval($node->field_plp_program_num_events->value),
+    'field_plp_program_category' => intval($node->get('field_plp_course_category')->getString()),
+    'field_plp_program_smugmug' => $node->get('field_plp_course_smugmug')->getString(),
+    'field_plp_program_search_terms' => $node->get('field_plp_course_search_terms')->getString(),
+    //'field_plp_program_event_pgm_ids' => unserialize($node->get('field_plp_program_event_pgm_ids')->getString()),
+    'category_name' => Term::load(intval($node->get('field_plp_course_category')->getString()))->getName(),
+    'body' => empty($node->get('body')->value) ? 'N/A' : $node->get('body')->value,
+    'summary' => empty($node->get('body')->summary) ? 'N/A' : $node->get('body')->summary,
+    'program_area' => Term::load(intval($node->get('field_plp_course_program_area')->getString()))->getName(),
+    'url' => \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id()),
+    'children_title' => [],
+    'children_body' => [],
+    'field_plp_program_topics' => [],
+    'topic_names' => [],
+    'audiences' => [],
+  ];
+
+  // Handle Topics
+  $topics = explode(', ', $node->get('field_plp_course_topics')->getString());
+  foreach ($topics as $topic_id) {
+    $record['field_plp_program_topics'][] = intval($topic_id);
+    $record['topic_names'][] = Term::load(intval($topic_id))->getName();
+  }
+/*
+  // Handle Children
+  $children = explode(', ', $node->get('field_plp_program_children')->getString());
+  foreach ($children as $child) {
+    $child_node = Node::load($child);
+    if ($child_node) {
+      $record['children_title'][] = $child_node->getTitle();
+      $record['children_body'][] = $child_node->get('body')->getString();
+    }
+  }
+*/
+
+/*
+  // Handle Audiences
+  $main_audience = $node->get('field_plp_course_main_audience')->getString();
+  //$record['audiences'][] = $main_audience;
+  $record['audiences'][] = $main_audience . ' Programs';
+  if ($main_audience == 'Youth' && str_contains($record['program_area'], '4-H')) {
+    //$record['audiences'][] = '4-H Youth';
+    $record['audiences'][] = 'Youth - 4-H Programs';
+  } elseif ($main_audience == 'Youth') {
+    //$record['audiences'][] = 'Other Youth';
+    $record['audiences'][] = 'Youth - Other Programs';
+  }
+*/
+
+$record['field_plp_program_event_pgm_ids'] = ['blah'];
+$record['field_plp_program_num_events'] = 0;
 
   $client->collections[$collection_name]->documents->upsert($record);
 }
