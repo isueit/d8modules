@@ -19,7 +19,7 @@ const typesenseInstantsearchAdapterResults = new TypesenseInstantSearchAdapter({
   //  filterBy is managed and overridden by InstantSearch.js. To set it, you want to use one of the filter widgets like refinementList or use the `configure` widget.
   additionalSearchParameters: {
     queryBy:
-      "title,body,field_plp_program_search_terms,children_title,children_body,summary,category_name,topic_names",
+      "title,body,search_terms,children_title,children_body,summary,category_name,topic_names",
   },
 });
 
@@ -164,18 +164,18 @@ searchResults.addWidgets([
         }))
       }));
     },
-  }), 
+  }),
   ]);
   searchResults.on('render', function () {
     const refinementsList = document.querySelector('#current-refinements .ais-CurrentRefinements-list');
-    
+
     if (refinementsList) {
       const refinementItems = refinementsList.querySelectorAll('.ais-CurrentRefinements-category');
-  
+
       refinementItems.forEach(item => {
         const categoryLabel = item.querySelector('.ais-CurrentRefinements-categoryLabel');
         const deleteButton = item.querySelector('.ais-CurrentRefinements-delete');
-  
+
         // Move the category label inside the delete button
         if (categoryLabel && deleteButton) {
           deleteButton.innerHTML = categoryLabel.innerHTML; // Adding label inside the button
