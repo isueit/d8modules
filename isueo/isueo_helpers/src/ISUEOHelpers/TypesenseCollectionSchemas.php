@@ -164,35 +164,35 @@ class TypesenseCollectionSchemas
       ],
 
       'plp_programs' => [
-        'default_sorting_field' => 'field_plp_program_sort_calc',
+        'default_sorting_field' => 'sort_order',
 
         // Define the fields
         'fields' => [
           'type' => 'string',
+          'audiences' => 'string[]',
           'body' => 'string',
+          'category_id' => 'int32',
           'category_name' => 'string',
           'children_body' => 'string[]',
           'children_title' => 'string[]',
-          'field_plp_program_category' => 'int32',
-          'field_plp_program_num_events' => 'int32',
-          'field_plp_program_search_terms' => 'string',
-          'field_plp_program_event_pgm_ids' => 'string[]',
-          'field_plp_program_smugmug' => 'string',
-          'field_plp_program_sort_calc' => 'int32',
-          'field_plp_program_topics' => 'int32[]',
+          'event_program_ids' => 'string[]',
+          'number_of_events' => 'int32',
           'program_area' => 'string',
+          'search_terms' => 'string',
+          'smugmug_id' => 'string',
+          'sort_order' => 'int32',
           'summary' => 'string',
           'title' => 'string',
+          'topic_ids' => 'int32[]',
           'topic_names' => 'string[]',
-          'audiences' => 'string[]',
           'url' => 'string',
         ],
 
         // Sort fields
         'sort' => [
-          'field_plp_program_sort_calc',
-          'field_plp_program_category',
-          'field_plp_program_num_events',
+          'sort_order',
+          'category_id',
+          'number_of_events',
         ],
 
         // Fields that are facets
@@ -277,6 +277,7 @@ class TypesenseCollectionSchemas
     if ($collection == 'ForStaff') {
       $collection = 'extension_content';
     }
+    $definitions['deleteme_brian'] = $definitions['plp_programs'];
 
     if (array_key_exists($collection, $definitions)) {
       return $definitions[$collection];

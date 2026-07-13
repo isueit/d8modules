@@ -118,12 +118,12 @@ function plp_typesense_index_program($client, $collection_name, $node, $type = '
     'id' => 'plp_program:' . $node->id(),
     'title' => $node->getTitle(),
     'type' => $type,
-    'field_plp_program_sort_calc' => intval($node->field_plp_program_sort_calc->value),
-    'field_plp_program_num_events' => intval($node->field_plp_program_num_events->value),
-    'field_plp_program_category' => intval($node->get('field_plp_program_category')->getString()),
-    'field_plp_program_smugmug' => $node->get('field_plp_program_smugmug')->getString(),
-    'field_plp_program_search_terms' => $node->get('field_plp_program_search_terms')->getString(),
-    'field_plp_program_event_pgm_ids' => unserialize($node->get('field_plp_program_event_pgm_ids')->getString()),
+    'sort_order' => intval($node->field_plp_program_sort_calc->value),
+    'number_of_events' => intval($node->field_plp_program_num_events->value),
+    'category_id' => intval($node->get('field_plp_program_category')->getString()),
+    'smugmug_id' => $node->get('field_plp_program_smugmug')->getString(),
+    'search_terms' => $node->get('field_plp_program_search_terms')->getString(),
+    'event_program_ids' => unserialize($node->get('field_plp_program_event_pgm_ids')->getString()),
     'category_name' => Term::load(intval($node->get('field_plp_program_category')->getString()))->getName(),
     'body' => empty($node->get('body')->value) ? 'N/A' : $node->get('body')->value,
     'summary' => empty($node->get('body')->summary) ? 'N/A' : $node->get('body')->summary,
@@ -131,7 +131,7 @@ function plp_typesense_index_program($client, $collection_name, $node, $type = '
     'url' => \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id()),
     'children_title' => [],
     'children_body' => [],
-    'field_plp_program_topics' => [],
+    'topic_ids' => [],
     'topic_names' => [],
     'audiences' => [],
   ];
@@ -139,7 +139,7 @@ function plp_typesense_index_program($client, $collection_name, $node, $type = '
   // Handle Topics
   $topics = explode(', ', $node->get('field_plp_program_topics')->getString());
   foreach ($topics as $topic_id) {
-    $record['field_plp_program_topics'][] = intval($topic_id);
+    $record['topic_ids'][] = intval($topic_id);
     $record['topic_names'][] = Term::load(intval($topic_id))->getName();
   }
 
