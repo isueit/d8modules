@@ -89,12 +89,12 @@ searchResults.addWidgets([
     templates: {
       item(item) {
         var imagelink = "";
-        if (item.field_plp_program_smugmug) {
+        if (item.smugmug_id) {
           imagelink =
             '<img src ="https://photos.smugmug.com/photos/' +
-            item.field_plp_program_smugmug +
+            item.smugmug_id +
             "/10000/XL/" +
-            item.field_plp_program_smugmug +
+            item.smugmug_id +
             '-XL.jpg" alt="" />';
         }
         return `
