@@ -13,7 +13,7 @@
     "drupal/field_delimiter": "^1.0 || ^2.0",
     "drupal/field_formatter_class": "^1.1",
     "drupal/field_group": "^4.0",
-    "drupal/fontawesome": "^2.16",
+    "drupal/fontawesome": "^3.0",
     "drupal/honeypot": "^2.0",
     "drupal/jquery_ui_accordion": "^2.0",
     "drupal/layout_builder_base": "^1.0@beta",
