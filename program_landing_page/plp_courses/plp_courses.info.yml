@@ -10,3 +10,5 @@ dependencies:
   - d8modules:plp_programs
   - views_data_export:views_data_export
   - views_accordion:views_accordion
+  - d8modules:sf_fields
+  - salesforce_pull
