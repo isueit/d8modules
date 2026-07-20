@@ -245,7 +245,7 @@ $record['number_of_events'] = 0;
 
 function plp_typesense_get_typesense_collection_name()
 {
-  r//eturn 'plp_programs';
+  //return 'plp_programs';
   return 'deleteme_brian';
 }
 
