@@ -245,12 +245,12 @@ $record['number_of_events'] = 0;
 
 function plp_typesense_get_typesense_collection_name()
 {
-  return 'plp_programs';
-  //return 'deleteme_brian';
+  r//eturn 'plp_programs';
+  return 'deleteme_brian';
 }
 
 function plp_typesense_get_typesense_client()
 {
-  return Typesense::getClient('plp_programs');
-  //return Typesense::getClient('deleteme_brian');
+  //return Typesense::getClient('plp_programs');
+  return Typesense::getClient('deleteme_brian');
 }
