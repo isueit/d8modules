@@ -55,6 +55,10 @@ class RelatedTaxonomyField extends SalesforceMappingFieldPluginBase
         '#default_value' => $this->config('salesforce_field'),
         '#required'      => TRUE,
       ];
+
+      // Lock direction to pull-only.
+      $pluginForm['direction']['#default_value'] = 'sf_drupal';
+      $pluginForm['direction']['#disabled'] = TRUE;
     }
     return $pluginForm;
   }
