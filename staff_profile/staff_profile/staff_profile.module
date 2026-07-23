@@ -278,17 +278,20 @@ function staff_profile_views_query_alter($view, $query) {
 function staff_profile_preprocess_views_view_field(&$variables) {
   if ($variables['view']->id() == 'list_of_articles_by_author' && $variables['field']->field == 'name') {
     $row = $variables['row'];
-    $tid = $row->taxonomy_term_field_data_node__field_category_topic_tid;
-    $parent_tid = $row->taxonomy_term_field_data_taxonomy_term__parent_tid;
-    
-    if ($tid) {
-      if ($parent_tid) {
-        $parent_term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($parent_tid);
-        if ($parent_term) {
-          $variables['output'] = \Drupal\Core\Render\Markup::create($parent_term->getName());
+    if (property_exists($row, 'taxonomy_term_field_data_node__field_category_topic_tid') && property_exists($row, 'taxonomy_term_field_data_taxonomy_term__parent_tid')) {
+      $tid = $row->taxonomy_term_field_data_node__field_category_topic_tid;
+      $parent_tid = $row->taxonomy_term_field_data_taxonomy_term__parent_tid;
+
+      if ($tid) {
+        if ($parent_tid) {
+          $parent_term = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->load($parent_tid);
+          if ($parent_term) {
+            Drupal::logger('blah')->info('Outputting the taxonomy name');
+            $variables['output'] = \Drupal\Core\Render\Markup::create($parent_term->getName());
+          }
         }
+        // If no parent_tid, term is already top level, leave output as is
       }
-      // If no parent_tid, term is already top level, leave output as is
     }
   }
 }
