@@ -35,7 +35,6 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-primary, #c8102e);
-    text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 .microsite-micro-banner-details__inner {
@@ -60,7 +59,6 @@
     font-size: 1.3rem;
     font-weight: 600;
     color: #ffffff;
-    text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 .microsite-micro-banner-details__title {
@@ -627,7 +625,6 @@ body.group-site header.isu-wordmark-sitename {
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     color: var(--dk-gray, #4a4a4a);
     margin-bottom: 0.75rem;
 }
