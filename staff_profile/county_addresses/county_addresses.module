@@ -59,7 +59,65 @@ function county_addresses_handle_feed()
 
       if ($save) {
         $term->save();
+        county_addresses_push_to_mydata($county_values);
       }
     }
+  }
+}
+
+function county_addresses_push_to_mydata(array $drupal)
+{
+  // Make sure we have the salesforce module enabled
+  if (!class_exists('Drupal\salesforce\SelectQuery')) {
+    return;
+  }
+
+  // Fix up the site_name
+  if ($drupal['site_name'] == 'Pottawattamie - East') {
+    $drupal['site_name'] = 'East Pottawattamie';
+  }
+  if ($drupal['site_name'] == 'Pottawattamie - West') {
+    $drupal['site_name'] = 'West Pottawattamie';
+  }
+  if ($drupal['site_name'] == "O'Brien") {
+    $drupal['site_name'] = "O\'Brien";
+  }
+
+  $street = trim($drupal['address1']) . (empty($drupal['address2']) ? '' : PHP_EOL . trim($drupal['address2']));
+
+  try {
+    // Get the client service.
+    $client = \Drupal::service('salesforce.client');
+
+    // Build a SOQL query.
+    $query = new Drupal\salesforce\SelectQuery('Account'); // the sObject/table name
+    $query->fields = ['Id', 'Name', 'ShippingStreet', 'ShippingCity', 'ShippingState', 'ShippingStateCode', 'ShippingPostalCode'];
+    $query->addCondition('Name', "'" . $drupal['site_name'] . " County Extension'", '=');
+    $query->addCondition('RecordTypeId', "'012460000007ByRAAU'", '=');
+    $query->limit = 1000;
+
+    // Execute it.
+    $result = $client->query($query);
+
+    // Should only get one Record Back
+    if ($result->size() != 1) {
+      return;
+    }
+
+    // Get the first Record's fields
+    $records = $result->records();
+    $mydata = reset($records)->fields();
+
+    // Push the updates to MyData
+    $params = [
+      'ShippingStreet' => $street,
+      'ShippingCity' => $drupal['city'],
+      'ShippingState' => 'Iowa',
+      'ShippingStateCode' => $drupal['state'],
+      'ShippingPostalCode' => $drupal['zip'],
+    ];
+    $client->objectUpdate('Account', $mydata['Id'], $params);
+  } catch (Exception $ex) {
+    Drupal::logger('county_addresses')->info($ex->getMessage());
   }
 }
