@@ -65,6 +65,10 @@ function county_addresses_handle_feed()
   }
 }
 
+/*
+ * This function takes a county record, and pushes it up to MyData to the Shipping address fields
+ * If it seems MyData gets out of sync, just change it so this function runs for every county, not just ones that have changed
+ */
 function county_addresses_push_to_mydata(array $drupal)
 {
   // Make sure we have the salesforce module enabled
