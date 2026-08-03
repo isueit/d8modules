@@ -1,0 +1,172 @@
+.porkbot-toggle,
+.porkbot-widget {
+  color: #1f2933;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.porkbot-toggle,
+.porkbot-widget,
+.porkbot-toggle *,
+.porkbot-widget * {
+  box-sizing: border-box;
+}
+
+.porkbot-toggle {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2147483000;
+  display: grid;
+  width: 54px;
+  height: 54px;
+  padding: 5px;
+  border: 0;
+  border-radius: 50%;
+  background: #c8102e;
+  box-shadow: 0 14px 30px rgb(0 0 0 / 24%);
+  cursor: pointer;
+  place-items: center;
+}
+
+.porkbot-toggle:focus-visible,
+.porkbot-close:focus-visible {
+  outline: 3px solid #f1be48;
+  outline-offset: 3px;
+}
+
+.porkbot-toggle img {
+  display: block;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.porkbot-widget {
+  position: fixed;
+  right: 20px;
+  bottom: 96px;
+  z-index: 2147482999;
+  display: flex;
+  overflow: hidden;
+  width: min(380px, calc(100vw - 24px));
+  height: min(520px, calc(100vh - 120px));
+  height: min(520px, calc(100dvh - 120px));
+  border: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
+  flex-direction: column;
+}
+
+.porkbot-widget.is-hidden {
+  display: none;
+}
+
+.porkbot-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 0;
+  padding: 12px;
+  color: #ffffff;
+  background: #c8102e;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: bold;
+}
+
+.porkbot-title {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.porkbot-title img {
+  width: 34px;
+  height: 34px;
+  border-radius: 0;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.porkbot-title h2 {
+  overflow-wrap: anywhere;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: #fff;
+}
+
+.porkbot-title p {
+  margin: 3px 0 0;
+  color: #ffe3e8;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.porkbot-close {
+  display: block;
+  width: auto;
+  height: auto;
+  padding: 4px 8px;
+  border: 0;
+  color: #ffffff;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.porkbot-close:hover {
+  opacity: 0.8;
+}
+
+.porkbot-disclaimer {
+  padding: 6px 10px;
+  border-bottom: 1px solid #e6e6e6;
+  color: #555555;
+  background: #fafafa;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+.porkbot-status {
+  padding: 10px;
+  color: #555555;
+  background: #fafafa;
+  font-size: 12px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.porkbot-webchat {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+.porkbot-webchat.chat-input-disabled .webchat__send-box {
+  cursor: progress;
+  opacity: 0.65;
+}
+
+@media (max-width: 560px) {
+  .porkbot-toggle {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .porkbot-widget {
+    right: 12px;
+    bottom: 92px;
+    width: calc(100vw - 24px);
+    height: min(520px, calc(100vh - 96px));
+    height: min(520px, calc(100dvh - 96px));
+  }
+}
