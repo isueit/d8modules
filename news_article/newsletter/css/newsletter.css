@@ -121,6 +121,7 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
     margin-bottom: 2rem;
 }
 
+h2.newsletter-index-title,
 h3.newsletter-index-title {
     color: #000;
     margin: 1rem .5rem 0.825rem;
