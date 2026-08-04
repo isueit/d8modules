@@ -58,41 +58,62 @@
           <tr>
             <td align="center" valign="top" style="padding:0;">
               {% if hero_image_url %}
-                {# Full-width background image with overlay #}
+                {# Full-width background image with overlay.
+                   Bulletproof background image: CSS background-image for clients that
+                   support it, plus a VML v:rect/v:fill fallback so Outlook desktop
+                   (which ignores CSS backgrounds) also shows the image. The VML box
+                   needs a fixed height, so keep header content within ~220px. #}
                 <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
                   <tr>
-                    <td style="padding: 40px 20px; background-color: rgba(0, 0, 0, 0.5);">
-                      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <td style="background-color: rgba(0, 0, 0, 0.5);">
+                      <!--[if gte mso 9]>
+                      <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:600px;height:220px;">
+                        <v:fill type="frame" src="{{ hero_image_url }}" color="#000000" />
+                        <v:textbox inset="0,0,0,0">
+                      <![endif]-->
+                      <div>
+                      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="height: 220px;">
                         <tr>
-                          {% if show_clover_logo %}
-                          <td valign="middle" style="width: 75px;">
-                            {# Clover logo - 60px for 4-H/Clover Kids newsletters only #}
-                            <img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" 
-                                 alt="4-H Clover" 
-                                 width="60" 
-                                 height="60" 
-                                 style="width: 60px; height: 60px; max-width: 60px; display: inline-block; vertical-align: middle; margin-right: 15px;">
-                          </td>
-                          {% endif %}
-                          <td valign="middle" style="text-align: left;">
-                            {# Title and issue info #}
-                            <h1 style="color: #ffffff; font-size: 28px; font-weight: bold; line-height: 1.2; margin: 0 0 5px 0;">
-                              {{ node.label }}
-                            </h1>
-                            {% if node.field_newsletter_issue_date.value or node.field_newsletter_issue_number.value %}
-                              <p style="color: #ffffff; font-size: 16px; margin: 0; line-height: 1.4;">
-                                {% if node.field_newsletter_issue_date.value and node.field_newsletter_issue_number.value %}
-                                  {{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}
-                                {% elseif node.field_newsletter_issue_date.value %}
-                                  {{ node.field_newsletter_issue_date.value }}
-                                {% else %}
-                                  {{ node.field_newsletter_issue_number.value }}
+                          <td style="padding: 40px 20px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                              <tr>
+                                {% if show_clover_logo %}
+                                <td valign="middle" style="width: 75px;">
+                                  {# Clover logo - 60px for 4-H/Clover Kids newsletters only #}
+                                  <img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png"
+                                       alt="4-H Clover"
+                                       width="60"
+                                       height="60"
+                                       style="width: 60px; height: 60px; max-width: 60px; display: inline-block; vertical-align: middle; margin-right: 15px;">
+                                </td>
                                 {% endif %}
-                              </p>
-                            {% endif %}
+                                <td valign="middle" style="text-align: left;">
+                                  {# Title and issue info #}
+                                  <h1 style="color: #ffffff; font-size: 28px; font-weight: bold; line-height: 1.2; margin: 0 0 5px 0;">
+                                    {{ node.label }}
+                                  </h1>
+                                  {% if node.field_newsletter_issue_date.value or node.field_newsletter_issue_number.value %}
+                                    <p style="color: #ffffff; font-size: 16px; margin: 0; line-height: 1.4;">
+                                      {% if node.field_newsletter_issue_date.value and node.field_newsletter_issue_number.value %}
+                                        {{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}
+                                      {% elseif node.field_newsletter_issue_date.value %}
+                                        {{ node.field_newsletter_issue_date.value }}
+                                      {% else %}
+                                        {{ node.field_newsletter_issue_number.value }}
+                                      {% endif %}
+                                    </p>
+                                  {% endif %}
+                                </td>
+                              </tr>
+                            </table>
                           </td>
                         </tr>
                       </table>
+                      </div>
+                      <!--[if gte mso 9]>
+                        </v:textbox>
+                      </v:rect>
+                      <![endif]-->
                     </td>
                   </tr>
                 </table>
@@ -141,28 +162,53 @@
                         {% set heading_slug = heading_text|lower|replace({' ': '-'}) %}
                         {% set heading_id = heading_slug ~ '-' ~ para.id() %}
                         
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%" id="{{ heading_id }}" style="margin: 30px 0 20px 0; {% if hero_image_url %}background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center;{% else %}background-color: #c8102e;{% endif %}">
+                        {# Bulletproof background image: CSS background-image for clients that
+                           support it, plus a VML v:rect/v:fill fallback so Outlook desktop
+                           (which ignores CSS backgrounds) also shows the image. The VML box
+                           needs a fixed height, so keep heading text within ~2 lines. #}
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" id="{{ heading_id }}" style="margin: {{ loop.first ? '0' : '30px' }} 0 20px 0; background-color: #c8102e; {% if hero_image_url %}background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center;{% endif %}">
                           <tr>
-                            <td style="padding: 20px 15px; {% if hero_image_url %}background-color: rgba(200, 16, 46, 0.85);{% endif %}">
-                              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <td style="{% if hero_image_url %}background-color: rgba(200, 16, 46, 0.85);{% endif %}">
+                              {% if hero_image_url %}
+                              <!--[if gte mso 9]>
+                              <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:354px;height:100px;">
+                                <v:fill type="frame" src="{{ hero_image_url }}" color="#c8102e" />
+                                <v:textbox inset="0,0,0,0">
+                              <![endif]-->
+                              {% endif %}
+                              <div>
+                              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="height: 100px;">
                                 <tr>
-                                  {% if show_clover_logo %}
-                                  <td valign="middle" style="width: 54px;">
-                                    {# Small clover for section headings - 42px (2.6rem) - only for 4-H/Clover Kids #}
-                                    <img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" 
-                                         alt="" 
-                                         width="42" 
-                                         height="42" 
-                                         style="width: 42px; height: 42px; max-width: 42px; display: block; margin-right: 12px;">
-                                  </td>
-                                  {% endif %}
-                                  <td valign="middle">
-                                    <h2 style="color: #ffffff; font-size: 22px; font-weight: bold; margin: 0; line-height: 1.3;">
-                                      {{ heading_text }}
-                                    </h2>
+                                  <td valign="middle" style="padding: 20px 15px;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                      <tr>
+                                        {% if show_clover_logo %}
+                                        <td valign="middle" style="width: 54px;">
+                                          {# Small clover for section headings - 42px (2.6rem) - only for 4-H/Clover Kids #}
+                                          <img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png"
+                                               alt=""
+                                               width="42"
+                                               height="42"
+                                               style="width: 42px; height: 42px; max-width: 42px; display: block; margin-right: 12px;">
+                                        </td>
+                                        {% endif %}
+                                        <td valign="middle">
+                                          <h2 style="color: #ffffff; font-size: 22px; font-weight: bold; margin: 0; line-height: 1.3;">
+                                            {{ heading_text }}
+                                          </h2>
+                                        </td>
+                                      </tr>
+                                    </table>
                                   </td>
                                 </tr>
                               </table>
+                              </div>
+                              {% if hero_image_url %}
+                              <!--[if gte mso 9]>
+                                </v:textbox>
+                              </v:rect>
+                              <![endif]-->
+                              {% endif %}
                             </td>
                           </tr>
                         </table>
