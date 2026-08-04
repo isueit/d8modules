@@ -105,7 +105,7 @@
 					{# Show Newsletter Issue Number and Date #}
 					{% if node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is not empty %}
 						<div class="newsletter-issue-wrapper{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
-							<p>{{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}</p>
+							<p>{{ node.field_newsletter_issue_date.value }}, Issue # {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% elseif node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is empty %}
 						<div class="newsletter-date-wrapper{% if show_clover_logo %} newsletter-date-wrapper--with-clover{% endif %}">
@@ -113,7 +113,7 @@
 						</div>
 					{% elseif node.field_newsletter_issue_date is empty and node.field_newsletter_issue_number is not empty %}
 						<div class="newsletter-issue-wrapper{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
-							<p>{{ node.field_newsletter_issue_number.value }}</p>
+							<p>Issue # {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% endif %}
 					</div>
@@ -151,7 +151,7 @@
 					{# Show Newsletter Issue Number and Date #}
 					{% if node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is not empty %}
 						<div class="newsletter-issue-wrapper">
-							<p>{{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}</p>
+							<p>{{ node.field_newsletter_issue_date.value }}, Issue # {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% elseif node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is empty %}
 						<div class="newsletter-date-wrapper">
@@ -159,7 +159,7 @@
 						</div>
 					{% elseif node.field_newsletter_issue_date is empty and node.field_newsletter_issue_number is not empty %}
 						<div class="newsletter-issue-wrapper">
-							<p>{{ node.field_newsletter_issue_number.value }}</p>
+							<p>Issue # {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% endif %}
 					{% endif %}
