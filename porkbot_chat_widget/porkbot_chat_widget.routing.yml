@@ -1,0 +1,7 @@
+porkbot_chat_widget.settings:
+  path: '/admin/config/services/porkbot-chat-widget'
+  defaults:
+    _form: '\Drupal\porkbot_chat_widget\Form\PorkbotChatWidgetSettingsForm'
+    _title: 'Porkbot Chat Widget'
+  requirements:
+    _permission: 'administer porkbot chat widget'
