@@ -21,6 +21,6 @@ dependencies:
   - eca:eca_modeller_bpmn
   - eca:eca_ui
   - eca:eca_workflow
-  - layout_builder_restrictions
+  - drupal:layout_builder_restrictions
   - drupal:paragraphs
   - d8modules:isueo_news_article
