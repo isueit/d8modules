@@ -1,0 +1,5 @@
+name: Porkbot Chat Widget
+type: module
+description: 'Embeds the Iowa State Extension Porkbot chat widget (Bot Framework Web Chat over Direct Line) as a placeable block.'
+package: Custom
+core_version_requirement: ^10 || ^11

@@ -84,7 +84,7 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
     color: #fff;
     font-size: 1.5rem;
 }
-.newsletter-hero-label .newsletter-issue-wrapper, .newsletter-hero-label .newsletter-date-wrapper--with-clover {
+.newsletter-hero-label .newsletter-issue-wrapper--with-clover, .newsletter-hero-label .newsletter-date-wrapper--with-clover {
   margin-left: 10%;
 }
 
@@ -121,6 +121,7 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
     margin-bottom: 2rem;
 }
 
+h2.newsletter-index-title,
 h3.newsletter-index-title {
     color: #000;
     margin: 1rem .5rem 0.825rem;
@@ -170,6 +171,7 @@ ul.newsletter-section-index li::before {
 h2.newsletter-section-heading {
     color: #fff;
     margin-top: .4rem;
+    margin-bottom: .4rem;
     padding: 0 1rem;
     font-size: 2.2rem;
 }
