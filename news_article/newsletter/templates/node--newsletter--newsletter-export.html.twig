@@ -10,12 +10,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {# Opt out of automatic dark-mode recoloring. Without this, Outlook desktop
+     dark mode rewrites our explicit colors (washing out the brand
+     red/green, flipping white text to black), even though every color
+     below is set intentionally, not left to a default. #}
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
   <title>{{ node.label }}</title>
   <style>
     img { max-width: 100%; height: auto; display: block; }
     body, table, td { font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; }
     /* Force images to respect dimensions in email clients */
     img[width] { width: auto !important; max-width: 100% !important; }
+
+    /* Belt-and-suspenders: some clients (notably Outlook.com's web/app dark
+       mode) mark up dark-mode-adjusted elements with these attributes
+       instead of respecting color-scheme. Force our real colors back. */
+    [data-ogsc] .newsletter-export-force-white,
+    [data-ogsb] .newsletter-export-force-white {
+      color: #ffffff !important;
+    }
   </style>
 </head>
 <body>
@@ -26,6 +40,7 @@
 
         {# Get hero background image #}
         {% set hero_image_url = '' %}
+        {% set hero_fallback_color = '#c8102e' %}
         {% if node.field_newsletter_hero is not empty %}
           {% set hero_paragraph = node.field_newsletter_hero.0.entity %}
           {% if hero_paragraph %}
@@ -35,6 +50,15 @@
                 {% set module_path = 'modules/custom/d8modules/news_article/newsletter' %}
                 {% set base_url_clean = url('<front>')|render|trim('/') %}
                 {% set hero_image_url = base_url_clean ~ '/' ~ module_path ~ '/images/' ~ image_value ~ '.png' %}
+                {# Match the fallback shown when the image itself can't load
+                   (e.g. blocked/unreachable) to that image's own palette:
+                   the 4-H banners are green, the general one is ISU red.
+                   Colors match the theme's .btn-outline-success/-danger
+                   (base.css) so the banner and buttons use the same brand
+                   green/red rather than an approximated shade. #}
+                {% set is_green_banner = image_value in ['4h_dark', '4h_light'] %}
+                {% set hero_fallback_color = is_green_banner ? '#008540' : '#c8102e' %}
+                {% set hero_overlay_color = is_green_banner ? 'rgba(0, 133, 64, 0.85)' : 'rgba(200, 16, 46, 0.85)' %}
               {% endif %}
             {% endif %}
           {% endif %}
@@ -63,12 +87,12 @@
                    support it, plus a VML v:rect/v:fill fallback so Outlook desktop
                    (which ignores CSS backgrounds) also shows the image. The VML box
                    needs a fixed height, so keep header content within ~220px. #}
-                <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <table border="0" cellpadding="0" cellspacing="0" width="600" bgcolor="{{ hero_fallback_color }}" style="background-color: {{ hero_fallback_color }} !important; background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
                   <tr>
-                    <td style="background-color: rgba(0, 0, 0, 0.5);">
+                    <td>
                       <!--[if gte mso 9]>
                       <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:600px;height:220px;">
-                        <v:fill type="frame" src="{{ hero_image_url }}" color="#000000" />
+                        <v:fill type="frame" src="{{ hero_image_url }}" color="{{ hero_fallback_color }}" />
                         <v:textbox inset="0,0,0,0">
                       <![endif]-->
                       <div>
@@ -89,18 +113,27 @@
                                 {% endif %}
                                 <td valign="middle" style="text-align: left;">
                                   {# Title and issue info #}
-                                  <h1 style="color: #ffffff; font-size: 28px; font-weight: bold; line-height: 1.2; margin: 0 0 5px 0;">
-                                    {{ node.label }}
+                                  {% if wordmark_url %}
+                                    <img src="{{ wordmark_url }}" alt="Iowa State University Extension and Outreach" width="67%" style="max-width:67% !important; width:67% !important; height:auto !important; display:block; margin-bottom: 10px;">
+                                  {% endif %}
+                                  <h1 class="newsletter-export-force-white" style="color: #ffffff !important; font-size: 28px; font-weight: bold; line-height: 1.2; margin: 0 0 5px 0;">
+                                    {# The <font color> tag is deprecated everywhere else, but it's a
+                                       known escape hatch for Outlook desktop's dark mode: that
+                                       remapping targets CSS color declarations, not this attribute,
+                                       so it survives where "color:#fff !important" alone doesn't. #}
+                                    <font color="#ffffff">{{ node.label }}</font>
                                   </h1>
                                   {% if node.field_newsletter_issue_date.value or node.field_newsletter_issue_number.value %}
-                                    <p style="color: #ffffff; font-size: 16px; margin: 0; line-height: 1.4;">
+                                    <p class="newsletter-export-force-white" style="color: #ffffff !important; font-size: 16px; margin: 0; line-height: 1.4;">
+                                      <font color="#ffffff">
                                       {% if node.field_newsletter_issue_date.value and node.field_newsletter_issue_number.value %}
-                                        {{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}
+                                        {{ node.field_newsletter_issue_date.value }}, Issue: {{ node.field_newsletter_issue_number.value }}
                                       {% elseif node.field_newsletter_issue_date.value %}
                                         {{ node.field_newsletter_issue_date.value }}
                                       {% else %}
-                                        {{ node.field_newsletter_issue_number.value }}
+                                        Issue: {{ node.field_newsletter_issue_number.value }}
                                       {% endif %}
+                                      </font>
                                     </p>
                                   {% endif %}
                                 </td>
@@ -122,15 +155,18 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="600">
                   <tr>
                     <td style="padding: 20px;">
+                      {% if wordmark_url %}
+                        <img src="{{ wordmark_url }}" alt="Iowa State University Extension and Outreach" width="67%" style="max-width:67% !important; width:67% !important; height:auto !important; display:block; margin-bottom: 10px;">
+                      {% endif %}
                       <h1 style="color: #202020; font-size: 28px; font-weight: bold; margin: 0;">{{ node.label }}</h1>
                       {% if node.field_newsletter_issue_date.value or node.field_newsletter_issue_number.value %}
                         <p style="color: #666666; font-size: 16px; margin: 10px 0 0 0;">
                           {% if node.field_newsletter_issue_date.value and node.field_newsletter_issue_number.value %}
-                            {{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}
+                            {{ node.field_newsletter_issue_date.value }}, Issue: {{ node.field_newsletter_issue_number.value }}
                           {% elseif node.field_newsletter_issue_date.value %}
                             {{ node.field_newsletter_issue_date.value }}
                           {% else %}
-                            {{ node.field_newsletter_issue_number.value }}
+                            Issue: {{ node.field_newsletter_issue_number.value }}
                           {% endif %}
                         </p>
                       {% endif %}
@@ -141,13 +177,87 @@
             </td>
           </tr>
         </table>
+        <!-- END BANNER -->
 
-        <!-- MAIN CONTENT + SIDEBAR -->
+        {% if node.field_newsletter_save_the_date is not empty %}
+          {% set save_the_date_count = node.field_newsletter_save_the_date|length %}
+          <!-- SAVE THE DATE (first 3, with a link to see the rest) -->
+          <table border="0" cellpadding="0" cellspacing="0" width="600">
+            <tr>
+              <td style="padding: 20px 18px 10px 18px; background-color: #f9f9f9; border-bottom: 1px solid #dddddd;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 15px;">
+                  <tr>
+                    <td style="font-size: 18px; font-weight: bold; color: #202020;">Important Dates</td>
+                    {% if save_the_date_count > 3 %}
+                      <td align="right" valign="middle">
+                        <a href="{{ path('entity.node.canonical', {'node': node.id()}) }}" style="color: #7c2529; font-size: 13px; font-weight: bold; text-decoration: none;">View all {{ save_the_date_count }} &rarr;</a>
+                      </td>
+                    {% endif %}
+                  </tr>
+                </table>
+
+                {% for item in node.field_newsletter_save_the_date|slice(0, 3) %}
+                  {% if item.entity %}
+                    {% set event = item.entity %}
+
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <td valign="top" style="width: 55px; padding-right: 12px; text-align: center; {% if not loop.first %}border-top: 1px solid #dddddd; padding-top: 15px;{% endif %}">
+                          {% if event.field_newsletter_event_date is not empty %}
+                            <div style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: #666666; line-height: 1.3;">
+                              {{ event.field_newsletter_event_date.value|date('M') }}
+                            </div>
+                            <div style="font-size: 22px; font-weight: bold; color: #7c2529; line-height: 1.2;">
+                              {{ event.field_newsletter_event_date.value|date('j') }}
+                            </div>
+                          {% endif %}
+                        </td>
+                        <td valign="top" style="{% if not loop.first %}border-top: 1px solid #dddddd; padding-top: 15px;{% endif %}">
+                          {% if event.field_newsletter_event_title is not empty %}
+                            <p style="margin: 0 0 3px 0; font-size: 14px; font-weight: bold; color: #202020;">
+                              {% if event.hasField('field_newsletter_event_link') and event.field_newsletter_event_link is not empty %}
+                                {# .uri gives the raw stored value (e.g. "entity:node/2" or
+                                   "internal:/foo"), which isn't a usable href as-is —
+                                   .getUrl resolves it to an actual Url object first. #}
+                                <a href="{{ event.field_newsletter_event_link.0.getUrl.toString }}" style="color: #202020; text-decoration: underline;">{{ event.field_newsletter_event_title.value }}</a>
+                              {% else %}
+                                {{ event.field_newsletter_event_title.value }}
+                              {% endif %}
+                            </p>
+                          {% endif %}
+
+                          {% if event.field_newsletter_event_time is not empty or event.field_newsletter_event_location is not empty %}
+                            <p style="margin: 0; font-size: 13px; color: #666666;">
+                              {% if event.field_newsletter_event_time is not empty %}{{ event.field_newsletter_event_time.value }}{% endif %}
+                              {% if event.field_newsletter_event_time is not empty and event.field_newsletter_event_location is not empty %} &middot; {% endif %}
+                              {% if event.field_newsletter_event_location is not empty %}{{ event.field_newsletter_event_location.value }}{% endif %}
+                            </p>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </table>
+                  {% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+          </table>
+        {% endif %}
+
+        <!-- MAIN CONTENT -->
         <table border="0" cellpadding="0" cellspacing="0" width="600">
           <tr>
-            <!-- Main Content Column -->
-            <td valign="top" width="390" style="padding: 20px 18px;">
-              
+            <td valign="top" style="padding: 0 18px;">
+
+              {# The "featured article" (field_newsletter_featured) is a
+                 separate, single-value field from field_newsletter_content
+                 — easy to miss since it's not part of the loop below.
+                 Its paragraph--featured-content.html.twig template also
+                 builds the "In This Issue" nav from the section headings
+                 in field_newsletter_content, same as on the live page. #}
+              {% if content.field_newsletter_featured is not empty %}
+                {{ content.field_newsletter_featured }}
+              {% endif %}
+
               {# Loop through content paragraphs if field exists #}
               {% if node.field_newsletter_content is not empty %}
                 {% for item in node.field_newsletter_content %}
@@ -166,20 +276,20 @@
                            support it, plus a VML v:rect/v:fill fallback so Outlook desktop
                            (which ignores CSS backgrounds) also shows the image. The VML box
                            needs a fixed height, so keep heading text within ~2 lines. #}
-                        <table border="0" cellpadding="0" cellspacing="0" width="100%" id="{{ heading_id }}" style="margin: {{ loop.first ? '0' : '30px' }} 0 20px 0; background-color: #c8102e; {% if hero_image_url %}background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center;{% endif %}">
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" id="{{ heading_id }}" bgcolor="{{ hero_fallback_color }}" style="margin: {{ loop.first ? '0' : '30px' }} 0 20px 0; background-color: {{ hero_fallback_color }} !important; {% if hero_image_url %}background-image: url('{{ hero_image_url }}'); background-size: cover; background-position: center;{% endif %}">
                           <tr>
-                            <td style="{% if hero_image_url %}background-color: rgba(200, 16, 46, 0.85);{% endif %}">
+                            <td style="{% if hero_image_url %}background-color: {{ hero_overlay_color }} !important;{% endif %}">
                               {% if hero_image_url %}
                               <!--[if gte mso 9]>
-                              <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:354px;height:100px;">
-                                <v:fill type="frame" src="{{ hero_image_url }}" color="#c8102e" />
+                              <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:354px;height:50px;">
+                                <v:fill type="frame" src="{{ hero_image_url }}" color="{{ hero_fallback_color }}" />
                                 <v:textbox inset="0,0,0,0">
                               <![endif]-->
                               {% endif %}
                               <div>
-                              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="height: 100px;">
+                              <table border="0" cellpadding="10" cellspacing="0" width="100%" style="height: 50px;">
                                 <tr>
-                                  <td valign="middle" style="padding: 20px 15px;">
+                                  <td valign="middle" style="padding: 10px 15px !important;">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                       <tr>
                                         {% if show_clover_logo %}
@@ -193,8 +303,8 @@
                                         </td>
                                         {% endif %}
                                         <td valign="middle">
-                                          <h2 style="color: #ffffff; font-size: 22px; font-weight: bold; margin: 0; line-height: 1.3;">
-                                            {{ heading_text }}
+                                          <h2 class="newsletter-export-force-white" style="color: #ffffff !important; font-size: 22px; font-weight: bold; margin: 0; line-height: 1.3;">
+                                            <font color="#ffffff">{{ heading_text }}</font>
                                           </h2>
                                         </td>
                                       </tr>
@@ -214,75 +324,47 @@
                         </table>
                       {% endif %}
                     
+                    {# embed_content used to show an iframe (e.g. Microsoft Forms);
+                       that capability is being removed site-wide, so skip it
+                       entirely here too rather than leave empty space behind. #}
+                    {% elseif para_type == 'embed_content' %}
+
                     {# OTHER PARAGRAPH TYPES - render normally #}
                     {% else %}
                       {{ content.field_newsletter_content[loop.index0] }}
+
+                      {# A staff profile right after an article is usually that
+                         article's byline, not a standalone item — so the divider
+                         belongs after the byline, not wedged between the article
+                         and its own author. Defer it as long as a staff profile
+                         immediately follows (loop.index is already the next
+                         delta, being 1-based); it lands after the last one in a
+                         run either way, whether that's an article's co-authors
+                         or a trailing "contact for this whole issue" profile. #}
+                      {% set next_item = loop.index < node.field_newsletter_content|length ? node.field_newsletter_content[loop.index] : null %}
+                      {% set next_type = next_item and next_item.entity ? next_item.entity.getType() : null %}
+
+                      {% if para_type == 'staff_information' %}
+                        <div style="margin-bottom: 20px;"></div>
+                      {% endif %}
+                      {# A few independent reasons to skip the divider here:
+                         - the next item is embed_content, which renders nothing,
+                           so a divider right before it separates this content
+                           from empty space instead of from real content;
+                         - the next item is a section heading, which already
+                           provides its own visual separation via its colored
+                           banner — a divider right before it would be redundant;
+                         - this is the last item in the newsletter, so there's
+                           nothing left to separate it from at all. #}
+                      {% if next_type != 'staff_information' and next_type != 'embed_content' and next_type != 'section_heading' and not loop.last %}
+                        <hr style="border: 0; border-top: 1px solid #dddddd; margin: 20px 0;">
+                      {% endif %}
                     {% endif %}
                     
                   {% endif %}
                 {% endfor %}
               {% endif %}
-              
-            </td>
-            
-            <!-- Save the Date Sidebar -->
-            <td valign="top" width="210" style="padding: 20px 18px; background-color: #f9f9f9; border-left: 1px solid #dddddd;">
-              <h4 style="color: #c8102e; font-size: 18px; font-weight: bold; margin: 0 0 10px 0;">Important Dates</h4>
-              <hr style="border: 0; border-top: 2px solid #c8102e; margin: 0 0 15px 0;">
-              
-              {% if node.field_newsletter_save_the_date is not empty %}
-                {% for item in node.field_newsletter_save_the_date %}
-                  {% if item.entity %}
-                    {% set event = item.entity %}
-                    
-                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 15px;">
-                      <tr>
-                        <td valign="top" style="width: 50px; padding-right: 10px;">
-                          <table border="0" cellpadding="0" cellspacing="0" width="50" style="background-color: #c8102e; text-align: center;">
-                            <tr>
-                              <td style="background-color: #c8102e; color: #ffffff; font-size: 11px; font-weight: bold; padding: 4px 2px; text-transform: uppercase;">
-                                {% if event.field_newsletter_event_date is not empty %}
-                                  {{ event.field_newsletter_event_date.value|date('M') }}
-                                {% endif %}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td style="background-color: #ffffff; color: #202020; font-size: 20px; font-weight: bold; padding: 8px 2px;">
-                                {% if event.field_newsletter_event_date is not empty %}
-                                  {{ event.field_newsletter_event_date.value|date('j') }}
-                                {% endif %}
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                        <td valign="top">
-                          {% if event.field_newsletter_event_title is not empty %}
-                            <p style="margin: 0 0 5px 0; font-size: 13px; font-weight: bold;">
-                              {{ event.field_newsletter_event_title.value }}
-                            </p>
-                          {% endif %}
-                          
-                          {% if event.field_newsletter_event_time is not empty %}
-                            <p style="margin: 0 0 3px 0; font-size: 12px; color: #555555;">
-                              {{ event.field_newsletter_event_time.value }}
-                            </p>
-                          {% endif %}
-                          
-                          {% if event.field_newsletter_event_location is not empty %}
-                            <p style="margin: 0; font-size: 12px; color: #555555;">
-                              {{ event.field_newsletter_event_location.value }}
-                            </p>
-                          {% endif %}
-                        </td>
-                      </tr>
-                    </table>
-                    
-                    {% if not loop.last %}
-                      <hr style="border: 0; border-top: 1px solid #dddddd; margin: 0 0 15px 0;">
-                    {% endif %}
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
+
             </td>
           </tr>
         </table>
@@ -291,6 +373,9 @@
         <table border="0" cellpadding="0" cellspacing="0" width="600">
           <tr>
             <td style="padding:18px; color:#656565; font-size:12px; text-align:center;">
+              <p style="margin: 0 0 10px 0;">
+                <a href="{{ path('entity.node.canonical', {'node': node.id()}) }}" style="color: #7c2529; font-weight: bold;">View this newsletter online</a>
+              </p>
               <p style="margin: 0;">This institution is an equal opportunity provider.<br>
               <a href="https://www.extension.iastate.edu/legal" style="color: #006ba6;">www.extension.iastate.edu/legal</a></p>
             </td>
