@@ -79,7 +79,6 @@ function newsletter_theme($existing, $type, $theme, $path)
   ];
 }
 
-
 /**
  * Implements hook_form_alter().
  */
@@ -230,7 +229,21 @@ function newsletter_preprocess_page(&$variables) {
   // Only for newsletter content type
   if (isset($variables['node']) && $variables['node']->bundle() == 'newsletter') {
     $node = $variables['node'];
-    
+
+    // site_slogan is only ever populated by the theme's own
+    // iastate_theme_preprocess_html() (for html.html.twig) — it's never
+    // set for the "page" theme hook, so it's otherwise empty here even
+    // though site_name (set separately in iastate_theme_preprocess_page())
+    // works fine. The print masthead/footer need it directly.
+    $variables['site_slogan'] = \Drupal::config('system.site')->get('slogan');
+
+    // Drives the single accent color used by the print stylesheet
+    // (css/newsletter.css @media print). Mirrors the "hero_fallback_color"
+    // logic in node--newsletter--newsletter-export.html.twig and
+    // NewsletterExportController::getBrandColor(): the 4-H banners are
+    // green, everything else (including no banner) is ISU red.
+    $variables['newsletter_print_color'] = '#c8102e';
+
     if ($node->hasField('field_newsletter_hero') && !$node->get('field_newsletter_hero')->isEmpty()) {
       $first_paragraph = $node->get('field_newsletter_hero')->first()->entity;
       
@@ -254,6 +267,7 @@ function newsletter_preprocess_page(&$variables) {
           
           $variables['featured_image_url'] = $image_url;
           $variables['featured_image_name'] = $image_value;
+          $variables['newsletter_print_color'] = in_array($image_value, ['4h_dark', '4h_light'], TRUE) ? '#008540' : '#c8102e';
         }
       }
     }
