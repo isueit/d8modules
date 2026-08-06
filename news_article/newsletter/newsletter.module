@@ -224,6 +224,45 @@ function _newsletter_create_slug($text) {
   return preg_replace('/-+/', '-', $slug);
 }
 
+/**
+ * Helper function to determine if a field_newsletter_content paragraph
+ * renders its own heading as the first thing in its markup. Used to detect
+ * a section heading immediately followed by another heading with no
+ * content between them.
+ */
+function _newsletter_paragraph_renders_heading($paragraph) {
+  switch ($paragraph->bundle()) {
+    case 'create_content':
+      return $paragraph->hasField('field_create_content_title') && !$paragraph->get('field_create_content_title')->isEmpty();
+
+    case 'existing_content':
+      $referenced = $paragraph->hasField('field_existing_content_search') ? $paragraph->get('field_existing_content_search')->entity : NULL;
+      return $referenced && trim((string) $referenced->label()) !== '';
+
+    default:
+      return FALSE;
+  }
+}
+
+/**
+ * Helper function to get the displayable article title for a
+ * field_newsletter_content paragraph, used to build the "In this section"
+ * accessibility summary.
+ */
+function _newsletter_paragraph_title($paragraph) {
+  switch ($paragraph->bundle()) {
+    case 'create_content':
+      return $paragraph->hasField('field_create_content_title') ? trim((string) $paragraph->get('field_create_content_title')->value) : '';
+
+    case 'existing_content':
+      $referenced = $paragraph->hasField('field_existing_content_search') ? $paragraph->get('field_existing_content_search')->entity : NULL;
+      return $referenced ? trim((string) $referenced->label()) : '';
+
+    default:
+      return '';
+  }
+}
+
 function newsletter_preprocess_page(&$variables) {
   $node = \Drupal::routeMatch()->getParameter('node');
   // Only for newsletter content type
@@ -433,6 +472,44 @@ function newsletter_preprocess_field(&$variables) {
               }
             }
           }
+        }
+      }
+    }
+
+    // Accessibility: if this section heading is immediately followed by a
+    // content paragraph that renders its own heading (an article title with
+    // nothing in between), build a visually hidden "In this section" summary
+    // so screen reader users navigating by heading still get context between
+    // the two adjacent headings.
+    if ($parent && $parent->hasField('field_newsletter_content')) {
+      $siblings = [];
+      foreach ($parent->field_newsletter_content as $item) {
+        if ($item->entity) {
+          $siblings[] = $item->entity;
+        }
+      }
+
+      $position = NULL;
+      foreach ($siblings as $delta => $sibling) {
+        if ($sibling->id() == $section_paragraph->id()) {
+          $position = $delta;
+          break;
+        }
+      }
+
+      if ($position !== NULL && isset($siblings[$position + 1]) && _newsletter_paragraph_renders_heading($siblings[$position + 1])) {
+        $section_titles = [];
+        for ($i = $position + 1; $i < count($siblings); $i++) {
+          if ($siblings[$i]->bundle() == 'section_heading') {
+            break;
+          }
+          $title = _newsletter_paragraph_title($siblings[$i]);
+          if ($title !== '') {
+            $section_titles[] = $title;
+          }
+        }
+        if ($section_titles) {
+          $variables['in_this_section_titles'] = $section_titles;
         }
       }
     }
