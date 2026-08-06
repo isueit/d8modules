@@ -20,7 +20,19 @@ function newsletter_preprocess_node(&$variables)
   if ($node->getType() == 'newsletter') {
     $variables['#attached']['library'][] = 'newsletter/newsletter';
   }
-} 
+
+  // ISU wordmark shown above the title in the newsletter export. The
+  // theme's own wordmark is SVG-only, which Outlook desktop can't render,
+  // so this uses the raster copy dropped into the module's images folder
+  // instead (same convention as the bundled hero banners).
+  if ($node->getType() == 'newsletter' && $variables['view_mode'] == 'newsletter_export') {
+    $module_path = \Drupal::service('extension.list.module')->getPath('newsletter');
+    $wordmark_filename = 'ISUEO_WordmarkWht_1080.png';
+    if (file_exists(DRUPAL_ROOT . '/' . $module_path . '/images/' . $wordmark_filename)) {
+      $variables['wordmark_url'] = base_path() . $module_path . '/images/' . $wordmark_filename;
+    }
+  }
+}
 
 /**
  * Implements hook_theme().
