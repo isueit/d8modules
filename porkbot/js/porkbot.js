@@ -2,7 +2,6 @@
   'use strict';
 
   var CHAT_TITLE = 'Iowa State Extension Porkbot';
-  var WELCOME_MESSAGE = "Hello, I'm Porkbot. How can I help?";
   var DIRECT_LINE_TOKEN_ENDPOINT = 'https://extension-porkbot-eqc3ekd5ena0hdb5.centralus-01.azurewebsites.net/api/directline/token';
 
   Drupal.behaviors.porkbot = {
@@ -160,18 +159,17 @@
                   if (action.type === 'DIRECT_LINE/CONNECT_FULFILLED' && !welcomeMessageSent) {
                     welcomeMessageSent = true;
                     dispatch({
-                      type: 'DIRECT_LINE/INCOMING_ACTIVITY',
+                      type: 'DIRECT_LINE/POST_ACTIVITY',
+                      meta: {
+                        method: "keyboard"
+                      },
                       payload: {
                         activity: {
-                          type: 'message',
-                          id: 'porkbot-welcome-' + Date.now(),
-                          timestamp: new Date().toISOString(),
-                          from: {
-                            id: 'isu-extension-pork-assistant',
-                            name: CHAT_TITLE,
-                            role: 'bot'
+                          channelData: {
+                            postBack: true
                           },
-                          text: WELCOME_MESSAGE
+                          name: "startConversation",
+                          type: "event"
                         }
                       }
                     });

@@ -156,6 +156,49 @@
   opacity: 0.65;
 }
 
+.porkbot-webchat table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  color: #111111;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: normal;
+}
+
+.porkbot-webchat th,
+.porkbot-webchat td {
+  min-width: 120px;
+  padding: 8px 10px;
+  border: 1px solid #d8d1c7;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+}
+
+.porkbot-webchat th {
+  background: #ebe6dc;
+  font-weight: 700;
+}
+
+.porkbot-webchat tr:nth-child(even) td {
+  background: #fbfaf7;
+}
+
+.porkbot-webchat caption {
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.porkbot-webchat .webchat__bubble__content {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
 @media (max-width: 560px) {
   .porkbot-toggle {
     right: 16px;
@@ -168,5 +211,14 @@
     width: calc(100vw - 24px);
     height: min(520px, calc(100vh - 96px));
     height: min(520px, calc(100dvh - 96px));
+  }
+  .porkbot-webchat table {
+    font-size: 12px;
+  }
+
+  .porkbot-webchat th,
+  .porkbot-webchat td {
+    min-width: 104px;
+    padding: 7px 8px;
   }
 }
