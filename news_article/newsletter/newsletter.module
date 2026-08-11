@@ -79,7 +79,6 @@ function newsletter_theme($existing, $type, $theme, $path)
   ];
 }
 
-
 /**
  * Implements hook_form_alter().
  */
@@ -225,12 +224,65 @@ function _newsletter_create_slug($text) {
   return preg_replace('/-+/', '-', $slug);
 }
 
+/**
+ * Helper function to determine if a field_newsletter_content paragraph
+ * renders its own heading as the first thing in its markup. Used to detect
+ * a section heading immediately followed by another heading with no
+ * content between them.
+ */
+function _newsletter_paragraph_renders_heading($paragraph) {
+  switch ($paragraph->bundle()) {
+    case 'create_content':
+      return $paragraph->hasField('field_create_content_title') && !$paragraph->get('field_create_content_title')->isEmpty();
+
+    case 'existing_content':
+      $referenced = $paragraph->hasField('field_existing_content_search') ? $paragraph->get('field_existing_content_search')->entity : NULL;
+      return $referenced && trim((string) $referenced->label()) !== '';
+
+    default:
+      return FALSE;
+  }
+}
+
+/**
+ * Helper function to get the displayable article title for a
+ * field_newsletter_content paragraph, used to build the "In this section"
+ * accessibility summary.
+ */
+function _newsletter_paragraph_title($paragraph) {
+  switch ($paragraph->bundle()) {
+    case 'create_content':
+      return $paragraph->hasField('field_create_content_title') ? trim((string) $paragraph->get('field_create_content_title')->value) : '';
+
+    case 'existing_content':
+      $referenced = $paragraph->hasField('field_existing_content_search') ? $paragraph->get('field_existing_content_search')->entity : NULL;
+      return $referenced ? trim((string) $referenced->label()) : '';
+
+    default:
+      return '';
+  }
+}
+
 function newsletter_preprocess_page(&$variables) {
   $node = \Drupal::routeMatch()->getParameter('node');
   // Only for newsletter content type
   if (isset($variables['node']) && $variables['node']->bundle() == 'newsletter') {
     $node = $variables['node'];
-    
+
+    // site_slogan is only ever populated by the theme's own
+    // iastate_theme_preprocess_html() (for html.html.twig) — it's never
+    // set for the "page" theme hook, so it's otherwise empty here even
+    // though site_name (set separately in iastate_theme_preprocess_page())
+    // works fine. The print masthead/footer need it directly.
+    $variables['site_slogan'] = \Drupal::config('system.site')->get('slogan');
+
+    // Drives the single accent color used by the print stylesheet
+    // (css/newsletter.css @media print). Mirrors the "hero_fallback_color"
+    // logic in node--newsletter--newsletter-export.html.twig and
+    // NewsletterExportController::getBrandColor(): the 4-H banners are
+    // green, everything else (including no banner) is ISU red.
+    $variables['newsletter_print_color'] = '#c8102e';
+
     if ($node->hasField('field_newsletter_hero') && !$node->get('field_newsletter_hero')->isEmpty()) {
       $first_paragraph = $node->get('field_newsletter_hero')->first()->entity;
       
@@ -254,6 +306,7 @@ function newsletter_preprocess_page(&$variables) {
           
           $variables['featured_image_url'] = $image_url;
           $variables['featured_image_name'] = $image_value;
+          $variables['newsletter_print_color'] = in_array($image_value, ['4h_dark', '4h_light'], TRUE) ? '#008540' : '#c8102e';
         }
       }
     }
@@ -419,6 +472,44 @@ function newsletter_preprocess_field(&$variables) {
               }
             }
           }
+        }
+      }
+    }
+
+    // Accessibility: if this section heading is immediately followed by a
+    // content paragraph that renders its own heading (an article title with
+    // nothing in between), build a visually hidden "In this section" summary
+    // so screen reader users navigating by heading still get context between
+    // the two adjacent headings.
+    if ($parent && $parent->hasField('field_newsletter_content')) {
+      $siblings = [];
+      foreach ($parent->field_newsletter_content as $item) {
+        if ($item->entity) {
+          $siblings[] = $item->entity;
+        }
+      }
+
+      $position = NULL;
+      foreach ($siblings as $delta => $sibling) {
+        if ($sibling->id() == $section_paragraph->id()) {
+          $position = $delta;
+          break;
+        }
+      }
+
+      if ($position !== NULL && isset($siblings[$position + 1]) && _newsletter_paragraph_renders_heading($siblings[$position + 1])) {
+        $section_titles = [];
+        for ($i = $position + 1; $i < count($siblings); $i++) {
+          if ($siblings[$i]->bundle() == 'section_heading') {
+            break;
+          }
+          $title = _newsletter_paragraph_title($siblings[$i]);
+          if ($title !== '') {
+            $section_titles[] = $title;
+          }
+        }
+        if ($section_titles) {
+          $variables['in_this_section_titles'] = $section_titles;
         }
       }
     }

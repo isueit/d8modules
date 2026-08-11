@@ -12,6 +12,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\views\Views;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Provides a 'Newsletter' Block.
@@ -25,7 +26,7 @@ use Drupal\Core\Access\AccessResult;
  *   }
  * )
  */
-class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
    * The entity type manager.
@@ -273,6 +274,13 @@ class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public function getCacheMaxAge() {
     return parent::getCacheMaxAge();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['demoteFeaturedNewsletterHeading'];
   }
 
   /**

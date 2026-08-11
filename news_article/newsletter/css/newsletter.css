@@ -20,6 +20,26 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
     margin-left: auto;
     margin-right: auto;
 }
+/* layout--base--twocols--newsletter.html.twig swaps the "Save the Date"
+   (second) and main content (first) regions' DOM order so the print
+   stylesheet can float them instead of using CSS grid (see @media print
+   below). The two-column grid's implicit auto-placement follows DOM
+   order by default, which would otherwise put Save the Date in the
+   left/main column on screen too — pin each region back to its intended
+   grid track explicitly regardless of source order. Both grid-row and
+   grid-column need pinning: with only grid-column set, sparse
+   auto-placement still assigns rows in DOM order, so "second" (column 2,
+   placed first) advances the placement cursor past row 1 before "first"
+   (column 1) is placed — pushing it down to row 2 instead of sharing
+   row 1, even though that cell was empty. */
+.isueo-newsletter .layout__region--first {
+	grid-row: 1;
+	grid-column: 1;
+}
+.isueo-newsletter .layout__region--second {
+	grid-row: 1;
+	grid-column: 2;
+}
 /* Style for archive notice */
 .archive-message-wrapper {
 	max-width: 1200px;
@@ -148,8 +168,15 @@ ul.newsletter-section-index li::before {
     vertical-align: top;
 }
 
-/* Responsive - single column on mobile */
-@media (max-width: 768px) {
+/* Responsive - single column on mobile.
+   Scoped to "screen" — without it, this also matches during real
+   printing (the print engine evaluates max-width against the physical
+   page box, which can be well under 768px), silently collapsing the
+   "In This Issue" grid to one column on paper even though nothing in
+   the @media print block below says to. Chrome's print-preview/PDF
+   emulation doesn't reproduce this, so it only shows up from an actual
+   Print dialog. */
+@media screen and (max-width: 768px) {
     ul.newsletter-section-index {
         grid-template-columns: 1fr;
     }
@@ -239,7 +266,7 @@ h2.newsletter-section-heading {
 }
 .save-the-date-item p {
   margin-bottom: 0;
-  line-height: 1.3;
+  line-height: 1.5;
   font-size: .9rem;
 }
 .save-the-date-date--wrapper {
@@ -279,14 +306,16 @@ h2.newsletter-section-heading {
 }
 .save-the-date-location {
     font-style: italic;
-    line-height: 1.3;
+    line-height: 1.5;
     font-size: .9rem;
 }
 
 /* --------------------------------------  */
 /* ## RESPONSIVE
 /* --------------------------------------  */
-@media (max-width: 576px) {
+/* Scoped to "screen" for the same reason as the 768px breakpoint above —
+   otherwise this can also fire during real printing. */
+@media screen and (max-width: 576px) {
   .save-the-date-item {
     gap: 1rem;
   }
@@ -311,34 +340,509 @@ h2.newsletter-section-heading {
 	@page {
 		margin: 0.5cm;
 	}
-  .newsletter-hero-wrapper h1.isu-page-title {
-    font-size: 24pt;
-    font-weight: bold;
-    line-height: 1.2;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  h2.newsletter-section-heading {
-    font-size: 22pt;
-    font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
+
+	/* Single accent color throughout, taken from --newsletter-print-color
+	   (set inline on .isu-page-wrap in page--type--newsletter--canonical
+	   .html.twig from the selected header banner: green for 4-H/Clover Kids,
+	   ISU red otherwise). Photos print full color. */
+
+	/* Two-column layout: CSS grid (the on-screen approach) reserves both
+	   column tracks for the full height of the taller one across the
+	   whole multi-page document, so once "Save the Date" runs out, the
+	   main content column stays stuck at 67% width for the rest of the
+	   newsletter even though the sidebar space is empty. Floats don't
+	   have that limitation — once a float's content ends, subsequent
+	   normal-flow content reflows to the full container width on its
+	   own. That only works with the float earlier in the DOM than the
+	   content meant to wrap around it, which is why
+	   layout--base--twocols--newsletter.html.twig renders "Save the
+	   Date" (region "second") before the main content (region "first")
+	   for newsletters specifically — on screen, the grid-column rules
+	   above put it back on the right regardless. */
+	.isueo-newsletter .layout-builder-base--two-columns .layout-content {
+		display: block !important;
+	}
+	.isueo-newsletter .layout-content::after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+	.isueo-newsletter .layout__region--second {
+		float: right !important;
+		width: 33% !important;
+		box-sizing: border-box;
+		margin-left: 1.5rem;
+		padding-left: 1rem;
+		border-left: 1px solid #d4cfc7;
+	}
+	.isueo-newsletter .layout__region--first {
+		float: none !important;
+		width: 100% !important;
+	}
+
+	/* Masthead: the on-screen version is a full-bleed photo banner, which
+	   fights with "single color" print output — flatten it to a plain
+	   white header with accent-colored type and a rule underneath instead
+	   of trying to print the photo itself. The branded wordmark (from the
+	   persistent site header) is replaced with a plain text kicker line. */
+	.isu-site-navbar {
+		display: none !important;
+	}
+	.newsletter-hero-wrapper {
+		background-image: none !important;
+		background-color: #fff !important;
+		min-height: 0;
+		width: 100%;
+		position: static;
+		padding: 0 0 1rem;
+		border-bottom: 3px solid var(--newsletter-print-color, #c8102e);
+	}
+	.newsletter-hero-label-wrapper {
+		position: static;
+	}
+	.newsletter-hero-label.container {
+		position: relative;
+	}
+	.newsletter-hero-label.container h1.isu-page-title img {
+		/* Clover emblem is a white PNG, meant for the photo banner — invisible
+		   against the flattened white print background. */
+		display: none !important;
+	}
+	.newsletter-print-kicker {
+		margin: 0 0 0.2rem;
+		max-width: 70%;
+		font-size: 9pt;
+		font-family: var(--sans-font, Arial, Helvetica, sans-serif);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: #666;
+	}
+	.newsletter-hero-wrapper h1.isu-page-title {
+		color: #000 !important;
+		max-width: 80%;
+		font-size: 24pt;
+		font-weight: bold;
+		line-height: 1.2;
+		font-family: var(--serif-font, Georgia, 'Times New Roman', serif);
+	}
+	/* Screen-only combined "date, Issue: N" line — the print version below
+	   stacks date and issue on separate lines instead. */
+	.newsletter-hero-label .newsletter-issue-wrapper.d-print-none,
+	.newsletter-hero-label .newsletter-date-wrapper.d-print-none {
+		display: none !important;
+	}
+	.newsletter-print-issue-date {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		text-align: right;
+	}
+	.newsletter-print-date,
+	.newsletter-print-issue {
+		margin: 0;
+		font-size: 9pt;
+		line-height: 1.4;
+		color: #666 !important;
+	}
+
+	/* Section headings: text in the single accent color instead of a
+	   colored background bar (both the plain and "with clover" variants
+	   are hardcoded green on-screen), with a light gray rule filling the
+	   remaining horizontal space after the title. */
+	.newsletter-section-heading-wrapper,
+	.newsletter-section-heading-wrapper--with-clover {
+		/* overflow:hidden (rather than display:flow-root, which would
+		   drop the display:flex this needs for the trailing line below)
+		   still establishes a block formatting context, shrinking this
+		   box — and its trailing gray line — to avoid the floated "Save
+		   the Date" column instead of running underneath it. */
+		overflow: hidden;
+		background: none !important;
+		margin: 0.5em 0;
+	}
+	.newsletter-section-heading-wrapper::after,
+	.newsletter-section-heading-wrapper--with-clover::after {
+		content: "";
+		flex: 1 1 auto;
+		align-self: center;
+		height: 1px;
+		margin-left: 0.75rem;
+		background: #d4cfc7;
+	}
+	.logo-circle {
+		margin-left: 0 !important;
+		border-color: var(--newsletter-print-color, #c8102e) !important;
+    width: 50px;
+    height: 50px;
+	}
+  .logo-circle img {
+    height: 2rem;
   }
   .newsletter-section-heading-wrapper {
-    margin: 0;
-    margin: 0.5em 0;
+    gap: .3rem;
   }
-  .newsletter h2.isu-block-title h4 {
-    margin: 1rem 0 0.5625rem;
-  }
-  .paragraph--type--create-content h2.isu-block-title.h4, .paragraph--type--existing-content h3.isu-block-title.h4 {
-    margin-bottom: 0;
-  }
-  .block-save-the-date h2.isu-block-title.h4 {
-    margin: 0;
-  }
-  .newsletter-index-wrapper {
-    margin-top: 2rem;
-  }
-  .isueo-staff-author--header p {
-    font-size: 12pt;
-  }
+	h2.newsletter-section-heading {
+		padding: 0 !important;
+		color: var(--newsletter-print-color, #c8102e) !important;
+		font-size: 22pt;
+		font-weight: bold;
+	}
+	/* Never strand a section heading alone at the bottom of a page —
+	   break-after/page-break-after: avoid pushes the whole heading to
+	   the next page instead if it would otherwise land with none of its
+	   own content following it. break-inside/page-break-inside: avoid
+	   additionally keeps the heading and its trailing gray line from
+	   splitting across a page themselves. Both the legacy (page-break-*)
+	   and current (break-*) property names are set for broader print
+	   engine support. */
+	.newsletter-section-heading-wrapper,
+	.newsletter-section-heading-wrapper--with-clover {
+		break-after: avoid;
+		break-inside: avoid;
+		page-break-after: avoid;
+		page-break-inside: avoid;
+	}
+
+	/* Pagination: the sitewide print stylesheet (iastate_theme/css/
+	   print.css) already sets orphans/widows: 2 on paragraphs, which
+	   still allows a break to leave just 2 lines stranded — raise that
+	   to 3 so a page break never leaves only one or two lines of an
+	   article behind or carries only one or two lines onto the next
+	   page. */
+	.isueo-newsletter p {
+		orphans: 3;
+		widows: 3;
+	}
+
+	/* "In This Issue" index: top/bottom rules only (no full box), light
+	   gray instead of the accent color, heading sized to match "Save the
+	   Date" and set in sans-serif. */
+	.newsletter-index-wrapper {
+		/* display:flow-root establishes a new block formatting context, so
+		   this box (and its border) shrinks to avoid overlapping the
+		   floated "Save the Date" column instead of running full width
+		   underneath it — floats only affect how inline/text content
+		   wraps by default, not the width of sibling block boxes like
+		   this one. */
+		display: flow-root;
+		background: none !important;
+		border: none;
+		border-top: 1px solid #d4cfc7;
+		border-bottom: 1px solid #d4cfc7;
+		padding: 0.5rem 0;
+		margin-top: 1rem;
+	}
+	h2.newsletter-index-title,
+	h3.newsletter-index-title {
+		margin-top: 0;
+		font-size: 13pt;
+		font-family: var(--sans-font, Arial, Helvetica, sans-serif);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--newsletter-print-color, #c8102e) !important;
+	}
+	ul.newsletter-section-index {
+		font-size: 0.9rem;
+		/* Re-asserted defensively: real print engines evaluate max-width
+		   breakpoints against the physical page box (which can read as
+		   "mobile"-width), not the screen viewport, so anything scoped
+		   only to screen elsewhere still needs this belt-and-suspenders
+		   override here to guarantee two columns on paper. */
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+	ul.newsletter-section-index li::before {
+		font-size: 8pt;
+		color: var(--newsletter-print-color, #c8102e) !important;
+	}
+
+	/* Save the date sidebar */
+	.block-save-the-date h2.isu-block-title.h4 {
+		margin: 0 0 0.5rem;
+		color: var(--newsletter-print-color, #c8102e) !important;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-size: 13pt;
+		font-family: var(--sans-font, Arial, Helvetica, sans-serif);
+		border-bottom: 1px solid var(--newsletter-print-color, #c8102e);
+		padding-bottom: 0.3rem;
+	}
+	.save-the-date-item {
+		background: none !important;
+		border-bottom: 1px solid #d4cfc7;
+		padding-bottom: 0.5rem;
+	}
+	.save-the-date-item:last-child {
+		border-bottom: none;
+	}
+	.save-the-date-date--wrapper {
+		background: none !important;
+		color: var(--newsletter-print-color, #c8102e) !important;
+	}
+	.save-the-date-date .date-month,
+	.save-the-date-date .date-day {
+		color: var(--newsletter-print-color, #c8102e) !important;
+	}
+
+	/* Links: no styling on paper — the print-only footer link below is
+	   the way back to working links, so let link text read as plain
+	   prose instead of a (non-clickable) blue underline or button. */
+	.isueo-newsletter a,
+	.isueo-newsletter a:visited {
+		color: inherit !important;
+		text-decoration: none !important;
+		font-weight: inherit !important;
+		background: none !important;
+		border: none !important;
+		padding: 0 !important;
+	}
+
+	/* Accordions (CKEditor accordion in WYSIWYG body content): print every
+	   panel open, regardless of its on-screen expanded/collapsed state,
+	   and drop the interactive chrome (+/- toggle icon, title underline)
+	   that has no meaning on paper. Title matches the body text size
+	   instead of the larger on-screen accordion-tab styling. */
+	.ckeditor-accordion-container > dl dd {
+		display: block !important;
+		height: auto !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+	.ckeditor-accordion-container > dl dt,
+	.ckeditor-accordion-container > dl dt > a {
+		border-bottom: none !important;
+	}
+	.ckeditor-accordion-container > dl dt > a {
+		font-size: 16pt !important;
+		color: var(--newsletter-print-color, #c8102e) !important;
+	}
+	.ckeditor-accordion-container .ckeditor-accordion-toggle {
+		display: none !important;
+	}
+
+	/* Story/thumbnail images print capped at 220px tall (width scales
+	   proportionally) and floated in their original left/right direction
+	   (the teaser thumbnail field always floats right; WYSIWYG-embedded
+	   images carry Drupal's "align left/right" class, from core's
+	   align.module.css), so body text wraps beside them instead of
+	   running full width above/below. The wrapping .align-left/
+	   .align-right div is left at its default auto width (a floated
+	   box's shrink-to-fit sizing) rather than forced to a fixed
+	   percentage — that's safe here specifically because the <img>'s own
+	   size is now fully determined by max-height + width:auto (a
+	   standard replaced-element calculation), not a percentage of an
+	   as-yet-unresolved container width, which is what previously made
+	   shrink-to-fit fall back to the original, oversized intrinsic
+	   dimensions instead of the visibly shrunk size. */
+	.field-content.newsletter-page-thumbnail,
+	.paragraph--type--create-content .align-right,
+	.paragraph--type--existing-content .align-right {
+		float: right;
+		width: auto !important;
+		margin: 0 0 0.5rem 1rem !important;
+	}
+	.paragraph--type--create-content .align-left,
+	.paragraph--type--existing-content .align-left {
+		float: left;
+		width: auto !important;
+		margin: 0 1rem 0.5rem 0 !important;
+	}
+	.field-content.newsletter-page-thumbnail img,
+	.paragraph--type--create-content .align-left img,
+	.paragraph--type--create-content .align-right img,
+	.paragraph--type--existing-content .align-left img,
+	.paragraph--type--existing-content .align-right img,
+	.paragraph--type--create-content img,
+	.paragraph--type--existing-content img {
+		max-height: 220px !important;
+		width: auto !important;
+		height: auto !important;
+		margin: 0 !important;
+	}
+	/* Any image not wrapped in one of the above (no alignment class) —
+	   left un-floated, centered by default block flow. */
+	.paragraph--type--create-content img,
+	.paragraph--type--existing-content img {
+		float: none !important;
+		margin: 0 0 0.5rem !important;
+	}
+
+	/* Article/story titles print smaller and in plain black so they read
+	   as body content, not competing with the accent-colored section
+	   headings above them. */
+	.paragraph--type--featured-content h2.isu-block-title.h4,
+	.paragraph--type--create-content h2.isu-block-title.h4,
+	.paragraph--type--existing-content h3.isu-block-title.h4,
+	.newsletter.col-1 h2.isu-block-title.h4,
+	.newsletter.col-1 h3.isu-block-title.h4 {
+		font-size: 18pt !important;
+	}
+	/* Same "don't strand a heading alone at the bottom of a page" rule
+	   applied to .newsletter-section-heading-wrapper above, but for the
+	   individual article/story titles — there are usually far more of
+	   these per newsletter than colored section headings, so they're
+	   the more common place a title would otherwise get orphaned by a
+	   page break. */
+	.paragraph--type--featured-content h2.isu-block-title.h4,
+	.paragraph--type--create-content h2.isu-block-title.h4,
+	.paragraph--type--existing-content h3.isu-block-title.h4,
+	.newsletter.col-1 h2.isu-block-title.h4,
+	.newsletter.col-1 h3.isu-block-title.h4 {
+		break-after: avoid;
+		break-inside: avoid;
+		page-break-after: avoid;
+		page-break-inside: avoid;
+	}
+	.paragraph--type--featured-content h2.isu-block-title.h4::after,
+	.paragraph--type--create-content h2.isu-block-title.h4::after,
+	.paragraph--type--existing-content h3.isu-block-title.h4::after,
+	.newsletter.col-1 h2.isu-block-title.h4::after,
+	.newsletter.col-1 h3.isu-block-title.h4::after {
+		display: none !important;
+	}
+	/* Some titles come out of the WYSIWYG with their text wrapped in a
+	   stray inner <div> (see the body-text fix below) rather than sitting
+	   directly in the h2/h3 — reassert the title's own size/color there
+	   too so it doesn't inherit the broader 16pt body size instead. */
+	.paragraph--type--featured-content h2.isu-block-title.h4 div,
+	.paragraph--type--create-content h2.isu-block-title.h4 div,
+	.paragraph--type--existing-content h3.isu-block-title.h4 div,
+	.newsletter.col-1 h2.isu-block-title.h4 div,
+	.newsletter.col-1 h3.isu-block-title.h4 div {
+		font-size: 18pt !important;
+	}
+
+	/* Some article body content isn't consistently wrapped in <p> tags —
+	   content pasted from Word/Outlook etc. sometimes lands as bare text
+	   or <div>-separated lines instead. The sitewide print stylesheet
+	   only sizes actual <p>/<ol>/<ul> elements (css/print.css), so
+	   anything else silently falls back to a smaller inherited size.
+	   Match the same size/line-height/spacing here regardless of markup,
+	   so paragraphs read consistently whether or not they're a real <p>. */
+	.paragraph--type--create-content div,
+	.paragraph--type--existing-content div,
+	.paragraph--type--featured-content div {
+		font-size: 16pt;
+		line-height: 1.3;
+		font-family: Arial, sans-serif;
+		margin: 0 0 1em;
+	}
+
+	/* Colored divider strictly between two consecutive article pieces —
+	   only drawn above a create_content/existing_content paragraph when
+	   the one immediately before it is also create_content/
+	   existing_content. Each item's own wrapper div is a direct sibling
+	   of the next, so :has() detects "the previous wrapper held a
+	   content paragraph" without touching section headings (which
+	   already have their own visual break) or staff bios (kept visually
+	   attached to the article they follow) on either side. */
+	.isueo-newsletter div:has(> .paragraph--type--create-content, > .paragraph--type--existing-content) + div > .paragraph--type--create-content,
+	.isueo-newsletter div:has(> .paragraph--type--create-content, > .paragraph--type--existing-content) + div > .paragraph--type--existing-content {
+		/* See .newsletter-index-wrapper above: without this, the top
+		   border runs full width underneath the floated "Save the Date"
+		   column instead of stopping at the same edge the paragraph's
+		   own text already wraps to. */
+		display: flow-root;
+		border-top: 1px solid var(--newsletter-print-color, #c8102e);
+		padding-top: 1rem;
+		margin-top: 1rem;
+	}
+
+	.archive-message-wrapper {
+		display: none !important;
+	}
+
+	.newsletter h2.isu-block-title h4 {
+		margin: 1rem 0 0.5625rem;
+	}
+	.paragraph--type--create-content h2.isu-block-title.h4, .paragraph--type--existing-content h3.isu-block-title.h4 {
+		margin-bottom: 0;
+	}
+	.isueo-staff-author--header p {
+		font-size: 12pt;
+	}
+
+	/* Footer: the full multi-column site footer (quick links, social,
+	   staff resources) is swapped for a condensed contact-only footer,
+	   matching the pattern used by the county impact report's print
+	   output — same drupal_entity('block', 'contact_us') call, contact
+	   details condensed to a single pipe-separated line, single accent
+	   color from the header banner instead of that report's hardcoded
+	   red. The border spans the full print width, same as the masthead's
+	   border-bottom — .newsletter-print-footer-inner (not the outer
+	   .newsletter-print-footer itself) is what's constrained to the
+	   1140px content measure, mirroring how .newsletter-hero-wrapper
+	   (full width) contains .newsletter-hero-label.container (1140px). */
+	.isu-footer {
+		display: none !important;
+	}
+	.newsletter-print-footer {
+		width: 100%;
+		margin-top: 1.5rem;
+		padding-top: 0.5rem;
+		border-top: 1px solid var(--newsletter-print-color, #c8102e);
+	}
+	.newsletter-print-footer-inner {
+		max-width: 1140px;
+		margin: 0 auto;
+	}
+	.newsletter-print-footer-title {
+		font-size: 13pt;
+		font-weight: bold;
+		font-family: var(--sans-font, Arial, Helvetica, sans-serif);
+		text-transform: uppercase;
+		color: var(--newsletter-print-color, #c8102e) !important;
+		margin: 0 0 0.4rem;
+	}
+	.newsletter-print-footer-contact #block-contact-us .isu-footer_contact-address-title,
+	.newsletter-print-footer-contact #block-contact-us .isu-footer_contact-print-title,
+	.newsletter-print-footer-contact #block-contact-us .isu-footer_contact-label {
+		display: none !important;
+	}
+	.newsletter-print-footer-contact #block-contact-us.isu-footer_contact-address::after {
+		/* The sitewide print stylesheet's auto equal-opportunity statement
+		   is suppressed here — this template prints its own copy
+		   (.newsletter-print-footer-legal) after the "view online" line. */
+		content: none !important;
+		display: none !important;
+	}
+	.newsletter-print-footer-contact #block-contact-us {
+		font-size: 11pt;
+		line-height: 1.6;
+	}
+	.newsletter-print-footer-contact #block-contact-us .isu-footer_contact-columns,
+	.newsletter-print-footer-contact #block-contact-us .isu-footer_contact-col,
+	.newsletter-print-footer-contact #block-contact-us p {
+		display: inline !important;
+	}
+	.newsletter-print-footer-contact #block-contact-us i {
+		display: none !important;
+	}
+	.newsletter-print-footer-contact #block-contact-us br {
+		display: none !important;
+	}
+	.newsletter-print-footer-contact #block-contact-us .isu-footer_contact-col:not(:last-child)::after {
+		content: " | ";
+	}
+	.newsletter-print-footer-contact #block-contact-us .isu-footer_contact-print-url {
+		display: block !important;
+		margin-top: 0.2rem;
+	}
+	.newsletter-print-footer-online {
+		margin: 0.4rem 0 0;
+		font-size: 10pt;
+		color: #333;
+	}
+	.newsletter-print-footer-online-url {
+		color: var(--newsletter-print-color, #c8102e);
+		word-break: break-all;
+	}
+	.newsletter-print-footer-legal {
+		font-size: 9pt !important;
+		color: #666;
+		font-style: italic;
+		line-height: 1.4;
+		margin: 0.4rem 0 0;
+	}
 }

@@ -1,0 +1,14 @@
+layout_base_twocol_newsletter:
+  label: 'Layout Base - Two columns (Newsletter)'
+  path: templates
+  template: layout--base--twocols--newsletter
+  class: '\Drupal\layout_builder_base_library\Plugin\Layout\BaseTwoColumnsLayout'
+  category: 'Columns: 2'
+  default_region: content
+  icon_map:
+    - [first, second]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second

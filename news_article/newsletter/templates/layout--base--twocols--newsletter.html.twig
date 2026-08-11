@@ -1,0 +1,43 @@
+{#
+/**
+ * @file
+ * Two-column layout override for the newsletter content type.
+ *
+ * Identical to @iastate_theme/templates/layout/layout--base--twocols
+ * .html.twig, except the two regions are swapped in DOM order (second
+ * region — the "Save the Date" sidebar — before first — the main
+ * content). That's what lets the print stylesheet (css/newsletter.css
+ * @media print) switch this layout from CSS grid to a float: once Save
+ * the Date's floated column runs out of content, the main content
+ * naturally reflows to use the full page width for the rest of the
+ * document — a CSS grid can't do that, since both column tracks stay
+ * reserved for the full height of the tallest one. Screen display is
+ * unaffected: css/newsletter.css pins each region back to its intended
+ * grid column explicitly, regardless of this DOM order.
+ *
+ * Available variables:
+ * - content: The content for this layout.
+ * - attributes: HTML attributes for the layout <div>.
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'layout',
+    'layout--twocol',
+  ]
+%}
+
+{% if content %}
+  <div{{attributes.addClass(classes)}}>
+    <div class="layout-content">
+      <div {{ region_attributes.second.addClass('layout__region', 'layout__region--second') }}>
+        {{ content.second }}
+      </div>
+      <div {{ region_attributes.first.addClass('layout__region', 'layout__region--first') }}>
+        {{ content.first }}
+      </div>
+    </div>
+  </div>
+{% endif %}
