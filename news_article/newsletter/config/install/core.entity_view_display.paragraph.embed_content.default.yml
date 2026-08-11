@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.embed_content.field_embed_block
+    - paragraphs.paragraphs_type.embed_content
+  module:
+    - text
+id: paragraph.embed_content.default
+targetEntityType: paragraph
+bundle: embed_content
+mode: default
+content:
+  field_embed_block:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }
