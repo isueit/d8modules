@@ -163,7 +163,12 @@ $html = $this->makeStoryImagesFullWidth($html);
 // month" summary) generate their own new tables.
 $html = preg_replace('/<table\b(?=[^>]*\bcellpadding=)(?=[^>]*\bcellspacing=)/i', '<table role="presentation"', $html);
 
-    // Return a page with the HTML in a copyable format
+    // renderRoot() above collapses the node's render array into a plain
+    // string, discarding the cache tags/contexts that would normally bubble
+    // up from it. Without an explicit #cache here, Dynamic Page Cache has
+    // nothing to invalidate on and would serve this response forever,
+    // regardless of subsequent edits to the node, its content, or this
+    // export logic itself.
     return [
       '#theme' => 'newsletter_export',
       '#html' => $html,
@@ -172,6 +177,9 @@ $html = preg_replace('/<table\b(?=[^>]*\bcellpadding=)(?=[^>]*\bcellspacing=)/i'
         'library' => [
           'newsletter/export',
         ],
+      ],
+      '#cache' => [
+        'max-age' => 0,
       ],
     ];
   }
@@ -431,15 +439,23 @@ $html = preg_replace('/<table\b(?=[^>]*\bcellpadding=)(?=[^>]*\bcellspacing=)/i'
    * to scale proportionally) and leaves it non-circular.
    *
    * Drupal's default field theming wraps the formatter's markup in its own
-   * "field"/"field__item" divs — this strips that whole wrapper (matching
-   * its known, fixed nesting) down to just the bare, resized <img>, which
-   * also gives layoutStaffAuthorSideBySide() a simple, predictable
-   * structure to work with afterward.
+   * "field"/"field__item" divs, but exactly how many — it's turned out to
+   * vary (sometimes just one, sometimes more) rather than the single fixed
+   * depth this used to assume. Counting closing </div> tags to find the
+   * end of that wrapper is fragile against that: get the count wrong and a
+   * non-greedy match sails past the real boundary looking for the next
+   * place two closing divs happen to line up, which can be well past the
+   * staff member's name/title — deleting it along with everything else in
+   * between. Matching the <img> itself directly, regardless of whatever
+   * divs happen to wrap it, sidesteps the whole problem. The wrapper divs
+   * are left in place (layoutStaffAuthorSideBySide() strips them
+   * afterward) — harmless since they carry no surviving styling once
+   * prepareHtmlForEmail() strips classes anyway.
    *
    * When a staff member has no photo, SmugmugIdFormatter renders a blank
    * placeholder image (class "staff_profile_blank_image") that's invisible
-   * on the site but has nothing to fill it in for email, so drop it (and
-   * its wrapper) outright rather than leaving an empty box behind.
+   * on the site but has nothing to fill it in for email, so drop it
+   * outright rather than leaving an empty box behind.
    *
    * @param string $html
    *   The HTML to process.
@@ -449,16 +465,13 @@ $html = preg_replace('/<table\b(?=[^>]*\bcellpadding=)(?=[^>]*\bcellspacing=)/i'
    */
   protected function inlineStaffAuthorImageStyles($html) {
     return preg_replace_callback(
-      '#<div\b[^>]*\bclass="[^"]*\bisueo-staff-author--img\b[^"]*"[^>]*>(.*?)</div>\s*</div>#is',
+      '#<img\b[^>]*\bclass="[^"]*\bstaff_profile_smugmug\b[^"]*"[^>]*/?>#i',
       function (array $matches) {
-        if (!preg_match('#<img\b[^>]*\bclass="[^"]*\bstaff_profile_smugmug\b[^"]*"[^>]*/?>#i', $matches[1], $img_match)) {
-          return '';
-        }
-        if (strpos($img_match[0], 'staff_profile_blank_image') !== FALSE) {
+        if (strpos($matches[0], 'staff_profile_blank_image') !== FALSE) {
           return '';
         }
 
-        $img = preg_replace('/\s(width|height)="[^"]*"/i', '', $img_match[0]);
+        $img = preg_replace('/\s(width|height)="[^"]*"/i', '', $matches[0]);
         return preg_replace(
           '/<img\b/i',
           '<img width="75" style="width:75px; height:auto; display:block;"',
@@ -479,10 +492,15 @@ $html = preg_replace('/<table\b(?=[^>]*\bcellpadding=)(?=[^>]*\bcellspacing=)/i'
    * divs just stack, putting the name/title underneath the photo instead
    * of beside it. This rebuilds it as a two-column table instead.
    *
-   * Must run after inlineStaffAuthorImageStyles(), which reduces the photo
-   * down to a single bare <img> (or nothing) — this can't assume that on
-   * its own, since Drupal's default field theming otherwise wraps it in
-   * further "field"/"field__item" divs.
+   * Must run after inlineStaffAuthorImageStyles(), which resizes the photo
+   * in place — but doesn't assume anything about how many divs still wrap
+   * it (that's turned out to vary). Rather than count closing divs to find
+   * where the ".isueo-staff-author--img" wrapper ends (fragile — see
+   * inlineStaffAuthorImageStyles()), this captures everything up to the
+   * next known landmark, the ".isueo-staff-author--body" div, and strips
+   * any leftover <div> tags from that capture so only the bare (already
+   * correctly sized) <img> — or nothing, if there wasn't one — ends up in
+   * the table cell.
    *
    * @param string $html
    *   The HTML to process.
@@ -492,9 +510,10 @@ $html = preg_replace('/<table\b(?=[^>]*\bcellpadding=)(?=[^>]*\bcellspacing=)/i'
    */
   protected function layoutStaffAuthorSideBySide($html) {
     return preg_replace_callback(
-      '#<div\b[^>]*\bclass="[^"]*\bisueo-staff-author\b(?!-)[^"]*"[^>]*>\s*(<img\b[^>]*/?>)?\s*<div\b[^>]*\bclass="[^"]*\bisueo-staff-author--body\b[^"]*"[^>]*>\s*<div\b[^>]*\bclass="[^"]*\bisueo-staff-author--header\b[^"]*"[^>]*>\s*(<p>.*?</p>)\s*</div>\s*</div>\s*</div>#is',
+      '#<div\b[^>]*\bclass="[^"]*\bisueo-staff-author\b(?!-)[^"]*"[^>]*>\s*(.*?)(?=<div\b[^>]*\bclass="[^"]*\bisueo-staff-author--body\b)<div\b[^>]*\bclass="[^"]*\bisueo-staff-author--body\b[^"]*"[^>]*>\s*<div\b[^>]*\bclass="[^"]*\bisueo-staff-author--header\b[^"]*"[^>]*>\s*(<p>.*?</p>)\s*</div>\s*</div>\s*</div>#is',
       function (array $matches) {
-        $img_cell = !empty($matches[1]) ? '<td valign="top" width="75" style="padding-right: 12px;">' . $matches[1] . '</td>' : '';
+        $img_html = trim(preg_replace('#</?div\b[^>]*>#i', '', $matches[1]));
+        $img_cell = $img_html !== '' ? '<td valign="top" width="75" style="padding-right: 12px;">' . $img_html . '</td>' : '';
         // Margin-top so this doesn't run right up against whatever came
         // before it (e.g. an article's "Read more" button) — the divider
         // that normally provides that breathing room is deliberately
