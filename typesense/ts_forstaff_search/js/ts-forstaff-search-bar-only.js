@@ -35,7 +35,7 @@ searchBar.addWidgets([
     searchAsYouType: false,
     placeholder: "Search for Staff Only Content",
     queryHook(query, search) {
-      newurl = 'search-results-0?ForStaff[query]=' + query;
+      newurl = '/search-results-0?ForStaff[query]=' + query;
       window.location.href = newurl;
       //search(query);
     },
