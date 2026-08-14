@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sf_related_field\Plugin\SalesforceMappingField;
+namespace Drupal\sf_fields\Plugin\SalesforceMappingField;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -12,11 +12,11 @@ use Drupal\salesforce_mapping\SalesforceMappingFieldPluginBase;
  * Adapter for Salesforce related object fields using dot notation.
  *
  * @Plugin(
- *   id = "related_field_property",
+ *   id = "RelatedField",
  *   label = @Translation("Related Field (dot notation)")
  * )
  */
-class RelatedFieldProperty extends SalesforceMappingFieldPluginBase {
+class RelatedField extends SalesforceMappingFieldPluginBase {
 
   /**
    * {@inheritdoc}

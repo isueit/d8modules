@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.news_article_newsletter
+label: 'News Article (Newsletter)'
+description: 'Teaser view for when a News Article is shown on the Newsletter Content type.'
+targetEntityType: node
+cache: true

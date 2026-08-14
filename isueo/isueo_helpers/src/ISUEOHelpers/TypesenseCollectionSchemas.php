@@ -271,6 +271,7 @@ class TypesenseCollectionSchemas
 
       // Add new Definitions here
     ];
+    $definitions['deleteme_brian'] = $definitions['plp_programs'];
 
     // ForStaff collection should be the exact same as extension_content
     if ($collection == 'ForStaff') {

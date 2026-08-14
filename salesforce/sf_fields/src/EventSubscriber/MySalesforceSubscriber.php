@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\sf_related_field\EventSubscriber;
+namespace Drupal\sf_fields\EventSubscriber;
 
 use Drupal\salesforce\Event\SalesforceEvents;
 use Drupal\salesforce_mapping\Event\SalesforceQueryEvent;

@@ -57,7 +57,7 @@
 #}
 {# Check if the newsletter has 4-H or Clover Kids taxonomy term #}
 
-<div class="isu-page-wrap">
+<div class="isu-page-wrap" style="--newsletter-print-color: {{ newsletter_print_color|default('#c8102e') }};">
 
 	{# The ISU Navbar may be disabled in theme settings #}
 	{% if isu_navbar %}
@@ -96,6 +96,9 @@
 			<div class="newsletter-hero-wrapper newsletter-hero--{{ image_name_clean }}" style="background-image: url('{{ featured_image_url }}');">
 				<div class="newsletter-hero-label-wrapper">
 					<div class="newsletter-hero-label container">
+					{# Print-only: replaces the branded wordmark (hidden for print
+					   in css/newsletter.css) with a plain text masthead line. #}
+					<p class="newsletter-print-kicker d-none d-print-block">{{ site_slogan }} - {{ site_name }}</p>
 					<h1 class="isu-page-title">
 						{% if show_clover_logo %}
 							<img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="4-H clover emblem.">
@@ -104,16 +107,28 @@
 					</h1>
 					{# Show Newsletter Issue Number and Date #}
 					{% if node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is not empty %}
-						<div class="newsletter-issue-wrapper{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
-							<p>{{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}</p>
+						<div class="newsletter-issue-wrapper d-print-none{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
+							<p>{{ node.field_newsletter_issue_date.value }}, Issue: {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% elseif node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is empty %}
-						<div class="newsletter-date-wrapper{% if show_clover_logo %} newsletter-date-wrapper--with-clover{% endif %}">
+						<div class="newsletter-date-wrapper d-print-none{% if show_clover_logo %} newsletter-date-wrapper--with-clover{% endif %}">
 							<p>{{ node.field_newsletter_issue_date.value }}</p>
 						</div>
 					{% elseif node.field_newsletter_issue_date is empty and node.field_newsletter_issue_number is not empty %}
-						<div class="newsletter-issue-wrapper{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
-							<p>{{ node.field_newsletter_issue_number.value }}</p>
+						<div class="newsletter-issue-wrapper d-print-none{% if show_clover_logo %} newsletter-issue-wrapper--with-clover{% endif %}">
+							<p>Issue # {{ node.field_newsletter_issue_number.value }}</p>
+						</div>
+					{% endif %}
+					{# Print-only: date and issue stacked on separate lines,
+					   positioned at the top right of the masthead. #}
+					{% if node.field_newsletter_issue_date is not empty or node.field_newsletter_issue_number is not empty %}
+						<div class="newsletter-print-issue-date d-none d-print-block">
+							{% if node.field_newsletter_issue_date is not empty %}
+								<p class="newsletter-print-date">{{ node.field_newsletter_issue_date.value }}</p>
+							{% endif %}
+							{% if node.field_newsletter_issue_number is not empty %}
+								<p class="newsletter-print-issue">Issue: {{ node.field_newsletter_issue_number.value }}</p>
+							{% endif %}
 						</div>
 					{% endif %}
 					</div>
@@ -151,7 +166,7 @@
 					{# Show Newsletter Issue Number and Date #}
 					{% if node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is not empty %}
 						<div class="newsletter-issue-wrapper">
-							<p>{{ node.field_newsletter_issue_date.value }}, {{ node.field_newsletter_issue_number.value }}</p>
+							<p>{{ node.field_newsletter_issue_date.value }}, Issue # {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% elseif node.field_newsletter_issue_date is not empty and node.field_newsletter_issue_number is empty %}
 						<div class="newsletter-date-wrapper">
@@ -159,7 +174,7 @@
 						</div>
 					{% elseif node.field_newsletter_issue_date is empty and node.field_newsletter_issue_number is not empty %}
 						<div class="newsletter-issue-wrapper">
-							<p>{{ node.field_newsletter_issue_number.value }}</p>
+							<p>Issue # {{ node.field_newsletter_issue_number.value }}</p>
 						</div>
 					{% endif %}
 					{% endif %}
@@ -183,6 +198,26 @@
 		</div>
 
 	</main>
+
+	{# Print-only condensed footer: the full multi-column site footer below
+	   (quick links, social, etc.) is hidden for print in css/newsletter.css
+	   @media print — this mirrors the condensed contact footer the county
+	   impact report print output uses instead (same drupal_entity('block',
+	   'contact_us') call). The sitewide print stylesheet's own ::after
+	   rule that would normally auto-append the equal-opportunity statement
+	   to #block-contact-us.isu-footer_contact-address is suppressed here
+	   (css/newsletter.css) so the explicit paragraph below can sit between
+	   the contact info and it, in the requested order. #}
+	<div class="newsletter-print-footer d-none d-print-block">
+		<div class="newsletter-print-footer-inner">
+			<h3 class="newsletter-print-footer-title">{{ site_slogan }} - {{ site_name }}</h3>
+			<div class="newsletter-print-footer-contact">{{ drupal_entity('block', 'contact_us') }}</div>
+			<p class="newsletter-print-footer-online">
+				View this issue online for full links and interactive content: <span class="newsletter-print-footer-online-url">{{ url('entity.node.canonical', {'node': node.id()}, {'absolute': true}) }}</span>
+			</p>
+			<p class="newsletter-print-footer-legal">This institution is an equal opportunity provider. For the full non-discrimination statement or accommodation inquiries, go to www.extension.iastate.edu/legal.</p>
+		</div>
+	</div>
 
 	{% include '@iastate_theme/parts/footer.html.twig' %}
 
