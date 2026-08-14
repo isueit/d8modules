@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.feature_with_large_image
+    - field.storage.block_content.field_flwi_links
+  module:
+    - link
+id: block_content.feature_with_large_image.field_flwi_links
+field_name: field_flwi_links
+entity_type: block_content
+bundle: feature_with_large_image
+label: Buttons
+description: 'One or more CTA buttons to display below the text.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 2
+field_type: link

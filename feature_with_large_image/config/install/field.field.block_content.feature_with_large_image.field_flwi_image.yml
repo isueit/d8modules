@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.feature_with_large_image
+    - field.storage.block_content.field_flwi_image
+    - media.type.image
+    - media.type.smugmug
+id: block_content.feature_with_large_image.field_flwi_image
+field_name: field_flwi_image
+entity_type: block_content
+bundle: feature_with_large_image
+label: Image
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      smugmug: smugmug
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: image
+field_type: entity_reference

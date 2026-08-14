@@ -1,0 +1,14 @@
+name: 'Feature with Large Image'
+description: 'A full-width feature block with a large image, title, rich text, and one or more CTA buttons.'
+package: Custom
+type: module
+version: '1.0'
+core_version_requirement: ^10 || ^11
+dependencies:
+  - drupal:block
+  - drupal:block_content
+  - drupal:media
+  - drupal:link
+  - drupal:text
+  - drupal:allowed_formats
+  - d8modules:isueo_helpers

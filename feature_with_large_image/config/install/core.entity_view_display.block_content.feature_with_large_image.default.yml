@@ -1,0 +1,54 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.feature_with_large_image
+    - field.field.block_content.feature_with_large_image.field_flwi_image
+    - field.field.block_content.feature_with_large_image.field_flwi_links
+    - field.field.block_content.feature_with_large_image.field_flwi_text
+    - field.field.block_content.feature_with_large_image.field_flwi_title
+  module:
+    - link
+    - text
+id: block_content.feature_with_large_image.default
+targetEntityType: block_content
+bundle: feature_with_large_image
+mode: default
+content:
+  field_flwi_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_flwi_title:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_flwi_text:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_flwi_links:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  search_api_excerpt: true

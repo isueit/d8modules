@@ -1,0 +1,39 @@
+/* --------------------------------------  */
+/* ## FEATURE WITH LARGE IMAGE
+/* --------------------------------------  */
+.feature-with-large-image {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 1.5rem;
+	background-color: var(--lt-gray);
+	border-radius: .5rem;
+	overflow: hidden;
+	margin-bottom: 1rem;
+}
+.feature-with-large-image-img {
+	flex: 1 1 320px;
+}
+.feature-with-large-image-img img {
+	display: block;
+	width: 100%;
+	object-fit: cover;
+}
+.feature-with-large-image-content {
+	flex: 1 1 320px;
+	padding: 1.5rem;
+}
+.feature-with-large-image-title.h2 {
+	margin: 0 0 1rem;
+}
+.feature-with-large-image-text {
+	margin-bottom: 1.25rem;
+}
+.feature-with-large-image-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .75rem;
+}
+.feature-with-large-image-buttons a.btn {
+	text-decoration: none;
+}
