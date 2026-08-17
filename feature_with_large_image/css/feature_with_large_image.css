@@ -57,7 +57,7 @@
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
 		align-items: center;
-		background-color: var(--lt-gray);
+		background-color: transparent;
 		box-shadow: none;
 		padding-bottom: 0;
 		/* Matches the site's normal content column (same max-width used by
@@ -87,7 +87,7 @@
 		box-sizing: border-box;
 		width: 27rem;
 		max-width: 100%;
-		margin-left: -3.625rem;
+		margin-left: -1.625rem;
 		background-color: var(--lt-gray);
 		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
 		padding: 2.5rem 4.0625rem;
@@ -103,7 +103,7 @@
 		background: var(--primary-accent-color);
 	}
 }
-@media (min-width: 576px) {
+@media (max-width: 991px) {
 	.feature-with-large-image {
 		position: relative;
 		margin-left: 4.375rem;
