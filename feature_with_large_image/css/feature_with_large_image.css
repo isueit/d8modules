@@ -16,7 +16,7 @@
 }
 .feature-with-large-image-inner {
 	position: relative;
-	background-color: #fff;
+	background-color: var(--lt-gray);
 	box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
 	padding-bottom: 1.5rem;
 }
@@ -57,7 +57,7 @@
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
 		align-items: center;
-		background-color: transparent;
+		background-color: var(--lt-gray);
 		box-shadow: none;
 		padding-bottom: 0;
 		/* Matches the site's normal content column (same max-width used by
@@ -85,9 +85,9 @@
 		z-index: 1;
 		justify-self: start;
 		box-sizing: border-box;
-		width: 32.5rem;
+		width: 27rem;
 		max-width: 100%;
-		margin-left: 4.375rem;
+		margin-left: -3.625rem;
 		background-color: var(--lt-gray);
 		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
 		padding: 2.5rem 4.0625rem;
@@ -101,5 +101,13 @@
 		width: 3.5rem;
 		height: 0.5rem;
 		background: var(--primary-accent-color);
+	}
+}
+@media (min-width: 576px) {
+	.feature-with-large-image {
+		position: relative;
+		margin-left: 4.375rem;
+		margin-right: 4.3275rem;
+		width: unset;
 	}
 }
