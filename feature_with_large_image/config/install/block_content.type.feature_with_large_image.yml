@@ -4,4 +4,4 @@ dependencies: {}
 id: feature_with_large_image
 label: 'Feature with Large Image'
 revision: false
-description: 'A full-width feature block with a large image, title, rich text, and one or more CTA buttons.'
+description: 'A full-width feature block with a title, rich text body, and a large image.'

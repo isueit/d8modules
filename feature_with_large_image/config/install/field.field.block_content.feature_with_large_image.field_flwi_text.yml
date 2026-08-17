@@ -15,7 +15,7 @@ id: block_content.feature_with_large_image.field_flwi_text
 field_name: field_flwi_text
 entity_type: block_content
 bundle: feature_with_large_image
-label: Text
+label: Body
 description: ''
 required: false
 translatable: false

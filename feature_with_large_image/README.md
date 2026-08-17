@@ -1,15 +1,21 @@
 # Feature with Large Image
 
 Recreates the "feature-with-large-image" pattern from the iastate22-frontend
-component library as a reusable block type: a large image, a title, rich
-text, and one or more CTA buttons.
+component library as a reusable block type: a title, rich text body, and a
+large image.
+
+The block's title is the block content entity's own admin label (`info`
+field) — there is no separate title field. It's required, rendered as an
+`<h2>`, and doubles as both the title shown in the Block Library admin
+listing and the title displayed on the page. CTA/button-style links can be
+added directly in the body field's rich text.
 
 ## Fields
 
+- `info` (base field, relabeled "Title") - Plain text title, required,
+  rendered as an `<h2>`.
+- `field_flwi_text` (labeled "Body") - Rich text (WYSIWYG).
 - `field_flwi_image` - Media reference (image/SmugMug), required.
-- `field_flwi_title` - Plain text title, required, rendered as an `<h2>`.
-- `field_flwi_text` - Rich text (WYSIWYG).
-- `field_flwi_links` - Unlimited link field for one or more CTA buttons.
 
 ## Background / accent styling
 

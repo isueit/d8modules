@@ -29,11 +29,3 @@
 .feature-with-large-image-text {
 	margin-bottom: 1.25rem;
 }
-.feature-with-large-image-buttons {
-	display: flex;
-	flex-wrap: wrap;
-	gap: .75rem;
-}
-.feature-with-large-image-buttons a.btn {
-	text-decoration: none;
-}
