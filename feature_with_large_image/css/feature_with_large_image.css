@@ -79,13 +79,9 @@
 		grid-row: 1;
 		z-index: 1;
 		justify-self: start;
-		width: 100%;
-		max-width: clamp(20rem, 30vw, 32.5rem);
-		/* 70px baseline (matches the reference at typical desktop widths),
-		   but never sits further left than the site name in the header
-		   once its own inset (.isu-site-navbar .container's 1140px
-		   max-width) grows past that. */
-		margin-left: max(4.375rem, calc((100vw - 1140px) / 2));
+		width: 32.5rem;
+		max-width: 100%;
+		margin-left: 4.375rem;
 		background-color: var(--lt-gray);
 		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
 		padding: 2.5rem 4.0625rem;
