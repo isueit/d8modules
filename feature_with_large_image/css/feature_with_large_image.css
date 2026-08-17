@@ -1,16 +1,31 @@
 /* --------------------------------------  */
 /* ## FEATURE WITH LARGE IMAGE
 /* --------------------------------------  */
+
+/* Outer canvas: breaks out to the full viewport width so the image can
+   bleed past the normal content column. Sizing/alignment happens on
+   .feature-with-large-image-inner instead, so this element should carry
+   no width-bearing content of its own (keeps contextual links, which
+   anchor to the nearest positioned ancestor, out of the way). */
 .feature-with-large-image {
 	position: relative;
 	width: 100vw;
 	margin-left: calc(50% - 50vw);
 	margin-right: calc(50% - 50vw);
-	padding-left: max(0px, calc((100vw - 1200px) / 2));
+	margin-bottom: 1rem;
+}
+.feature-with-large-image-inner {
+	position: relative;
 	background-color: #fff;
 	box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
 	padding-bottom: 1.5rem;
-	margin-bottom: 1rem;
+	/* Left edge lines up with the site name in the header
+	   (.isu-site-navbar .container's max-width). */
+	padding-left: max(0px, calc((100vw - 1200px) / 2));
+	/* Caps how wide the component grows on very large screens, so there's
+	   still breathing room on the right until the viewport narrows past
+	   this. Adjust to taste. */
+	max-width: 1600px;
 }
 .feature-with-large-image-img {
 	position: relative;
@@ -33,6 +48,7 @@
 	background: var(--primary-accent-color);
 }
 .feature-with-large-image-content {
+	position: relative;
 	padding: 0 1.5rem;
 }
 .feature-with-large-image-title.h2 {
@@ -43,27 +59,31 @@
 }
 
 @media (min-width: 992px) {
-	.feature-with-large-image {
+	.feature-with-large-image-inner {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		align-items: center;
 		background-color: transparent;
 		box-shadow: none;
 		padding-bottom: 0;
 	}
 	.feature-with-large-image-img {
-		width: 80%;
-		margin: 0 0 0 auto;
+		grid-column: 1 / -1;
+		grid-row: 1;
+		margin-bottom: 0;
 		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
 	}
 	.feature-with-large-image-img:after {
 		display: none;
 	}
 	.feature-with-large-image-content {
-		position: absolute;
+		grid-column: 1;
+		grid-row: 1;
 		z-index: 1;
-		top: 50%;
-		left: 2.5rem;
-		transform: translateY(-50%);
-		width: 35%;
+		justify-self: start;
+		width: 100%;
 		max-width: 32rem;
+		margin-left: 2.5rem;
 		background-color: #fff;
 		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
 		padding: 1.5rem 2.5rem;
