@@ -22,10 +22,6 @@
 	/* Left edge lines up with the site name in the header
 	   (.isu-site-navbar .container's max-width). */
 	padding-left: max(0px, calc((100vw - 1200px) / 2));
-	/* Caps how wide the component grows on very large screens, so there's
-	   still breathing room on the right until the viewport narrows past
-	   this. Adjust to taste. */
-	max-width: 1600px;
 }
 .feature-with-large-image-img {
 	position: relative;
@@ -83,7 +79,7 @@
 		z-index: 1;
 		justify-self: start;
 		width: 100%;
-		max-width: 32rem;
+		max-width: clamp(20rem, 30vw, 32.5rem);
 		margin-left: 2.5rem;
 		background-color: var(--lt-gray);
 		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
