@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Fixes CKEditor 5 plugin "elements" declarations that are missing or
+ * incomplete, which causes the "Limit allowed HTML tags and correct faulty
+ * HTML" filter to strip markup those plugins produce.
+ */
+
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+
+/**
+ * Implements hook_ckeditor5_plugin_info_alter().
+ */
+function ckeditor5_element_fixes_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
+  // ckeditor5_plugin_pack: Layout Table.
+  // CKEditor 5's own table feature marks a table's type by setting a class
+  // and, for layout tables, a role attribute — see the "tableType" downcast
+  // converter in core/assets/vendor/ckeditor5/table/table.js:
+  //   n.addClass(`${type}-table`, table)   // "layout-table" or "content-table"
+  //   if (type == "layout") n.setAttribute("role", "presentation", table)
+  // This is CKEditor 5's own native table model, not GHS/arbitrary HTML, so
+  // the client-side editor already emits this correctly. But the module
+  // declares <table> with no attributes at all, so Limit allowed HTML tags
+  // strips both the class and the role on save — which is why a "Layout"
+  // table and a "Content" table end up looking identical once saved: the
+  // one attribute that distinguished them is gone.
+  $layout_table_id = 'ckeditor5_plugin_pack_layout_table__layout_table';
+  if (isset($plugin_definitions[$layout_table_id])) {
+    $definition = $plugin_definitions[$layout_table_id]->toArray();
+    $definition['drupal']['elements'] = [
+      '<table class role="presentation">',
+      '<colgroup>',
+      '<col>',
+      '<tr>',
+      '<td>',
+      '<th>',
+      '<thead>',
+      '<tbody>',
+      '<tfoot>',
+    ];
+    $plugin_definitions[$layout_table_id] = new CKEditor5PluginDefinition($definition);
+  }
+}
