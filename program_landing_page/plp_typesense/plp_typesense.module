@@ -171,6 +171,7 @@ function plp_typesense_index_program($client, $collection_name, $node, $type = '
 // Index a single program
 function plp_typesense_index_course($client, $collection_name, $node, $type = 'Course')
 {
+  return;
   // Only do this from the production server
   if (!ISUEOHelpers\General::is_production_server()) {
     return;

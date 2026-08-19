@@ -24,7 +24,7 @@ third_party_settings:
     allow_custom: false
     sections:
       -
-        layout_id: layout_base_twocol
+        layout_id: layout_base_twocol_newsletter
         layout_settings:
           label: '2 Column Layout'
           context_mapping: {  }

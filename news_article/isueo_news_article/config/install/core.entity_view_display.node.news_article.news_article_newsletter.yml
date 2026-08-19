@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.news_article_newsletter
     - field.field.node.news_article.body
     - field.field.node.news_article.field_embed_news_article
     - field.field.node.news_article.field_news_author
@@ -13,12 +13,25 @@ dependencies:
     - node.type.news_article
   module:
     - field_formatter_class
+    - layout_builder
+    - layout_builder_restrictions
     - text
     - user
-id: node.news_article.teaser
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories: {  }
+id: node.news_article.news_article_newsletter
 targetEntityType: node
 bundle: news_article
-mode: teaser
+mode: news_article_newsletter
 content:
   field_teaser:
     type: text_default
@@ -31,7 +44,7 @@ content:
     type: entity_reference_entity_view
     label: hidden
     settings:
-      view_mode: medium_220x220_
+      view_mode: newsletter_article_650x200
       link: false
     third_party_settings:
       field_formatter_class:

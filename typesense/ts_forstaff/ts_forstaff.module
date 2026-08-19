@@ -1,5 +1,6 @@
 <?php
 
+use \Drupal\isueo_helpers\ISUEOHelpers;
 use \Drupal\isueo_helpers\ISUEOHelpers\Typesense;
 
 /**
@@ -8,6 +9,11 @@ use \Drupal\isueo_helpers\ISUEOHelpers\Typesense;
 
 function ts_forstaff_node_delete(Drupal\Core\Entity\EntityInterface $entity)
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   try {
     $config = Drupal::config('ts_forstaff.settings');
     $client = Typesense::getClient($config->get('collection'));
@@ -28,6 +34,11 @@ function ts_forstaff_node_delete(Drupal\Core\Entity\EntityInterface $entity)
 
 function ts_forstaff_node_update(Drupal\Core\Entity\EntityInterface $entity)
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   $config = Drupal::config('ts_forstaff.settings');
 
   $contentTypes = $config->get('content_types');
@@ -45,6 +56,11 @@ function ts_forstaff_node_update(Drupal\Core\Entity\EntityInterface $entity)
 
 function ts_forstaff_index_all_nodes()
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   try {
     $config = Drupal::config('ts_forstaff.settings');
     $contentTypes = array_values($config->get('content_types'));
@@ -64,6 +80,11 @@ function ts_forstaff_index_all_nodes()
 
 function ts_forstaff_delete_all_from_collection($sitename = '')
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   $config = Drupal::config('ts_forstaff.settings');
   if (empty($config->get('api_key'))) {
     return;

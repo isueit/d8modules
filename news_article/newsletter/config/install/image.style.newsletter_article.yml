@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies: {  }
+name: newsletter_article
+label: 'Newsletter Article'
+effects:
+  375aedc4-5905-4290-819c-69d4e713b387:
+    uuid: 375aedc4-5905-4290-819c-69d4e713b387
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 650
+      height: 200
+      anchor: center-center
