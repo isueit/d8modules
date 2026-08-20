@@ -1,0 +1,5 @@
+feature_with_large_image:
+  version: 1.x
+  css:
+    layout:
+      css/feature_with_large_image.css: {}
