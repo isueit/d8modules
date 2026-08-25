@@ -19,7 +19,10 @@ function flip_cards_theme_suggestions_block_alter(&$suggestions, $variables) {
 
 function flip_cards_preprocess_block(&$variables) {
   //Layout builder flipcards have $variables['plugin_id'], custom block library uses uuid, need to check bundle for them
-  if ($variables['plugin_id'] == 'inline_block:flip_cards' || ($variables ?? 'elements' ?? 'content' ?? '#block_content'->bundle() == 'flip_cards')) {
+  $block_content = $variables['elements']['content']['#block_content'] ?? NULL;
+  $is_flip_cards_block_content = $block_content instanceof \Drupal\block_content\BlockContentInterface && $block_content->bundle() == 'flip_cards';
+
+  if ($variables['plugin_id'] == 'inline_block:flip_cards' || $is_flip_cards_block_content) {
     $variables['#attached']['library'][] = 'flip_cards/flip_cards';
     $variables['attributes']['class'][] = 'flip_cards';
   }
