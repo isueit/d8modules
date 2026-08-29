@@ -1,0 +1,6 @@
+name: Porkbot Chat Widget
+type: module
+description: Adds the Porkbot chat widget loader to site pages.
+package: Custom
+core_version_requirement: ^8 || ^9 || ^10
+configure: porkbot_chat_widget.settings

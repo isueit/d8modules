@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+import '../porkAIbot.css';
+import bannerImage from '../assets/Iowa State University - banner.png';
+import PorkbotAiElementsIsland from '../components/PorkbotAiElementsIsland';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="Porkbot assistant for swine production questions" />
+    <title>Porkbot</title>
+  </head>
+  <body class="bg-[oklch(0.96_0.01_257)]">
+    <header class="w-full overflow-hidden bg-black" role="banner">
+      <img
+        src={bannerImage.src}
+        alt="Iowa State University global navigation banner"
+        class="block h-auto w-full object-cover"
+      />
+    </header>
+
+    <main class="mx-auto max-w-[1400px] px-3 py-5 md:px-5 md:py-8">
+      <PorkbotAiElementsIsland client:load />
+    </main>
+  </body>
+</html>

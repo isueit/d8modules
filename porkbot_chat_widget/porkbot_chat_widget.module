@@ -1,0 +1,103 @@
+<?php
+
+/**
+ * @file
+ * Module hooks for porkbot_chat_widget.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function porkbot_chat_widget_page_attachments(array &$attachments) {
+  $config = \Drupal::config('porkbot_chat_widget.settings');
+
+  if (!$config->get('enabled')) {
+    return;
+  }
+
+  if (!$config->get('load_admin')) {
+    $route = \Drupal::routeMatch()->getRouteObject();
+    if ($route && $route->getOption('_admin_route')) {
+      return;
+    }
+  }
+
+  $runtime_config = _porkbot_chat_widget_runtime_config($config);
+  $init_options = _porkbot_chat_widget_decode_init_options($config->get('init_options'));
+
+  $attachments['#attached']['library'][] = 'porkbot_chat_widget/widget_loader';
+  $attachments['#attached']['drupalSettings']['porkbotChatWidget'] = [
+    'scriptUrl' => (string) $config->get('script_url'),
+    'initMethod' => (string) $config->get('init_method'),
+    'initOptions' => _porkbot_chat_widget_merge_init_options($init_options, $runtime_config),
+    'runtimeConfig' => $runtime_config,
+  ];
+}
+
+/**
+ * Safely decode init options from JSON.
+ */
+function _porkbot_chat_widget_decode_init_options($value) {
+  $json = trim((string) $value);
+  if ($json === '') {
+    return [];
+  }
+
+  $decoded = json_decode($json, TRUE);
+  return is_array($decoded) ? $decoded : [];
+}
+
+/**
+ * Build runtime configuration consumed by the Astro interface.
+ */
+function _porkbot_chat_widget_runtime_config($config) {
+  $default_mode = (string) $config->get('default_mode');
+  if (!in_array($default_mode, ['widget', 'full'], TRUE)) {
+    $default_mode = 'widget';
+  }
+
+  return [
+    'apiBaseUrl' => trim((string) $config->get('api_base_url')),
+    'apiPrefix' => _porkbot_chat_widget_normalize_api_prefix($config->get('api_prefix')),
+    'defaultMode' => $default_mode,
+    'openByDefault' => (bool) $config->get('open_by_default'),
+  ];
+}
+
+/**
+ * Merge explicit runtime config into init options for init-method consumers.
+ */
+function _porkbot_chat_widget_merge_init_options(array $init_options, array $runtime_config) {
+  $merged = $init_options;
+  $existing_runtime_config = [];
+  if (isset($init_options['runtimeConfig']) && is_array($init_options['runtimeConfig'])) {
+    $existing_runtime_config = $init_options['runtimeConfig'];
+  }
+
+  $merged_runtime = array_merge($existing_runtime_config, $runtime_config);
+
+  $merged['runtimeConfig'] = $merged_runtime;
+  $merged['apiBaseUrl'] = (string) $merged_runtime['apiBaseUrl'];
+  $merged['apiPrefix'] = (string) $merged_runtime['apiPrefix'];
+  $merged['defaultMode'] = (string) $merged_runtime['defaultMode'];
+  $merged['openByDefault'] = (bool) $merged_runtime['openByDefault'];
+
+  return $merged;
+}
+
+/**
+ * Normalize API prefix as a leading slash path.
+ */
+function _porkbot_chat_widget_normalize_api_prefix($value) {
+  $prefix = trim((string) $value);
+  if ($prefix === '') {
+    return '/api';
+  }
+
+  if (strpos($prefix, '/') !== 0) {
+    $prefix = '/' . $prefix;
+  }
+
+  $normalized = rtrim($prefix, '/');
+  return $normalized === '' ? '/' : $normalized;
+}

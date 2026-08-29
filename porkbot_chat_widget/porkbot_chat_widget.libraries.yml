@@ -1,0 +1,7 @@
+widget_loader:
+  version: 1.x
+  js:
+    js/porkbot_chat_widget.loader.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
