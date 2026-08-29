@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implements hook_form_alter().
+ */
+function date_dropdown_form_alter(&$form, &$form_state, $form_id) {
+  // Always attach the JavaScript, regardless of form ID or field type.
+  $form['#attached']['library'][] = 'date_dropdown/date_dropdown_js';
+}
+
