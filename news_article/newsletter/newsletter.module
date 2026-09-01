@@ -80,6 +80,73 @@ function newsletter_theme($existing, $type, $theme, $path)
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK_alter() for the "layout" theme hook.
+ *
+ * The newsletter print stylesheet (css/newsletter.css, @media print) turns the
+ * two-column layout into a float: the "Save the Date" sidebar (region "second")
+ * floats right and the article body (region "first") wraps beside it, then
+ * reflows to full width once the sidebar ends. A right float can only do that
+ * when it comes BEFORE the wrapped content in the DOM, so
+ * templates/layout--base--twocols--newsletter.html.twig renders "second" before
+ * "first".
+ *
+ * That swapping template is bound only to this module's own layout plugin
+ * (layout_base_twocol_newsletter). Newsletters whose section was built with any
+ * other two-column layout (the generic layout_builder_base one, core's
+ * layout_twocol_section, ...) render "first" then "second", so when printed the
+ * floated sidebar has nothing to rise above and drops to the bottom of the
+ * article. Point every first/second layout rendered on a newsletter node at the
+ * swapping template so print output is consistent no matter which two-column
+ * layout the editor picked.
+ *
+ * On screen this only changes source order, not the visible layout: the
+ * grid-column pins in css/newsletter.css place each region in its intended
+ * column regardless of DOM order (same as the newsletters that already use
+ * layout_base_twocol_newsletter).
+ */
+function newsletter_theme_suggestions_layout_alter(array &$suggestions, array $variables) {
+  // Suggestions run before template_preprocess_layout(), so read the raw
+  // render array: '#layout' is the LayoutDefinition, region content is under
+  // the region-name keys.
+  if (empty($variables['#layout']) || !is_object($variables['#layout'])) {
+    return;
+  }
+  // '#layout' is normally the LayoutDefinition, but tolerate a plugin instance.
+  $layout = $variables['#layout'];
+  if (!method_exists($layout, 'getRegionNames') && method_exists($layout, 'getPluginDefinition')) {
+    $layout = $layout->getPluginDefinition();
+  }
+  if (!method_exists($layout, 'getRegionNames') || !method_exists($layout, 'id')) {
+    return;
+  }
+
+  // Only plain two-column (exactly first + second) layouts.
+  $regions = $layout->getRegionNames();
+  sort($regions);
+  if ($regions !== ['first', 'second']) {
+    return;
+  }
+
+  // The swapping template is already in use for this plugin.
+  if ($layout->id() === 'layout_base_twocol_newsletter') {
+    return;
+  }
+
+  // Only when rendering in the context of a newsletter node (canonical page,
+  // layout builder preview). Anywhere without a node in scope - listings,
+  // teasers, other content types - is left untouched.
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node instanceof NodeInterface) {
+    $node = is_scalar($node) ? Node::load($node) : NULL;
+  }
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'newsletter') {
+    return;
+  }
+
+  $suggestions[] = 'layout__base__twocols__newsletter';
+}
+
+/**
  * Implements hook_form_alter().
  */
 function newsletter_form_alter(&$form, FormStateInterface $form_state, $form_id)
