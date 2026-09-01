@@ -105,14 +105,16 @@ function newsletter_theme($existing, $type, $theme, $path)
  * layout_base_twocol_newsletter).
  */
 function newsletter_theme_suggestions_layout_alter(array &$suggestions, array $variables) {
-  // Suggestions run before template_preprocess_layout(), so read the raw
-  // render array: '#layout' is the LayoutDefinition, region content is under
-  // the region-name keys.
-  if (empty($variables['#layout']) || !is_object($variables['#layout'])) {
+  // The "layout" theme hook uses a render element named "content", so at
+  // suggestion time (before template_preprocess_layout()) the render array is
+  // under $variables['content'] - '#layout' is the LayoutDefinition, region
+  // content is under the region-name keys.
+  $element = $variables['content'] ?? NULL;
+  if (!is_array($element) || empty($element['#layout']) || !is_object($element['#layout'])) {
     return;
   }
   // '#layout' is normally the LayoutDefinition, but tolerate a plugin instance.
-  $layout = $variables['#layout'];
+  $layout = $element['#layout'];
   if (!method_exists($layout, 'getRegionNames') && method_exists($layout, 'getPluginDefinition')) {
     $layout = $layout->getPluginDefinition();
   }
