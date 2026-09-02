@@ -1,0 +1,5 @@
+services:
+  sf_fields.salesforce_subscriber:
+    class: Drupal\sf_fields\EventSubscriber\MySalesforceSubscriber
+    tags:
+      - { name: event_subscriber }

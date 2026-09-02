@@ -75,6 +75,12 @@
       <h2{{ item.attributes.addClass('section-title').addClass('newsletter-section-heading').addClass(field_name) }}>
         {{ item.content }}
       </h2>
+      {# Accessibility: when this section heading is immediately followed by
+         another heading (an article title) with nothing between them, give
+         screen reader users navigating by heading a sense of what follows. #}
+      {% if in_this_section_titles is defined and in_this_section_titles|length > 0 %}
+        <p class="sr-only">In this section: {{ in_this_section_titles|join(', ', ' and ') }}.</p>
+      {% endif %}
     </div>
   {% endfor %}
 </div>

@@ -73,11 +73,9 @@
 							<img src="{{ subsite_logo_url }}" alt="{{ subsite_logo_alt }}" class="regcytes-custom-header__logo">
 						{% endif %}
 						<div class="regcytes-custom-header__info">
-							{% if subsite_dates_formatted or subsite_location %}
+							{% if subsite_dates_formatted %}
 								<p class="regcytes-custom-header__meta">
 									{{- subsite_dates_formatted -}}
-									{%- if subsite_dates_formatted and subsite_location %} &nbsp;·&nbsp; {% endif -%}
-									{{- subsite_location -}}
 								</p>
 							{% endif %}
 							{% if subsite_group_label %}

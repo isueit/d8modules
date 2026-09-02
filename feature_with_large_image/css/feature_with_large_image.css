@@ -1,0 +1,113 @@
+/* --------------------------------------  */
+/* ## FEATURE WITH LARGE IMAGE
+/* --------------------------------------  */
+
+/* Outer canvas: breaks out to the full viewport width so the image can
+   bleed past the normal content column. Sizing/alignment happens on
+   .feature-with-large-image-inner instead, so this element should carry
+   no width-bearing content of its own (keeps contextual links, which
+   anchor to the nearest positioned ancestor, out of the way). */
+.feature-with-large-image {
+	position: relative;
+	width: 100vw;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+	margin-bottom: 1rem;
+}
+.feature-with-large-image-inner {
+	position: relative;
+	background-color: var(--lt-gray);
+	box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
+	padding-bottom: 1.5rem;
+}
+.feature-with-large-image-img {
+	position: relative;
+	margin-bottom: 1.5rem;
+}
+.feature-with-large-image-img img {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+}
+.feature-with-large-image-img:after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	margin-left: -1.75rem;
+	width: 3.5rem;
+	height: 0.5rem;
+	background: var(--primary-accent-color);
+}
+.feature-with-large-image-content {
+	position: relative;
+	padding: 0 1.5rem;
+}
+.feature-with-large-image-title.h2 {
+	margin: 0 0 1rem;
+	color: var(--primary-color);
+}
+.feature-with-large-image-text {
+	margin-bottom: 1.25rem;
+}
+
+@media (min-width: 992px) {
+	.feature-with-large-image-inner {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 4fr);
+		align-items: center;
+		background-color: transparent;
+		box-shadow: none;
+		padding-bottom: 0;
+		/* Matches the site's normal content column (same max-width used by
+		   the page title, local tasks, and footer). Below this, the image
+		   still bleeds flush to the viewport edges; above it, this box is
+		   centered like the rest of the page's content instead of pinned
+		   to the left, so the card's fixed offset below stays aligned with
+		   the site name without needing its own formula. */
+		max-width: 1200px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	.feature-with-large-image-img {
+		grid-column: 2 / -1;
+		grid-row: 1;
+		margin-bottom: 0;
+		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
+	}
+	.feature-with-large-image-img:after {
+		display: none;
+	}
+	.feature-with-large-image-content {
+		grid-column: 1 / -1;
+		grid-row: 1;
+		z-index: 1;
+		justify-self: start;
+		box-sizing: border-box;
+		width: 30.5rem;
+		max-width: 100%;
+		margin-left: -1.625rem;
+		background-color: var(--lt-gray);
+		box-shadow: 0.5rem 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
+		padding: 2.5rem 4.0625rem;
+	}
+	.feature-with-large-image-content:before {
+		content: "";
+		position: absolute;
+		top: -0.25rem;
+		left: 50%;
+		margin-left: -1.75rem;
+		width: 3.5rem;
+		height: 0.5rem;
+		background: var(--primary-accent-color);
+	}
+}
+@media (max-width: 991px) {
+	.feature-with-large-image {
+		position: relative;
+		margin-left: 4.375rem;
+		margin-right: 4.3275rem;
+		width: unset;
+	}
+}

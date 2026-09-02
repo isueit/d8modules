@@ -1,0 +1,22 @@
+<?php
+
+use \Drupal\taxonomy\Entity\Vocabulary;
+
+/**
+* Implements hook_install().
+*/
+
+function plp_events_install() {
+  // Define Vocabularies/taxonomies
+  $vocabularies = [
+    'intended_audiences' => 'Intended Audiences',
+  ];
+
+  // Make sure Vocabulary exits
+  foreach ($vocabularies as $key => $value) {
+    if (!Vocabulary::load($key)) {
+      Vocabulary::create(['vid' => $key, 'description' => '', 'name' => $value,])->save();
+    }
+  }
+
+}

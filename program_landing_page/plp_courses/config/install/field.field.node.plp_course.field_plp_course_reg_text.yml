@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_plp_course_reg_text
+    - node.type.plp_course
+  module:
+    - text
+id: node.plp_course.field_plp_course_reg_text
+field_name: field_plp_course_reg_text
+entity_type: node
+bundle: plp_course
+label: 'Course Registration Text'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

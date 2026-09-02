@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.feature_with_large_image
+    - field.storage.block_content.field_flwi_text
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    allowed_formats:
+      - wysiwyg
+id: block_content.feature_with_large_image.field_flwi_text
+field_name: field_flwi_text
+entity_type: block_content
+bundle: feature_with_large_image
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

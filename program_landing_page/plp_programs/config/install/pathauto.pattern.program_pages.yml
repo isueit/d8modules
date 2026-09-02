@@ -3,6 +3,9 @@ status: true
 dependencies:
   module:
     - node
+  enforced:
+    config:
+      - node.type.plp_program
 id: program_pages
 label: 'Program Pages'
 type: 'canonical_entities:node'

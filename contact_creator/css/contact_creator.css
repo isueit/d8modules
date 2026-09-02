@@ -27,6 +27,10 @@ h2.isu-footer_contact-address-title::after {
 	width: 3.125rem;
 	border-bottom: .125rem solid var(--primary-accent-color);
 }
+.isu-footer_contact-print-title,
+.isu-footer_contact-print-url {
+	display: none;
+}
 .contact_hours_title.h3 {
 	color: var(--primary-color);
 }
@@ -46,4 +50,36 @@ h2.isu-footer_contact-address-title::after {
 	font-size: 1.2rem;
 	font-weight: 700;
 	color: #fff;
+}
+
+/* --------------------------------------  */
+/* ## PRINT
+/* --------------------------------------  */
+/* Collapse the Visit us/Call us/Email us columns back into a single
+   compact inline line (address | phone | email) to match the pre-redesign
+   printed footer instead of the multi-column, icon-labeled layout. */
+@media print {
+	#block-contact-us.isu-footer_contact-address a {
+		display: inline;
+	}
+	.isu-footer_contact-columns,
+	.isu-footer_contact-col {
+		display: inline;
+	}
+	.isu-footer_contact-col:not(:last-child)::after {
+		content: " | ";
+	}
+	.isu-footer_contact-label {
+		display: none;
+	}
+	.isu-footer_contact-col p {
+		display: inline;
+		margin: 0;
+	}
+	.isu-footer_contact-col p + p::before {
+		content: ", ";
+	}
+	.isu-footer_contact-col p br {
+		display: none;
+	}
 }

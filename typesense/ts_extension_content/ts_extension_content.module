@@ -1,5 +1,6 @@
 <?php
 
+use \Drupal\isueo_helpers\ISUEOHelpers;
 use \Drupal\isueo_helpers\ISUEOHelpers\Typesense;
 
 /**
@@ -8,6 +9,11 @@ use \Drupal\isueo_helpers\ISUEOHelpers\Typesense;
 
 function ts_extension_content_node_delete(Drupal\Core\Entity\EntityInterface $entity)
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   try {
     $config = Drupal::config('ts_extension_content.settings');
     $client = Typesense::getClient($config->get('collection'));
@@ -28,6 +34,11 @@ function ts_extension_content_node_delete(Drupal\Core\Entity\EntityInterface $en
 
 function ts_extension_content_node_update(Drupal\Core\Entity\EntityInterface $entity)
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   $config = Drupal::config('ts_extension_content.settings');
 
   $contentTypes = $config->get('content_types');
@@ -45,6 +56,11 @@ function ts_extension_content_node_update(Drupal\Core\Entity\EntityInterface $en
 
 function ts_extension_content_index_all_nodes()
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   try {
     $config = Drupal::config('ts_extension_content.settings');
     $contentTypes = array_values($config->get('content_types'));
@@ -64,6 +80,11 @@ function ts_extension_content_index_all_nodes()
 
 function ts_extension_content_delete_all_from_collection($sitename = '')
 {
+  // Only work on production server
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
+
   $config = Drupal::config('ts_extension_content.settings');
   $client = Typesense::getClient($config->get('collection'));
   $sitename = empty($sitename) ? $config->get('site_name') : $sitename;

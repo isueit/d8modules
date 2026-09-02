@@ -1,0 +1,22 @@
+<?php
+
+/*
+ * Implements hook_ENTITY_TYPE_update()
+ */
+function feature_with_large_image_block_content_update(Drupal\Core\Entity\EntityInterface $entity){
+	// Clear cache if BlockContent is of type 'feature_with_large_image'
+  if ($entity->bundle() == 'feature_with_large_image') {
+	\Drupal::service('cache.render')->invalidateAll();
+  }
+}
+
+function feature_with_large_image_theme_suggestions_block_alter(&$suggestions, $variables) {
+  $content = $variables['elements']['content'];
+  if (isset($content['#block_content']) && $content['#block_content'] instanceof \Drupal\block_content\BlockContentInterface) {
+    $suggestions[] = 'block__' . $content['#block_content']->bundle();
+  }
+}
+
+function feature_with_large_image_preprocess_block(&$variables) {
+    $variables['#attached']['library'][] = 'feature_with_large_image/feature_with_large_image';
+}

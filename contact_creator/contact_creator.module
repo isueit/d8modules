@@ -3,16 +3,18 @@
 /*
  * Implements hook_ENTITY_TYPE_update()
  */
-function contact_creator_block_content_update(Drupal\Core\Entity\EntityInterface $entity){
+function contact_creator_block_content_update(Drupal\Core\Entity\EntityInterface $entity)
+{
 	// Clear cache if BlockContent is of type 'contact_creator'
 	if ($entity->bundle() == 'contact_info') {
-	  \Drupal::service('cache.render')->invalidateAll();
+		\Drupal::service('cache.render')->invalidateAll();
 	}
 }
 
 /**
  * Implements hook_preprocess_HOOK()
  */
-function contact_creator_preprocess_block(&$variables) {
-    $variables['#attached']['library'][] = 'contact_creator/contact_creator';
-  }
+function contact_creator_preprocess_block(&$variables)
+{
+	$variables['#attached']['library'][] = 'contact_creator/contact_creator';
+}

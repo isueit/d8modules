@@ -1,0 +1,5 @@
+{
+  "name": "isueit/feature_with_large_image",
+  "type": "drupal-custom-module",
+  "description": "Creates a full-width feature block type with a large image, title, rich text, and CTA buttons"
+}

@@ -18,3 +18,4 @@ dependencies:
   - field_formatter_class:field_formatter_class
   - jquery_ui_accordion:jquery_ui_accordion
   - address:address
+  - twig_tweak:twig_tweak

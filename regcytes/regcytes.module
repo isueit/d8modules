@@ -497,7 +497,9 @@ function regcytes_preprocess_page(array &$variables): void
         $em = $end->format('F');
         $ed = $end->format('j');
         $ey = $end->format('Y');
-        if ($sm === $em && $sy === $ey) {
+        if ($sm === $em && $sd === $ed && $sy === $ey) {
+          $variables['subsite_dates_formatted'] = "{$sm} {$sd}, {$sy}";
+        } elseif ($sm === $em && $sy === $ey) {
           $variables['subsite_dates_formatted'] = "{$sm} {$sd}–{$ed}, {$sy}";
         } elseif ($sy === $ey) {
           $variables['subsite_dates_formatted'] = "{$sm} {$sd} – {$em} {$ed}, {$sy}";

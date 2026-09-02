@@ -1,3 +1,4 @@
+uuid: 99486e57-e4be-4f8a-babe-82ce90ffbd6b
 langcode: en
 status: true
 dependencies:
@@ -43,3 +44,6 @@ content:
 hidden:
   body: true
   field_embed_news_article: true
+  field_news_author: true
+  field_section: true
+  layout_builder__layout: true

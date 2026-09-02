@@ -1,0 +1,118 @@
+langcode: en
+id: courses
+label: Courses
+weight: 0
+type: salesforce_mapping
+key: Id
+always_upsert: true
+async: false
+push_standalone: false
+pull_standalone: false
+pull_trigger_date: LastModifiedDate
+pull_frequency: 0
+push_frequency: 0
+push_limit: 0
+push_retries: 3
+pull_where_clause: "RecordTypeId = '012UO000002XNXlYAO'"
+pull_record_type_filter: {  }
+sync_triggers:
+  push_create: false
+  push_update: false
+  push_delete: false
+  pull_create: true
+  pull_update: true
+  pull_delete: true
+salesforce_object_type: hed__Course_Offering__c
+drupal_entity_type: node
+drupal_bundle: plp_course
+field_mappings:
+  -
+    drupal_field_type: properties
+    drupal_field_value: body.value
+    direction: sf_drupal
+    salesforce_field: Offering_Description__c
+    id: 0
+    description: ''
+  -
+    drupal_field_type: properties
+    drupal_field_value: title
+    direction: sf_drupal
+    salesforce_field: Name
+    id: 1
+    description: ''
+  -
+    drupal_field_type: properties
+    drupal_field_value: field_plp_course_mydata_id
+    direction: sf_drupal
+    salesforce_field: Id
+    id: 2
+    description: ''
+  -
+    drupal_field_type: properties
+    drupal_field_value: field_plp_course_program_id
+    direction: sf_drupal
+    salesforce_field: hed__Course__c
+    id: 3
+    description: ''
+  -
+    drupal_field_type: RelatedTaxonomyField
+    drupal_field_value: field_plp_course_audiences
+    direction: sf_drupal
+    salesforce_field: hed__Course__r.Intended_Audiences__c
+    id: 4
+    description: ''
+  -
+    drupal_field_type: RelatedTaxonomyField
+    drupal_field_value: field_plp_course_category
+    direction: sf_drupal
+    salesforce_field: hed__Course__r.Program_landing_Page_Category__c
+    id: 5
+    description: ''
+  -
+    drupal_field_type: RelatedTaxonomyField
+    drupal_field_value: field_plp_course_topics
+    direction: sf_drupal
+    salesforce_field: hed__Course__r.Program_Landing_Page_Topic__c
+    id: 6
+    description: ''
+  -
+    drupal_field_type: RelatedTaxonomyField
+    drupal_field_value: field_plp_course_program_area
+    direction: sf_drupal
+    salesforce_field: hed__Course__r.Primary_Program_Unit__c
+    id: 7
+    description: ''
+  -
+    drupal_field_type: RelatedField
+    drupal_field_value: field_plp_course_search_terms
+    direction: sf_drupal
+    salesforce_field: hed__Course__r.Search_Terms__c
+    id: 8
+    description: ''
+  -
+    drupal_field_type: RelatedField
+    drupal_field_value: field_plp_course_smugmug
+    direction: sf_drupal
+    salesforce_field: hed__Course__r.Smugmug_ID__c
+    id: 9
+    description: ''
+status: true
+dependencies:
+  config:
+    - field.field.node.plp_course.field_plp_course_audiences
+    - field.field.node.plp_course.field_plp_course_category
+    - field.field.node.plp_course.field_plp_course_mydata_id
+    - field.field.node.plp_course.field_plp_course_program_area
+    - field.field.node.plp_course.field_plp_course_program_id
+    - field.field.node.plp_course.field_plp_course_topics
+    - field.storage.node.field_plp_course_audiences
+    - field.storage.node.field_plp_course_category
+    - field.storage.node.field_plp_course_program_area
+    - field.storage.node.field_plp_course_topics
+    - node.type.plp_course
+    - taxonomy.vocabulary.categories_topics
+    - taxonomy.vocabulary.intended_audiences
+    - taxonomy.vocabulary.program_areas
+  module:
+    - salesforce_pull
+    - sf_fields

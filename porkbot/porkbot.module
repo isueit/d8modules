@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for the Porkbot chat widget module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function porkbot_theme(): array {
+  return [
+    'porkbot_widget' => [
+      'variables' => [
+        'module_path' => '',
+      ],
+    ],
+  ];
+}

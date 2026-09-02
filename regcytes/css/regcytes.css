@@ -5,7 +5,7 @@
 .regcytes-custom-header {
     background: #ffffff;
     border-bottom: 2px solid var(--color-primary, #c8102e);
-    padding: 1rem;
+    padding: 0 1rem;
 }
 .regcytes-custom-header__inner {
     display: flex;
@@ -20,7 +20,7 @@
     gap: 1rem;
 }
 .regcytes-custom-header__logo {
-    max-height: 56px;
+    max-height: 100px;
     width: auto;
     display: block;
     flex-shrink: 0;
@@ -35,7 +35,6 @@
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-primary, #c8102e);
-    text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 .microsite-micro-banner-details__inner {
@@ -60,7 +59,6 @@
     font-size: 1.3rem;
     font-weight: 600;
     color: #ffffff;
-    text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 .microsite-micro-banner-details__title {
@@ -272,7 +270,7 @@ body.custom-theme .isu-menu-navbar_toggler-icon span {
     margin-bottom: 1rem;
 }
 .microsite-hero-logo__img {
-    max-height: 80px;
+    max-height: 100px;
     width: auto;
     display: block;
     margin: 0 auto;
@@ -627,7 +625,6 @@ body.group-site header.isu-wordmark-sitename {
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     color: var(--dk-gray, #4a4a4a);
     margin-bottom: 0.75rem;
 }

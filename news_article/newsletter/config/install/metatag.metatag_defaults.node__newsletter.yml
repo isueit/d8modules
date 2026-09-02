@@ -8,4 +8,4 @@ id: node__newsletter
 label: 'Content: Newsletter'
 tags:
   description: '[node:field_newsletter_featured]'
-  title: '[node:title] | [site:slogan] [site:name]'
+  title: '[node:title] - [node:field_newsletter_issue_date] | [site:slogan]'

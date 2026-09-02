@@ -2,7 +2,7 @@ name: County Impact Report
 description: Creates a content type for county impact reports.
 package: ISUEO
 type: module
-version: 1.0
+version: '1.0'
 core_version_requirement: ^10 || ^11
 dependencies:
   - drupal:node
@@ -21,6 +21,6 @@ dependencies:
   - eca:eca_modeller_bpmn
   - eca:eca_ui
   - eca:eca_workflow
-  - layout_builder_restrictions
+  - drupal:layout_builder_restrictions
   - drupal:paragraphs
   - d8modules:isueo_news_article

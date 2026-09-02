@@ -3,13 +3,16 @@
 namespace Drupal\newsletter\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\views\Views;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Security\TrustedCallbackInterface;
 
 /**
  * Provides a 'Newsletter' Block.
@@ -23,7 +26,7 @@ use Drupal\Core\Access\AccessResult;
  *   }
  * )
  */
-class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
    * The entity type manager.
@@ -189,13 +192,23 @@ class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
     // Check if we have results
     if (!empty($view->result)) {
-      $build[] = [
+      $view_element = [
         '#type' => 'view',
         '#name' => 'newsletter',
         '#display_id' => $view_display,
         '#arguments' => [$newsletter_type],
         '#embed' => TRUE,
       ];
+
+      // When the block's own title is displayed, it already renders as an
+      // h2, so demote the newsletter's featured heading to h3 to avoid
+      // duplicate h2s and preserve the heading hierarchy.
+      $label_display = $this->configuration['label_display'] ?? BlockPluginInterface::BLOCK_LABEL_VISIBLE;
+      if ($label_display === BlockPluginInterface::BLOCK_LABEL_VISIBLE) {
+        $view_element['#post_render'][] = [static::class, 'demoteFeaturedNewsletterHeading'];
+      }
+
+      $build[] = $view_element;
     }
     else {
       // No results - try to query directly to see if content exists
@@ -261,6 +274,31 @@ class NewsletterBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public function getCacheMaxAge() {
     return parent::getCacheMaxAge();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function trustedCallbacks() {
+    return ['demoteFeaturedNewsletterHeading'];
+  }
+
+  /**
+   * #post_render callback: demotes the featured newsletter heading to h3.
+   *
+   * The "newsletter" view's field rewrite hardcodes an h2 for the featured
+   * newsletter heading. When the block title is displayed it is already an
+   * h2, so this avoids two h2s in a row.
+   */
+  public static function demoteFeaturedNewsletterHeading($markup, array $element) {
+    // Add the "h2" utility class so the demoted heading keeps h2's visual
+    // styling (base.css sizes/styles h2 and h3 differently).
+    $html = preg_replace(
+      '#<h2([^>]*)\bclass="([^"]*\bnewsletter-featured-title--preview\b[^"]*)"([^>]*)>(.*?)</h2>#s',
+      '<h3$1class="h2 $2"$3>$4</h3>',
+      (string) $markup
+    );
+    return Markup::create($html);
   }
 
 }

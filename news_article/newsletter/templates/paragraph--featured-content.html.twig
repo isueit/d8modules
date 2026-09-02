@@ -52,7 +52,11 @@
   </div>
         {% if section_headings is defined and section_headings|length > 0 %}
         <div class="newsletter-index-wrapper">
-          <h3 class="newsletter-index-title">In This Issue</h3>
+          {% if paragraph.field_featured_content_title.value %}
+            <h3 class="newsletter-index-title">In This Issue</h3>
+          {% else %}
+            <h2 class="newsletter-index-title">In This Issue</h2>
+          {% endif %}
           <ul class="newsletter-section-index">
             {% for heading in section_headings %}
               <li>

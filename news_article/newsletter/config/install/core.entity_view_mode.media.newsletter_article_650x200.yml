@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+id: media.newsletter_article_650x200
+label: 'Newsletter Article (650x200)'
+description: ''
+targetEntityType: media
+cache: true

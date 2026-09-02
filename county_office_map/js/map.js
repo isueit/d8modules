@@ -96,9 +96,9 @@
           html += `<div class="director-details">`;
           
           if (director.name) {
-            // Build staff profile URL if we have netid
-            if (director.netid) {
-              const profileUrl = `https://www.extension.iastate.edu/${svgId}/staff/${director.netid}`;
+            // Build staff profile URL if we have a first-last name slug
+            if (director.url_name) {
+              const profileUrl = `https://www.extension.iastate.edu/${svgId}/staff/${director.url_name}`;
               html += `<p class="h3 director-name"><a href="${profileUrl}">${director.name}</a></p>`;
             } else {
               html += `<p class="h3 director-name">${director.name}</p>`;

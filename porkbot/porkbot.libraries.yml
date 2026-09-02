@@ -1,0 +1,21 @@
+webchat:
+  remote: https://cdn.botframework.com/botframework-webchat/latest/webchat.js
+  version: latest
+  license:
+    name: MIT
+    url: https://github.com/microsoft/BotFramework-WebChat/blob/main/LICENSE-MIT
+    gpl-compatible: true
+  js:
+    https://cdn.botframework.com/botframework-webchat/latest/webchat.js: { type: external, minified: true }
+
+widget:
+  version: 1.0.0
+  css:
+    theme:
+      css/porkbot.css: {}
+  js:
+    js/porkbot.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - porkbot/webchat

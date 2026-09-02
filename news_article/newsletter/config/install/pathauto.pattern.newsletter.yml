@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.newsletter
   module:
     - node
   enforced:
@@ -9,12 +11,11 @@ dependencies:
 id: newsletter
 label: Newsletter
 type: 'canonical_entities:node'
-pattern: 'newsletter/[node:title]'
+pattern: '/newsletter/[node:title]-[node:field_newsletter_issue_date]'
 selection_criteria:
   b02292e2-2f52-4aa1-9cec-cad7fadae6a3:
     id: 'entity_bundle:node'
     negate: false
-    uuid: b02292e2-2f52-4aa1-9cec-cad7fadae6a3
     context_mapping:
       node: node
     bundles:

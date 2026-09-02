@@ -17,6 +17,18 @@ use Drupal\taxonomy\Entity\Term;
 class CountyOfficeMapBlock extends BlockBase {
 
   /**
+   * NetIDs of staff who hold the Regional Director position but are above
+   * that role (e.g. their supervisor). They act as backups and should only
+   * be shown as a county's Regional Director when no other Regional
+   * Director is assigned to that county.
+   */
+  private const BACKUP_REGIONAL_DIRECTOR_NETIDS = [
+    // REMOVE FIELD OPS DIRECTORS
+    'raeannb',
+    'jansmith'
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function build() {
@@ -127,16 +139,29 @@ class CountyOfficeMapBlock extends BlockBase {
     
     $query->condition($or_group);
     $nids = $query->execute();
-    
+
     if (empty($nids)) {
       return NULL;
     }
-    
-    // Load the first matching staff profile
-    $staff_node = \Drupal::entityTypeManager()
+
+    // Prefer a Regional Director who isn't a backup; only fall back to a
+    // backup net-ID if no other Regional Director is assigned to this county.
+    $staff_nodes = \Drupal::entityTypeManager()
       ->getStorage('node')
-      ->load(reset($nids));
-    
+      ->loadMultiple($nids);
+
+    $staff_node = NULL;
+    $backup_node = NULL;
+    foreach ($staff_nodes as $node) {
+      if (in_array($this->getStaffNetId($node), self::BACKUP_REGIONAL_DIRECTOR_NETIDS, TRUE)) {
+        $backup_node = $backup_node ?? $node;
+        continue;
+      }
+      $staff_node = $node;
+      break;
+    }
+    $staff_node = $staff_node ?? $backup_node;
+
     if (!$staff_node) {
       return NULL;
     }
@@ -157,19 +182,27 @@ class CountyOfficeMapBlock extends BlockBase {
       $director_data['email'] = $staff_node->get('field_staff_profile_email')->value;
     }
         
-  // NetID for building profile URL
-    $netid = '';
-    if (!$staff_node->get('field_staff_profile_netid')->isEmpty()) {
-      $netid = $staff_node->get('field_staff_profile_netid')->value;
-    } elseif (!empty($director_data['email'])) {
-      // Extract from email if netid field is empty
-      $netid = explode('@', $director_data['email'])[0];
-    }
-    
+    // NetID (used only for the backup-director check above)
+    $netid = $this->getStaffNetId($staff_node);
     if (!empty($netid)) {
       $director_data['netid'] = $netid;
     }
-    
+
+    // URL-friendly "first-last" slug for linking to the director's profile
+    // page, e.g. "Kristi Elmore" -> "kristi-elmore".
+    $first_name = '';
+    if (!$staff_node->get('field_staff_profile_pref_name')->isEmpty()) {
+      $first_name = $staff_node->get('field_staff_profile_pref_name')->value;
+    } elseif (!$staff_node->get('field_staff_profile_first_name')->isEmpty()) {
+      $first_name = $staff_node->get('field_staff_profile_first_name')->value;
+    }
+    $last_name = $staff_node->get('field_staff_profile_last_name')->value ?? '';
+
+    $url_name = $this->buildUrlSlug($first_name, $last_name);
+    if (!empty($url_name)) {
+      $director_data['url_name'] = $url_name;
+    }
+
     // Phone: Preferred phone, or fall back to regular phone
     if (!$staff_node->get('field_staff_profile_pref_phone')->isEmpty()) {
       $director_data['phone'] = $staff_node->get('field_staff_profile_pref_phone')->value;
@@ -195,6 +228,28 @@ class CountyOfficeMapBlock extends BlockBase {
     return $director_data;
   }
   
+  /**
+   * Get a staff profile node's net-ID, falling back to the email prefix.
+   */
+  private function getStaffNetId($staff_node) {
+    if (!$staff_node->get('field_staff_profile_netid')->isEmpty()) {
+      return $staff_node->get('field_staff_profile_netid')->value;
+    }
+    if (!$staff_node->get('field_staff_profile_email')->isEmpty()) {
+      return explode('@', $staff_node->get('field_staff_profile_email')->value)[0];
+    }
+    return '';
+  }
+
+  /**
+   * Build a "first-last" URL slug from a name, e.g. "Kristi Elmore" -> "kristi-elmore".
+   */
+  private function buildUrlSlug($first_name, $last_name) {
+    $slug = strtolower(trim($first_name . ' ' . $last_name));
+    $slug = preg_replace('/[^a-z0-9]+/', '-', $slug);
+    return trim($slug, '-');
+  }
+
   /**
    * Convert county name to SVG ID.
    */

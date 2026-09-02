@@ -9,6 +9,31 @@ function isueo_news_article_preprocess_node(&$variables) {
   if ($node->getType() == 'news_article') {
     $variables['#attached']['library'][] = 'isueo_news_article/isueo_news_article';
   }
+
+  // Drupal core's NodeViewBuilder::buildLinks() only adds the "Read more"
+  // link when the view mode is literally 'teaser', so the
+  // news_article_newsletter view mode never gets one. Build the same link
+  // manually here so it behaves like the teaser--newsletter template.
+  if ($node->getType() == 'news_article' && $variables['view_mode'] == 'news_article_newsletter') {
+    $node_title_stripped = strip_tags($node->label());
+    $variables['content']['links'] = [
+      '#theme' => 'links__node__node',
+      '#links' => [
+        'node-readmore' => [
+          'title' => t('Read more<span class="visually-hidden"> about @title</span>', [
+            '@title' => $node_title_stripped,
+          ]),
+          'url' => $node->toUrl(),
+          'language' => $node->language(),
+          'attributes' => [
+            'rel' => 'tag',
+            'title' => $node_title_stripped,
+          ],
+        ],
+      ],
+      '#attributes' => ['class' => ['links', 'inline']],
+    ];
+  }
 }
 
 /**
@@ -28,6 +53,10 @@ function isueo_news_article_theme($existing, $type, $theme, $path)
     ],
     'node__news_article__more_like_this' => [
       'template' => 'node--news-article--more-like-this',
+      'base hook' => 'node',
+    ],
+    'node__news_article__news_article_newsletter' => [
+      'template' => 'node--news-article--news-article-newsletter',
       'base hook' => 'node',
     ],
   ];

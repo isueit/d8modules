@@ -10,6 +10,7 @@ function news_from_feed_theme($existing, $type, $theme, $path)
       'variables' => [
         'articles' => [],
         'header' => null,
+        'all_news_url' => '',
       ],
       'template' => 'news-from-feed',
     ],

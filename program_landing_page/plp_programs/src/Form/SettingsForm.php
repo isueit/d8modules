@@ -202,6 +202,40 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => empty($config->get('children.child_interval')) ? '1' : $config->get('children.child_interval'),
     ];
 
+    $form['courses'] = array(
+      '#type' => 'details',
+      '#title' => t('Courses'),
+      '#open' => false,
+    );
+
+    $form['courses']['course_boost'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Boost for any number of courses'),
+      '#description' => $this->t('If the program has any courses, it will get this boost (one time).'),
+      '#min' => 0,
+      '#maxlength' => 5,
+      '#size' => 5,
+      '#default_value' => empty($config->get('courses.course_boost')) ? '500' : $config->get('courses.course_boost'),
+    ];
+    $form['courses']['course_multiplier'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Multiplier for courses'),
+      '#description' => $this->t('.'),
+      '#min' => 0,
+      '#maxlength' => 5,
+      '#size' => 5,
+      '#default_value' => empty($config->get('courses.course_multiplier')) ? '0' : $config->get('courses.course_multiplier'),
+    ];
+    $form['courses']['course_interval'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Interval for courses'),
+      '#description' => $this->t(''),
+      '#min' => 1,
+      '#maxlength' => 5,
+      '#size' => 5,
+      '#default_value' => empty($config->get('courses.course_interval')) ? '1' : $config->get('courses.course_interval'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -240,6 +274,10 @@ class SettingsForm extends ConfigFormBase {
       ->set('children.child_boost', $form_state->getValue('child_boost'))
       ->set('children.child_multiplier', $form_state->getValue('child_multiplier'))
       ->set('children.child_interval', $form_state->getValue('child_interval'))
+
+      ->set('courses.course_boost', $form_state->getValue('course_boost'))
+      ->set('courses.course_multiplier', $form_state->getValue('course_multiplier'))
+      ->set('courses.course_interval', $form_state->getValue('course_interval'))
 
       ->save();
 
