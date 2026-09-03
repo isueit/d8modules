@@ -6,27 +6,30 @@ dependencies:
     - field.field.block_content.feature_with_large_image.field_flwi_image
     - field.field.block_content.feature_with_large_image.field_flwi_text
   module:
+    - field_formatter_class
     - text
 id: block_content.feature_with_large_image.default
 targetEntityType: block_content
 bundle: feature_with_large_image
 mode: default
 content:
+  field_flwi_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: full_size_1000x1000
+      link: false
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 0
+    region: content
   field_flwi_text:
     type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 0
-    region: content
-  field_flwi_image:
-    type: entity_reference_entity_view
-    label: hidden
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
 hidden:
   search_api_excerpt: true
