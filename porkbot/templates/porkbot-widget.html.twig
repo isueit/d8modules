@@ -8,19 +8,33 @@
  */
 #}
 <button id="porkbot-toggle" class="porkbot-toggle" type="button" aria-label="{{ 'Open Iowa State University Extension and Outreach Porkbot'|t }}" aria-controls="porkbot-widget" aria-expanded="false">
-  <img src="{{ base_path ~ module_path }}/assets/PorkChatBot-02.png" alt="" width="44" height="44" />
+  <img src="{{ base_path ~ module_path }}/assets/PorkChatBot-02.png" alt="" width="75" height="75" />
 </button>
 
 <section id="porkbot-widget" class="porkbot-widget is-hidden" aria-label="{{ 'Iowa State University Extension and Outreach Porkbot'|t }}">
   <header class="porkbot-header">
     <div class="porkbot-title">
-      <img src="{{ base_path ~ module_path }}/assets/porky-icon-left.png" alt="" width="34" height="34" />
+      <img src="{{ base_path ~ module_path }}/assets/Porkbot-v2.png" alt="" width="50" height="50" />
       <div>
         <h2>{{ 'Porkbot'|t }}</h2>
       </div>
     </div>
-    <button id="porkbot-close" class="porkbot-close" type="button" aria-label="{{ 'Close Iowa State University Extension and Outreach Porkbot'|t }}">X</button>
+    <button id="porkbot-close" class="porkbot-close" type="button" aria-label="{{ 'Close Iowa State University Extension and Outreach Porkbot'|t }}"><span aria-hidden="true">&times;</span></button>
   </header>
+  <div id="porkbot-disclaimer" class="porkbot-disclaimer is-collapsed">
+    <button
+      id="porkbot-disclaimer-toggle"
+      class="porkbot-disclaimer-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="porkbot-disclaimer-full"
+    >
+      {{ 'View Disclaimer'|t }}
+    </button>
+    <div id="porkbot-disclaimer-full" class="porkbot-disclaimer-full" hidden>
+      {{ 'This content is intended for educational and informational purposes only and is not a substitute for professional veterinary, medical, or other expert advice. Always consult a qualified professional regarding specific health, disease, treatment, or management decisions.'|t }}
+    </div>
+  </div>
   <div id="porkbot-status" class="porkbot-status" role="status" hidden></div>
   <div id="porkbot-webchat" class="porkbot-webchat" role="region" aria-label="{{ 'Conversation'|t }}"></div>
 </section>

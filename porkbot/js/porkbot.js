@@ -11,6 +11,9 @@
         var closeButton = document.getElementById('porkbot-close');
         var statusElement = document.getElementById('porkbot-status');
         var webChatElement = document.getElementById('porkbot-webchat');
+        var disclaimer = document.getElementById('porkbot-disclaimer');
+        var disclaimerToggle = document.getElementById('porkbot-disclaimer-toggle');
+        var disclaimerFull = document.getElementById('porkbot-disclaimer-full');
 
         var initialized = false;
         var loading = false;
@@ -199,7 +202,7 @@
                   avatarSize: 0,
                   botAvatarBackgroundColor: 'transparent',
                   userAvatarBackgroundColor: 'transparent',
-                  bubbleBackground: '#f6f4f0',
+                  bubbleBackground: '#f5f5f5',
                   bubbleBorderColor: '#e3ded4',
                   bubbleBorderRadius: 14,
                   bubbleFromUserBackground: '#c8102e',
@@ -239,6 +242,14 @@
 
         closeButton.addEventListener('click', function () {
           setWidgetOpen(false);
+        });
+
+        disclaimerToggle.addEventListener('click', function () {
+          var isExpanded = disclaimerToggle.getAttribute('aria-expanded') === 'true';
+
+          disclaimerToggle.setAttribute('aria-expanded', String(!isExpanded));
+          disclaimer.classList.toggle('is-collapsed', isExpanded);
+          disclaimerFull.hidden = isExpanded;
         });
 
         document.addEventListener('keydown', function (event) {

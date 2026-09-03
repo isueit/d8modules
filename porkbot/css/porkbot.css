@@ -1,3 +1,7 @@
+:root {
+  --lt-gray: #f5f5f5;
+}
+
 .porkbot-toggle,
 .porkbot-widget {
   color: #1f2933;
@@ -13,44 +17,44 @@
 
 .porkbot-toggle {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
-  z-index: 2147483000;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10000;
   display: grid;
-  width: 54px;
-  height: 54px;
-  padding: 5px;
-  border: 0;
+  width: 75px;
+  height: 75px;
+  border: 2px solid #c8102e;
   border-radius: 50%;
-  background: #c8102e;
-  box-shadow: 0 14px 30px rgb(0 0 0 / 24%);
+  background: #fff;
+  box-shadow: 0 4px 12px rgb(0 0 0 0.2);
   cursor: pointer;
   place-items: center;
 }
 
 .porkbot-toggle:focus-visible,
-.porkbot-close:focus-visible {
+.porkbot-close:focus-visible,
+.porkbot-disclaimer-toggle:focus-visible {
   outline: 3px solid #f1be48;
   outline-offset: 3px;
 }
 
 .porkbot-toggle img {
   display: block;
-  width: 44px;
-  height: 44px;
+  width: 75px;
+  height: 75px;
   object-fit: contain;
 }
 
 .porkbot-widget {
   position: fixed;
   right: 20px;
-  bottom: 96px;
+  bottom: 111px;
   z-index: 2147482999;
   display: flex;
   overflow: hidden;
-  width: min(380px, calc(100vw - 24px));
-  height: min(520px, calc(100vh - 120px));
-  height: min(520px, calc(100dvh - 120px));
+  width: min(750px, calc(100vw - 24px));
+  height: min(520px, calc(100vh - 135px));
+  height: min(520px, calc(100dvh - 135px));
   border: 0;
   border-radius: 12px;
   background: #ffffff;
@@ -67,37 +71,40 @@
   z-index: 2;
   display: flex;
   min-height: 0;
-  padding: 12px 44px;
+  padding: 8px 10px;
   color: #ffffff;
   background: #c8102e;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  justify-content: space-between;
   font-weight: bold;
+}
+
+.porkbot-header > * {
+  min-height: 0;
 }
 
 .porkbot-title {
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 }
 
 .porkbot-title img {
-  width: 34px;
-  height: 34px;
-  border-radius: 0;
-  object-fit: contain;
-  flex: 0 0 auto;
+  width: 50px;
+  height: 50px;
+  display: block;
+  flex-shrink: 0;
 }
 
 .porkbot-title h2 {
   overflow-wrap: anywhere;
   margin: 0;
-  font-size: 16px;
-  line-height: 1.2;
+  font-size: 1.35rem;
+  line-height: 1;
   letter-spacing: 0;
   color: #fff;
+  padding-bottom: 0;
 }
 
 .porkbot-title p {
@@ -119,7 +126,7 @@
   color: #ffffff;
   background: transparent;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 400;
   line-height: 1;
   transform: translateY(-50%);
@@ -130,18 +137,44 @@
 }
 
 .porkbot-disclaimer {
-  padding: 6px 10px;
   border-bottom: 1px solid #e6e6e6;
   color: #555555;
-  background: #fafafa;
-  font-size: 8px;
+  background: var(--lt-gray);
+  font-size: 0.7rem;
   line-height: 1.35;
+}
+
+.porkbot-disclaimer-toggle {
+  display: flex;
+  width: 100%;
+  padding: 6px 10px;
+  border: 0;
+  color: #c8102e;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.porkbot-disclaimer-toggle:hover {
+  color: #9b0c23;
+}
+
+.porkbot-disclaimer-toggle:focus-visible {
+  outline-offset: -3px;
+}
+
+.porkbot-disclaimer-full {
+  padding: 0 10px 8px;
+  color: #000;
 }
 
 .porkbot-status {
   padding: 10px;
   color: #555555;
-  background: #fafafa;
+  background: var(--lt-gray);
   font-size: 12px;
   border-bottom: 1px solid #e6e6e6;
 }
@@ -210,10 +243,10 @@
 
   .porkbot-widget {
     right: 12px;
-    bottom: 92px;
+    bottom: 107px;
     width: calc(100vw - 24px);
-    height: min(520px, calc(100vh - 96px));
-    height: min(520px, calc(100dvh - 96px));
+    height: min(520px, calc(100vh - 111px));
+    height: min(520px, calc(100dvh - 111px));
   }
   .porkbot-webchat table {
     font-size: 12px;
