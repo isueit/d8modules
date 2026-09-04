@@ -44,6 +44,9 @@ class Typesense
       case 'SearchAll':
         $api_key = 'bilLvsiWoO1EqcM21L8XrzofmVBYfyB9'; // search all
         break;
+      case 'websites':
+        $api_key = 'wjTQELxmTb9HIiF0YpGfiKHnmJQWvJrA'; // Admin site_audit
+        break;
       case 'deleteme_brian':
         $api_key = 'FcwLwSWecQh91ElQtZjm0lGRv8cW2t1T'; // Admin deleteme_brian
         break;

@@ -269,6 +269,36 @@ class TypesenseCollectionSchemas
         ],
       ],
 
+      'websites' => [
+        'default_sorting_field' => '',
+
+        // Define the fields
+        'fields' => [
+          'site_name' => 'string',
+          'type' => 'string',
+          'users' => 'string[]',
+          'user_last_login' => 'string[]',
+          'menus' => 'string[]',
+        ],
+
+        // Sort fields
+        'sort' => [
+        ],
+
+        // Fields that are facets
+        'facets' => [
+          'site_name',
+          'type',
+        ],
+
+        // Optional fields
+        'optional' => [
+          'users',
+          'user_last_login',
+          'menus',
+        ],
+      ],
+
       // Add new Definitions here
     ];
     $definitions['deleteme_brian'] = $definitions['plp_programs'];
