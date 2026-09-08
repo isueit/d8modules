@@ -275,10 +275,20 @@ class TypesenseCollectionSchemas
         // Define the fields
         'fields' => [
           'site_name' => 'string',
+          'drush_alias' => 'string',
+          'url' => 'string',
           'type' => 'string',
-          'users' => 'string[]',
-          'user_last_login' => 'string[]',
-          'menus' => 'string[]',
+          'users_active' => 'string[]',
+          'users_active_last_access' => 'int64[]',
+          'users_blocked' => 'string[]',
+          'users_blocked_last_access' => 'int64[]',
+          'nodes_published' => 'int64',
+          'nodes_unpublished' => 'int64',
+          'node_types' => 'string[]',
+          'node_count_published' => 'int64[]',
+          'node_count_unpublished' => 'int64[]',
+          'node_last_modified' => 'int64[]',
+          'menu_items_top_level' => 'string[]',
         ],
 
         // Sort fields
@@ -293,9 +303,6 @@ class TypesenseCollectionSchemas
 
         // Optional fields
         'optional' => [
-          'users',
-          'user_last_login',
-          'menus',
         ],
       ],
 

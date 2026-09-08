@@ -1,0 +1,219 @@
+<?php
+
+use Drupal\user\Entity\User;
+use Drupal\node\Entity\NodeType;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\isueo_helpers\ISUEOHelpers\Typesense;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Typesense\Client;
+
+/**
+* Implements hook_cron().
+*/
+
+function ts_website_cron_blah() {
+
+  $record = [];
+
+  $folder = _ts_website_get_folder();
+  if (empty($folder)) {
+    Drupal::logger('ts_website')->critical('Can\'t find the Drush alias for this site');
+    return;
+  }
+
+  $drush_alias = explode('.', $folder)[0];
+
+
+  $record['site_name'] = Drupal::config('system.site')->get('name');
+  $record['drush_alias'] = $drush_alias;
+  $record['id'] = $drush_alias;
+  $record['url'] = str_contains($folder, '.') ? ('https://www.' . $folder) : ('https://www.extension.iastate.edu/' . $folder);
+  $record['type'] = _ts_website_get_type($record['site_name'], $folder);
+
+  _ts_website_get_user_info($record);
+  _ts_website_get_node_info($record);
+  _ts_website_get_menu_info($record);
+
+  echo json_encode($record, JSON_PRETTY_PRINT) . PHP_EOL;
+
+  // Write Info to the Typesense client
+  $client = Typesense::getClient('websites');
+  $client->collections['websites']->documents->upsert($record);
+
+  /*
+    // Short-running operation example, not using a queue:
+    // Delete all expired records since the last cron run.
+    $expires = \Drupal::state()->get('mymodule.last_check', 0);
+    \Drupal::database()->delete('mymodule_table')
+      ->condition('expires', $expires, '>=')
+      ->execute();
+    \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
+
+    // Long-running operation example, leveraging a queue:
+    // Queue news feeds for updates once their refresh interval has elapsed.
+    $queue = \Drupal::queue('aggregator_feeds');
+    $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+    foreach (Feed::loadMultiple($ids) as $feed) {
+      if ($queue->createItem($feed)) {
+        // Add timestamp to avoid queueing item more than once.
+        $feed->setQueuedTime(REQUEST_TIME);
+        $feed->save();
+      }
+    }
+    $ids = \Drupal::entityQuery('aggregator_feed')
+      ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+      ->execute();
+    if ($ids) {
+      $feeds = Feed::loadMultiple($ids);
+      foreach ($feeds as $feed) {
+        $feed->setQueuedTime(0);
+        $feed->save();
+      }
+    }
+  */
+}
+
+// Attempt to get the Drush Alias for the sute using the Drupal root folder path
+function _ts_website_get_folder() {
+  $folder = '';
+
+  $folders = explode('/', Drupal::hasService('app.root') ? \Drupal::container()->getParameter('app.root') : DRUPAL_ROOT);
+  if (count($folders) > 2) {
+    $folder = $folders[count($folders) - 2];
+  }
+
+  return $folder;
+}
+
+// Get information about Users, and add it to the record array
+function _ts_website_get_user_info(array &$record) {
+  $users_active = [];
+  $users_active_last_access = [];
+  $users_blocked = [];
+  $users_blocked_last_access = [];
+
+  // Query all user IDs
+  $query = \Drupal::entityQuery('user');
+  $query->accessCheck(FALSE); // Required in Drupal 9/10/11 to avoid access restriction bypass notices
+  $query->sort('name', 'ASC');
+  $uids = $query->execute();
+  $users = User::loadMultiple($uids);
+
+  // Walk through the list of users
+  foreach ($users as $user) {
+    $username = $user->get('name')->value;
+    if (empty($username)) {
+      continue;
+    }
+    if ($user->isActive()) {
+      $users_active[] = $username;
+      $users_active_last_access[] = intval($user->getLastAccessedTime());
+    } else {
+      $users_blocked[] = $username;
+      $users_blocked_last_access[] = intval($user->getLastAccessedTime());
+    }
+  }
+
+  // Add the information to the array
+  $record['users_active'] = $users_active;
+  $record['users_active_last_access'] = $users_active_last_access;
+  $record['users_blocked'] = $users_blocked;
+  $record['users_blocked_last_access'] = $users_blocked_last_access;
+}
+
+// Get information about nodes, and add it to the record array
+function _ts_website_get_node_info(array &$record) {
+  $node_types = [];
+  $node_types_human = [];
+  $node_types_published = [];
+  $node_types_unpublished = [];
+  $node_types_modified_date = [];
+  $total_published_nodes = 0;
+  $total_unpublished_nodes = 0;
+
+  // Load all content type configuration entities
+  $all_content_types = NodeType::loadMultiple();
+  foreach ($all_content_types as $machine_name => $content_type) {
+    $node_types_human[] = $content_type->label(); // Human-readable name (e.g., "Article")
+    $node_types[] = $content_type->id(); // Human-readable name (e.g., "Article")
+  }
+
+  // Step through each node type
+  foreach ($node_types as $node_type) {
+    $published = 0;
+    $unpublished = 0;
+    $lastModifiedDate = 0;
+
+    $nids = \Drupal::entityQuery('node')
+      ->condition('type', $node_type)
+      ->accessCheck(FALSE) // Required in Drupal 9/10/11 to avoid access bypass exceptions
+      ->sort('changed', 'ASC')
+      ->execute();
+
+    // 2. Load the complete node objects using the IDs
+    if (!empty($nids)) {
+      $nodes = \Drupal\node\Entity\Node::loadMultiple($nids);
+
+      // Example: Loop through the nodes
+      foreach ($nodes as $node) {
+        if ($node->isPublished()) {
+          $published += 1;
+          $lastModifiedDate = $node->getChangedTime();
+          $total_published_nodes += 1;
+        } else {
+          $unpublished += 1;
+          $total_unpublished_nodes += 1;
+        }
+      }
+    }
+    $node_types_published[] = $published;
+    $node_types_unpublished[] = $unpublished;
+    $node_types_modified_date[] = $lastModifiedDate;
+  }
+
+  $record['nodes_published'] = $total_published_nodes;
+  $record['nodes_unpublished'] = $total_unpublished_nodes;
+  $record['node_types'] = $node_types_human;
+  $record['node_count_published'] = $node_types_published;
+  $record['node_count_unpublished'] = $node_types_unpublished;
+  $record['node_last_modified'] = $node_types_modified_date;
+}
+
+// Get the type of Website
+function _ts_website_get_type(string $site_name, string $folder) {
+  $type = 'Subsite';
+
+  if (str_contains($site_name, 'County')) {
+    $type = 'County';
+  } elseif (str_contains($folder, '.')) {
+    $type = "Top Level";
+  }
+
+  return $type;
+}
+
+// Get information about menus, and add it to the record array
+function _ts_website_get_menu_info(array &$record) {
+  $top_level_menu_items = [];
+  $top_level_menu_items_disabled = [];
+
+  $menu_tree = \Drupal::menuTree();
+  $menu_name = "main";
+
+  // Build the typical default set of menu tree parameters.
+  $parameters = $menu_tree->getCurrentRouteMenuTreeParameters($menu_name);
+
+  // Load the tree based on this set of parameters.
+  $tree = $menu_tree->load($menu_name, $parameters);
+  foreach ($tree as $item) {
+    if ($item->link->isEnabled()) {
+      $top_level_menu_items[] = $item->link->getTitle();
+    } else {
+      $top_level_menu_items_disabled[] = $item->link->getTitle();
+    }
+  }
+
+  $record['menu_items_top_level'] = $top_level_menu_items;
+  $record['menu_items_top_level_disbled'] = $top_level_menu_items_disabled;
+}
