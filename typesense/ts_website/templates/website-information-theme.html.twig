@@ -1,0 +1,51 @@
+{# templates/my-custom-page-theme.html.twig #}
+
+{% if website is not empty %}
+    {# The array has elements #}
+{% endif %}
+
+<div class="website-info-wrapper">
+  <h2>{{ website.site_name }}</h2>
+
+  <h3>Menu Items ({{ website.menu_items_top_level|length }})</h3>
+  <ol>
+    {% for item in website.menu_items_top_level %}
+      <li>{{ item }}</li>
+    {% endfor %}
+  </ol>
+
+  <h3>Users - Active ({{ website.users_active|length }})</h3>
+  <ol>
+    {% for key, value in website.users_active %}
+      <li>{{ value }} {% if website.users_active_last_access[key] != 0 %}({{ website.users_active_last_access[key]|date }}){% endif %}</li>
+    {% endfor %}
+  </ol>
+
+  <h3>Users - Blocked ({{ website.users_blocked|length }})</h3>
+  <ol>
+    {% for key, value in website.users_blocked %}
+      <li>{{ value }} {% if website.users_blocked_last_access[key] != 0 %}({{ website.users_blocked_last_access[key]|date }}){% endif %}</li>
+    {% endfor %}
+  </ol>
+
+  <h3>Nodes - Published ({{ website.nodes_published }})</h3>
+  <ol>
+    {% for key, value in website.node_types %}
+      <li>{{ value }} ({{ website.node_count_published[key] }})
+        {% if website.node_last_modified[key] != 0 %} - {{ website.node_last_modified[key]|date }}{% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+
+  <h3>Nodes - Unpublished ({{ website.nodes_unpublished }})</h3>
+  <ol>
+    {% for key, value in website.node_types %}
+      <li>{{ value }} ({{ website.node_count_unpublished[key] }})</li>
+    {% endfor %}
+  </ol>
+
+</div>
+
+
+        'fields' => [
+          'node_last_modified' => 'int64[]',

@@ -1,0 +1,8 @@
+# ts_website.routing.yml
+ts_website.custom_page:
+  path: '/website-info'
+  defaults:
+    _controller: '\Drupal\ts_website\Controller\WebsiteInformationController::renderPage'
+    _title: 'Website Informaion'
+  requirements:
+    _permission: 'access content'

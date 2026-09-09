@@ -4,15 +4,79 @@ use Drupal\user\Entity\User;
 use Drupal\node\Entity\NodeType;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\isueo_helpers\Drush\Commands\ISUEOHelpersCommands;
+use Drupal\isueo_helpers\ISUEOHelpers;
 use Drupal\isueo_helpers\ISUEOHelpers\Typesense;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Typesense\Client;
 
 /**
+* Implements hook_rebuild().
+*/
+
+function ts_website_rebuild() {
+  _ts_website_audit_site();
+}
+/**
 * Implements hook_cron().
 */
 
-function ts_website_cron_blah() {
+function ts_website_cron() {
+  _ts_website_audit_site();
+
+  /*
+    // Short-running operation example, not using a queue:
+    // Delete all expired records since the last cron run.
+    $expires = \Drupal::state()->get('mymodule.last_check', 0);
+    \Drupal::database()->delete('mymodule_table')
+      ->condition('expires', $expires, '>=')
+      ->execute();
+    \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
+
+    // Long-running operation example, leveraging a queue:
+    // Queue news feeds for updates once their refresh interval has elapsed.
+    $queue = \Drupal::queue('aggregator_feeds');
+    $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
+    foreach (Feed::loadMultiple($ids) as $feed) {
+      if ($queue->createItem($feed)) {
+        // Add timestamp to avoid queueing item more than once.
+        $feed->setQueuedTime(REQUEST_TIME);
+        $feed->save();
+      }
+    }
+    $ids = \Drupal::entityQuery('aggregator_feed')
+      ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+      ->execute();
+    if ($ids) {
+      $feeds = Feed::loadMultiple($ids);
+      foreach ($feeds as $feed) {
+        $feed->setQueuedTime(0);
+        $feed->save();
+      }
+    }
+  */
+}
+
+/**
+* Implements hook_theme().
+*/
+
+function ts_website_theme($existing, $type, $theme, $path) {
+  return [
+      'website_information_theme' => [
+        'variables' => [
+          'page_title' => NULL,
+          'website' => [],
+        ],
+      ],
+    ];
+}
+
+function _ts_website_audit_site() {
+  // Only put production sites in Typesense
+  if (!ISUEOHelpers\General::is_production_server()) {
+    return;
+  }
 
   $record = [];
 
@@ -28,14 +92,12 @@ function ts_website_cron_blah() {
   $record['site_name'] = Drupal::config('system.site')->get('name');
   $record['drush_alias'] = $drush_alias;
   $record['id'] = $drush_alias;
-  $record['url'] = str_contains($folder, '.') ? ('https://www.' . $folder) : ('https://www.extension.iastate.edu/' . $folder);
+  $record['url'] = str_contains($folder, '.') ? ('https://' . $folder) : ('https://www.extension.iastate.edu/' . $folder);
   $record['type'] = _ts_website_get_type($record['site_name'], $folder);
 
   _ts_website_get_user_info($record);
   _ts_website_get_node_info($record);
   _ts_website_get_menu_info($record);
-
-  echo json_encode($record, JSON_PRETTY_PRINT) . PHP_EOL;
 
   // Write Info to the Typesense client
   $client = Typesense::getClient('websites');
