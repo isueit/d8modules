@@ -71,7 +71,6 @@ class General
 
   public static function is_production_server()
   {
-return TRUE;
     return str_starts_with(DRUPAL_ROOT, '/var/www/websites');
   }
 
