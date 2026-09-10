@@ -246,7 +246,7 @@ function _ts_website_get_node_info(array &$record) {
 function _ts_website_get_type(string $site_name, string $folder) {
   $type = 'Subsite';
 
-  if (str_contains($site_name, 'County')) {
+  if (str_contains($site_name, ' County')) {
     $type = 'County';
   } elseif (str_contains($folder, '.')) {
     $type = "Top Level";
