@@ -32,7 +32,7 @@
   <ol>
     {% for key, value in website.node_types %}
       <li>{{ value }} ({{ website.node_count_published[key] }})
-        {% if website.node_last_modified[key] != 0 %} - {{ website.node_last_modified[key]|date }}{% endif %}
+        {% if website.node_last_modified_published[key] != 0 %} - {{ website.node_last_modified_published[key]|date }}{% endif %}
       </li>
     {% endfor %}
   </ol>

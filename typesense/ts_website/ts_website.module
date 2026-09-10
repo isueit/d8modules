@@ -239,7 +239,7 @@ function _ts_website_get_node_info(array &$record) {
   $record['node_types'] = $node_types_human;
   $record['node_count_published'] = $node_types_published;
   $record['node_count_unpublished'] = $node_types_unpublished;
-  $record['node_last_modified'] = $node_types_modified_date;
+  $record['node_last_modified_published'] = $node_types_modified_date;
 }
 
 // Get the type of Website

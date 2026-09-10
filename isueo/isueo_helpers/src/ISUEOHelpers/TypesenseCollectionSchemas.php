@@ -287,7 +287,7 @@ class TypesenseCollectionSchemas
           'node_types' => 'string[]',
           'node_count_published' => 'int64[]',
           'node_count_unpublished' => 'int64[]',
-          'node_last_modified' => 'int64[]',
+          'node_last_modified_published' => 'int64[]',
           'menu_items_top_level' => 'string[]',
         ],
 
