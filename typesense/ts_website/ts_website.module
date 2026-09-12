@@ -95,6 +95,7 @@ function _ts_website_audit_site() {
   $record['url'] = str_contains($folder, '.') ? ('https://' . $folder) : ('https://www.extension.iastate.edu/' . $folder);
   $record['type'] = _ts_website_get_type($record['site_name'], $folder);
 
+  _ts_website_get_git_info($record);
   _ts_website_get_user_info($record);
   _ts_website_get_node_info($record);
   _ts_website_get_menu_info($record);
@@ -102,38 +103,6 @@ function _ts_website_audit_site() {
   // Write Info to the Typesense client
   $client = Typesense::getClient('websites');
   $client->collections['websites']->documents->upsert($record);
-
-  /*
-    // Short-running operation example, not using a queue:
-    // Delete all expired records since the last cron run.
-    $expires = \Drupal::state()->get('mymodule.last_check', 0);
-    \Drupal::database()->delete('mymodule_table')
-      ->condition('expires', $expires, '>=')
-      ->execute();
-    \Drupal::state()->set('mymodule.last_check', REQUEST_TIME);
-
-    // Long-running operation example, leveraging a queue:
-    // Queue news feeds for updates once their refresh interval has elapsed.
-    $queue = \Drupal::queue('aggregator_feeds');
-    $ids = \Drupal::entityTypeManager()->getStorage('aggregator_feed')->getFeedIdsToRefresh();
-    foreach (Feed::loadMultiple($ids) as $feed) {
-      if ($queue->createItem($feed)) {
-        // Add timestamp to avoid queueing item more than once.
-        $feed->setQueuedTime(REQUEST_TIME);
-        $feed->save();
-      }
-    }
-    $ids = \Drupal::entityQuery('aggregator_feed')
-      ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
-      ->execute();
-    if ($ids) {
-      $feeds = Feed::loadMultiple($ids);
-      foreach ($feeds as $feed) {
-        $feed->setQueuedTime(0);
-        $feed->save();
-      }
-    }
-  */
 }
 
 // Attempt to get the Drush Alias for the sute using the Drupal root folder path
@@ -146,6 +115,28 @@ function _ts_website_get_folder() {
   }
 
   return $folder;
+}
+
+// Get information about Users, and add it to the record array
+function _ts_website_get_git_info(array &$record) {
+  $folders = [
+    'theme' => 'themes/custom/iastate_theme',
+    'd8modules' => 'modules/custom/d8modules',
+  ];
+
+  foreach ($folders as $key => $value) {
+    $working_dir = DRUPAL_ROOT . '/' . $value;
+    $cwd = getcwd();
+    chdir($working_dir);
+
+    // -n1 limits output to the single latest commit
+    // --pretty=format:"%h" returns the short hash (use %H for the full hash)
+    $command = "git log -n1 --pretty=format:\"%h\" -- " . escapeshellarg($working_dir);
+    $commit_id = trim(shell_exec($command));
+
+    $record['git_commit_' . $key] = $commit_id;
+    chdir($cwd);
+  }
 }
 
 // Get information about Users, and add it to the record array

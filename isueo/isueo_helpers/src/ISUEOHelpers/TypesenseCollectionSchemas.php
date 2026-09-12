@@ -278,6 +278,8 @@ class TypesenseCollectionSchemas
           'drush_alias' => 'string',
           'url' => 'string',
           'type' => 'string',
+          'git_commit_theme' => 'string',
+          'git_commit_d8modules' => 'string',
           'users_active' => 'string[]',
           'users_active_last_access' => 'int64[]',
           'users_blocked' => 'string[]',
@@ -299,6 +301,8 @@ class TypesenseCollectionSchemas
         'facets' => [
           'site_name',
           'type',
+          'git_commit_theme',
+          'git_commit_d8modules',
         ],
 
         // Optional fields
