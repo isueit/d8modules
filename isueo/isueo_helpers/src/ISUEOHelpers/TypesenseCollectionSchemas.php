@@ -278,6 +278,7 @@ class TypesenseCollectionSchemas
           'drush_alias' => 'string',
           'url' => 'string',
           'type' => 'string',
+          'drupal_version' => 'string',
           'git_commit_theme' => 'string',
           'git_commit_d8modules' => 'string',
           'users_active' => 'string[]',
@@ -301,6 +302,7 @@ class TypesenseCollectionSchemas
         'facets' => [
           'site_name',
           'type',
+          'drupal_version',
           'git_commit_theme',
           'git_commit_d8modules',
         ],

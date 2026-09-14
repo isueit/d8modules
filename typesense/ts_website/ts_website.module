@@ -11,17 +11,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Typesense\Client;
 
 /**
-* Implements hook_rebuild().
-*/
+ * Implements hook_rebuild().
+ */
 
-function ts_website_rebuild() {
+function ts_website_rebuild()
+{
   _ts_website_audit_site();
 }
 /**
-* Implements hook_cron().
-*/
+ * Implements hook_cron().
+ */
 
-function ts_website_cron() {
+function ts_website_cron()
+{
   _ts_website_audit_site();
 
   /*
@@ -58,21 +60,23 @@ function ts_website_cron() {
 }
 
 /**
-* Implements hook_theme().
-*/
+ * Implements hook_theme().
+ */
 
-function ts_website_theme($existing, $type, $theme, $path) {
+function ts_website_theme($existing, $type, $theme, $path)
+{
   return [
-      'website_information_theme' => [
-        'variables' => [
-          'page_title' => NULL,
-          'website' => [],
-        ],
+    'website_information_theme' => [
+      'variables' => [
+        'page_title' => NULL,
+        'website' => [],
       ],
-    ];
+    ],
+  ];
 }
 
-function _ts_website_audit_site() {
+function _ts_website_audit_site()
+{
   // Only put production sites in Typesense
   if (!ISUEOHelpers\General::is_production_server()) {
     return;
@@ -95,7 +99,7 @@ function _ts_website_audit_site() {
   $record['url'] = str_contains($folder, '.') ? ('https://' . $folder) : ('https://www.extension.iastate.edu/' . $folder);
   $record['type'] = _ts_website_get_type($record['site_name'], $folder);
 
-  _ts_website_get_git_info($record);
+  _ts_website_get_version_info($record);
   _ts_website_get_user_info($record);
   _ts_website_get_node_info($record);
   _ts_website_get_menu_info($record);
@@ -106,7 +110,8 @@ function _ts_website_audit_site() {
 }
 
 // Attempt to get the Drush Alias for the sute using the Drupal root folder path
-function _ts_website_get_folder() {
+function _ts_website_get_folder()
+{
   $folder = '';
 
   $folders = explode('/', Drupal::hasService('app.root') ? \Drupal::container()->getParameter('app.root') : DRUPAL_ROOT);
@@ -118,7 +123,10 @@ function _ts_website_get_folder() {
 }
 
 // Get information about Users, and add it to the record array
-function _ts_website_get_git_info(array &$record) {
+function _ts_website_get_version_info(array &$record)
+{
+  $record['drupal_verson'] = Drupal::VERSION;
+
   $folders = [
     'theme' => 'themes/custom/iastate_theme',
     'd8modules' => 'modules/custom/d8modules',
@@ -140,7 +148,8 @@ function _ts_website_get_git_info(array &$record) {
 }
 
 // Get information about Users, and add it to the record array
-function _ts_website_get_user_info(array &$record) {
+function _ts_website_get_user_info(array &$record)
+{
   $users_active = [];
   $users_active_last_access = [];
   $users_blocked = [];
@@ -176,7 +185,8 @@ function _ts_website_get_user_info(array &$record) {
 }
 
 // Get information about nodes, and add it to the record array
-function _ts_website_get_node_info(array &$record) {
+function _ts_website_get_node_info(array &$record)
+{
   $node_types = [];
   $node_types_human = [];
   $node_types_published = [];
@@ -234,7 +244,8 @@ function _ts_website_get_node_info(array &$record) {
 }
 
 // Get the type of Website
-function _ts_website_get_type(string $site_name, string $folder) {
+function _ts_website_get_type(string $site_name, string $folder)
+{
   $type = 'Subsite';
 
   if (str_contains($site_name, ' County')) {
@@ -247,7 +258,8 @@ function _ts_website_get_type(string $site_name, string $folder) {
 }
 
 // Get information about menus, and add it to the record array
-function _ts_website_get_menu_info(array &$record) {
+function _ts_website_get_menu_info(array &$record)
+{
   $top_level_menu_items = [];
   $top_level_menu_items_disabled = [];
 
