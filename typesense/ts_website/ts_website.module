@@ -125,7 +125,7 @@ function _ts_website_get_folder()
 // Get information about Users, and add it to the record array
 function _ts_website_get_version_info(array &$record)
 {
-  $record['drupal_verson'] = Drupal::VERSION;
+  $record['drupal_version'] = Drupal::VERSION;
 
   $folders = [
     'theme' => 'themes/custom/iastate_theme',
