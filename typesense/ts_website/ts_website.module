@@ -142,7 +142,7 @@ function _ts_website_get_version_info(array &$record)
     $command = "git log -n1 --pretty=format:\"%h\" -- " . escapeshellarg($working_dir);
     $commit_id = trim(shell_exec($command));
 
-    $record['git_commit_' . $key] = $commit_id;
+    $record['git_commit_' . $key] = empty($commit_id) ? 'unknown' : $commit_id;
     chdir($cwd);
   }
 }
