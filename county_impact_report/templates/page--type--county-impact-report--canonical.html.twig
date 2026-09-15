@@ -122,6 +122,9 @@
                 <p class="d-none d-print-block"><span style="font-size: 12pt; font-weight: 700;">County Staff</span><br><span style="font-size: .9rem; word-wrap: break-word; overflow-wrap: break-word;">https://www.extension.iastate.edu{{ base_path }}staff</span></p>
                 <p><a class="btn btn-secondary d-print-none" href="{{ base_path }}extension-council">County Council</a></p>
                 <p class="d-none d-print-block"><span style="font-size: 12pt; font-weight: 700;">County Council</span><br><span style="font-size: .9rem; word-wrap: break-word; overflow-wrap: break-word;">https://www.extension.iastate.edu{{ base_path }}extension-council</span></p>
+                {% if logged_in %}
+                  <p><a class="btn btn-secondary d-print-none" href="{{ url('<current>') }}/print">Print Report</a></p>
+                {% endif %}
               </div>
             </div>
           </div>

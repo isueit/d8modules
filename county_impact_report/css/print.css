@@ -253,12 +253,8 @@ p.footer-legal {
 .contact-info #block-contact-us br {
     display: none !important;
   }
-.contact-info #block-contact-us > div:not(.contextual)::after {
+.contact-info #block-contact-us > div:not(.contextual):has(~ div:not(.contextual))::after {
     content: " | ";
-}
-.contact-info #block-contact-us > div:last-of-type:not(.contextual)::after,
-.contact-info #block-contact-us > div:nth-last-of-type(2):has(+ .contextual)::after {
-    content: none;
 }
 .contact-info #block-contact-us div.contextual {
   display: none;

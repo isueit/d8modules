@@ -34,9 +34,19 @@ div#block-iastate-theme-content--2 .paragraph {
 	height: 275px;
 	border-radius: .25rem;
 	object-fit: cover;
+	max-width: 100%;
+	display: block;
+}
+.paragraph .impact-story-image figure.caption-img {
 	max-width: 350px;
-	margin-left: 1.5rem;
-	margin-bottom: 1.5rem;
+	margin: 0 0 1.5rem 1.5rem;
+}
+.paragraph .impact-story-image figure.caption-img.has-caption img {
+	border-radius: .25rem .25rem 0 0;
+}
+.paragraph .impact-story-image figure.caption-img.has-caption figcaption {
+	border-radius: 0 0 .25rem .25rem;
+	overflow: hidden;
 }
 .paragraph.paragraph--type--county-impact-story h2 {
 	padding-top: 4rem;
@@ -106,8 +116,9 @@ div#block-iastate-theme-content--2 .paragraph {
 	.paragraph .impact-story-image {
 		float: none;
 	}
-	.paragraph .impact-story-image img {
+	.paragraph .impact-story-image figure.caption-img {
 		margin-left: 0;
+		max-width: 100%;
 	}
 	.impact-story-stats-one .layout-builder-base--three-columns .layout-content, .impact-story-stats-two .layout-builder-base--three-columns .layout-content {
 		row-gap: 40px;
