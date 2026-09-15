@@ -140,7 +140,8 @@ function _ts_website_get_version_info(array &$record)
     // -n1 limits output to the single latest commit
     // --pretty=format:"%h" returns the short hash (use %H for the full hash)
     $command = "git log -n1 --pretty=format:\"%h\" -- " . escapeshellarg($working_dir);
-    $commit_id = trim(shell_exec($command));
+    $shell_exec_result = shell_exec($command);
+    $commit_id = empty($shell_exec_result) ? 'unknown' : trim($shell_exec_result);
 
     $record['git_commit_' . $key] = empty($commit_id) ? 'unknown' : $commit_id;
     chdir($cwd);
