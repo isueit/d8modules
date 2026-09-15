@@ -12,6 +12,7 @@ function feature_with_large_image_install()
     'access block library',
     'delete any feature_with_large_image block content',
     'edit any feature_with_large_image block content',
+    'create feature_with_large_image block content',
   ];
   Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
 }
