@@ -488,9 +488,9 @@ h2.newsletter-section-heading {
 		position: relative;
 	}
 	.newsletter-hero-label.container h1.isu-page-title img {
-		/* Clover emblem is a white PNG, meant for the photo banner — invisible
-		   against the flattened white print background. */
-		display: none !important;
+		max-width: 3rem !important;
+		margin-right: 0.75rem !important;
+		float: left;
 	}
 	.newsletter-print-kicker {
 		margin: 0 0 0.2rem;
