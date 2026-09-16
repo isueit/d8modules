@@ -1,0 +1,25 @@
+spectrum:
+  remote: https://github.com/bgrins/spectrum
+  version: 1.6.0
+  js:
+    js/spectrum.js: { minified: false }
+  css:
+    component:
+      css/spectrum.css: {}
+  license:
+    name: MIT
+    url: https://github.com/bgrins/spectrum/blob/master/LICENSE
+    gpl-compatible: true
+  dependencies:
+    - core/jquery
+
+color_picker:
+  version: 1.x
+  js:
+    js/color-picker.js: { minified: false }
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+    - isueo_color_picker/spectrum

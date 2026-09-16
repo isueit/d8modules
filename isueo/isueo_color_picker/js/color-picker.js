@@ -1,11 +1,20 @@
 /**
  * @file
- * Inline accessibility checker for group color fields.
+ * Inline WCAG accessibility checker for color picker fields, plus an
+ * optional preset-palette chooser.
  *
- * Non-button fields: contrast ratio against white (#ffffff) — the common
- *   use case (text on a white page, or white text on a colored background).
- * Button fields: best text color (white or black) calculated from WCAG
- *   relative luminance, with pass/fail ratio displayed.
+ * Driven entirely by drupalSettings.colorPickerWidget — any form can opt in
+ * by attaching the isueo_color_picker/color_picker library and populating:
+ *   - fields: array of { fieldName, inputSelector, default, isButton,
+ *     backgrounds, dynamicBg, cssKey } — one entry per color field to check.
+ *   - palettes (optional): array of { id, label, colors } preset palettes.
+ *     Omit this key entirely to disable the palette chooser.
+ *
+ * Non-button fields: contrast ratio against each configured background — the
+ *   common use case (text on a white page, or white text on a colored
+ *   background).
+ * Button fields (isButton: true): best text color (white or black)
+ *   calculated from WCAG relative luminance, with pass/fail ratio displayed.
  *
  * All calculations are local — no external API calls.
  */
@@ -211,14 +220,42 @@
     return html;
   }
 
+  // ─── Spectrum picker (opt-in) ───────────────────────────────────────────────
+  // Only runs when a caller explicitly sets colorPickerWidget.initSpectrum.
+  // Callers whose inputs already get Spectrum from elsewhere (e.g. regcytes'
+  // color_field-driven group fields, which use color_field's own Spectrum
+  // widget) must leave this unset so the field is never initialized twice.
+
+  Drupal.behaviors.colorPickerSpectrum = {
+    attach(context) {
+      const settings = drupalSettings.colorPickerWidget;
+      if (!settings || !settings.initSpectrum) return;
+
+      once('color-picker-spectrum', 'form', context).forEach(form => {
+        settings.fields.forEach(cfg => {
+          const input = form.querySelector(cfg.inputSelector);
+          if (!input) return;
+
+          $(input).spectrum({
+            showInitial: true,
+            showInput: true,
+            preferredFormat: 'hex',
+            allowEmpty: false,
+            appendTo: input.parentElement,
+          });
+        });
+      });
+    },
+  };
+
   // ─── Behaviour ─────────────────────────────────────────────────────────────
 
-  Drupal.behaviors.regcytesGroupColorPicker = {
+  Drupal.behaviors.colorPickerWidget = {
     attach(context) {
-      const settings = drupalSettings.regcytesGroupColors;
+      const settings = drupalSettings.colorPickerWidget;
       if (!settings) return;
 
-      once('regcytes-color-picker', 'form', context).forEach(form => {
+      once('color-picker-widget', 'form', context).forEach(form => {
         injectStyles();
 
         settings.fields.forEach(cfg => {
@@ -268,13 +305,14 @@
   };
 
   // ─── Palette chooser ───────────────────────────────────────────────────────
+  // Dormant unless drupalSettings.colorPickerWidget.palettes is populated.
 
-  Drupal.behaviors.regcytesGroupPalettePicker = {
+  Drupal.behaviors.colorPickerPalettePicker = {
     attach(context) {
-      const settings = drupalSettings.regcytesGroupColors;
+      const settings = drupalSettings.colorPickerWidget;
       if (!settings || !settings.palettes || !settings.palettes.length) return;
 
-      once('regcytes-palette-picker', 'form', context).forEach(form => {
+      once('color-picker-palette', 'form', context).forEach(form => {
         injectStyles();
 
         // Locate the first color field wrapper — insert the chooser just before

@@ -1,0 +1,6 @@
+name: 'ISUEO Color Picker'
+type: module
+core_version_requirement: ^10 || ^11
+description: 'Shared inline WCAG contrast checker for color picker fields. Attach the color_picker library and populate drupalSettings.colorPickerWidget to use it on any form.'
+version: '8.x-1.0-dev'
+package: 'ISUEO'
