@@ -704,22 +704,6 @@ h2.newsletter-section-heading {
 	.ckeditor-accordion-container .ckeditor-accordion-toggle {
 		display: none !important;
 	}
-
-	/* Story/thumbnail images print capped at 220px tall (width scales
-	   proportionally) and floated in their original left/right direction
-	   (the teaser thumbnail field always floats right; WYSIWYG-embedded
-	   images carry Drupal's "align left/right" class, from core's
-	   align.module.css), so body text wraps beside them instead of
-	   running full width above/below. The wrapping .align-left/
-	   .align-right div is left at its default auto width (a floated
-	   box's shrink-to-fit sizing) rather than forced to a fixed
-	   percentage — that's safe here specifically because the <img>'s own
-	   size is now fully determined by max-height + width:auto (a
-	   standard replaced-element calculation), not a percentage of an
-	   as-yet-unresolved container width, which is what previously made
-	   shrink-to-fit fall back to the original, oversized intrinsic
-	   dimensions instead of the visibly shrunk size. */
-	.field-content.newsletter-page-thumbnail,
 	.paragraph--type--create-content .align-right,
 	.paragraph--type--existing-content .align-right {
 		float: right;
@@ -744,9 +728,8 @@ h2.newsletter-section-heading {
 		height: auto !important;
 		margin: 0 !important;
 	}
-	/* Any image not wrapped in one of the above (no alignment class) —
-	   left un-floated, centered by default block flow. */
 	.paragraph--type--create-content img,
+	.field-content.newsletter-page-thumbnail,
 	.paragraph--type--existing-content img {
 		float: none !important;
 		margin: 0 0 0.5rem !important;
