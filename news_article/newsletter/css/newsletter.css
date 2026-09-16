@@ -734,7 +734,9 @@ h2.newsletter-section-heading {
 		float: none !important;
 		margin: 0 0 0.5rem !important;
 	}
-
+	.field-content.newsletter-page-thumbnail img {
+		max-width: 60% !important;
+	}
 	/* Article/story titles print smaller and in plain black so they read
 	   as body content, not competing with the accent-colored section
 	   headings above them. */
