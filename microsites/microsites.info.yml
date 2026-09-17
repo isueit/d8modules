@@ -7,6 +7,8 @@ core_version_requirement: ^10 || ^11
 dependencies:
  - drupal:block
  - drupal:node
- - drupal:group
+ - group:group
+ - group:gnode
+ - group_content_menu:group_content_menu
  - drupal:path_alias
  - drupal:link
