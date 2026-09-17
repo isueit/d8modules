@@ -9,7 +9,7 @@ webchat:
     https://cdn.botframework.com/botframework-webchat/latest/webchat.js: { type: external, minified: true }
 
 widget:
-  version: 1.0.0
+  version: 1.0.1
   css:
     theme:
       css/porkbot.css: {}

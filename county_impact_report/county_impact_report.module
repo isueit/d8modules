@@ -87,6 +87,8 @@ function county_impact_report_theme($existing, $type, $theme, $path)
 
 function county_impact_report_preprocess_paragraph__county_impact_story(&$variables)
 {
+  $variables['#attached']['library'][] = 'county_impact_report/county_impact_report';
+
   $node = \Drupal::routeMatch()->getParameter('node');
   if (!$node) {
     return;

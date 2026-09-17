@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.county_impact_story.field_county_impact_img_caption
     - field.field.paragraph.county_impact_story.field_county_impact_story_body
     - field.field.paragraph.county_impact_story.field_county_impact_story_image
     - field.field.paragraph.county_impact_story.field_county_impact_story_title
@@ -16,6 +17,14 @@ targetEntityType: paragraph
 bundle: county_impact_story
 mode: default
 content:
+  field_county_impact_img_caption:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_county_impact_story_body:
     type: text_textarea
     weight: 1

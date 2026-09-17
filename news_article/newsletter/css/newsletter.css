@@ -40,6 +40,116 @@ tr.paragraph-type--featured-image td.field-multiple-drag:after {
 	grid-row: 1;
 	grid-column: 2;
 }
+/* The pin above applies at every width so the grid keeps "first"/
+   "second" in their correct columns regardless of DOM order. But
+   layout_builder_base_library's own responsive breakpoints (its CSS,
+   layout-builder-base-library.css) collapse .layout-content to a single
+   grid-template-columns: 1fr once the viewport narrows past whichever
+   breakpoint this section is configured with — and a grid item explicitly
+   pinned to grid-column: 2 still gets its own (implicit) column even
+   when the grid itself now defines only one explicit column, so "Save
+   the Date" stayed squeezed in beside the main content column instead of
+   stacking below it, each shrunk (by the min-width:0 fix below) until
+   they overlapped rather than actually wrapping. Un-pin both regions
+   back to column 1 / auto row at each of that library's own breakpoint
+   tiers so they stack properly once it collapses — this is a no-op
+   whenever a given tier's modifier class isn't the one this particular
+   section is configured with.
+
+   Stacked order: "second" (Save the Date) is first in the DOM (for the
+   print float trick — see layout--base--twocols--newsletter.html.twig),
+   so plain auto-placement here would stack it above the main content.
+   `order` puts main content visually first and Save the Date below it,
+   without touching DOM/reading order. */
+@media only screen and (max-width: 600px) {
+	.isueo-newsletter .layout--column-breakpoint--small .layout__region--first,
+	.isueo-newsletter .layout--column-breakpoint--small .layout__region--second {
+		grid-column: 1 !important;
+		grid-row: auto !important;
+	}
+	.isueo-newsletter .layout--column-breakpoint--small .layout__region--first {
+		order: 1;
+	}
+	.isueo-newsletter .layout--column-breakpoint--small .layout__region--second {
+		order: 2;
+	}
+}
+@media only screen and (max-width: 800px) {
+	.isueo-newsletter .layout--column-breakpoint--medium .layout__region--first,
+	.isueo-newsletter .layout--column-breakpoint--medium .layout__region--second {
+		grid-column: 1 !important;
+		grid-row: auto !important;
+	}
+	.isueo-newsletter .layout--column-breakpoint--medium .layout__region--first {
+		order: 1;
+	}
+	.isueo-newsletter .layout--column-breakpoint--medium .layout__region--second {
+		order: 2;
+	}
+}
+@media only screen and (max-width: 1200px) {
+	.isueo-newsletter .layout-builder-base--standard .layout__region--first,
+	.isueo-newsletter .layout-builder-base--standard .layout__region--second {
+		grid-column: 1 !important;
+		grid-row: auto !important;
+	}
+	.isueo-newsletter .layout-builder-base--standard .layout__region--first {
+		order: 1;
+	}
+	.isueo-newsletter .layout-builder-base--standard .layout__region--second {
+		order: 2;
+	}
+}
+@media only screen and (max-width: 1400px) {
+	.isueo-newsletter .layout-builder-base--large .layout__region--first,
+	.isueo-newsletter .layout-builder-base--large .layout__region--second {
+		grid-column: 1 !important;
+		grid-row: auto !important;
+	}
+	.isueo-newsletter .layout-builder-base--large .layout__region--first {
+		order: 1;
+	}
+	.isueo-newsletter .layout-builder-base--large .layout__region--second {
+		order: 2;
+	}
+}
+/* "Save the Date" column gets crushed to one-word-per-line on some
+   newsletters but not others. Cause: the grid tracks from
+   layout_builder_base_library (grid-template-columns: 0.75fr 0.25fr etc.)
+   resolve to minmax(auto, Nfr), and a grid item's automatic minimum size
+   is its min-content — so anything wide in the main content column (an
+   image without max-width, a long unbroken URL, a wide embed/table/iframe
+   pasted from Word or an external site) sets a floor that overflows its
+   own track and squeezes the narrow second column down to almost nothing.
+   Newsletters whose body content happens to have no such wide element
+   render fine, which is why it looks intermittent.
+
+   Fix: pin min-width:0 on both regions so they can shrink to their track,
+   re-declare the tracks as minmax(0, Nfr) so the configured ratio is
+   actually honored, and cap content images at 100% of their column. */
+.isueo-newsletter .layout__region--first,
+.isueo-newsletter .layout__region--second {
+	min-width: 0;
+}
+.isueo-newsletter .layout-builder-base--two-columns .layout-content {
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.isueo-newsletter .layout-builder-base--two-columns.layout--column-width--75-25 .layout-content {
+	grid-template-columns: minmax(0, 0.75fr) minmax(0, 0.25fr);
+}
+.isueo-newsletter .layout-builder-base--two-columns.layout--column-width--67-33 .layout-content {
+	grid-template-columns: minmax(0, 0.67fr) minmax(0, 0.33fr);
+}
+.isueo-newsletter .layout-builder-base--two-columns.layout--column-width--33-67 .layout-content {
+	grid-template-columns: minmax(0, 0.33fr) minmax(0, 0.67fr);
+}
+.isueo-newsletter .layout-builder-base--two-columns.layout--column-width--25-75 .layout-content {
+	grid-template-columns: minmax(0, 0.25fr) minmax(0, 0.75fr);
+}
+.isueo-newsletter .layout__region img {
+	max-width: 100%;
+	height: auto;
+}
 /* Style for archive notice */
 .archive-message-wrapper {
 	max-width: 1200px;
@@ -235,6 +345,7 @@ h2.newsletter-section-heading {
     padding-left: 0;
 }
 
+
 /* --------------------------------------  */
 /* ## SAVE THE DATE BLOCK
 /* --------------------------------------  */
@@ -355,6 +466,16 @@ h2.newsletter-section-heading {
 	   Date" (region "second") before the main content (region "first")
 	   for newsletters specifically — on screen, the grid-column rules
 	   above put it back on the right regardless. */
+	/* Not scoped to .layout-builder-base--two-columns: a newsletter section
+	   built with a different two-column layout won't carry that class, and its
+	   container would then stay display:grid in print (floats ignored on grid
+	   items). Force plain block flow for any newsletter layout container so the
+	   float rules below take effect regardless of which layout was used.
+	   (DOM order — "second" before "first", which the float depends on — is
+	   handled in newsletter.module::newsletter_theme_suggestions_layout_alter,
+	   which routes every newsletter two-column layout at the swapping
+	   template.) */
+	.isueo-newsletter .layout-content,
 	.isueo-newsletter .layout-builder-base--two-columns .layout-content {
 		display: block !important;
 	}
@@ -365,6 +486,12 @@ h2.newsletter-section-heading {
 	}
 	.isueo-newsletter .layout__region--second {
 		float: right !important;
+		clear: none !important;
+		/* grid pins from the on-screen rules above would otherwise still
+		   apply in print and fight the float if the container somehow stays
+		   grid — neutralise them. */
+		grid-row: auto !important;
+		grid-column: auto !important;
 		width: 33% !important;
 		box-sizing: border-box;
 		margin-left: 1.5rem;
@@ -373,7 +500,42 @@ h2.newsletter-section-heading {
 	}
 	.isueo-newsletter .layout__region--first {
 		float: none !important;
+		clear: none !important;
+		grid-row: auto !important;
+		grid-column: auto !important;
 		width: 100% !important;
+	}
+
+	/* Once the floated "Save the Date" column starts at the top of the
+	   article (DOM order fixed in newsletter.module), a long event list can
+	   still be taller than the space left on its first page. The float needs
+	   to be able to *fragment* across pages: if it — or any wrapper inside it
+	   — is treated as unbreakable, the print engine defers the whole float to
+	   the next page and the article text stops wrapping around it. Keep every
+	   level of the column breakable, and stop only the individual event cards
+	   from splitting mid-item. The sitewide print stylesheet also puts
+	   page-break-inside: avoid on every heading (css/print.css) — the "Save
+	   the Date" <h2> inherits that and can drag the top of the column with
+	   it, so clear it here too. */
+	.isueo-newsletter .layout__region--second,
+	.isueo-newsletter .layout__region--second .block-save-the-date,
+	.isueo-newsletter .layout__region--second .save-the-date-wrapper,
+	.isueo-newsletter .block-save-the-date h2.isu-block-title.h4 {
+		break-inside: auto !important;
+		page-break-inside: auto !important;
+	}
+	/* Column flex on .save-the-date-wrapper fragments unreliably across a
+	   page edge — the items already just stack, so drop to normal block
+	   flow for print. */
+	.isueo-newsletter .save-the-date-wrapper {
+		display: block;
+	}
+	.isueo-newsletter .save-the-date-item {
+		break-inside: avoid;
+		page-break-inside: avoid;
+	}
+	.isueo-newsletter .save-the-date-item + .save-the-date-item {
+		margin-top: 0.5rem;
 	}
 
 	/* Masthead: the on-screen version is a full-bleed photo banner, which
@@ -399,10 +561,15 @@ h2.newsletter-section-heading {
 	.newsletter-hero-label.container {
 		position: relative;
 	}
+	/* The white-clover <img> (screen) is hidden by its own .d-print-none
+	   class in the template; this sizes the green, no-border clover
+	   (.d-print-block) that prints in its place — scaled down from the
+	   6rem on-screen size to sit next to the smaller flattened print
+	   title instead of dwarfing it. */
 	.newsletter-hero-label.container h1.isu-page-title img {
-		/* Clover emblem is a white PNG, meant for the photo banner — invisible
-		   against the flattened white print background. */
-		display: none !important;
+		max-width: 3rem !important;
+		margin-right: 0.75rem !important;
+		float: left;
 	}
 	.newsletter-print-kicker {
 		margin: 0 0 0.2rem;
@@ -465,11 +632,20 @@ h2.newsletter-section-heading {
 		margin-left: 0.75rem;
 		background: #d4cfc7;
 	}
+	/* Drop the white circle/border chrome entirely on paper — it's there
+	   on screen to stand out against the green section-heading bar, but
+	   print already flattens that bar to plain text (see
+	   .newsletter-section-heading-wrapper above), so the circle would
+	   just be an odd outline around the clover with nothing to separate
+	   it from. Print the clover plain instead. */
 	.logo-circle {
 		margin-left: 0 !important;
-		border-color: var(--newsletter-print-color, #c8102e) !important;
-    width: 50px;
-    height: 50px;
+		width: auto;
+		height: auto;
+		border: none !important;
+		border-radius: 0;
+		background: none !important;
+		overflow: visible;
 	}
   .logo-circle img {
     height: 2rem;
@@ -616,22 +792,6 @@ h2.newsletter-section-heading {
 	.ckeditor-accordion-container .ckeditor-accordion-toggle {
 		display: none !important;
 	}
-
-	/* Story/thumbnail images print capped at 220px tall (width scales
-	   proportionally) and floated in their original left/right direction
-	   (the teaser thumbnail field always floats right; WYSIWYG-embedded
-	   images carry Drupal's "align left/right" class, from core's
-	   align.module.css), so body text wraps beside them instead of
-	   running full width above/below. The wrapping .align-left/
-	   .align-right div is left at its default auto width (a floated
-	   box's shrink-to-fit sizing) rather than forced to a fixed
-	   percentage — that's safe here specifically because the <img>'s own
-	   size is now fully determined by max-height + width:auto (a
-	   standard replaced-element calculation), not a percentage of an
-	   as-yet-unresolved container width, which is what previously made
-	   shrink-to-fit fall back to the original, oversized intrinsic
-	   dimensions instead of the visibly shrunk size. */
-	.field-content.newsletter-page-thumbnail,
 	.paragraph--type--create-content .align-right,
 	.paragraph--type--existing-content .align-right {
 		float: right;
@@ -656,12 +816,25 @@ h2.newsletter-section-heading {
 		height: auto !important;
 		margin: 0 !important;
 	}
-	/* Any image not wrapped in one of the above (no alignment class) —
-	   left un-floated, centered by default block flow. */
+	.field-content.newsletter-page-thumbnail,
 	.paragraph--type--create-content img,
 	.paragraph--type--existing-content img {
 		float: none !important;
 		margin: 0 0 0.5rem !important;
+	}
+	/* The existing-article thumbnail is a wide ~3.25:1 banner image (the
+	   650x200 style), so capping only its height still lets it reach
+	   ~700px wide — wider than the space actually left beside the
+	   floated Save the Date column, which print always fixes at 33%
+	   width plus margin/padding/border (see .layout__region--second
+	   above), regardless of the on-screen column ratio chosen for this
+	   layout. An inline image wider than the line width available next
+	   to a float isn't shrunk to fit by the browser; the print engine
+	   just drops it below the float instead, which is why these were
+	   bumping below "Save the Date" instead of running alongside their
+	   own article. Capping the width too keeps it inside that space. */
+	.field-content.newsletter-page-thumbnail img {
+		max-width: 60% !important;
 	}
 
 	/* Article/story titles print smaller and in plain black so they read

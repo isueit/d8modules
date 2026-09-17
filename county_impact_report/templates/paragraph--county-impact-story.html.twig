@@ -60,7 +60,15 @@
     {% block content %}
     <div class="paragraph-layout-content">
      <h2 class="isu-block-title h4">{{ content.field_county_impact_story_title }}</h2>
-     <div class="impact-story-image">{{ content.field_county_impact_story_image }}</div>
+     {% set caption_text = content.field_county_impact_img_caption|render|trim %}
+     <div class="impact-story-image">
+       <figure role="group" class="caption caption-img{{ caption_text ? ' has-caption' : '' }}">
+         {{ content.field_county_impact_story_image }}
+         {% if caption_text %}
+           <figcaption>{{ caption_text|raw }}</figcaption>
+         {% endif %}
+       </figure>
+     </div>
      <div class="impact-story-body">{{ content.field_county_impact_story_body }}</div>
      </div>
     {% endblock %}

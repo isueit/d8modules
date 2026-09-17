@@ -269,6 +269,49 @@ class TypesenseCollectionSchemas
         ],
       ],
 
+      'websites' => [
+        'default_sorting_field' => '',
+
+        // Define the fields
+        'fields' => [
+          'site_name' => 'string',
+          'drush_alias' => 'string',
+          'url' => 'string',
+          'type' => 'string',
+          'drupal_version' => 'string',
+          'git_commit_theme' => 'string',
+          'git_commit_d8modules' => 'string',
+          'users_active' => 'string[]',
+          'users_active_last_access' => 'int64[]',
+          'users_blocked' => 'string[]',
+          'users_blocked_last_access' => 'int64[]',
+          'nodes_published' => 'int64',
+          'nodes_unpublished' => 'int64',
+          'node_types' => 'string[]',
+          'node_count_published' => 'int64[]',
+          'node_count_unpublished' => 'int64[]',
+          'node_last_modified_published' => 'int64[]',
+          'menu_items_top_level' => 'string[]',
+        ],
+
+        // Sort fields
+        'sort' => [
+        ],
+
+        // Fields that are facets
+        'facets' => [
+          'site_name',
+          'type',
+          'drupal_version',
+          'git_commit_theme',
+          'git_commit_d8modules',
+        ],
+
+        // Optional fields
+        'optional' => [
+        ],
+      ],
+
       // Add new Definitions here
     ];
     $definitions['deleteme_brian'] = $definitions['plp_programs'];
