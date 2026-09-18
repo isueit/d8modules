@@ -7,6 +7,7 @@ Some prep work needs to be done before you can enable this module
             },
 
 2) Run the following commands
+   cp ../registrations/web/local/patches/group-deletenodes.patch web/local/patches
    composer require 'drupal/group:^3.3' --no-install
    composer require 'drupal/group_content_menu:^3.0' --no-install
    composer update --with-dependencies

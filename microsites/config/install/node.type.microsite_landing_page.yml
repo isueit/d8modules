@@ -25,7 +25,7 @@ third_party_settings:
     unpublish_enable: false
     unpublish_required: false
     unpublish_revision: false
-name: 'Group Landing Page'
+name: 'Microsite Landing Page'
 type: microsite_landing_page
 description: 'Landing Pages for Groups'
 help: null
