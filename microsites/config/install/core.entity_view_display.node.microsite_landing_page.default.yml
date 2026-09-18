@@ -1,0 +1,86 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.microsite_landing_page.body
+    - field.field.node.microsite_landing_page.layout_builder__layout
+    - node.type.microsite_landing_page
+  module:
+    - layout_builder
+    - layout_builder_restrictions
+    - layout_discovery
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          02e69b49-6d67-46a3-8eb1-bc24bd526385:
+            uuid: 02e69b49-6d67-46a3-8eb1-bc24bd526385
+            region: content
+            configuration:
+              id: 'extra_field_block:node:microsite_landing_page:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+          43209f5e-3e96-4395-b1f8-239c1979b6c4:
+            uuid: 43209f5e-3e96-4395-b1f8-239c1979b6c4
+            region: content
+            configuration:
+              id: 'field_block:node:microsite_landing_page:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories:
+        - 'Content fields'
+        - 'Custom block types'
+        - 'Custom blocks'
+        - Forms
+        - Help
+        - 'Lists (Views)'
+        - Menus
+        - Search
+        - System
+        - User
+        - core
+id: node.microsite_landing_page.default
+targetEntityType: node
+bundle: microsite_landing_page
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  layout_builder__layout: true

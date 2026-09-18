@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - group_content_menu.group_content_menu_type.microsite_menu
+id: group_content_menu.microsite_menu.default
+targetEntityType: group_content_menu
+bundle: microsite_menu
+mode: default
+content:
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden: {  }

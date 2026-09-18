@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.microsite
+    - node.type.microsite_landing_page
+  module:
+    - gnode
+    - node
+id: microsite-09081cc102e0df9e20d2c2
+group_type: microsite
+content_plugin: 'group_node:microsite_landing_page'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false
