@@ -89,4 +89,22 @@ class General
     }
     return $exists;
   }
+
+  public static function get_drush_alias()
+  {
+    $folder = '';
+
+    $folders = explode('/', \Drupal::hasService('app.root') ? \Drupal::container()->getParameter('app.root') : DRUPAL_ROOT);
+    if (count($folders) > 2) {
+      $folder = $folders[count($folders) - 2];
+    }
+
+    return explode('.', $folder)[0];
+  }
+
+  public static function is_main_extension_site()
+  {
+    $drush_alias = self::get_drush_alias();
+    return $drush_alias == 'extension';
+  }
 }

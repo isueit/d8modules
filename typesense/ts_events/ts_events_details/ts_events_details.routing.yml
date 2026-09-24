@@ -1,8 +1,33 @@
 ts_events_details.ts-event-details:
+  path: '/event-details/{eventID}/{eventTitle}'
+  defaults:
+    _controller: '\Drupal\ts_events_details\Controller\EventDetailsController::ts_event_details'
+    _title: 'Details of Event'
+    eventTitle: ''
+  requirements:
+    _permission: 'access content'
+
+ts_events_details.ts-event-details-calendar:
   path: '/calendar/event-details/{eventID}/{eventTitle}'
   defaults:
     _controller: '\Drupal\ts_events_details\Controller\EventDetailsController::ts_event_details'
     _title: 'Details of Event'
     eventTitle: ''
+  requirements:
+    _permission: 'access content'
+
+ts_events_details.ts_event_ics:
+  path: '/event-details/{eventID}/calendar.ics'
+  defaults:
+    _controller: '\Drupal\ts_events_details\Controller\EventDetailsController::download_ics'
+    _title: 'Download Event Calendar'
+  requirements:
+    _permission: 'access content'
+
+ts_events_details.ts_event_ics-calendar:
+  path: '/calendar/event-details/{eventID}/calendar.ics'
+  defaults:
+    _controller: '\Drupal\ts_events_details\Controller\EventDetailsController::download_ics'
+    _title: 'Download Event Calendar'
   requirements:
     _permission: 'access content'
