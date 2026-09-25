@@ -14,7 +14,7 @@ use Drupal\Core\Access\AccessResult;
  * group's base URL alias. Change this constant if your site uses a different
  * machine name for landing pages.
  */
-const MICROSITES_HOMEPAGE_BUNDLE = 'landing_page';
+const MICROSITES_HOMEPAGE_BUNDLE = 'microsite_landing_page';
 
 /**
  * Implements hook_node_presave().
