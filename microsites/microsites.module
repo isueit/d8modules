@@ -3,9 +3,15 @@
 use Drupal\node\Entity\Node;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\Group;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Access\AccessResult;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\group_content_menu\Entity\GroupContentMenu;
 
 /**
  * The node bundle used as each group's homepage.
@@ -14,6 +20,7 @@ use Drupal\Core\Access\AccessResult;
  * group's base URL alias. Change this constant if your site uses a different
  * machine name for landing pages.
  */
+//const MICROSITES_HOMEPAGE_BUNDLE = 'microsite_homepage';
 const MICROSITES_HOMEPAGE_BUNDLE = 'microsite_landing_page';
 
 /**
@@ -22,7 +29,11 @@ const MICROSITES_HOMEPAGE_BUNDLE = 'microsite_landing_page';
  * Prevents pathauto from auto-generating an alias for nodes that already
  * belong to a group. Their aliases are managed by this module.
  */
-function microsites_node_presave(\Drupal\node\NodeInterface $node): void {
+function microsites_node_presave(\Drupal\node\NodeInterface $node): void
+{
+  //if (in_array($node->bundle(), [MICROSITES_HOMEPAGE_BUNDLE, 'microsite_landing_page'])) {
+    //$node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
+  //}
   if ($node->isNew()) {
     return;
   }
@@ -44,7 +55,9 @@ function microsites_node_presave(\Drupal\node\NodeInterface $node): void {
 /**
  * Implements hook_theme().
  */
-function microsites_theme($existing, $type, $theme, $path): array {
+
+function microsites_theme($existing, $type, $theme, $path)
+{
   return [
     'menu__group_menu' => [
       'template' => 'menu--group-menu',
@@ -56,10 +69,74 @@ function microsites_theme($existing, $type, $theme, $path): array {
 /**
  * Implements hook_theme_suggestions_group_alter().
  *
+ * Ensures view-mode-based template suggestions are generated for group
+ * entities, so templates like group--hero-banner.html.twig are selected when
+ * the hero_banner view mode is rendered.
+ */
+/**
+ * Implements hook_preprocess_menu__group_menu().
+ *
+ * Passes registration open/closed state to the template so the Register link
+ * can be shown only when registration is active.
+ */
+function NotUsed_microsites_preprocess_menu__group_menu(array &$variables): void
+{
+  $variables['registration_is_open'] = FALSE;
+  $variables['registration_url'] = '';
+
+  try {
+    $contexts = \Drupal::service('microsites.path_prefix_context')
+      ->getRuntimeContexts(['group']);
+
+    if (empty($contexts['group'])) {
+      return;
+    }
+
+    $group = $contexts['group']->getContextValue();
+    if (!$group instanceof GroupInterface) {
+      return;
+    }
+
+    // Vary per URL path so each group site gets its own cached menu.
+    $variables['#cache']['contexts'][] = 'url.path';
+    // Invalidate when the group entity is saved (e.g. dates change).
+    $variables['#cache']['tags'] = array_merge(
+      $variables['#cache']['tags'] ?? [],
+      $group->getCacheTags()
+    );
+
+    $reg_field = $group->get('field_subsite_registration_deets');
+    if ($reg_field->isEmpty()) {
+      return;
+    }
+
+    $reg_paragraph = $reg_field->entity;
+    if (!$reg_paragraph) {
+      return;
+    }
+
+    $link_field = $reg_paragraph->get('field_subsite_registration_link');
+    if ($link_field->isEmpty()) {
+      return;
+    }
+
+    if ((bool) $reg_paragraph->get('field_subsite_open_close')->value) {
+      $variables['registration_is_open'] = TRUE;
+      $variables['registration_url'] = $link_field->first()->getUrl()->toString();
+    }
+  } catch (\Throwable $e) {
+    \Drupal::logger('microsites')->error('microsites_preprocess_menu__group_menu failed: @msg', ['@msg' => $e->getMessage()]);
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_group_alter().
+ *
  * Generates view-mode-based template suggestions for group entities so themes
  * can provide templates like group--{bundle}--{view-mode}.html.twig.
  */
-function microsites_theme_suggestions_group_alter(array &$suggestions, array $variables): void {
+function microsites_theme_suggestions_group_alter(array &$suggestions, array $variables)
+{
   $view_mode = $variables['elements']['#view_mode'] ?? NULL;
   if (!$view_mode) {
     return;
@@ -71,15 +148,19 @@ function microsites_theme_suggestions_group_alter(array &$suggestions, array $va
   }
 }
 
+
 /**
  * Implements hook_form_alter().
  *
- * - Requires a URL alias on all group add/edit forms.
- * - Pre-populates the alias field from the current homepage node's alias.
- * - Attaches the group-node autocomplete library to menu link forms.
+ * Require the URL Aliases in groups, and try to expand the tab containing this field
  */
-function microsites_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, string $form_id): void {
-  if (preg_match('/^group_.+_(add|edit)_form$/', $form_id)) {
+function microsites_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
+{
+  // Target group add/edit forms. Optionally restrict to a specific group type:
+  // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
+  if (preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
+
+    //$form['#after_build'][] = 'microsites_group_color_after_build';
     $form['#after_build'][] = 'microsites_group_form_after_build';
 
     if (isset($form['path'])) {
@@ -90,13 +171,18 @@ function microsites_form_alter(array &$form, \Drupal\Core\Form\FormStateInterfac
       $alias_el = &$form['path']['widget'][0]['alias'];
       $alias_el['#required'] = TRUE;
 
-      // The path widget's own validation checks the alias against the group's
-      // source path which always fails (the alias lives on the homepage node).
+      // PathWidget::validateFormElement() lives on the OUTER container element
+      // (path[widget][0]), not on the alias textfield. It reads
+      // $element['alias']['#value'] directly and validates uniqueness against
+      // the group's source path — which always fails because the alias belongs
+      // to the MICROSITES_HOMEPAGE_BUNDLE node. Clear it from the container.
       $form['path']['widget'][0]['#element_validate'] = [];
+
       $form['#validate'][] = 'microsites_group_alias_required_validate';
 
-      // For existing groups, pre-populate the field from the homepage node's
-      // current alias so editors can see and change the public URL.
+      // For existing groups the alias lives on the MICROSITES_HOMEPAGE_BUNDLE node, not
+      // the group, so the widget is blank. Pre-populate so admins can see and
+      // edit the current public URL.
       $form_object = $form_state->getFormObject();
       if ($form_object instanceof \Drupal\Core\Entity\EntityFormInterface) {
         $group_entity = $form_object->getEntity();
@@ -107,10 +193,7 @@ function microsites_form_alter(array &$form, \Drupal\Core\Form\FormStateInterfac
               ->loadByProperties(['gid' => $group_entity->id()]) as $rel
           ) {
             $node = $rel->getEntity();
-            if (
-              $node->getEntityTypeId() === 'node'
-              && $node->bundle() === MICROSITES_HOMEPAGE_BUNDLE
-            ) {
+            if ($node->getEntityTypeId() === 'node' && $node->bundle() === MICROSITES_HOMEPAGE_BUNDLE) {
               $current = \Drupal::service('path_alias.manager')
                 ->getAliasByPath('/node/' . $node->id());
               if ($current !== '/node/' . $node->id()) {
@@ -124,13 +207,14 @@ function microsites_form_alter(array &$form, \Drupal\Core\Form\FormStateInterfac
     }
   }
 
-  if (str_starts_with($form_id, 'menu_link_content_')) {
+  if (strpos($form_id, 'menu_link_content_') === 0) {
+
     $group = _microsites_get_group_from_request();
     if ($group) {
-      $url = \Drupal\Core\Url::fromRoute(
-        'microsites.group_node_autocomplete',
-        ['group' => $group->id()]
-      )->toString();
+
+      $url = \Drupal\Core\Url::fromRoute('microsites.group_node_autocomplete', ['group' => $group->id()])
+        ->toString();
+
       $form['#attached']['library'][] = 'microsites/group_autocomplete';
       $form['#attached']['drupalSettings']['microsites']['groupAutocompleteUrl'] = $url;
     }
@@ -143,43 +227,45 @@ function microsites_form_alter(array &$form, \Drupal\Core\Form\FormStateInterfac
  * Wires the group-node autocomplete route to the URI field on menu link forms
  * so editors can easily link to nodes within the current group.
  */
-function microsites_field_widget_single_element_form_alter(
-  array &$element,
-  \Drupal\Core\Form\FormStateInterface $form_state,
-  array $context
-): void {
+function microsites_field_widget_single_element_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
   $field_definition = $context['items']->getFieldDefinition();
+
   if ($field_definition->getName() !== 'link') {
     return;
   }
   if ($field_definition->getTargetEntityTypeId() !== 'menu_link_content') {
     return;
   }
+
   $group = _microsites_get_group_from_request();
   if (!$group) {
     return;
   }
+
+  // Keep this in case it ever starts working, but the real
+  // override is now done via JS attached in hook_form_alter.
   $element['uri']['#autocomplete_route_name'] = 'microsites.group_node_autocomplete';
-  $element['uri']['#autocomplete_route_parameters'] = ['group' => $group->id()];
+  $element['uri']['#autocomplete_route_parameters'] = ['group' => $group->id(), ];
 }
 
+
+
 /**
- * #after_build callback — moves all form field descriptions above the input.
+ * #after_build callback — moves all field descriptions above the input.
  */
-function microsites_group_form_after_build(array $form, \Drupal\Core\Form\FormStateInterface $form_state): array {
+function microsites_group_form_after_build(array $form, \Drupal\Core\Form\FormStateInterface $form_state): array
+{
   _microsites_description_before($form);
   return $form;
 }
 
 /**
- * Recursively sets #description_display = 'before' on all form elements.
+ * Recursively sets #description_display to 'before' on all form elements.
  */
-function _microsites_description_before(array &$element): void {
+function _microsites_description_before(array &$element): void
+{
   foreach (array_keys($element) as $key) {
-    if (is_string($key) && $key[0] === '#') {
-      continue;
-    }
-    if (!is_array($element[$key])) {
+    if ((is_string($key) && $key[0] === '#') || !is_array($element[$key])) {
       continue;
     }
     if (isset($element[$key]['#description'])) {
@@ -190,11 +276,13 @@ function _microsites_description_before(array &$element): void {
 }
 
 /**
- * Validation handler — ensures the URL alias is not empty on group forms.
+ * Validation handler — ensures the URL alias field is not empty.
  */
-function microsites_group_alias_required_validate(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
+function microsites_group_alias_required_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state)
+{
   $path_values = $form_state->getValue(['path', 0]);
   $alias = trim($path_values['alias'] ?? '');
+
   if (empty($alias)) {
     $form_state->setError(
       $form['path']['widget'][0]['alias'],
@@ -204,12 +292,11 @@ function microsites_group_alias_required_validate(array &$form, \Drupal\Core\For
 }
 
 /**
- * Stash/retrieve the alias typed on a group form.
- *
- * Bridges group_presave → group_insert / group_update so the alias can be
- * applied to the homepage node after the group entity is persisted.
+ * Stash/retrieve the alias the admin typed on a group form.
+ * Used to bridge group_presave → group_insert/group_update.
  */
-function &_microsites_alias_store(): array {
+function &_microsites_alias_store(): array
+{
   static $store = ['alias' => NULL];
   return $store;
 }
@@ -217,81 +304,360 @@ function &_microsites_alias_store(): array {
 /**
  * Implements hook_group_presave().
  *
- * Captures the URL alias entered on the group form, clears it from the group
- * entity (so the group itself never claims the public URL), and stashes it for
- * group_insert / group_update to apply to the homepage node.
+ * Capture the URL alias the admin entered, clear it off the group entity so the
+ * group itself never gets a Drupal path alias, and stash it for group_insert /
+ * group_update to apply to the MICROSITES_HOMEPAGE_BUNDLE node instead.
  */
-function microsites_group_presave(Group $group): void {
+function microsites_group_presave(\Drupal\group\Entity\Group $group): void
+{
+  if ($group->bundle() !== 'microsite') {
+    return;
+  }
+
   $alias = $group->get('path')->alias ?? '';
   if ($alias === '') {
     return;
   }
+
+  // Stash for the insert/update hook.
   $store = &_microsites_alias_store();
   $store['alias'] = $alias;
+
+  // Clear the alias so the group entity does not claim this URL.
   $group->get('path')->alias = '';
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert() for group entities.
+ * Implements hook_preprocess_html().
  *
- * Auto-creates a homepage node (MICROSITES_HOMEPAGE_BUNDLE) and assigns it
- * the alias entered on the group form. Skipped silently when the content type
- * does not exist on this site.
+ * Adds a 'group-site' body class on any page within a group URL prefix so
+ * theme CSS can suppress the global site name in the navbar.
  */
-function microsites_group_insert(Group $group): void {
-  $store = &_microsites_alias_store();
-  $homepage_alias = $store['alias'] ?? NULL;
-  $store['alias'] = NULL;
+function NotUsed_microsites_preprocess_html(array &$variables): void
+{
+  try {
+    $contexts = \Drupal::service('microsites.path_prefix_context')
+      ->getRuntimeContexts(['group']);
 
-  if (!$homepage_alias) {
+    if (empty($contexts['group'])) {
+      return;
+    }
+
+    $group = $contexts['group']->getContextValue();
+    if ($group instanceof GroupInterface) {
+      $variables['attributes']['class'][] = 'group-site';
+      if (
+        $group->hasField('field_subsite_design_type')
+        && $group->get('field_subsite_design_type')->value === 'custom_theme'
+      ) {
+        $variables['attributes']['class'][] = 'custom-theme';
+      }
+    }
+  } catch (\Throwable $e) {
+    // Context unavailable — do nothing.
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Passes hide_default_footer and subsite_contact to page templates based on
+ * the current group resolved via the microsites path-prefix context.
+ */
+function Not_Used_microsites_preprocess_page(array &$variables): void
+{
+  $variables['hide_default_footer'] = FALSE;
+  $variables['show_site_contact_info'] = FALSE;
+  $variables['subsite_contact'] = NULL;
+  $variables['custom_theme'] = FALSE;
+  $variables['subsite_group_label'] = '';
+  $variables['subsite_logo_url'] = '';
+  $variables['subsite_logo_alt'] = '';
+  $variables['subsite_dates_formatted'] = '';
+  $variables['subsite_location'] = '';
+  $variables['subsite_registration_url'] = '';
+
+  try {
+    $contexts = \Drupal::service('microsites.path_prefix_context')
+      ->getRuntimeContexts(['group']);
+
+    if (empty($contexts['group'])) {
+      return;
+    }
+
+    $group = $contexts['group']->getContextValue();
+    if (!$group instanceof GroupInterface) {
+      return;
+    }
+
+    // Vary per URL path and invalidate when the group is saved so toggle
+    // changes (field_subsite_open_close, etc.) are reflected immediately.
+    $variables['#cache']['contexts'][] = 'url.path';
+    $variables['#cache']['tags'] = \Drupal\Core\Cache\Cache::mergeTags(
+      $variables['#cache']['tags'] ?? [],
+      $group->getCacheTags()
+    );
+
+    if (
+      $group->hasField('field_hide_default_footer')
+      && !$group->get('field_hide_default_footer')->isEmpty()
+      && (bool) $group->get('field_hide_default_footer')->value
+    ) {
+      $variables['hide_default_footer'] = TRUE;
+    }
+
+    $is_custom = $group->hasField('field_subsite_design_type')
+      && $group->get('field_subsite_design_type')->value === 'custom_theme';
+    $variables['custom_theme'] = $is_custom;
+
+    // Always expose the group label so menu-navbar can show it in place of
+    // the linked site name on all group pages (custom-themed or not).
+    $variables['subsite_group_label'] = $group->label();
+
+    if ($is_custom) {
+
+      // Logo.
+      if (
+        $group->hasField('field_subsite_logo_graphic')
+        && !$group->get('field_subsite_logo_graphic')->isEmpty()
+      ) {
+        $logo_item   = $group->get('field_subsite_logo_graphic')->first();
+        $logo_entity = $logo_item ? $logo_item->entity : NULL;
+        if ($logo_entity) {
+          $variables['subsite_logo_url'] = \Drupal::service('file_url_generator')
+            ->generateAbsoluteString($logo_entity->getFileUri());
+          $variables['subsite_logo_alt'] = $logo_item->alt ?: $group->label();
+        }
+      }
+
+      // Formatted date range.
+      if (
+        $group->hasField('field_subsite_dates')
+        && !$group->get('field_subsite_dates')->isEmpty()
+      ) {
+        $di    = $group->get('field_subsite_dates')->first();
+        $start = new \DateTime($di->value);
+        $end   = new \DateTime($di->end_value);
+        $sm = $start->format('F');
+        $sd = $start->format('j');
+        $sy = $start->format('Y');
+        $em = $end->format('F');
+        $ed = $end->format('j');
+        $ey = $end->format('Y');
+        if ($sm === $em && $sd === $ed && $sy === $ey) {
+          $variables['subsite_dates_formatted'] = "{$sm} {$sd}, {$sy}";
+        } elseif ($sm === $em && $sy === $ey) {
+          $variables['subsite_dates_formatted'] = "{$sm} {$sd}–{$ed}, {$sy}";
+        } elseif ($sy === $ey) {
+          $variables['subsite_dates_formatted'] = "{$sm} {$sd} – {$em} {$ed}, {$sy}";
+        } else {
+          $variables['subsite_dates_formatted'] = "{$sm} {$sd}, {$sy} – {$em} {$ed}, {$ey}";
+        }
+      }
+
+      // Location.
+      if (
+        $group->hasField('field_subsite_location')
+        && !$group->get('field_subsite_location')->isEmpty()
+      ) {
+        $variables['subsite_location'] = $group->get('field_subsite_location')->value;
+      }
+
+      // Registration URL if window is currently open.
+      if (
+        $group->hasField('field_subsite_registration_deets')
+        && !$group->get('field_subsite_registration_deets')->isEmpty()
+      ) {
+        $reg_para = $group->get('field_subsite_registration_deets')->first()->entity;
+        if (
+          $reg_para
+          && $reg_para->hasField('field_subsite_registration_link')
+          && !$reg_para->get('field_subsite_registration_link')->isEmpty()
+        ) {
+          if ((bool) $reg_para->get('field_subsite_open_close')->value) {
+            $raw_uri = $reg_para->get('field_subsite_registration_link')->first()->uri;
+            try {
+              $variables['subsite_registration_url'] = \Drupal\Core\Url::fromUri($raw_uri)->toString();
+            } catch (\Exception $e) {
+              $variables['subsite_registration_url'] = $raw_uri;
+            }
+          }
+        }
+      }
+    }
+
+    if ($group->bundle() === 'microsite') {
+      $variables['show_site_contact_info'] = TRUE;
+
+      $variables['subsite_contacts'] = [];
+      if (
+        $group->hasField('field_subsite_contact')
+        && !$group->get('field_subsite_contact')->isEmpty()
+      ) {
+        foreach ($group->get('field_subsite_contact') as $item) {
+          if ($item->entity) {
+            $variables['subsite_contacts'][] = $item->entity;
+          }
+        }
+      }
+    }
+
+    // Inject group color overrides as an inline <style> in <head>.
+    //$css = microsites_group_color_css($group);
+    if ($css !== '') {
+      $variables['#attached']['html_head'][] = [
+        [
+          '#type'       => 'html_tag',
+          '#tag'        => 'style',
+          '#value'      => $css,
+          '#attributes' => ['data-microsites-group-colors' => $group->id()],
+        ],
+        'microsites_group_colors_' . $group->id(),
+      ];
+    }
+  } catch (\Throwable $e) {
+    \Drupal::logger('microsites')->error('microsites_preprocess_page failed: @msg', ['@msg' => $e->getMessage()]);
+  }
+
+  // On Layout Builder admin routes the path-prefix context never fires because
+  // the URL is /node/{nid}/layout, not the group's alias. Resolve the group
+  // from the node being edited so color custom properties are injected and
+  // blocks preview with the correct group styles.
+  try {
+    if (str_contains(\Drupal::routeMatch()->getRouteName(), 'layout_builder')) {
+      $variables['#attached']['library'][] = 'microsites/microsites';
+      $variables['#attached']['library'][] = 'microsites/micro_banner';
+      $node = \Drupal::routeMatch()->getParameter('node');
+      if ($node instanceof \Drupal\node\NodeInterface) {
+        foreach (
+          \Drupal::entityTypeManager()
+            ->getStorage('group_relationship')
+            ->loadByEntity($node) as $rel
+        ) {
+          $group = $rel->getGroup();
+          if (!$group instanceof GroupInterface) {
+            continue;
+          }
+          //$css = microsites_group_color_css($group);
+          if ($css !== '') {
+            $variables['#attached']['html_head'][] = [
+              [
+                '#type'       => 'html_tag',
+                '#tag'        => 'style',
+                '#value'      => $css,
+                '#attributes' => ['data-microsites-group-colors' => $group->id()],
+              ],
+              'microsites_group_colors_' . $group->id(),
+            ];
+          }
+          break;
+        }
+      }
+    }
+  } catch (\Throwable $e) {
+    // Group not resolvable on this route — leave defaults.
+  }
+}
+
+/**
+ * Implements hook_preprocess_group().
+ *
+ * Passes custom_theme flag to group entity templates (e.g. hero banner).
+ */
+function NotUsed_microsites_preprocess_group(array &$variables): void
+{
+  $group = $variables['group'];
+  $variables['custom_theme'] = $group->hasField('field_subsite_design_type')
+    && $group->get('field_subsite_design_type')->value === 'custom_theme';
+}
+
+/**
+ * Implements hook_preprocess_page_title().
+ *
+ * Suppresses the page title for nodes that have "Exclude node title" enabled.
+ */
+function NotUsed_microsites_preprocess_page_title(array &$variables): void
+{
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if (!$node instanceof \Drupal\node\NodeInterface) {
+    return;
+  }
+  try {
+    if (\Drupal::service('exclude_node_title.manager')->isTitleExcluded($node)) {
+      $variables['title'] = '';
+    }
+  } catch (\Throwable $e) {
+    // Service unavailable — do nothing.
+  }
+}
+
+function _microsites_get_group_from_request()
+{
+  $request = \Drupal::request();
+
+  // group_content_menu passes ?destination= or is accessed via
+  // /group/{group}/content paths — check route params first.
+  $route_match = \Drupal::routeMatch();
+
+  $group = $route_match->getParameter('group');
+  if ($group instanceof \Drupal\group\Entity\GroupInterface) {
+    return $group;
+  }
+
+  // Fallback: parse 'destination' query param if needed.
+  return NULL;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for group entities.
+ */
+function microsites_group_insert(Group $group)
+{
+  // Only act on a specific group type (e.g. "community").
+  // Remove this check if you want it for all group types.
+  if ($group->bundle() !== 'microsite') {
     return;
   }
 
-  // Only auto-create when the configured homepage bundle exists on this site.
-  $node_type = \Drupal::entityTypeManager()
-    ->getStorage('node_type')
-    ->load(MICROSITES_HOMEPAGE_BUNDLE);
-  if (!$node_type) {
-    return;
-  }
-
+  // Create the Homepage node.
   $node = Node::create([
     'type'   => MICROSITES_HOMEPAGE_BUNDLE,
-    'title'  => $group->label(),
+    'title'  => 'Homepage',
     'status' => 1,
     'uid'    => $group->getOwnerId(),
   ]);
-  // Prevent pathauto from generating an alias on this initial save.
-  if (class_exists('\Drupal\pathauto\PathautoState')) {
-    $node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
-  }
   $node->save();
+  $group->addRelationship($node, 'group_node:' . MICROSITES_HOMEPAGE_BUNDLE);
+  //microsites_node_auto_add_blocks($node);
 
-  try {
-    $group->addRelationship($node, 'group_node:' . MICROSITES_HOMEPAGE_BUNDLE);
+  // Apply the alias the admin entered on the group form to the MICROSITES_HOMEPAGE_BUNDLE
+  // node so it becomes the public URL (e.g. /conference-slug).
+  $store = &_microsites_alias_store();
+  $homepage_alias = NULL;
+  if (!empty($store['alias'])) {
+    $homepage_alias = $store['alias'];
+    \Drupal\path_alias\Entity\PathAlias::create([
+      'path'     => '/node/' . $node->id(),
+      'alias'    => $homepage_alias,
+      'langcode' => 'en',
+    ])->save();
+    $store['alias'] = NULL;
   }
-  catch (\Exception $e) {
-    \Drupal::logger('microsites')->notice(
-      'Could not add @bundle node to group @id (plugin not configured): @msg',
-      ['@bundle' => MICROSITES_HOMEPAGE_BUNDLE, '@id' => $group->id(), '@msg' => $e->getMessage()]
-    );
-  }
-
-  \Drupal\path_alias\Entity\PathAlias::create([
-    'path'     => '/node/' . $node->id(),
-    'alias'    => $homepage_alias,
-    'langcode' => 'en',
-  ])->save();
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update() for group entities.
  *
- * When the group's alias changes, re-derives aliases for all nodes in the
- * group: homepage → new base alias; others → new base alias + title slug.
+ * When an existing group is saved with a new alias, apply it to the
+ * MICROSITES_HOMEPAGE_BUNDLE node and remove any lingering alias from the group itself.
  */
-function microsites_group_update(Group $group): void {
-  // Delete any lingering alias that may have been saved on the group entity.
+function microsites_group_update(Group $group): void
+{
+  if ($group->bundle() !== 'microsite') {
+    return;
+  }
+
+  // Delete any old path alias that may still be on the group entity.
   $group_aliases = \Drupal::entityTypeManager()
     ->getStorage('path_alias')
     ->loadByProperties(['path' => '/group/' . $group->id()]);
@@ -315,13 +681,13 @@ function microsites_group_update(Group $group): void {
       ->loadByProperties(['gid' => $group->id()]) as $relationship
   ) {
     $entity = $relationship->getEntity();
-    if (!$entity instanceof \Drupal\node\NodeInterface) {
+    if ($entity->getEntityTypeId() !== 'node') {
       continue;
     }
+
     if ($entity->bundle() === MICROSITES_HOMEPAGE_BUNDLE) {
       _microsites_upsert_alias('/node/' . $entity->id(), $alias, $path_alias_storage);
-    }
-    else {
+    } elseif ($entity->bundle() === 'microsite_landing_page') {
       $slug = $alias_cleaner->cleanString($entity->getTitle());
       _microsites_upsert_alias('/node/' . $entity->id(), $alias . '/' . $slug, $path_alias_storage);
     }
@@ -329,45 +695,13 @@ function microsites_group_update(Group $group): void {
 }
 
 /**
- * Implements hook_group_relationship_insert().
+ * Creates or updates a single path alias, skipping if the value is unchanged.
  *
- * When any node is added to a group after initial group creation, auto-assigns
- * a path alias using the group's homepage alias as the prefix.
+ * Using an update instead of delete+create avoids tripping Drupal's path_alias
+ * unique constraint when the same alias is saved more than once in a request.
  */
-function microsites_group_relationship_insert(\Drupal\group\Entity\GroupRelationshipInterface $relationship): void {
-  $entity = $relationship->getEntity();
-  if (!$entity instanceof \Drupal\node\NodeInterface) {
-    return;
-  }
-
-  // Homepage nodes have their alias set in microsites_group_insert; skip here.
-  if ($entity->bundle() === MICROSITES_HOMEPAGE_BUNDLE && $entity->isNew()) {
-    return;
-  }
-
-  $group = $relationship->getGroup();
-  if (!$group instanceof GroupInterface) {
-    return;
-  }
-
-  // Find the homepage node's alias — that IS the group's path prefix.
-  $homepage_alias = _microsites_get_group_prefix($group);
-  if (!$homepage_alias) {
-    return;
-  }
-
-  $slug = \Drupal::service('pathauto.alias_cleaner')->cleanString($entity->getTitle());
-  _microsites_upsert_alias(
-    '/node/' . $entity->id(),
-    $homepage_alias . '/' . $slug,
-    \Drupal::entityTypeManager()->getStorage('path_alias')
-  );
-}
-
-/**
- * Creates or updates a single path alias, skipping when the value is unchanged.
- */
-function _microsites_upsert_alias(string $system_path, string $new_alias, $path_alias_storage): void {
+function _microsites_upsert_alias(string $system_path, string $new_alias, $path_alias_storage): void
+{
   $existing = $path_alias_storage->loadByProperties([
     'path'     => $system_path,
     'langcode' => 'en',
@@ -375,16 +709,17 @@ function _microsites_upsert_alias(string $system_path, string $new_alias, $path_
 
   if (!empty($existing)) {
     $alias_entity = reset($existing);
+    // Delete any duplicates beyond the first.
     foreach (array_slice($existing, 1) as $extra) {
       $extra->delete();
     }
+    // Only write if the alias actually changed.
     if ($alias_entity->getAlias() === $new_alias) {
       return;
     }
     $alias_entity->setAlias($new_alias);
     $alias_entity->save();
-  }
-  else {
+  } else {
     \Drupal\path_alias\Entity\PathAlias::create([
       'path'     => $system_path,
       'alias'    => $new_alias,
@@ -394,49 +729,134 @@ function _microsites_upsert_alias(string $system_path, string $new_alias, $path_
 }
 
 /**
- * Returns the path prefix (base alias) for a group by finding its homepage
- * node's path alias. Returns NULL when none is set.
+ * Implements hook_group_relationship_insert().
+ *
+ * When a microsite_landing_page node is added to an microsite group after the
+ * initial group creation, assign it a path alias using the group's homepage
+ * alias as the prefix.
  */
-function _microsites_get_group_prefix(GroupInterface $group): ?string {
+function microsites_group_relationship_insert(\Drupal\group\Entity\GroupRelationshipInterface $relationship): void
+{
+  $group = $relationship->getGroup();
+  if (!$group instanceof GroupInterface || $group->bundle() !== 'microsite') {
+    return;
+  }
+
+  $entity = $relationship->getEntity();
+  if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'microsite_landing_page') {
+    return;
+  }
+
+  // Find the homepage alias from the MICROSITES_HOMEPAGE_BUNDLE node in this group.
+  $homepage_alias = NULL;
   foreach (
     \Drupal::entityTypeManager()
       ->getStorage('group_relationship')
       ->loadByProperties(['gid' => $group->id()]) as $rel
   ) {
     $node = $rel->getEntity();
-    if (
-      $node instanceof \Drupal\node\NodeInterface
-      && $node->bundle() === MICROSITES_HOMEPAGE_BUNDLE
-    ) {
+    if ($node instanceof \Drupal\node\NodeInterface && $node->bundle() === MICROSITES_HOMEPAGE_BUNDLE) {
       $candidate = \Drupal::service('path_alias.manager')
         ->getAliasByPath('/node/' . $node->id());
       if ($candidate !== '/node/' . $node->id()) {
-        return $candidate;
+        $homepage_alias = $candidate;
       }
+      break;
     }
   }
-  return NULL;
-}
 
-/**
- * Returns the group from the current request's route parameters, if any.
- */
-function _microsites_get_group_from_request(): ?GroupInterface {
-  $group = \Drupal::routeMatch()->getParameter('group');
-  return $group instanceof GroupInterface ? $group : NULL;
-}
-
-/**
- * Implements hook_entity_access().
- *
- * Users with the 'administrator' role automatically have full access to all
- * group entities, regardless of group membership.
- */
-function microsites_entity_access(EntityInterface $entity, string $operation, AccountInterface $account): AccessResult {
-  if ($entity instanceof GroupInterface && $account->hasRole('administrator')) {
-    return AccessResult::allowed()
-      ->cachePerUser()
-      ->addCacheContexts(['user.roles']);
+  if (!$homepage_alias) {
+    return;
   }
-  return AccessResult::neutral();
+
+  $slug = \Drupal::service('pathauto.alias_cleaner')->cleanString($entity->getTitle());
+  $new_alias = $homepage_alias . '/' . $slug;
+  $system_path = '/node/' . $entity->id();
+
+  _microsites_upsert_alias(
+    $system_path,
+    $new_alias,
+    \Drupal::entityTypeManager()->getStorage('path_alias')
+  );
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+
+function NotUsed_microsites_node_auto_add_blocks(\Drupal\Core\Entity\EntityInterface $entity)
+{
+  // Get the layout field from the entity.
+  $layout_field = $entity->get('layout_builder__layout');
+  if (!$layout_field) {
+    return;
+  }
+
+    // Get all existing sections.
+  /** @var \Drupal\layout_builder\Section[] $sections */
+  $sections = $layout_field->getSections();
+
+  if (empty($sections)) {
+    //throw new \RuntimeException('No sections found on this entity layout.' . $entity->bundle());
+    //return;
+    $sections[0] = new Section('layout_base_onecol');
+  }
+
+  // Get the first section.
+  $first_section = $sections[0];
+
+  // Weight determines order — find the highest existing weight and add 1.
+  $existing_components = $first_section->getComponents();
+  $max_weight = 0;
+  foreach ($existing_components as $component) {
+    $weight = $component->getWeight();
+    if ($weight >= $max_weight) {
+      $max_weight = $weight + 1;
+    }
+  }
+
+  $title = $entity->getTitle();
+  if ($title == 'Homepage') {
+    $component = microsites_create_section_component('hero_banner', $max_weight);
+    $first_section->appendComponent($component);
+  } elseif ($title == 'Agenda') {
+    $component = microsites_create_section_component('micro_banner_details', $max_weight);
+    $first_section->appendComponent($component);
+    $component = microsites_create_section_component('agenda', $max_weight + 1);
+    $first_section->appendComponent($component);
+  } else {
+    $component = microsites_create_section_component('micro_banner_details', $max_weight);
+    $first_section->appendComponent($component);
+  }
+
+  $sections[0] = $first_section;
+
+  // Save the updated layout back to the entity.
+  $entity->set('layout_builder__layout', $sections);
+  $entity->save();
+}
+
+
+function NotUsed_microsites_create_section_component(string $view_mode, int $weight = 0)
+{
+  // Generate a unique UUID for the new component.
+  $uuid = \Drupal::service('uuid')->generate();
+
+  // Default block configuration.
+  $block_config = [
+    'id' => 'microsites_group_view_block',
+    'label' => '',
+    'label_display' => FALSE,
+    //'provider' => 'block_content', // adjust to your block's provider
+    'provider' => 'microsites_group_view_block', // adjust to your block's provider
+    'context_mapping' => [],
+    'view_mode' => $view_mode,
+  ];
+
+  // Create a new SectionComponent (block) and append to the first section.
+  $weight = $weight + 1;
+  $component = new SectionComponent($uuid, 'content', $block_config);
+  $component->setWeight($weight);
+
+  return $component;
 }
