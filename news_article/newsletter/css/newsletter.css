@@ -316,10 +316,15 @@ h2.newsletter-section-heading {
     padding-bottom: 0;
     padding-left: .4rem;
 }
-.logo-circle img {
+/* Also scoped under .isueo-newsletter .layout__region so this outranks the
+   generic ".isueo-newsletter .layout__region img { height: auto }" rule,
+   which would otherwise render the clover at its full 1080px size. */
+.logo-circle img,
+.isueo-newsletter .layout__region .logo-circle img {
     object-fit: contain;
     height: 2.6rem;
     width: auto;
+    max-width: none;
 }
 .logo-circle {
     width: 65px;
@@ -647,7 +652,8 @@ h2.newsletter-section-heading {
 		background: none !important;
 		overflow: visible;
 	}
-  .logo-circle img {
+  .logo-circle img,
+  .isueo-newsletter .layout__region .logo-circle img {
     height: 2rem;
   }
   .newsletter-section-heading-wrapper {
