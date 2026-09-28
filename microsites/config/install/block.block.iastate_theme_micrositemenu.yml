@@ -1,0 +1,40 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - group_content_menu.group_content_menu_type.microsite_menu
+  module:
+    - group
+    - group_content_menu
+  theme:
+    - iastate_theme
+id: iastate_theme_micrositemenu
+theme: iastate_theme
+region: menu_navbar
+weight: -7
+provider: null
+plugin: 'group_content_menu:microsite_menu'
+settings:
+  id: 'group_content_menu:microsite_menu'
+  label: 'Microsite Menu'
+  label_display: '0'
+  provider: group_content_menu
+  context_mapping:
+    group: '@microsites.path_prefix_context:group'
+  level: 1
+  depth: 0
+  expand_all_items: false
+  relative_visibility: false
+  theme_hook_suggestion: ''
+visibility:
+  group_type:
+    id: group_type
+    negate: false
+    context_mapping:
+      group: '@microsites.path_prefix_context:group'
+  group_content_menu:
+    id: group_content_menu
+    negate: false
+    context_mapping:
+      group: '@microsites.path_prefix_context:group'
+    type: microsite_menu
