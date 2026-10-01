@@ -1,0 +1,84 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.microsite_homepage.body
+    - node.type.microsite_homepage
+  module:
+    - layout_builder
+    - layout_builder_restrictions
+    - layout_discovery
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          cfb1af14-f1a3-4bad-bc75-e122ae00a0d5:
+            uuid: cfb1af14-f1a3-4bad-bc75-e122ae00a0d5
+            region: content
+            configuration:
+              id: 'extra_field_block:node:microsite_homepage:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+          e0fe08d7-fbf8-4d04-a55d-9492db60b089:
+            uuid: e0fe08d7-fbf8-4d04-a55d-9492db60b089
+            region: content
+            configuration:
+              id: 'field_block:node:microsite_homepage:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories:
+        - 'Content fields'
+        - 'Custom block types'
+        - 'Custom blocks'
+        - Forms
+        - Help
+        - 'Lists (Views)'
+        - Menus
+        - Search
+        - System
+        - User
+        - core
+id: node.microsite_homepage.default
+targetEntityType: node
+bundle: microsite_homepage
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }
