@@ -1,0 +1,5 @@
+plp_courses:
+  version: 1.x
+  css:
+    theme:
+      css/plp_courses.css: {}
