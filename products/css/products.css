@@ -28,6 +28,9 @@ button.slick-next, button.slick-prev {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+.slick-prev:before, .slick-next:before {
+  opacity: 100%;
+}
 .slick__arrow {
   margin-top: 0;
   top: 90%;
@@ -99,7 +102,7 @@ button.slick-next, button.slick-prev {
   color: var(--primary-color);
   text-decoration: underline;
 }
-.layout--background--blue button.slick-next, button.slick-prev {
+.layout--background--blue button.slick-next, .layout--background--blue button.slick-prev {
   background: var(--primary-accent-color);
 }
 .product_title a {
