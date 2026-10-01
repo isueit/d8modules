@@ -54,6 +54,7 @@
  */
 #}
 <div class="program_offering_blocks ungerboeck_eventlist_details">
+  <h1 class="isu-page-title">{{ title }}</h1>
 
   <div class="event_details_wrapper">
     <div class="event_details_dates">
@@ -139,7 +140,7 @@
 #}
 
     <div class="event_description">
-      {{ event.description }}
+      {{ event.description|raw }}
       <span class="event_details_links">
         {% if (event.Program_Offering_Website__c) and (event.Program_Offering_Website__c != event.Registration_Link__c) %}
           <div class="event_details_more_information">
