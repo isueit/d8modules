@@ -1,0 +1,167 @@
+/* CSS for Program Landing Page Courses */
+
+:root {
+	--dk-gray: #4a4a4a;
+	--lt-gray: #f5f5f5;
+	--md-gray: #ebebeb;
+	--sans-font: 'Arial', 'Helvetica Neue', sans-serif;
+	--serif-font: 'Merriweather', serif;
+  }
+
+/* ------------------------------------- */
+/* ## COURSE PAGES
+/* ------------------------------------- */
+.node--type-plp-course .layout-content, .node--type-plp-course .layout__region--content {
+    max-width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Hero Image & Title */
+.plp-course--hero-wrapper {
+    max-width: 100%;
+    position: relative;
+    box-sizing: border-box;
+}
+.plp-course--hero-image img {
+    width: 100%;
+    max-height: 50vh;
+    object-fit: cover;
+    min-height: 1px;
+}
+.plp-course--hero-wrapper.plp-course--hero-overlay {
+    position: relative;
+}
+.plp-course--hero-wrapper.plp-course--hero-overlay::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 0;
+    background-color: rgba(7,51,62,0.5);
+}
+.plp-course--hero-overlay .plp-course--hero-label-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+}
+.plp-course--hero-overlay .plp-course--hero-label.container {
+    max-width: 1200px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+.plp-course--hero-overlay .plp-course--hero-label h1.isu-page-title {
+    color: #fff;
+    font-weight: 700;
+    margin: 0;
+    width: 66%;
+}
+
+/* Content Area Headings (block titles, h2 & h3 - excludes hero banner) */
+.node--type-plp-course .layout-content h2,
+.node--type-plp-course .layout-content h3,
+.node--type-plp-course .layout-content .isu-block-title,
+.node--type-plp-course .layout__region--content h2,
+.node--type-plp-course .layout__region--content h3,
+.node--type-plp-course .layout__region--content .isu-block-title {
+    color: #000;
+}
+.node--type-plp-course .layout-content h2::after,
+.node--type-plp-course .layout-content h3::after,
+.node--type-plp-course .layout-content .isu-block-title::after,
+.node--type-plp-course .layout__region--content h2::after,
+.node--type-plp-course .layout__region--content h3::after,
+.node--type-plp-course .layout__region--content .isu-block-title::after {
+    display: none;
+}
+.node--type-plp-course .layout-content h2.isu-block-title.h4 {
+    margin-bottom: .25rem;
+}
+
+/* ------------------------------------- */
+/* ## COURSE DETAILS FIELD GROUP
+/* ------------------------------------- */
+.plp-course-course-details__wrapper .layout__region--first {
+    background: var(--lt-gray);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+.plp-course-course-details__title {
+    margin: 0 0 1rem;
+    font-family: var(--serif-font);
+}
+.plp-course-course-details__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.3rem 0;
+}
+.plp-course-course-details__label {
+    color: var(--dk-gray);
+    flex: 0 0 auto;
+}
+.plp-course-course-details__value {
+    color: #000;
+    text-align: right;
+}
+
+/* ------------------------------------- */
+/* ## AUDIENCE FIELD
+/* ------------------------------------- */
+.plp-course-audience {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.plp-course-audience__icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color, #c8102e);
+    color: var(--primary-color, #c8102e);
+    font-size: 1.25rem;
+}
+.plp-course-audience__content {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.plp-course-audience__label {
+    text-transform: uppercase;
+    color: rgb(108, 117, 125);
+    font-size: 0.9rem;
+    margin-bottom: .3rem;
+}
+.plp-course-audience__list {
+    white-space: normal;
+    word-wrap: break-word;
+}
+.plp-course-audience__item {
+    display: inline;
+}
+.plp-course-audience__value {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+/* ------------------------------------- */
+/* ## ENROLL BLOCK
+/* ------------------------------------- */
+.plp-course-enroll__wrapper {
+
+}

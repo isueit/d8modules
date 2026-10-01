@@ -322,9 +322,25 @@ function plp_courses_preprocess_page_title(&$variables)
 function plp_courses_theme($existing, $type, $theme, $path)
 {
   return [
-    'page__type__plp_program__canonical' => [
-      'template' => 'page--type--plp-program--canonical',
+    'page__type__plp_course__canonical' => [
+      'template' => 'page--type--plp-course--canonical',
       'base hook' => 'node',
+    ],
+    'field__node__field_plp_course_audiences__plp_course' => [
+      'template' => 'field--node--field-plp-course-audiences--plp-course',
+      'base hook' => 'field',
+    ],
+    'field__node__field_plp_course_category__plp_course__default' => [
+      'template' => 'field--node--field-plp-course-category--plp-course--default',
+      'base hook' => 'field',
+    ],
+    'field__node__field_plp_course_topics__plp_course__default' => [
+      'template' => 'field--node--field-plp-course-topics--plp-course--default',
+      'base hook' => 'field',
+    ],
+    'field__node__field_plp_course_program_area__plp_course__default' => [
+      'template' => 'field--node--field-plp-course-program-area--plp-course--default',
+      'base hook' => 'field',
     ],
   ];
 }
@@ -335,9 +351,9 @@ function plp_courses_theme($existing, $type, $theme, $path)
 
 function plp_courses_preprocess_node(&$variables)
 {
-  // Add the css file if we're on content type of plp_program
+  // Add the css file if we're on content type of plp_course
   $node = $variables['node'];
-  if ($node->getType() == 'plp_program') {
+  if ($node->getType() == 'plp_course') {
     $variables['#attached']['library'][] = 'plp_courses/plp_courses';
   }
 }

@@ -1,0 +1,10 @@
+topics_report.topics-report:
+  path: '/topics-report'
+  defaults:
+    _controller: '\Drupal\topics_report\Controller\TopicsReportController::topics_report'
+    _title: 'Categories & Topics Report'
+    eventTitle: ''
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Theme override for the Course Program Area field, grouped inside the
+ * "Course Details" Layout Builder section (see field-group config
+ * group_course_details / .plp-course-course-details__wrapper).
+ *
+ * Available variables:
+ * - items: List of all the field items. Each item contains:
+ *   - content: The field item's content.
+ *
+ * @see template_preprocess_field()
+ */
+#}
+
+<div class="plp-course-course-details__row">
+  <div class="plp-course-course-details__label">{{ 'Program Area'|t }}</div>
+  <div class="plp-course-course-details__value">
+    {% for item in items %}{{ item.content }}{% if not loop.last %}, {% endif %}{% endfor %}
+  </div>
+</div>
