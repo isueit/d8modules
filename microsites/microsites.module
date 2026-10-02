@@ -3,15 +3,8 @@
 use Drupal\node\Entity\Node;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\Group;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
-
-use Drupal\Core\Routing\RouteMatchInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Drupal\Core\Url;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\group_content_menu\Entity\GroupContentMenu;
 
 /**
  * The node bundle used as each group's homepage.
@@ -158,7 +151,7 @@ function microsites_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $for
 {
   // Target group add/edit forms. Optionally restrict to a specific group type:
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
-  if (preg_match('/^group_.*_(add|edit)_form$/', $form_id)) {
+  if (preg_match('/^group_.*_(add|edit)_form$/', $form_id) && !str_contains($form_id, 'group_membership')) {
 
     //$form['#after_build'][] = 'microsites_group_color_after_build';
     $form['#after_build'][] = 'microsites_group_form_after_build';

@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.microsite
+    - user.role.authenticated
+id: microsite-authenticated
+label: Authenticated
+weight: 101
+admin: false
+scope: outsider
+global_role: authenticated
+group_type: microsite
+permissions:
+  - 'view group'
+  - 'view group_node:microsite_landing_page entity'

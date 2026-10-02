@@ -1,0 +1,18 @@
+<?php
+
+use Drupal\isueo_helpers\ISUEOHelpers\Wrappers;
+
+/**
+ * Implements hook_install to set default variables
+ */
+
+function microsites_install()
+{
+  // Set up permissions for content editors
+  $permissions = [
+    'configure editable microsite_landing_page node layout overrides',
+    'configure own editable microsite_landing_page node layout overrides',
+  ];
+  Wrappers::changeRolePermissions('content_editor', $permissions, TRUE);
+}
+
