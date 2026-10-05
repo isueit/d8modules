@@ -10,5 +10,6 @@ dependencies:
  - group:group
  - group:gnode
  - group_content_menu:group_content_menu
+ - groupmedia:groupmedia
  - drupal:path_alias
  - drupal:link

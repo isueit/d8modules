@@ -8,3 +8,4 @@ dependencies:
   - drupal:media_library
   - group:group
   - groupmedia:groupmedia
+  - d8modules:microsites
