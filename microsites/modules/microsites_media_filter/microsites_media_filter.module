@@ -35,20 +35,6 @@ use Drupal\microsites_media_filter\Plugin\CKEditor5Plugin\GroupMediaLibrary;
 const MICROSITES_MEDIA_FILTER_ARG_PREFIX = 'group:';
 
 /**
- * Set to FALSE once everything works to stop the debug log messages.
- */
-const MICROSITES_MEDIA_FILTER_DEBUG = TRUE;
-
-/**
- * Writes a debug message to Reports > Recent log messages.
- */
-function microsites_media_filter_debug(string $message, array $context = []): void {
-  if (MICROSITES_MEDIA_FILTER_DEBUG) {
-    \Drupal::logger('microsites_media_filter')->debug($message, $context);
-  }
-}
-
-/**
  * Implements hook_ckeditor5_plugin_info_alter().
  */
 function microsites_media_filter_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
@@ -76,11 +62,8 @@ function microsites_media_filter_ckeditor5_plugin_info_alter(array &$plugin_defi
 function microsites_media_filter_current_group_id(): ?int {
   $route_match = \Drupal::routeMatch();
 
-  microsites_media_filter_debug('Editor built on route @route.', ['@route' => $route_match->getRouteName()]);
-
   $group = $route_match->getParameter('group');
   if ($group instanceof GroupInterface) {
-    microsites_media_filter_debug('Group @gid found in the route.', ['@gid' => $group->id()]);
     return (int) $group->id();
   }
 
@@ -99,9 +82,6 @@ function microsites_media_filter_current_group_id(): ?int {
         $entity = NULL;
       }
     }
-    else {
-      microsites_media_filter_debug('Layout Builder storage @type has no single entity (default layout).', ['@type' => $section_storage->getPluginId()]);
-    }
   }
 
   if (!$entity) {
@@ -109,21 +89,9 @@ function microsites_media_filter_current_group_id(): ?int {
   }
 
   if ($entity instanceof ContentEntityInterface && !$entity->isNew()) {
-    if ($group_id = microsites_media_filter_entity_group_id($entity)) {
-      microsites_media_filter_debug('@type @id is in group @gid.', [
-        '@type' => $entity->getEntityTypeId(),
-        '@id' => $entity->id(),
-        '@gid' => $group_id,
-      ]);
-      return $group_id;
-    }
-    microsites_media_filter_debug('@type @id is not in any group.', [
-      '@type' => $entity->getEntityTypeId(),
-      '@id' => $entity->id(),
-    ]);
+    return microsites_media_filter_entity_group_id($entity);
   }
 
-  microsites_media_filter_debug('No group found for this editor, media library will not be filtered.');
   return NULL;
 }
 
@@ -198,10 +166,6 @@ function microsites_media_filter_views_pre_view(ViewExecutable $view, $display_i
   }
   if ($group_id = microsites_media_filter_state_group_id()) {
     $args[] = MICROSITES_MEDIA_FILTER_ARG_PREFIX . $group_id;
-    microsites_media_filter_debug('Media library opened for group @gid.', ['@gid' => $group_id]);
-  }
-  else {
-    microsites_media_filter_debug('Media library opened without a group ID. Query: @q', ['@q' => \Drupal::request()->getQueryString()]);
   }
 }
 
@@ -229,7 +193,6 @@ function microsites_media_filter_views_query_alter(ViewExecutable $view, QueryPl
   $base_table = $view->storage->get('base_table');
   $base_field = $view->storage->get('base_field');
   $query->addWhere(0, "$base_table.$base_field", $subquery, 'IN');
-  microsites_media_filter_debug('Media library filtered to group @gid (display @display).', ['@gid' => $group_id, '@display' => $view->current_display]);
 }
 
 /**
