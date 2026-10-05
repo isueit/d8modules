@@ -1,0 +1,10 @@
+name: 'Microsites Media Filter'
+type: module
+description: 'Limits the CKEditor 5 media library to media in the current group, and adds media uploaded from it to that group.'
+package: Group
+core_version_requirement: ^10.1 || ^11
+dependencies:
+  - drupal:ckeditor5
+  - drupal:media_library
+  - group:group
+  - groupmedia:groupmedia
