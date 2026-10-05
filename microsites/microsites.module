@@ -149,9 +149,14 @@ function microsites_theme_suggestions_group_alter(array &$suggestions, array $va
  */
 function microsites_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
 {
+  $target_ids = [
+    'group_microsite_add_form',
+    'group_microsite_edit_form',
+  ];
   // Target group add/edit forms. Optionally restrict to a specific group type:
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
-  if (preg_match('/^group_.*_(add|edit)_form$/', $form_id) && !str_contains($form_id, 'group_membership')) {
+  if (in_array($form_id, $target_ids)) {
+  //if (preg_match('/^group_.*_(add|edit)_form$/', $form_id) && !str_contains($form_id, 'group_membership')) {
 
     //$form['#after_build'][] = 'microsites_group_color_after_build';
     $form['#after_build'][] = 'microsites_group_form_after_build';
@@ -678,7 +683,7 @@ function microsites_group_update(Group $group): void
       continue;
     }
 
-    if ($entity->bundle() === MICROSITES_HOMEPAGE_BUNDLE) {
+    if ($entity->bundle() === MICROSITES_HOMEPAGE_BUNDLE && $entity->getTitle() == 'Homepage') {
       _microsites_upsert_alias('/node/' . $entity->id(), $alias, $path_alias_storage);
     } elseif ($entity->bundle() === 'microsite_landing_page') {
       $slug = $alias_cleaner->cleanString($entity->getTitle());
