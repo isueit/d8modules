@@ -14,6 +14,7 @@ Some prep work needs to be done before you can enable this module
    composer update --with-dependencies
 
    drush en microsites 
+   drush en midrosites_media_filter
 
 This should enable the microsites module, which creates a group type, a group content menu type, and a content type.
 
