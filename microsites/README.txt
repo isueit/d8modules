@@ -13,8 +13,27 @@ Some prep work needs to be done before you can enable this module
    composer update --with-dependencies
 
    drush en microsites
-   drush en midrosites_media_filter
+   drush en microsites_media_filter
 
 This should enable the microsites module, which creates a group type, a group content menu type, and a content type.
 
-Next, you will need to create your first group.
+Some of the things that happen when microsites and microsites_media_filter are installed:
+  - Creates a group type called microsites
+  - Creates a microsite_landing_page content type
+  - Creates relationships between microsites and media/content types
+  - Sets some permissions
+  - When editing the group content, only media with a relationship is shown
+
+
+Next, you will need to create your first group. When you create a group:
+  - The group is created
+  - A homepage for the group is created
+  - A menu for the group is created
+  - You may want to assign users to the group, most will be Group editors
+
+Potential issues
+  - The hamepage has to stay titled "Homepage"
+  - Group editor can delete the home page, probably shouldn't be able to do this
+  - Not sure how it will work when additional content types are created for the group
+  - Not sure how staff profiles will work, and how to create a view to show all the staff profiles related to a group
+  - Group membership is manual, not from the staff directory
