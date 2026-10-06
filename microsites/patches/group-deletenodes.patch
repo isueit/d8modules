@@ -1,0 +1,35 @@
+diff --git a/src/Entity/GroupRelationship.php b/src/Entity/GroupRelationship.php
+index 0633849..26c7a37 100644
+--- a/src/Entity/GroupRelationship.php
++++ b/src/Entity/GroupRelationship.php
+@@ -2,6 +2,8 @@
+ 
+ namespace Drupal\group\Entity;
+ 
++use Dom\Entity;
++use Drupal;
+ use Drupal\Core\Entity\ContentEntityBase;
+ use Drupal\Core\Entity\EntityChangedTrait;
+ use Drupal\Core\Entity\EntityInterface;
+@@ -298,7 +300,20 @@ class GroupRelationship extends ContentEntityBase implements GroupRelationshipIn
+         // trying to save an entity that just got deleted and triggered the
+         // deletion of its relationship entities.
+         // @todo Revisit when https://www.drupal.org/node/2754399 lands.
+-        $entity->save();
++
++        // The idea for doing this came from:
++        // https://www.drupal.org/project/group/issues/2754399
++        $save_entity = TRUE;
++        if (count(self::loadByEntity($entity)) === 0) {
++          // Delete node page when the group is deleted
++          if ($entity->getEntityTypeId() === 'node') {
++            $save_entity = FALSE;
++            $entity->delete();
++          }
++        }
++        if ($save_entity) {
++          $entity->save();
++        }
+ 
+         // If a membership gets deleted, we need to reset the internal group
+         // roles cache for the member in that group, but only if the user still
