@@ -112,7 +112,7 @@ function plp_programs_getprograms()
       $mynode->setTitle(html_entity_decode($program['Name']));
       $save = true;
     }
-    
+
     // Handle Body
     $body = preg_replace_callback(
       '/\sstyle="([^"]*)"/i',
@@ -127,10 +127,16 @@ function plp_programs_getprograms()
       },
       plp_programs_generate_body($program)
     );
-  
+
     if ($mynode->body->value != $body) {
       $mynode->body->value = $body;
       $mynode->body->format = 'basic';
+      $save = true;
+    }
+
+    // Handle summary
+    if (!empty($program['hed__Description__c']) && ($mynode->body->summary != $program['hed__Description__c'])) {
+      $mynode->body->summary = $program['hed__Description__c'];
       $save = true;
     }
 
