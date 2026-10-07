@@ -15,6 +15,8 @@ Some prep work needs to be done before you can enable this module
    drush en microsites
    drush en microsites_media_filter
 
+   Go to /admin/config/content/exclude-node-title and on Microsite Landing Page, allow it to exclude the title
+
 This should enable the microsites module, which creates a group type, a group content menu type, and a content type.
 
 Some of the things that happen when microsites and microsites_media_filter are installed:
