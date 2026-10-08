@@ -312,6 +312,70 @@ class TypesenseCollectionSchemas
         ],
       ],
 
+      'porkgateway' => [
+        'default_sorting_field' => 'publish_date',
+
+        // Define the fields
+        'fields' => [
+          'title' => 'string',
+          'factsheet_number' => 'string',
+          'url_path' => 'string',
+          'audiences' => 'string[]',
+          'resource_type' => 'string',
+          'categories' => 'string[]',
+          'body' => 'string',
+          'summary' => 'string',
+          'references' => 'string',
+          'publish_date' => 'int64',
+          'updated_date' => 'int64',
+          'authors' => 'string[]',
+          'editors' => 'string[]',
+          'reviews' => 'string[]',
+        ],
+
+        // Sort fields
+        'sort' => [
+          'publish_date'
+        ],
+
+        // Fields that are facets
+        'facets' => [
+          'audiences',
+          'resource_type',
+          'categories',
+          'authors',
+          'editors',
+          'reviewers',
+        ],
+
+        // Optional fields
+        'optional' => [
+          'authors',
+          'editors',
+          'reviews',
+        ],
+      ],
+
+      'sample' => [
+        'default_sorting_field' => '',
+
+        // Define the fields
+        'fields' => [
+        ],
+
+        // Sort fields
+        'sort' => [
+        ],
+
+        // Fields that are facets
+        'facets' => [
+        ],
+
+        // Optional fields
+        'optional' => [
+        ],
+      ],
+
       // Add new Definitions here
     ];
     $definitions['deleteme_brian'] = $definitions['plp_programs'];
