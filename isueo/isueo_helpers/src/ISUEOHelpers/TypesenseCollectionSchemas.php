@@ -327,7 +327,7 @@ class TypesenseCollectionSchemas
           'summary' => 'string',
           'references' => 'string',
           'publish_date' => 'int64',
-          'updated_date' => 'int64',
+          'updated_date' => 'string',
           'authors' => 'string[]',
           'editors' => 'string[]',
           'reviews' => 'string[]',
@@ -350,6 +350,11 @@ class TypesenseCollectionSchemas
 
         // Optional fields
         'optional' => [
+          'factsheet_number',
+          'references',
+          'resource_type',
+          'updated_date',
+          'audiences',
           'authors',
           'editors',
           'reviews',

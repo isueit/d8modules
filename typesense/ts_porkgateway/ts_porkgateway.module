@@ -1,0 +1,153 @@
+<?php
+
+use Drupal\contact\Entity\Message;
+use \Drupal\isueo_helpers\ISUEOHelpers;
+use \Drupal\isueo_helpers\ISUEOHelpers\Typesense;
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+
+function ts_porkgateway_node_delete(Drupal\Core\Entity\EntityInterface $entity)
+{
+  // Make sure the node is a Resource node on the production server
+  if ($entity->bundle() != 'resource_type' || !_ts_porkgateway_is_production_server()) {
+    return;
+  }
+
+  // Delete the document from Typesense Collection
+  try {
+    $client = Typesense::getClient('porkgateway');
+    $client->collections['porkgateway']->documents['porkgateway-' . $entity->id()]->delete();
+  } catch (Exception $e) {
+    Drupal::logger('ts_porkgateway')->error('Deleting a node in Typesense: ' . $e->getMessage());
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+
+function ts_porkgateway_node_update(Drupal\Core\Entity\EntityInterface $entity)
+{
+  // Make sure the node is a Resource node on the production server
+  if ($entity->bundle() != 'resource_type' || !_ts_porkgateway_is_production_server()) {
+    return;
+  }
+
+  // If the node is published, index the node
+  if ($entity->isPublished()) {
+    _ts_porkgateway_index_node($entity);
+  } else {
+    // Remove the node from Typesense if it's changing from published to unpublished
+    if ($entity->original->isPublished()) {
+      ts_porkgateway_node_delete($entity);
+    }
+  }
+}
+
+function _ts_porkgateway_index_all_nodes()
+{
+  // Only work on production server
+  if (!_ts_porkgateway_is_production_server()) {
+    return;
+  }
+
+  // Truncate the Collection
+  ISUEOHelpers\Typesense::truncateCollection('porkgateway');
+
+  // Get all the published resource nodes
+  $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'resource_type', 'status' => 1,]);
+
+  // Index each node
+  foreach ($nodes as $node) {
+    if ($node) {
+      _ts_porkgateway_index_node($node);
+    }
+  }
+}
+
+function _ts_porkgateway_index_node(Drupal\node\Entity\Node $node)
+{
+  // Make sure the node is a Resource node on the production server
+  if ($node->bundle() != 'resource_type' || !_ts_porkgateway_is_production_server()) {
+    return;
+  }
+
+  // Gather the information from the node
+  $record = [
+    'id' => 'porkgateway-' . $node->id(),
+    'title' => $node->getTitle(),
+    'body' => strip_tags($node->body->value),
+    'summary' => $node->body->summary,
+    'factsheet_number' => $node->field_factsheet_number->value ?? '',
+    'url_path' => $node->toUrl()->toString(),
+    'audiences' => _ts_porkgateway_get_taxonomy_terms($node->field_resource_audiences),
+    'resource_type' => !empty($node->field_resource_type->entity) ? $node->field_resource_type->entity->label() : '',
+    'categories' => _ts_porkgateway_get_taxonomy_terms($node->field_resource_category),
+    'references' => $node->field_references_and_citations->value ?? '',
+    'publish_date' => _ts_porkgateway_get_date($node->field_resource_date->entity, 'published'),
+    'updated_date' => _ts_porkgateway_get_date($node->field_resource_date->entity, 'updated'),
+    'authors' => _ts_porkgateway_get_experts($node->field_experts->referencedEntities()),
+    'editors' => _ts_porkgateway_get_experts($node->field_editors->referencedEntities()),
+    'reviews' => _ts_porkgateway_get_experts($node->field_reviewers->referencedEntities()),
+  ];
+
+  // Upsert it into Typesense
+  if (is_int($record['publish_date'])) {
+    $client = ISUEOHelpers\Typesense::getClient('porkgateway');
+    $client->collections['porkgateway']->documents->upsert($record);
+  }
+}
+
+/**
+ * Get the Taxonomy terms from the Taxonomy Reference field
+ */
+function _ts_porkgateway_get_taxonomy_terms(Drupal\Core\Field\EntityReferenceFieldItemList $field)
+{
+  $labels = [];
+  foreach ($field->referencedEntities() as $term) {
+    $labels[] = $term->label();
+  }
+  return $labels;
+}
+
+/**
+ * Get the published or updated date from the paragraph that holds this information
+ */
+function _ts_porkgateway_get_date(Drupal\paragraphs\Entity\Paragraph $field, string $type)
+{
+  $value = '';
+  switch ($type) {
+    case 'published':
+      $value = strtotime($field->field_publish_date->value);
+      break;
+    case 'updated':
+      $value = !empty($field->field_updated->value) ? $field->field_updated->value : '';
+      break;
+    default:
+      break;
+  }
+  return $value;
+}
+
+/**
+ * Get the Experts name from the Entity Reference field
+ */
+function _ts_porkgateway_get_experts(array $expert_nodes)
+{
+  $experts = [];
+  foreach ($expert_nodes as $node) {
+    $experts[] = $node->getTitle();
+  }
+  return $experts;
+}
+
+/**
+ * Wrapper function to determine if we're on the production server
+ */
+function _ts_porkgateway_is_production_server()
+{
+  return true;
+  return ISUEOHelpers\General::is_production_server();
+}
