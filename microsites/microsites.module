@@ -27,7 +27,7 @@ const MICROSITES_HOMEPAGE_BUNDLE = 'microsite_landing_page';
 function microsites_node_presave(\Drupal\node\NodeInterface $node): void
 {
   //if (in_array($node->bundle(), [MICROSITES_HOMEPAGE_BUNDLE, 'microsite_landing_page'])) {
-    //$node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
+  //$node->get('path')->pathauto = \Drupal\pathauto\PathautoState::SKIP;
   //}
   if ($node->isNew()) {
     return;
@@ -158,7 +158,7 @@ function microsites_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $for
   // Target group add/edit forms. Optionally restrict to a specific group type:
   // e.g. 'group_my_group_type_add_form' / 'group_my_group_type_edit_form'
   if (in_array($form_id, $target_ids)) {
-  //if (preg_match('/^group_.*_(add|edit)_form$/', $form_id) && !str_contains($form_id, 'group_membership')) {
+    //if (preg_match('/^group_.*_(add|edit)_form$/', $form_id) && !str_contains($form_id, 'group_membership')) {
 
     //$form['#after_build'][] = 'microsites_group_color_after_build';
     $form['#after_build'][] = 'microsites_group_form_after_build';
@@ -227,7 +227,8 @@ function microsites_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $for
  * Wires the group-node autocomplete route to the URI field on menu link forms
  * so editors can easily link to nodes within the current group.
  */
-function microsites_field_widget_single_element_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
+function microsites_field_widget_single_element_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context)
+{
   $field_definition = $context['items']->getFieldDefinition();
 
   if ($field_definition->getName() !== 'link') {
@@ -245,7 +246,7 @@ function microsites_field_widget_single_element_form_alter(array &$element, \Dru
   // Keep this in case it ever starts working, but the real
   // override is now done via JS attached in hook_form_alter.
   $element['uri']['#autocomplete_route_name'] = 'microsites.group_node_autocomplete';
-  $element['uri']['#autocomplete_route_parameters'] = ['group' => $group->id(), ];
+  $element['uri']['#autocomplete_route_parameters'] = ['group' => $group->id(),];
 }
 
 
@@ -644,7 +645,7 @@ function microsites_group_insert(Group $group)
     $store['alias'] = NULL;
   }
 
-// Try to change the menlabel on the Home link, in the group_content_menu
+  // Try to change the menlabel on the Home link, in the group_content_menu
   $link_storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
 
   foreach (group_content_menu_get_menus_per_group($group) as $relationship) {
@@ -664,9 +665,6 @@ function microsites_group_insert(Group $group)
       $link->save();
     }
   }
-
-
-
 }
 
 /**
