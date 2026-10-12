@@ -1,10 +1,10 @@
+import { createDropdown } from "./Dropdown.js";
 (function (Drupal, once) {
   Drupal.behaviors.porkgatewaySearchbar = {
     attach(context) {
       once('porkgateway-search', '#search-results-bar', context).forEach((el) => {
 /* global algoliasearch instantsearch */
 
-import { createDropdown } from "./Dropdown.js";
 
 const typesenseInstantsearchAdapterResults = new TypesenseInstantSearchAdapter({
   server: {
