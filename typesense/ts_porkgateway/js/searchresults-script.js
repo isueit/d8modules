@@ -90,7 +90,7 @@ searchResults.addWidgets([
         }).format(date);
         return `
           <div class="card mb-3 porkgateway-card">
-                <h2 class="hit-name card-title"><a href="${item.url}"> ${item._highlightResult.title.value}</a></h2>
+                <h2 class="hit-name card-title"><a href="${item.url_path}"> ${item._highlightResult.title.value}</a></h2>
                 <div class="hit-date">Publish date: <span class="formatted-date">${formattedDate}</span></div>
                 <div class="hit-summary">${item._highlightResult.summary.value}</div>
           </div>

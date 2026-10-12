@@ -1,4 +1,8 @@
-const typesenseInstantsearchAdapterBar = new TypesenseInstantSearchAdapter({
+(function (Drupal, once) {
+  Drupal.behaviors.porkgatewaySearchbar = {
+    attach(context) {
+      once('porkgateway-search', '#porkgateway-search-bar', context).forEach((el) => {
+ const typesenseInstantsearchAdapterBar = new TypesenseInstantSearchAdapter({
   server: {
     apiKey: "bilLvsiWoO1EqcM21L8XrzofmVBYfyB9", // Be sure to use an API key that only allows searches, in production
     nodes: [
@@ -15,7 +19,7 @@ const typesenseInstantsearchAdapterBar = new TypesenseInstantSearchAdapter({
   //  filterBy is managed and overridden by InstantSearch.js. To set it, you want to use one of the filter widgets like refinementList or use the `configure` widget.
   additionalSearchParameters: {
     queryBy:
-      "title,factsheet_number,url_path,audiences,resource_type,categories,body,summary,references,publish_date,updated_date,authors,editors,reviews",
+      "title,factsheet_number,url_path,audiences,resource_type,categories,body,summary,references,updated_date,authors,editors,reviews",
   },
 });
 
@@ -44,3 +48,7 @@ searchBar.addWidgets([
 
 searchBar.start();
 
+      });
+    },
+  };
+})(Drupal, once);
