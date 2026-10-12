@@ -1,0 +1,21 @@
+searchbar_assets:
+  version: 1.x
+  css:
+    theme:
+      css/searchbar-styles.css: {}
+  js:
+    js/searchbar-script.js: {}
+  dependencies:
+    - core/drupal
+
+searchresults_assets:
+  version: 1.x
+  css:
+    theme:
+      css/searchresults-styles.css: {}
+  js:
+    js/searchresults-script.js: {attributes: { type: module }}
+    js/Dropdown.js: {attributes: { type: module }}
+    js/util.js: {attributes: { type: module }}
+  dependencies:
+    - core/drupal

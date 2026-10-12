@@ -5,6 +5,21 @@ use \Drupal\isueo_helpers\ISUEOHelpers;
 use \Drupal\isueo_helpers\ISUEOHelpers\Typesense;
 
 /**
+* Implements hook_theme().
+*/
+
+function ts_porkgateway_theme($existing, $type, $theme, $path) {
+  return [
+    'ts_porkgateway_searchbar' => [
+    ],
+    'ts_porkgateway_searchresults' => [
+      'template' => 'ts-porkgateway-searchresults',
+      'base hook' => 'block',
+    ],
+  ];
+}
+
+/**
  * Implements hook_ENTITY_TYPE_delete().
  */
 
