@@ -22,6 +22,9 @@ searchresults_assets:
     js/util.js: {attributes: { type: module }}
   dependencies:
     - core/drupal
+    - core/once
+    - ts_porkgateway/instantsearch
+    - ts_porkgateway/typesense-adapter
 
 instantsearch:
   remote: https://github.com/algolia/instantsearch
