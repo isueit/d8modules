@@ -1,4 +1,6 @@
 import { createDropdown } from "./Dropdown.js";
+
+// Lines the help with making this an asset in hook.libraries.yml file
 (function (Drupal, once) {
   Drupal.behaviors.porkgatewaySearchbar = {
     attach(context) {
@@ -6,6 +8,8 @@ import { createDropdown } from "./Dropdown.js";
         (el) => {
           /* global algoliasearch instantsearch */
 
+          // This is the start of the  searchresults code
+          // Set up the search Adapter
           const typesenseInstantsearchAdapterResults =
             new TypesenseInstantSearchAdapter({
               server: {
@@ -193,6 +197,8 @@ import { createDropdown } from "./Dropdown.js";
           });
 
           searchResults.start();
+          // end of the searchresults code
+
         },
       );
     },

@@ -1,8 +1,11 @@
+// Lines the help with making this an asset in hook.libraries.yml file
 (function (Drupal, once) {
   Drupal.behaviors.porkgatewaySearchbar = {
     attach(context) {
       once("porkgateway-search", "#porkgateway-search-bar", context).forEach(
         (el) => {
+          // This is the start of the  searchbar code
+          // Set up the search Adapter
           const typesenseInstantsearchAdapterBar =
             new TypesenseInstantSearchAdapter({
               server: {
@@ -50,6 +53,8 @@
           ]);
 
           searchBar.start();
+          // end of the searchbar code
+
         },
       );
     },
