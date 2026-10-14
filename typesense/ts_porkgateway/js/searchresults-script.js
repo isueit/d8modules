@@ -2,9 +2,9 @@ import { createDropdown } from "./Dropdown.js";
 
 // Lines the help with making this an asset in hook.libraries.yml file
 (function (Drupal, once) {
-  Drupal.behaviors.porkgatewaySearchbar = {
+  Drupal.behaviors.porkgatewaySearchresults = {
     attach(context) {
-      once("porkgateway-search", "#search-results-bar", context).forEach(
+      once("porkgateway-search-results", "#search-results-bar", context).forEach(
         (el) => {
           /* global algoliasearch instantsearch */
 
@@ -52,13 +52,6 @@ import { createDropdown } from "./Dropdown.js";
             },
           );
 
-          const authorsDropdown = createDropdown(
-            instantsearch.widgets.refinementList,
-            {
-              closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
-              buttonText: "Authors",
-            },
-          );
 
           const categoriesDropdown = createDropdown(
             instantsearch.widgets.refinementList,
@@ -68,13 +61,6 @@ import { createDropdown } from "./Dropdown.js";
             },
           );
 
-          const editorsDropdown = createDropdown(
-            instantsearch.widgets.refinementList,
-            {
-              closeOnChange: () => window.innerWidth >= MOBILE_WIDTH,
-              buttonText: "Editors",
-            },
-          );
 
           const resourceTypeDropdown = createDropdown(
             instantsearch.widgets.refinementList,
@@ -104,17 +90,35 @@ import { createDropdown } from "./Dropdown.js";
               container: "#hits",
               templates: {
                 item(item) {
-                  var date = new Date(item.publish_date * 1000);
-                  var formattedDate = new Intl.DateTimeFormat("en-US", {
-                    dateStyle: "long",
-                  }).format(date);
+                  const hl = item._highlightResult;
+                  // Categories (highlighted when they match), separated by commas
+                  const categoryNames = Array.isArray(hl.categories)
+                    ? hl.categories.map((category) => category.value)
+                    : item.categories || [];
+                  const categories = categoryNames.length
+                    ? `<div class="pg-hit__category">${categoryNames.join(", ")}</div>`
+                    : "";
+                  // Bottom bar styled like the Resource Details block header, showing the resource type
+                  const barLabel = "Resource Type";
+                  const barValue = hl.resource_type ? hl.resource_type.value : item.resource_type || "";
+                  const bar = `<div class="pg-hit__bar">
+                <span class="pg-hit__bar-icon" aria-hidden="true"></span>
+                <div class="pg-hit__bar-text">
+                  <span class="pg-hit__bar-label">${barLabel}</span>
+                  <span class="pg-hit__bar-value">${barValue}</span>
+                </div>
+                <a class="pg-hit__view" href="${item.url_path}" tabindex="-1" aria-hidden="true">View <span class="pg-hit__view-arrow">&rarr;</span></a>
+              </div>`;
                   return `
-          <div class="card mb-3 porkgateway-card">
-                <h2 class="hit-name card-title"><a href="${item.url_path}"> ${item._highlightResult.title.value}</a></h2>
-                <div class="hit-date">Publish date: <span class="formatted-date">${formattedDate}</span></div>
-                <div class="hit-summary">${item._highlightResult.summary.value}</div>
-          </div>
-        `;
+            <article class="pg-hit">
+              <div class="pg-hit__body">
+                ${categories}
+                <h2 class="pg-hit__title"><a href="${item.url_path}">${hl.title.value}</a></h2>
+                <div class="pg-hit__summary">${hl.summary.value}</div>
+              </div>
+              ${bar}
+            </article>
+          `;
                 },
               },
               cssClasses: {
@@ -122,10 +126,6 @@ import { createDropdown } from "./Dropdown.js";
               },
             }),
 
-            authorsDropdown({
-              container: "#authors",
-              attribute: "authors",
-            }),
             audiencesDropdown({
               container: "#audiences",
               attribute: "audiences",
@@ -133,10 +133,6 @@ import { createDropdown } from "./Dropdown.js";
             categoriesDropdown({
               container: "#categories",
               attribute: "categories",
-            }),
-            editorsDropdown({
-              container: "#editors",
-              attribute: "editors",
             }),
             resourceTypeDropdown({
               container: "#resource_type",
@@ -168,7 +164,16 @@ import { createDropdown } from "./Dropdown.js";
               },
             }),
           ]);
+          // Point "Search all of Extension" at the current query
+          const searchAllLink = document.querySelector("#isueo-searchall a");
           searchResults.on("render", function () {
+            if (searchAllLink) {
+              const query = searchResults.helper.state.query;
+              searchAllLink.href = query
+                ? "https://www.extension.iastate.edu/search-results?as_q=" + encodeURIComponent(query)
+                : "https://www.extension.iastate.edu/search-results?search_broadness=wide";
+            }
+
             const refinementsList = document.querySelector(
               "#current-refinements .ais-CurrentRefinements-list",
             );
