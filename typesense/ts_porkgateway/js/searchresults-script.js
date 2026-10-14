@@ -91,7 +91,7 @@ import { createDropdown } from "./Dropdown.js";
               showReset: false,
               searchAsYouType: false,
               placeholder:
-                "Search programs to help you grow, learn, and thrive",
+                "Search Peer-reviewed Resources",
               queryHook(query, search) {
                 search(query);
               },
