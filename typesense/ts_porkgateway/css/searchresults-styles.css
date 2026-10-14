@@ -7,6 +7,7 @@
 }
 .typesense-search-results .card {
   text-align: left;
+  padding: 15px;
 }
 .typesense-search-results .hit-date {
   color: gray;
