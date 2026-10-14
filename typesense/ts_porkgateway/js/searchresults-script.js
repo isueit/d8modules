@@ -129,14 +129,20 @@ import { createDropdown } from "./Dropdown.js";
             audiencesDropdown({
               container: "#audiences",
               attribute: "audiences",
+              // Show every value; refinementList only shows 10 by default
+              limit: 50,
             }),
             categoriesDropdown({
               container: "#categories",
               attribute: "categories",
+              // Show every value; refinementList only shows 10 by default
+              limit: 50,
             }),
             resourceTypeDropdown({
               container: "#resource_type",
               attribute: "resource_type",
+              // Show every value; refinementList only shows 10 by default
+              limit: 50,
             }),
 
             instantsearch.widgets.stats({

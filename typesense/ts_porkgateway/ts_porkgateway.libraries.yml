@@ -1,5 +1,5 @@
 searchbar_assets:
-  version: 1.10
+  version: 1.11
   css:
     theme:
       css/searchbar-styles.css: {}
@@ -12,7 +12,7 @@ searchbar_assets:
     - ts_porkgateway/typesense-adapter
 
 searchresults_assets:
-  version: 1.10
+  version: 1.11
   css:
     theme:
       css/searchresults-styles.css: {}
