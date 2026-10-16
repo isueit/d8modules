@@ -61,6 +61,17 @@ function ts_porkgateway_node_update(Drupal\Core\Entity\EntityInterface $entity)
   }
 }
 
+/**
+* Implements hook_ENTITY_TYPE_insert().
+*/
+function ts_porkgateway_node_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  // Make sure the node is a Resource node on the production server
+  if ($entity->bundle() == 'resource_type' && _ts_porkgateway_is_production_server()) {
+    _ts_porkgateway_index_node($entity);
+  }
+
+}
+
 function _ts_porkgateway_index_all_nodes()
 {
   // Only work on production server
