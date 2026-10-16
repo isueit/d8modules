@@ -30,7 +30,7 @@ a.bean-card_link {
     display: flex;
     padding: 0.75rem 1rem;
     justify-content: center;
-    background: var(--btn-danger-color);
+    background: var(--primary-color);
     font-size: 1.5rem;
 }
 .bean-card_label p {
@@ -44,7 +44,7 @@ a.bean-card_link {
 .bean-card_body {
     color: black;
     padding: 0.5rem 0.5rem 0 0.5rem;
-    border: 3px solid var(--btn-danger-color);
+    border: 3px solid var(--primary-color);
 }
 /* Fontawesome icons - this isn't being used (used declaration on line: 842)
 .fontawesome-icons {
@@ -56,8 +56,8 @@ div.fontawesome-icon i {
 /* Colors */
 .bean-card_label.Blue { background: #006ba6; }
 .bean-card_label.Green { background: var(--btn-success-color); }
-.bean-card_label.Dark-Red { background: var(--btn-secondary-color); }
-.bean-card_label.Dark-Blue { background: var(--btn-primary-color); }
+.bean-card_label.Dark-Red { background: var(--secondary-color); }
+.bean-card_label.Dark-Blue { background: var(--tertiary-color); }
 .bean-card_label.Dark-Green { background: #3E4827; }
 .bean-card_label.Brown { background: #8b5b29; }
 .bean-card_label.Grey { background: #707372; }
@@ -65,8 +65,8 @@ div.fontawesome-icon i {
 /* Changes color of border depending on selected label color (content cards) */
 .bean-card_body.Blue { border-color: #006ba6; }
 .bean-card_body.Green { border-color: var(--btn-success-color); }
-.bean-card_body.Dark-Red { border-color: var(--btn-secondary-color); }
-.bean-card_body.Dark-Blue { border-color: var(--btn-primary-color); }
+.bean-card_body.Dark-Red { border-color: var(--secondary-color); }
+.bean-card_body.Dark-Blue { border-color: var(--tertiary-color); }
 .bean-card_body.Dark-Green { border-color: #3E4827; }
 .bean-card_body.Brown { border-color: #8b5b29; }
 .bean-card_body.Grey { border-color: #707372; }

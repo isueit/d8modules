@@ -14,7 +14,7 @@
 	display: flex;
 	padding: 0.75rem 1rem;
 	justify-content: center;
-	background: var(--btn-danger-color);
+	background: var(--primary-color);
 	font-size: 1.5rem;
 	position: relative;
 	left: 0;
@@ -32,7 +32,7 @@
 .bean-card_body {
 	color: black;
 	padding: 0.5rem 0.5rem 0 0.5rem;
-	border: 3px solid var(--btn-danger-color);
+	border: 3px solid var(--primary-color);
 }
 
 /* --------------------------------------  */
@@ -48,30 +48,30 @@
 /* ## CARD COLORS
 /* -------------------------------------- */
 .bean-card-content_label.Blue {
-	background: var(--btn-primary-color);
+	background: var(--tertiary-color);
 }
 .bean-card-content_label.Green {
 	background: var(--btn-success-color);
 }
 .bean-card-content_label.Dark.Red {
-	background: var(--btn-secondary-color);
+	background: var(--secondary-color);
 }
 .bean-card-content_label.Dark.Blue {
-	background: var(--btn-primary-color);
+	background: var(--tertiary-color);
 }
 
 /* Border Color based on Label Color */
 .bean-card-content_body.Blue { 
-	border-color: var(--btn-primary-color);
+	border-color: var(--tertiary-color);
 }
 .bean-card-content_body.Green { 
 	border-color: var(--btn-success-color); 
 }
 .bean-card-content_body.Dark.Red { 
-	border-color: var(--btn-secondary-color); 
+	border-color: var(--secondary-color); 
 }
 .bean-card-content_body.Dark.Blue { 
-	border-color: var(--btn-primary-color); 
+	border-color: var(--tertiary-color); 
 }
 
 /* -------------------------------------- */

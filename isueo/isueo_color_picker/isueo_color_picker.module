@@ -1,0 +1,170 @@
+<?php
+
+/**
+ * @file
+ * Relabels color-named options when the theme colors are overridden.
+ *
+ * Card color fields and CKEditor button styles are labeled after the default
+ * ISU colors (Red, Dark Blue, ...). When a site overrides the colors in the
+ * theme settings, those names stop matching, so editors instead see the color
+ * setting and its hex value, e.g. "Secondary color (#1a4f8b)".
+ *
+ * Only the labels shown to editors change. Stored values stay the same, and
+ * the card templates still render the original label as their CSS class.
+ */
+
+/**
+ * Card color fields whose option labels name a theme color.
+ */
+const ISUEO_COLOR_PICKER_CARD_FIELDS = [
+  'field_content_card_color_style',
+  'field_image_card_color_style',
+  'field_flip_card_color_style',
+];
+
+/**
+ * Returns the theme colors that a set of color-named labels refer to.
+ *
+ * @param string $set
+ *   'card' for the card color fields, which use the main theme colors, or
+ *   'button' for the CKEditor button styles, which use the button colors.
+ *
+ * @return array
+ *   Color info keyed by the default color name used in labels ("Dark Red"),
+ *   each with 'label' and 'hex'. Empty while the theme colors are in use.
+ */
+function isueo_color_picker_label_colors($set) {
+  $colors = &drupal_static(__FUNCTION__, []);
+  if (isset($colors[$set])) {
+    return $colors[$set];
+  }
+
+  // Theme setting, label and default for each color, defaults match
+  // iastate_theme's theme-settings.php
+  if ($set == 'card') {
+    $settings = [
+      'primary' => ['primary_color', t('Primary color'), '#c8102e'],
+      'secondary' => ['secondary_color', t('Secondary color'), '#7c2529'],
+      'tertiary' => ['tertiary_color', t('Tertiary color'), '#003d4c'],
+      'success' => ['btn_success_color', t('Success color'), '#008540'],
+    ];
+    $names = [
+      'Red' => 'primary',
+      'Dark Red' => 'secondary',
+      'Dk Red' => 'secondary',
+      'Dark Blue' => 'tertiary',
+      'Dk Blue' => 'tertiary',
+      'Blue' => 'tertiary',
+      'Green' => 'success',
+    ];
+  }
+  else {
+    $settings = [
+      'danger' => ['btn_danger_color', t('Danger'), '#c8102e'],
+      'primary' => ['btn_primary_color', t('Primary'), '#003d4c'],
+      'secondary' => ['btn_secondary_color', t('Secondary'), '#7c2529'],
+      'success' => ['btn_success_color', t('Success'), '#008540'],
+    ];
+    $names = [
+      'Red' => 'danger',
+      'Blue' => 'primary',
+      'Dark Blue' => 'primary',
+      'Dark Red' => 'secondary',
+      'Green' => 'success',
+    ];
+  }
+
+  // Unchecking "Use the colors supplied by the theme" switches to the setting
+  // names. While it is checked the theme outputs the default colors, so the
+  // default color names still apply.
+  $theme = \Drupal::config('system.theme')->get('default');
+  $colors[$set] = [];
+  if (theme_get_setting('default_color_settings', $theme) ?? 1) {
+    return $colors[$set];
+  }
+
+  foreach ($names as $name => $role) {
+    [$setting, $label, $default] = $settings[$role];
+    $hex = strtolower((string) (theme_get_setting($setting, $theme) ?? $default));
+    $colors[$set][$name] = ['label' => $label, 'hex' => $hex];
+  }
+  return $colors[$set];
+}
+
+/**
+ * Replaces the default color name in a label with the setting and hex value.
+ *
+ * @param string $label
+ *   The original label, e.g. "Partial Dk Red".
+ * @param string $set
+ *   The color set the label belongs to, see isueo_color_picker_label_colors().
+ *
+ * @return string|null
+ *   The relabeled text, or NULL when the label names no theme color.
+ */
+function isueo_color_picker_relabel($label, $set) {
+  $colors = isueo_color_picker_label_colors($set);
+  if (!$colors) {
+    return NULL;
+  }
+
+  // Longest names first so "Dark Red" is not matched as "Red"
+  $names = array_keys($colors);
+  usort($names, fn($a, $b) => strlen($b) - strlen($a));
+  $pattern = '/\b(' . implode('|', array_map('preg_quote', $names)) . ')\b/';
+  if (!preg_match($pattern, $label, $match)) {
+    return NULL;
+  }
+
+  $color = $colors[$match[1]];
+  return preg_replace($pattern, $color['label'] . ' (' . $color['hex'] . ')', $label, 1);
+}
+
+/**
+ * Implements hook_options_list_alter().
+ */
+function isueo_color_picker_options_list_alter(array &$options, array $context) {
+  if (!in_array($context['fieldDefinition']->getName(), ISUEO_COLOR_PICKER_CARD_FIELDS)) {
+    return;
+  }
+
+  foreach ($options as $value => $label) {
+    if (is_string($label) || $label instanceof \Stringable) {
+      $new_label = isueo_color_picker_relabel((string) $label, 'card');
+      if ($new_label !== NULL) {
+        $options[$value] = $new_label;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_editor_js_settings_alter().
+ */
+function isueo_color_picker_editor_js_settings_alter(array &$settings) {
+  if (!isueo_color_picker_label_colors('button') || empty($settings['editor']['formats'])) {
+    return;
+  }
+
+  foreach ($settings['editor']['formats'] as &$format) {
+    $config = &$format['editorSettings']['config'];
+
+    // Link styles from ckeditor_link_styles, e.g. "Button: Dark Red Outline"
+    foreach ($config['link']['decorators'] ?? [] as $key => $decorator) {
+      $classes = explode(' ', $decorator['attributes']['class'] ?? '');
+      if (in_array('btn', $classes) && ($new_label = isueo_color_picker_relabel((string) $decorator['label'], 'button')) !== NULL) {
+        $config['link']['decorators'][$key]['label'] = $new_label;
+      }
+    }
+
+    // Core CKEditor 5 styles
+    foreach ($config['style']['definitions'] ?? [] as $key => $definition) {
+      if (in_array('btn', $definition['classes'] ?? []) && ($new_name = isueo_color_picker_relabel((string) $definition['name'], 'button')) !== NULL) {
+        $config['style']['definitions'][$key]['name'] = $new_name;
+      }
+    }
+
+    unset($config);
+  }
+  unset($format);
+}
