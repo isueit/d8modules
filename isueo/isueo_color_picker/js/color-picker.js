@@ -263,11 +263,13 @@
           if (!input) return;
 
           // Prefer the outer field wrapper (has a reliable data-drupal-selector),
-          // fall back to .js-form-wrapper or the immediate .form-item.
+          // then the input's own .form-item. Check .form-item before
+          // .js-form-wrapper: on plain forms (e.g. theme settings) the nearest
+          // .js-form-wrapper is a container shared by every color field.
           const outerKey = 'edit-' + cfg.fieldName.replace(/_/g, '-') + '-wrapper';
           const wrapper  = form.querySelector('[data-drupal-selector="' + outerKey + '"]')
-            || input.closest('.js-form-wrapper')
             || input.closest('.form-item')
+            || input.closest('.js-form-wrapper')
             || input.parentElement;
 
           const panel = document.createElement('div');
@@ -327,8 +329,8 @@
         if (!firstWrapper) {
           const firstInput = form.querySelector(firstCfg.inputSelector);
           if (!firstInput) return;
-          firstWrapper = firstInput.closest('.js-form-wrapper')
-            || firstInput.closest('.form-item')
+          firstWrapper = firstInput.closest('.form-item')
+            || firstInput.closest('.js-form-wrapper')
             || firstInput.parentElement;
         }
         if (!firstWrapper) return;
