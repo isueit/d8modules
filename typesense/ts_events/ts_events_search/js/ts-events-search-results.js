@@ -122,11 +122,11 @@ searchResults.addWidgets([
         const days = ['Sunday,', 'Monday,', 'Tuesday,', 'Wednesday,', 'Thursday,', 'Friday,', 'Saturday,'];
         const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         const timeFormatter = new Intl.DateTimeFormat('en-US', {hour: 'numeric', minute: '2-digit', hour12: true });
-        var date = new Date(item.Next_Start_Date__c * 1000);
+        var date = new Date(item.next_start_date * 1000);
         var sessions = String(item.sessions).split(',');
         var sessionString = '';
         if (sessions.length > 1) {
-          sessionString = '(Session ' + (sessions.indexOf(String(item.Next_Start_Date__c)) + 1) + ' of ' + sessions.length + ')';
+          sessionString = '(Session ' + (sessions.indexOf(String(item.next_start_date)) + 1) + ' of ' + sessions.length + ')';
         }
         var location = item.Event_Location__c;
         if (item.Program_State__c !== undefined) {
