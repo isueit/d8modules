@@ -106,6 +106,54 @@
           );
         }
 
+        function enableBuiltInCopyForBotAnswer(action) {
+          if (!isBotMessageActivity(action)) {
+            return action;
+          }
+
+          var activity = action.payload.activity;
+          if (typeof activity.text !== 'string' || !activity.text.trim()) {
+            return action;
+          }
+
+          var entities = Array.isArray(activity.entities) ? activity.entities : [];
+          var messageEntityIndex = entities.findIndex(function (entity) {
+            return entity && (entity['@type'] === 'Message' || entity.type === 'https://schema.org/Message');
+          });
+          var messageEntity = messageEntityIndex === -1 ? null : entities[messageEntityIndex];
+          var keywords = messageEntity && Array.isArray(messageEntity.keywords) ? messageEntity.keywords : [];
+
+          if (keywords.includes('AllowCopy')) {
+            return action;
+          }
+
+          var copyEnabledMessageEntity = Object.assign(
+            {
+              '@context': 'https://schema.org',
+              '@id': '',
+              '@type': 'Message',
+              type: 'https://schema.org/Message'
+            },
+            messageEntity || {},
+            { keywords: keywords.concat('AllowCopy') }
+          );
+          var copyEnabledEntities = entities.slice();
+
+          if (messageEntityIndex === -1) {
+            copyEnabledEntities.push(copyEnabledMessageEntity);
+          } else {
+            copyEnabledEntities[messageEntityIndex] = copyEnabledMessageEntity;
+          }
+
+          return Object.assign({}, action, {
+            payload: Object.assign({}, action.payload, {
+              activity: Object.assign({}, activity, {
+                entities: copyEnabledEntities
+              })
+            })
+          });
+        }
+
         function isPostActivityFailure(action) {
           return [
             'DIRECT_LINE/POST_ACTIVITY_REJECTED',
@@ -178,6 +226,8 @@
                     });
                   }
 
+                  action = enableBuiltInCopyForBotAnswer(action);
+
                   var result = next(action);
 
                   if (isUserSubmittedActivity(action)) {
@@ -196,7 +246,6 @@
                 directLine: await createDirectLine(),
                 store: store,
                 styleOptions: {
-                  hideUploadButton: true,
                   botAvatarInitials: '',
                   userAvatarInitials: '',
                   avatarSize: 0,
@@ -214,7 +263,9 @@
                   sendBoxButtonColorOnHover: '#9b0c23',
                   sendBoxTextColor: '#1f2933',
                   subtle: '#5f6368',
-                  timestampColor: '#5f6368'
+                  timestampColor: '#5f6368',
+                  disableFileUpload: true,
+                  feedbackActionsPlacement: 'activity-actions'
                 }
               },
               webChatElement
