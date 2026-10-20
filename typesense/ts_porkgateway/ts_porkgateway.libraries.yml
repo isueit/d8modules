@@ -1,5 +1,5 @@
 searchbar_assets:
-  version: 1.x
+  version: 1.11
   css:
     theme:
       css/searchbar-styles.css: {}
@@ -12,10 +12,11 @@ searchbar_assets:
     - ts_porkgateway/typesense-adapter
 
 searchresults_assets:
-  version: 1.x
+  version: 1.11
   css:
     theme:
       css/searchresults-styles.css: {}
+      css/Dropdown.css: {}
   js:
     js/searchresults-script.js: {attributes: { type: module }}
     js/Dropdown.js: {attributes: { type: module }}
