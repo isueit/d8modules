@@ -1,0 +1,6 @@
+name: 'Topics Report'
+type: module
+core_version_requirement: ^10 || ^11
+description: 'Creates report on the usage of Categories and Topics'
+version: '8.x-1.0-dev'
+package: 'ISUEO'

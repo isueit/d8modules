@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    config:
+      - node.type.microsite_landing_page
+  module:
+    - node
+id: microsite_content
+label: Microsite_content
+type: 'canonical_entities:node'
+pattern: '/[node:group:url:path]/[node:title]'
+selection_criteria:
+  e1ecc8bd-feb0-40e2-86f2-3ae7026d5127:
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: node
+    bundles:
+      microsite_landing_page: microsite_landing_page
+selection_logic: and
+weight: -5
+relationships: {  }

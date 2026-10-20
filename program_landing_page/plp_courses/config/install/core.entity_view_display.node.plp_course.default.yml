@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.plp_course.field_plp_course_audiences
     - field.field.node.plp_course.field_plp_course_category
     - field.field.node.plp_course.field_plp_course_mydata_id
+    - field.field.node.plp_course.field_plp_course_price
     - field.field.node.plp_course.field_plp_course_program_area
     - field.field.node.plp_course.field_plp_course_program_id
     - field.field.node.plp_course.field_plp_course_program_node_id
@@ -17,9 +18,369 @@ dependencies:
     - field.field.node.plp_course.field_plp_course_website
     - node.type.plp_course
   module:
+    - field_formatter_class
+    - field_group
+    - layout_builder
+    - layout_builder_base_library
+    - layout_builder_restrictions
     - link
     - text
     - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: false
+    sections:
+      -
+        layout_id: layout_base_threecol
+        layout_settings:
+          label: '3 Column Layout'
+          context_mapping: {  }
+          column_widths: null
+          id: ''
+          classes: ''
+          column_gap: layout--column-gap--default
+          row_gap: layout--row-gap--none
+          column_width: layout--column-width--default
+          column_breakpoint: layout--column-breakpoint--medium
+          align_items: layout--align-items--normal
+          background: layout--background--gray
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout-height-default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+          layout_builder_styles_style:
+            extension_icon_directory: 0
+            four_column_22: 0
+            hero_heading: 0
+            news_background: 0
+            program_area_mobile: 0
+            vertical_alignment: 0
+        components:
+          d306f797-73e5-4ff3-81e3-4d49a9fa0c8f:
+            uuid: d306f797-73e5-4ff3-81e3-4d49a9fa0c8f
+            region: third
+            configuration:
+              id: 'field_block:node:plp_course:field_plp_course_audiences'
+              label: 'Course Audiences'
+              label_display: '0'
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: entity_reference_label
+                label: above
+                settings:
+                  link: false
+                third_party_settings:
+                  field_delimiter:
+                    delimiter: ','
+                  field_formatter_class:
+                    class: ''
+            weight: 4
+            additional:
+              layout_builder_styles_style:
+                '404_': 0
+                gray_background: 0
+                hide_on_mobile: 0
+                more_news: 0
+                our_story_button: 0
+                padding_top: 0
+                red_block_heading: 0
+                red_call_out: 0
+                strong_iowa: 0
+                top_and_bottom_padding_large: 0
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_twocol
+        layout_settings:
+          label: '2 Column Layout'
+          context_mapping: {  }
+          column_widths: null
+          id: ''
+          classes: plp-course-enroll__wrapper
+          column_gap: layout--column-gap--default
+          row_gap: layout--row-gap--none
+          column_width: layout--column-width--67-33
+          column_breakpoint: layout--column-breakpoint--medium
+          align_items: layout--align-items--normal
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--small
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout-height-default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+          layout_builder_styles_style:
+            extension_icon_directory: 0
+            four_column_22: 0
+            hero_heading: 0
+            news_background: 0
+            program_area_mobile: 0
+            vertical_alignment: 0
+        components:
+          ff079f81-e531-441e-b0a7-e67053fbb9e2:
+            uuid: ff079f81-e531-441e-b0a7-e67053fbb9e2
+            region: first
+            configuration:
+              id: 'field_block:node:plp_course:body'
+              label: 'About This Course'
+              label_display: visible
+              provider: layout_builder
+              context_mapping:
+                entity: layout_builder.entity
+                view_mode: view_mode
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+            weight: 0
+            additional:
+              layout_builder_styles_style:
+                '404_': 0
+                gray_background: 0
+                hide_on_mobile: 0
+                more_news: 0
+                our_story_button: 0
+                padding_top: 0
+                red_block_heading: 0
+                red_call_out: 0
+                strong_iowa: 0
+                top_and_bottom_padding_large: 0
+          6fff5c65-695f-471d-a99f-af9ee7cc521a:
+            uuid: 6fff5c65-695f-471d-a99f-af9ee7cc521a
+            region: second
+            configuration:
+              id: 'field_block:node:plp_course:field_plp_course_website'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: link
+                label: visually_hidden
+                settings:
+                  trim_length: null
+                  url_only: true
+                  url_plain: true
+                  rel: '0'
+                  target: '0'
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+            weight: 0
+            additional: {  }
+          7e94cf3e-28a9-41c7-a939-e1d001caed2f:
+            uuid: 7e94cf3e-28a9-41c7-a939-e1d001caed2f
+            region: second
+            configuration:
+              id: 'field_block:node:plp_course:field_plp_course_reg_link'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: link
+                label: above
+                settings:
+                  trim_length: null
+                  url_only: true
+                  url_plain: true
+                  rel: '0'
+                  target: '0'
+                third_party_settings:
+                  field_formatter_class:
+                    class: ''
+            weight: 7
+            additional: {  }
+          0de043ef-7864-4e48-bc63-d7160f40bbf6:
+            uuid: 0de043ef-7864-4e48-bc63-d7160f40bbf6
+            region: second
+            configuration:
+              id: 'field_block:node:plp_course:field_plp_course_price'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            weight: 9
+            additional: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_base_twocol
+        layout_settings:
+          label: '2 Column Layout'
+          context_mapping: {  }
+          column_widths: null
+          id: ''
+          classes: plp-course-course-details__wrapper
+          column_gap: layout--column-gap--default
+          row_gap: layout--row-gap--none
+          column_width: layout--column-width--67-33
+          column_breakpoint: layout--column-breakpoint--medium
+          align_items: layout--align-items--normal
+          background: layout--background--none
+          background_image: ''
+          background_image_style: ''
+          background_attachment: layout--background-attachment--default
+          background_position: layout--background-position--center
+          background_size: layout--background-size--cover
+          background_overlay: layout--background-overlay--none
+          equal_top_bottom_margins: ''
+          equal_left_right_margins: ''
+          top_margin: ''
+          right_margin: ''
+          bottom_margin: ''
+          left_margin: ''
+          equal_top_bottom_paddings: layout--top-bottom-padding--big
+          equal_left_right_paddings: layout--left-right-padding--small
+          top_padding: ''
+          right_padding: ''
+          bottom_padding: ''
+          left_padding: ''
+          container: layout--container--none
+          content_container: layout--content-container--default
+          height: layout-height-default
+          color: layout--color--default
+          alignment: ''
+          modifier: ''
+          customizable_columns: ''
+          modifiers: ''
+          layout_builder_styles_style:
+            extension_icon_directory: 0
+            four_column_22: 0
+            hero_heading: 0
+            news_background: 0
+            program_area_mobile: 0
+            vertical_alignment: 0
+        components:
+          b4714bb8-6b53-4422-a960-e569ac0d4698:
+            uuid: b4714bb8-6b53-4422-a960-e569ac0d4698
+            region: first
+            configuration:
+              id: 'field_block:node:plp_course:field_plp_course_category'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+          b2f9349a-6703-47a7-ae5b-23c67ea0fb37:
+            uuid: b2f9349a-6703-47a7-ae5b-23c67ea0fb37
+            region: first
+            configuration:
+              id: 'field_block:node:plp_course:field_plp_course_topics'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+          a3670a36-ae65-4c23-ac2c-d6d9b1277c50:
+            uuid: a3670a36-ae65-4c23-ac2c-d6d9b1277c50
+            region: first
+            configuration:
+              id: 'field_block:node:plp_course:field_plp_course_program_area'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: inline
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+        third_party_settings: {  }
+  layout_builder_restrictions:
+    allowed_block_categories: {  }
+    entity_view_mode_restriction:
+      allowed_layouts: {  }
+      denylisted_blocks: {  }
+      allowlisted_blocks: {  }
+      restricted_categories: {  }
+  field_group:
+    group_course_details:
+      children:
+        - field_plp_course_category
+        - field_plp_course_topics
+        - field_plp_course_program_area
+      label: 'Course Details'
+      parent_name: ''
+      region: content
+      weight: 10
+      format_type: html_element
+      format_settings:
+        classes: plp-course-course-details--wrapper
+        show_empty_fields: false
+        id: ''
+        label_as_html: false
+        element: div
+        show_label: true
+        label_element: h3
+        label_element_classes: ''
+        attributes: ''
+        effect: none
+        speed: fast
 id: node.plp_course.default
 targetEntityType: node
 bundle: plp_course
@@ -30,7 +391,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 101
+    weight: 1
     region: content
   field_plp_course_audiences:
     type: entity_reference_label
@@ -38,100 +399,84 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 107
+    weight: 6
     region: content
   field_plp_course_category:
     type: entity_reference_label
-    label: above
+    label: inline
     settings:
       link: true
     third_party_settings: {  }
-    weight: 105
+    weight: 5
     region: content
-  field_plp_course_program_area:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 108
-    region: content
-  field_plp_course_program_id:
+  field_plp_course_price:
     type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 111
+    weight: 9
     region: content
-  field_plp_course_program_node_id:
-    type: number_integer
-    label: above
+  field_plp_course_program_area:
+    type: entity_reference_label
+    label: inline
     settings:
-      thousand_separator: ''
-      prefix_suffix: true
+      link: true
     third_party_settings: {  }
-    weight: 112
+    weight: 7
     region: content
   field_plp_course_reg_link:
     type: link
     label: above
     settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 109
+      trim_length: null
+      url_only: true
+      url_plain: true
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 7
     region: content
   field_plp_course_reg_text:
     type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 110
-    region: content
-  field_plp_course_search_terms:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 106
-    region: content
-  field_plp_course_smugmug:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 102
+    weight: 8
     region: content
   field_plp_course_topics:
     type: entity_reference_label
-    label: above
+    label: inline
     settings:
       link: true
     third_party_settings: {  }
-    weight: 104
+    weight: 6
     region: content
   field_plp_course_website:
     type: link
-    label: above
+    label: visually_hidden
     settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    weight: 103
+      trim_length: null
+      url_only: true
+      url_plain: true
+      rel: '0'
+      target: '0'
+    third_party_settings:
+      field_formatter_class:
+        class: ''
+    weight: 2
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 0
     region: content
 hidden:
   breadcrumbs: true
   field_plp_course_mydata_id: true
+  field_plp_course_program_id: true
+  field_plp_course_program_node_id: true
+  field_plp_course_search_terms: true
+  field_plp_course_smugmug: true

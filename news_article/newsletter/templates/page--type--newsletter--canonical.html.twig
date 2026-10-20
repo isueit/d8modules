@@ -101,7 +101,8 @@
 					<p class="newsletter-print-kicker d-none d-print-block">{{ site_slogan }} - {{ site_name }}</p>
 					<h1 class="isu-page-title">
 						{% if show_clover_logo %}
-							<img src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="4-H clover emblem.">
+							<img class="d-print-none" src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/White/High-Res/i-kxnLLqT/0/MZxc3sZwVCcfLC829w2Sv8R4C2N9zbbcqhRVRF8L7/D/Clover_Wht-D.png" alt="4-H clover emblem.">
+							<img class="d-none d-print-block" src="https://photos.smugmug.com/WORDMARKS/Primary-4-HExtension/CloverEmblem/Green/No-Border/High-Res/i-4XFdgtJ/0/LRjBkvb7ZT7bGSzTT4rms9FgQLpnX4J8VXqP6Zd55/D/Clover_NoBorder1080-D.png" alt="4-H clover emblem">
 						{% endif %}
 						{{ node.label }}
 					</h1>
