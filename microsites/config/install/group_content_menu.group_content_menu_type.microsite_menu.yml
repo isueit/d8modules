@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - microsites
+id: microsite_menu
+label: 'Microsite Menu'

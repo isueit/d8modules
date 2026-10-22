@@ -101,7 +101,9 @@ class TypesenseCollectionSchemas
           'smugmug_id' => 'string',
           'sort_order' => 'int32',
           'last_updated_time' => 'int32',
-          'Next_Start_Date__c' => 'int64',
+          'next_start_date' => 'int64',
+          'next_end_date' => 'int64',
+          'next_session_text' => 'string',
           'sessions' => 'int64[]',
           'sessions_end_date_time' => 'int64[]',
           'Contact_Information_Name__c' => 'string',
@@ -153,6 +155,7 @@ class TypesenseCollectionSchemas
           'Event_Location_Site_Building__c',
           'Event_Location_Street_Address__c',
           'Event_Location_Zip_Code__c',
+          'next_end_date',
           'smugmug_id',
           'plp_program',
           'Planned_Program_Website__c',
@@ -160,6 +163,7 @@ class TypesenseCollectionSchemas
           'Registration_Opens__c',
           'Registration_Deadline__c',
           'Registration_Link__c',
+          'next_session_text',
         ],
       ],
 
@@ -305,6 +309,75 @@ class TypesenseCollectionSchemas
           'drupal_version',
           'git_commit_theme',
           'git_commit_d8modules',
+        ],
+
+        // Optional fields
+        'optional' => [
+        ],
+      ],
+
+      'porkgateway' => [
+        'default_sorting_field' => 'publish_date',
+
+        // Define the fields
+        'fields' => [
+          'title' => 'string',
+          'factsheet_number' => 'string',
+          'url_path' => 'string',
+          'audiences' => 'string[]',
+          'resource_type' => 'string',
+          'categories' => 'string[]',
+          'body' => 'string',
+          'summary' => 'string',
+          'references' => 'string',
+          'publish_date' => 'int64',
+          'updated_date' => 'string',
+          'authors' => 'string[]',
+          'editors' => 'string[]',
+          'reviews' => 'string[]',
+        ],
+
+        // Sort fields
+        'sort' => [
+          'publish_date'
+        ],
+
+        // Fields that are facets
+        'facets' => [
+          'audiences',
+          'resource_type',
+          'categories',
+          'authors',
+          'editors',
+          'reviewers',
+        ],
+
+        // Optional fields
+        'optional' => [
+          'factsheet_number',
+          'references',
+          'resource_type',
+          'updated_date',
+          'audiences',
+          'authors',
+          'editors',
+          'reviews',
+        ],
+      ],
+
+      'sample' => [
+        'default_sorting_field' => '',
+
+        // Define the fields
+        'fields' => [
+        ],
+
+        // Sort fields
+        'sort' => [
+        ],
+
+        // Fields that are facets
+        'facets' => [
         ],
 
         // Optional fields

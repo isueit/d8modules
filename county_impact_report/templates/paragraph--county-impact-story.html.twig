@@ -74,10 +74,12 @@
     {% endblock %}
 
     {% if paragraph.id() == first_paragraph_id %}
+    {% if top_impact_data is not empty %}
     <div class="impact-story-stats-one">
       <div class="layout layout--base--threecols layout--base--threecols-- layout--background--none layout--background-attachment--default layout--background-position--center layout--background-size--cover layout--background-overlay--none layout--top-bottom-padding--big layout--left-right-padding--small layout--container--none layout--content-container--default layout--height--default layout--color--default layout--column-gap--default layout--row-gap--none layout--column-breakpoint--medium layout--column-width--default layout--align-items--normal layout-builder-base--three-columns layout--fourcol">
         <div class="layout-content">
           <div class="layout__region layout__region--first">
+            {% if top_impact_data[0] is not empty %}
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
                 <p>{{ top_impact_data[0]['icon']|raw }}</p>
@@ -85,8 +87,10 @@
                 <p class="impact_statistic__text">{{ top_impact_data[0]['label']|raw }}</p>
               </div>
             </div>
+            {% endif %}
           </div>
           <div class="layout__region layout__region--second">
+            {% if top_impact_data[1] is not empty %}
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
                 <p>{{ top_impact_data[1]['icon']|raw }}</p>
@@ -94,8 +98,10 @@
                 <p class="impact_statistic__text">{{ top_impact_data[1]['label']|raw }}</p>
               </div>
             </div>
+            {% endif %}
           </div>
           <div class="layout__region layout__region--third">
+            {% if top_impact_data[2] is not empty %}
             <div class="isueo-callout-stat isu-block">
               <div class="text-align-center">
                 <p>{{ top_impact_data[2]['icon']|raw }}</p>
@@ -103,10 +109,12 @@
                 <p class="impact_statistic__text">{{ top_impact_data[2]['label']|raw }}</p>
               </div>
             </div>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
+    {% endif %}
 
     {% endif %}
   </div>

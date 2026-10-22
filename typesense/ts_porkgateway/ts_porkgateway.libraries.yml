@@ -1,0 +1,48 @@
+searchbar_assets:
+  version: 1.11
+  css:
+    theme:
+      css/searchbar-styles.css: {}
+  js:
+    js/searchbar-script.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - ts_porkgateway/instantsearch
+    - ts_porkgateway/typesense-adapter
+
+searchresults_assets:
+  version: 1.11
+  css:
+    theme:
+      css/searchresults-styles.css: {}
+      css/Dropdown.css: {}
+  js:
+    js/searchresults-script.js: {attributes: { type: module }}
+    js/Dropdown.js: {attributes: { type: module }}
+    js/util.js: {attributes: { type: module }}
+  dependencies:
+    - core/drupal
+    - core/once
+    - ts_porkgateway/instantsearch
+    - ts_porkgateway/typesense-adapter
+
+instantsearch:
+  remote: https://github.com/algolia/instantsearch
+  version: 4.x
+  license:
+    name: MIT
+    url: https://github.com/algolia/instantsearch/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+      https://cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js: { type: external, minified: true }
+
+typesense-adapter:
+  remote: https://github.com/typesense/typesense-instantsearch-adapter
+  version: 2.x
+  license:
+    name: Apache-2.0
+    url: https://github.com/typesense/typesense-instantsearch-adapter/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    https://cdn.jsdelivr.net/npm/typesense-instantsearch-adapter@2/dist/typesense-instantsearch-adapter.min.js: { type: external, minified: true }

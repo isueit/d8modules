@@ -47,6 +47,9 @@ class Typesense
       case 'websites':
         $api_key = 'wjTQELxmTb9HIiF0YpGfiKHnmJQWvJrA'; // Admin site_audit
         break;
+      case 'porkgateway':
+        $api_key = 'Pwvy6FF7r1SrfcmEzS6UWJCi1wb1aznK'; // Admin porkgateway
+        break;
       case 'deleteme_brian':
         $api_key = 'FcwLwSWecQh91ElQtZjm0lGRv8cW2t1T'; // Admin deleteme_brian
         break;

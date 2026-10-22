@@ -8,3 +8,6 @@ div.embedded_article .itswd-section-content .hero--news-article.text-content {di
 div.embedded_article aside.iastate2022-aside {display: none;}
 div.embedded_article .isueo-related-news-articles {display: none;}
 div.embedded_article figcaption {padding: 0.5rem 0.8rem 0 0.8rem; font-size: 0.875rem; font-style: italic; line-height: 1.57143; position: relative; color: var(--dk-gray);}
+
+div.isu-post-date {font-style: oblique; font-size: 0.9em; color: var(--dk-gray); padding-bottom: 15px;}
+div.embedded_article .isu-body figure figcaption {color: var(--dk-gray); background: transparent; font-size: 0.875rem; padding: 0.4rem 0.8rem 0px;}

@@ -239,11 +239,11 @@ function regcytes_group_color_after_build(array $form, \Drupal\Core\Form\FormSta
     $fields_config[] = $entry;
   }
 
-  $form['#attached']['drupalSettings']['regcytesGroupColors'] = [
+  $form['#attached']['drupalSettings']['colorPickerWidget'] = [
     'fields'   => $fields_config,
     'palettes' => regcytes_color_palettes(),
   ];
-  $form['#attached']['library'][] = 'regcytes/group_color_picker';
+  $form['#attached']['library'][] = 'isueo_color_picker/color_picker';
 
   return $form;
 }

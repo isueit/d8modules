@@ -53,6 +53,11 @@
  *     -
  */
 #}
+
+
+
+
+
 <div class="program_offering_blocks ungerboeck_eventlist_details">
   <h1 class="isu-page-title">{{ title }}</h1>
 
@@ -66,20 +71,7 @@
       {# Handle Dates Ranges #}
       {% if event.sessions|length == 1 %}
         {# Handle date range for single session events #}
-        {{ event.Start_Time_and_Date__c|date('l, F j, Y') }}
-        {% if event.Start_Time_and_Date__c|date('Hi') != '0000' %}
-          {{ event.Start_Time_and_Date__c|date('g:i A') }}
-        {% endif %}
-        {% if event.Start_Time_and_Date__c|date('z') == event.End_Date_and_Time__c|date('z') %}
-          {% if event.Start_Time_and_Date__c|date('Hi') != event.End_Date_and_Time__c|date('Hi') %}
-            - {{event.End_Date_and_Time__c|date('g:i A') }}
-          {% endif %}
-        {% else %}
-          - {{event.End_Date_and_Time__c|date('l, F j, Y') }}
-          {% if event.Start_Time_and_Date__c|date('Hi') != event.End_Date_and_Time__c|date('Hi') %}
-            {{event.End_Date_and_Time__c|date('g:i A') }}
-          {% endif %}
-        {% endif %}
+        {{ event.next_session_text }}
       {% else %}
         {# Finish date range for multi session events #}
         {{ event.Start_Time_and_Date__c|date('F j, Y') }}
@@ -95,7 +87,7 @@
         <em>
           Next Session:
           <span class="event_details_next_dates">
-            {{ event.Next_Start_Date__c|date('l, F j, Y g:i A') }}
+            {{ event.next_session_text }}
           </span>
         </em>
       </p>
@@ -207,11 +199,11 @@
         <ol>
           {% for session in event.sessions %}
             <li>
-              {% if (event.Next_Start_Date__c == session) %}
+              {% if (event.next_start_date == session) %}
                 <span class="next_session">
               {% endif %}
               {{ session|date('l, F j, Y g:i A') }}
-              {% if (event.Next_Start_Date__c == session) %}
+              {% if (event.next_start_date == session) %}
                 </span>
               {% endif %}
             </li>

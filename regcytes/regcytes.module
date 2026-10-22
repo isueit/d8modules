@@ -266,8 +266,8 @@ function regcytes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
     ];
   }
 
-  $form['#attached']['library'][] = 'regcytes/group_color_picker';
-  $form['#attached']['drupalSettings']['regcytesGroupColors'] = [
+  $form['#attached']['library'][] = 'isueo_color_picker/color_picker';
+  $form['#attached']['drupalSettings']['colorPickerWidget'] = [
     'fields'          => $color_fields,
     'enabledSelector' => '[name="field_color_enabled[value]"]',
     'webaim_api_base' => 'https://webaim.org/resources/contrastchecker/',

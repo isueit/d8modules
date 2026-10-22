@@ -51,8 +51,10 @@ function ts_events_collection_index_events()
     $tmp['delivery_method'] = $event['Event_Location__c'] == 'Online' ? 'Online' : 'In Person';
     $tmp['Start_Time_and_Date__c'] = strtotime($event['Start_Time_and_Date__c']);
     $tmp['End_Date_and_Time__c'] = strtotime($event['End_Date_and_Time__c']);
-    $tmp['Next_Start_Date__c'] = strtotime($event['Next_Start_Date__c']);
-    $tmp['sort_order'] = $tmp['Next_Start_Date__c'] - strtotime('yesterday midnight');
+    $tmp['next_start_date'] = strtotime($event['Next_Start_Date__c']);
+    $tmp['next_end_date'] = intval($sessions[$tmp['next_start_date']]);
+    $tmp['next_session_text'] = _ts_events_collection_parse_next_start_date($tmp['next_start_date'], $tmp['next_end_date']);
+    $tmp['sort_order'] = $tmp['next_start_date'] - strtotime('yesterday midnight');
     $tmp['Registration_Opens__c'] = ts_events_collection_get_registration_opens($event);
     $tmp['Registration_Deadline__c'] = ts_events_collection_get_registration_deadline($event);
     $tmp['smugmug_id'] = $event['Planned_Program__r.Smugmug_ID__c'];
@@ -246,4 +248,25 @@ function ts_events_collection_index_events_programs() {
   if ($chunk) {
     $queue->createItem($chunk);
   }
+}
+
+function _ts_events_collection_parse_next_start_date(int $startdate, int $enddate)
+{
+  $tmpstr = date('l, F j, Y', $startdate);
+  if (date('Hi', $startdate) != '0000') {
+    $tmpstr = $tmpstr . date(' g:i A', $startdate);
+  }
+
+  if (date('z', $startdate) == date('z', $enddate)) {
+    if (date('Hi', $startdate) != date('Hi', $enddate)) {
+      $tmpstr = $tmpstr . date(' - g:i A', $enddate);
+    }
+  } else {
+    $tmpstr = $tmpstr . date(' - l, F j, Y', $enddate);
+    if (date('Hi', $startdate) != date('Hi', $enddate)) {
+      $tmpstr = $tmpstr . date(' - g:i A', $enddate);
+    }
+  }
+
+  return $tmpstr;
 }

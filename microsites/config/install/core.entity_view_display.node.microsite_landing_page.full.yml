@@ -1,0 +1,68 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.full
+    - field.field.node.microsite_landing_page.body
+    - field.field.node.microsite_landing_page.layout_builder__layout
+    - node.type.microsite_landing_page
+  module:
+    - layout_builder
+    - layout_discovery
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: true
+    allow_custom: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          e1c8e37a-adbb-46e9-9241-cf52ea7a738b:
+            uuid: e1c8e37a-adbb-46e9-9241-cf52ea7a738b
+            region: content
+            configuration:
+              id: 'extra_field_block:node:microsite_landing_page:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 0
+            additional: {  }
+          446153a2-3a25-417a-89a3-b04a706d93ab:
+            uuid: 446153a2-3a25-417a-89a3-b04a706d93ab
+            region: content
+            configuration:
+              id: 'field_block:node:microsite_landing_page:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+        third_party_settings: {  }
+id: node.microsite_landing_page.full
+targetEntityType: node
+bundle: microsite_landing_page
+mode: full
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  layout_builder__layout: true

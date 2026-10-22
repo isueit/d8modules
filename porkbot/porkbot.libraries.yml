@@ -1,15 +1,15 @@
 webchat:
-  remote: https://cdn.botframework.com/botframework-webchat/latest/webchat.js
-  version: latest
+  remote: https://unpkg.com/botframework-webchat@4.19.0/dist/webchat.js
+  version: 4.19.0
   license:
     name: MIT
     url: https://github.com/microsoft/BotFramework-WebChat/blob/main/LICENSE-MIT
     gpl-compatible: true
   js:
-    https://cdn.botframework.com/botframework-webchat/latest/webchat.js: { type: external, minified: true }
+    https://unpkg.com/botframework-webchat@4.19.0/dist/webchat.js: { type: external, minified: true, attributes: { crossorigin: anonymous } }
 
 widget:
-  version: 1.0.1
+  version: 1.0.2
   css:
     theme:
       css/porkbot.css: {}
