@@ -103,6 +103,7 @@ class TypesenseCollectionSchemas
           'last_updated_time' => 'int32',
           'next_start_date' => 'int64',
           'next_end_date' => 'int64',
+          'next_session_text' => 'string',
           'sessions' => 'int64[]',
           'sessions_end_date_time' => 'int64[]',
           'Contact_Information_Name__c' => 'string',
@@ -162,6 +163,7 @@ class TypesenseCollectionSchemas
           'Registration_Opens__c',
           'Registration_Deadline__c',
           'Registration_Link__c',
+          'next_session_text',
         ],
       ],
 
