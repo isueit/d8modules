@@ -29,7 +29,10 @@ p.event_details_next_session {
 }
 .event_contact_wrapper {
     margin-top: 1.5rem;
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
+}
+.event-actions {
+    padding-bottom: 2rem;
 }
 .events_show_more{
     background-color: #006BA6;
