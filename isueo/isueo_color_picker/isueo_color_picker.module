@@ -11,6 +11,9 @@
  *
  * Only the labels shown to editors change. Stored values stay the same, and
  * the card templates still render the original label as their CSS class.
+ *
+ * The overridden colors are also added to admin theme pages so content styled
+ * in CKEditor, like buttons, shows them too.
  */
 
 /**
@@ -167,4 +170,51 @@ function isueo_color_picker_editor_js_settings_alter(array &$settings) {
     unset($config);
   }
   unset($format);
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * The default theme adds its color settings as CSS variables in
+ * iastate_theme_preprocess_html(), but that doesn't run on admin theme pages.
+ * CKEditor still loads the default theme's stylesheets there, so add the same
+ * variables to keep buttons and other styled content matching the site.
+ */
+function isueo_color_picker_page_attachments(array &$attachments) {
+  $theme = \Drupal::config('system.theme')->get('default');
+  $attachments['#cache']['tags'][] = 'config:' . $theme . '.settings';
+  if (\Drupal::theme()->getActiveTheme()->getName() == $theme || (theme_get_setting('default_color_settings', $theme) ?? 1)) {
+    // The default theme adds them itself, or the stylesheet defaults apply
+    return;
+  }
+
+  $variables = [];
+  foreach ([
+    'primary_color' => '--primary-color',
+    'secondary_color' => '--secondary-color',
+    'tertiary_color' => '--tertiary-color',
+    'primary_accent_color' => '--primary-accent-color',
+    'link_color' => '--link-color',
+    'btn_success_color' => '--btn-success-color',
+    'btn_danger_color' => '--btn-danger-color',
+    'btn_primary_color' => '--btn-primary-color',
+    'btn_secondary_color' => '--btn-secondary-color',
+  ] as $setting => $css_variable) {
+    // Only allow hex colors since the value is written into a style tag
+    $hex = (string) theme_get_setting($setting, $theme);
+    if (preg_match('/^#[0-9a-f]{3,8}$/i', $hex)) {
+      $variables[] = "{$css_variable}: {$hex};";
+    }
+  }
+
+  if ($variables) {
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'style',
+        '#value' => ':root { ' . implode(' ', $variables) . ' }',
+      ],
+      'isueo_color_picker_theme_colors',
+    ];
+  }
 }
