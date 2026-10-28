@@ -1,0 +1,6 @@
+layout_builder_base.layout_builder_base_settings_form:
+  title: 'Layout Builder Base Settings'
+  route_name: layout_builder_base.layout_builder_base_settings_form
+  description: 'Configure your layouts provided by Layout Builder Base.'
+  parent: system.admin_config_content
+  weight: 99

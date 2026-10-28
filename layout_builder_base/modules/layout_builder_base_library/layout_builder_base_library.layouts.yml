@@ -1,0 +1,75 @@
+layout_base_onecol:
+  label: 'Layout Base - One column'
+  path: layouts/onecol
+  template: layout--base--onecol
+  class: '\Drupal\layout_builder_base_library\Plugin\Layout\BaseOneColumnLayout'
+  category: 'Columns: 1'
+  default_region: content
+  icon_map:
+    - [content]
+  regions:
+    content:
+      label: Content
+
+layout_base_twocol:
+  label: 'Layout Base - Two columns'
+  path: layouts/twocols
+  template: layout--base--twocols
+  class: '\Drupal\layout_builder_base_library\Plugin\Layout\BaseTwoColumnsLayout'
+  category: 'Columns: 2'
+  default_region: content
+  icon_map:
+    - [first, second]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+
+layout_base_threecol:
+  label: 'Layout Base - Three columns'
+  path: layouts/threecols
+  template: layout--base--threecols
+  class: '\Drupal\layout_builder_base_library\Plugin\Layout\BaseThreeColumnsLayout'
+  category: 'Columns: 3'
+  default_region: content
+  icon_map:
+    - [first, second, third]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+
+layout_base_fourcol:
+  label: 'Layout Base - Four columns'
+  path: layouts/fourcols
+  template: layout--base--fourcols
+  class: '\Drupal\layout_builder_base_library\Plugin\Layout\BaseFourColumnsLayout'
+  category: 'Columns: 4'
+  default_region: content
+  icon_map:
+    - [first, second, third, fourth]
+  regions:
+    first:
+      label: First
+    second:
+      label: Second
+    third:
+      label: Third
+    fourth:
+      label: Fourth
+layout_base_customizable:
+  label: 'Layout Base - Customizable'
+  path: layouts/customizable
+  template: layout--base--customizable
+  class: '\Drupal\layout_builder_base_library\Plugin\Layout\BaseCustomizableColumnsLayout'
+  category: 'Columns: 1'
+  default_region: content
+  icon_map:
+    - [content]
+  regions:
+    content:
+      label: Content

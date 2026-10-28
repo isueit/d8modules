@@ -1,0 +1,4 @@
+services:
+  layout_builder_base.config_manager:
+    class: Drupal\layout_builder_base\ConfigManagerService
+    arguments: ['@config.factory']

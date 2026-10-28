@@ -1,0 +1,5 @@
+layout-builder-base-library:
+  version: VERSION
+  css:
+    base:
+      css/layout-builder-base-library.css: {}

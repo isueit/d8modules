@@ -1,0 +1,242 @@
+<?php
+
+/**
+ * @file
+ * Module file for layout builder base.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements hook_help().
+ */
+function layout_builder_base_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.layout_builder_base':
+      $text = file_get_contents(__DIR__ . '/README.md');
+      if (!\Drupal::moduleHandler()->moduleExists('markdown')) {
+        return '<pre>' . Html::escape($text) . '</pre>';
+      }
+      else {
+        // Use the Markdown filter to render the README.
+        $filter_manager = \Drupal::service('plugin.manager.filter');
+        $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+        $config = ['settings' => $settings];
+        $filter = $filter_manager->createInstance('markdown', $config);
+        return $filter->process($text, 'en');
+      }
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_layout_builder_base_background_alter().
+ */
+function layout_builder_base_layout_builder_base_background_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'background');
+}
+
+/**
+ * Implements hook_layout_builder_base_background_attachment_alter().
+ */
+function layout_builder_base_layout_builder_base_background_attachment_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'background_attachment');
+}
+
+/**
+ * Implements hook_layout_builder_base_background_position_alter().
+ */
+function layout_builder_base_layout_builder_base_background_position_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'background_position');
+}
+
+/**
+ * Implements hook_layout_builder_base_background_size_alter().
+ */
+function layout_builder_base_layout_builder_base_background_size_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'background_size');
+}
+
+/**
+ * Implements hook_layout_builder_base_background_overlay_alter().
+ */
+function layout_builder_base_layout_builder_base_background_overlay_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'background_overlay');
+}
+
+/**
+ * Implements hook_layout_builder_base_top_margin_alter().
+ */
+function layout_builder_base_layout_builder_base_top_margin_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'top_margin');
+}
+
+/**
+ * Implements hook_layout_builder_base_bottom_margin_alter().
+ */
+function layout_builder_base_layout_builder_base_bottom_margin_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'bottom_margin');
+}
+
+/**
+ * Implements hook_layout_builder_base_left_margin_alter().
+ */
+function layout_builder_base_layout_builder_base_left_margin_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'left_margin');
+}
+
+/**
+ * Implements hook_layout_builder_base_right_margin_alter().
+ */
+function layout_builder_base_layout_builder_base_right_margin_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'right_margin');
+}
+
+/**
+ * Implements hook_layout_builder_base_top_bottom_margins_alter().
+ */
+function layout_builder_base_layout_builder_base_top_bottom_margins_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'equal_top_bottom_margins');
+}
+
+/**
+ * Implements hook_layout_builder_base_left_right_margins_alter().
+ */
+function layout_builder_base_layout_builder_base_left_right_margins_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'equal_left_right_margins');
+}
+
+/**
+ * Implements hook_layout_builder_base_top_padding_alter().
+ */
+function layout_builder_base_layout_builder_base_top_padding_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'top_padding');
+}
+
+/**
+ * Implements hook_layout_builder_base_bottom_padding_alter().
+ */
+function layout_builder_base_layout_builder_base_bottom_padding_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'bottom_padding');
+}
+
+/**
+ * Implements hook_layout_builder_base_left_padding_alter().
+ */
+function layout_builder_base_layout_builder_base_left_padding_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'left_padding');
+}
+
+/**
+ * Implements hook_layout_builder_base_right_padding_alter().
+ */
+function layout_builder_base_layout_builder_base_right_padding_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'right_padding');
+}
+
+/**
+ * Implements hook_layout_builder_base_top_bottom_paddings_alter().
+ */
+function layout_builder_base_layout_builder_base_top_bottom_paddings_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'equal_top_bottom_paddings');
+}
+
+/**
+ * Implements hook_layout_builder_base_left_right_paddings_alter().
+ */
+function layout_builder_base_layout_builder_base_left_right_paddings_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'equal_left_right_paddings');
+}
+
+/**
+ * Implements hook_layout_builder_base_container_alter().
+ */
+function layout_builder_base_layout_builder_base_container_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'container');
+}
+
+/**
+ * Implements hook_layout_builder_base_content_container_alter().
+ */
+function layout_builder_base_layout_builder_base_content_container_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'content_container');
+}
+
+/**
+ * Implements hook_layout_builder_base_height_alter().
+ */
+function layout_builder_base_layout_builder_base_height_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'height');
+}
+
+/**
+ * Implements hook_layout_builder_base_color_alter().
+ */
+function layout_builder_base_layout_builder_base_color_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'color');
+}
+
+/**
+ * Implements hook_layout_builder_base_alignment_alter().
+ */
+function layout_builder_base_layout_builder_base_alignment_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'alignment');
+}
+
+/**
+ * Implements hook_layout_builder_base_column_gap_alter().
+ */
+function layout_builder_base_layout_builder_base_column_gap_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'column_gap');
+}
+
+/**
+ * Implements hook_layout_builder_base_row_gap_alter().
+ */
+function layout_builder_base_layout_builder_base_row_gap_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'row_gap');
+}
+
+/**
+ * Implements hook_layout_builder_base_column_breakpoint_alter().
+ */
+function layout_builder_base_layout_builder_base_column_breakpoint_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'column_breakpoint');
+}
+
+/**
+ * Implements hook_layout_builder_base_align_items_alter().
+ */
+function layout_builder_base_layout_builder_base_align_items_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'align_items');
+}
+
+/**
+ * Implements hook_layout_builder_base_two_column_width_alter().
+ */
+function layout_builder_base_layout_builder_base_two_column_width_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'two_column_width');
+}
+
+/**
+ * Implements hook_layout_builder_base_three_column_width_alter().
+ */
+function layout_builder_base_layout_builder_base_three_column_width_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'three_column_width');
+}
+
+/**
+ * Implements hook_layout_builder_base_modifiers_alter().
+ */
+function layout_builder_base_layout_builder_base_modifiers_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'modifiers');
+}
+
+/**
+ * Implements hook_layout_builder_base_customizable_columns_alter().
+ */
+function layout_builder_base_layout_builder_base_customizable_columns_alter(&$options) {
+  $options = \Drupal::service('layout_builder_base.config_manager')->getMergedOptionsWithOverrides($options, 'customizable_columns');
+}
+
