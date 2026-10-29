@@ -2,7 +2,7 @@ name: Layout Builder Base
 description: Module that provides flexible layouts to extend in order to build complex pages.
 package: Layout Builder
 type: module
-core_version_requirement: ^8 || ^9 || ^10
+core_version_requirement: ^8 || ^9 || ^10 || ^11
 dependencies:
   - drupal:layout_builder
   - drupal:layout_discovery
