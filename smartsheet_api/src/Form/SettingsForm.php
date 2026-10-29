@@ -8,8 +8,6 @@ use Drupal\Core\Site\Settings;
 
 /*
  * Class SettingsForm
- *
- * Submodules add their own settings to this form with hook_form_smartsheet_api_settings_form_alter()
  */
 class SettingsForm extends ConfigFormBase {
   /**
@@ -59,18 +57,8 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('Run every enabled sync when this form is saved.'),
       '#weight' => 90,
     ];
-    // Runs after the form alters, so syncNow comes after any submodule's submit handler
-    $form['#after_build'][] = [static::class, 'addSyncNowSubmit'];
 
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * #after_build callback, adds syncNow as the last submit handler
-   */
-  public static function addSyncNowSubmit(array $form, FormStateInterface $form_state) {
-    $form['#submit'][] = [static::class, 'syncNow'];
-    return $form;
   }
 
   /**
@@ -81,25 +69,19 @@ class SettingsForm extends ConfigFormBase {
       ->set('sync_interval', (int) $form_state->getValue('sync_interval'))
       ->save();
     parent::submitForm($form, $form_state);
-  }
 
-  /**
-   * Run the syncs after every submit handler, including submodules', has saved its settings
-   */
-  public static function syncNow(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->getValue('sync_now')) {
-      return;
-    }
-
-    $results = smartsheet_api_sync();
-    if (empty($results)) {
-      \Drupal::messenger()->addWarning(t('No Smartsheet syncs are enabled. Enable a submodule, like PTC Class Series.'));
-    }
-    foreach ($results as $label => $summary) {
-      if ($summary === NULL) {
-        \Drupal::messenger()->addError(t('@label sync did not run, check the Recent log messages.', ['@label' => $label]));
-      } else {
-        \Drupal::messenger()->addStatus(t('@label sync finished: @summary.', ['@label' => $label, '@summary' => smartsheet_api_summary_text($summary)]));
+    //If checked, run sync
+    if ($form_state->getValue('sync_now')) {
+      $results = smartsheet_api_sync();
+      if (empty($results)) {
+        $this->messenger()->addWarning($this->t('No Smartsheet syncs are enabled. Enable a submodule, like PTC Class Series.'));
+      }
+      foreach ($results as $label => $summary) {
+        if ($summary === NULL) {
+          $this->messenger()->addError($this->t('@label sync did not run, check the Recent log messages.', ['@label' => $label]));
+        } else {
+          $this->messenger()->addStatus($this->t('@label sync finished: @summary.', ['@label' => $label, '@summary' => smartsheet_api_summary_text($summary)]));
+        }
       }
     }
   }

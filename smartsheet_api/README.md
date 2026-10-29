@@ -16,8 +16,8 @@ Add the Smartsheet API token to `settings.php` (don't commit it):
 $settings['smartsheet_api_token'] = 'your-token';
 ```
 
-Settings are at `/admin/config/smartsheet_api_settings`. Submodules add their own
-settings to the same page.
+Settings (token status, sync frequency, Sync now) are at
+`/admin/config/smartsheet_api_settings`. Each submodule has its own settings page.
 
 ## Syncing
 

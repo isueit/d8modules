@@ -1,0 +1,9 @@
+ptc_class_series.settings_form:
+  path: 'admin/config/services/ptc_class_series_settings'
+  defaults:
+    _form: '\Drupal\ptc_class_series\Form\SettingsForm'
+    _title: 'PTC Class Series Settings'
+  requirements:
+    _permission: 'administer ptc class series'
+  options:
+    _admin-route: TRUE

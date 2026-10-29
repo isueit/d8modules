@@ -1,0 +1,6 @@
+ptc_class_series.settings_form:
+  title: 'PTC Class Series Settings'
+  route_name: ptc_class_series.settings_form
+  description: 'Change the PTC Class Series sheet and workshop descriptions'
+  parent: system.admin_config_services
+  weight: 101

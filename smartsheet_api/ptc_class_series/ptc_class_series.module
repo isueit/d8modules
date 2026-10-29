@@ -1,7 +1,6 @@
 <?php
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 
 /**
@@ -10,66 +9,6 @@ use Drupal\node\Entity\Node;
 function ptc_class_series_smartsheet_api_sync(bool $dry_run)
 {
   return ['PTC Class Series' => ptc_class_series_sync($dry_run)];
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * Add the PTC Class Series settings to the Smartsheet API settings page
- */
-function ptc_class_series_form_smartsheet_api_settings_form_alter(&$form, FormStateInterface $form_state)
-{
-  $config = \Drupal::config('ptc_class_series.settings');
-
-  $form['ptc_class_series'] = [
-    '#type' => 'details',
-    '#title' => t('PTC Class Series'),
-    '#open' => TRUE,
-    '#weight' => 50,
-  ];
-  $form['ptc_class_series']['ptc_sheet_id'] = [
-    '#type' => 'textfield',
-    '#title' => t('Smartsheet Sheet ID'),
-    '#description' => t('Found in Smartsheet under File > Properties.'),
-    '#default_value' => $config->get('sheet_id'),
-    '#required' => TRUE,
-  ];
-  $form['ptc_class_series']['ptc_minimum_rows'] = [
-    '#type' => 'number',
-    '#title' => t('Minimum Number of Rows'),
-    '#description' => t('Minimum number of rows we should expect from Smartsheet. If we get less than this, then something\'s wrong, don\'t process the rows.'),
-    '#min' => 0,
-    '#default_value' => $config->get('minimum_rows'),
-    '#required' => TRUE,
-  ];
-  $form['ptc_class_series']['workshop_descriptions'] = [
-    '#type' => 'fieldset',
-    '#title' => t('Workshop Descriptions'),
-    '#description' => t('Shown on every class page for that workshop. Changes show right away, without a sync.'),
-  ];
-  foreach (ptc_class_series_workshops() as $workshop => $label) {
-    $form['ptc_class_series']['workshop_descriptions']['ptc_workshop_' . $workshop] = [
-      '#type' => 'textarea',
-      '#title' => $label,
-      '#rows' => 4,
-      '#default_value' => $config->get('workshop_descriptions.' . $workshop),
-    ];
-  }
-  $form['#submit'][] = 'ptc_class_series_settings_form_submit';
-}
-
-/**
- * Save the PTC Class Series settings from the Smartsheet API settings page
- */
-function ptc_class_series_settings_form_submit(array &$form, FormStateInterface $form_state)
-{
-  $config = \Drupal::configFactory()->getEditable('ptc_class_series.settings')
-    ->set('sheet_id', trim($form_state->getValue('ptc_sheet_id')))
-    ->set('minimum_rows', (int) $form_state->getValue('ptc_minimum_rows'));
-  foreach (array_keys(ptc_class_series_workshops()) as $workshop) {
-    $config->set('workshop_descriptions.' . $workshop, trim($form_state->getValue('ptc_workshop_' . $workshop)));
-  }
-  $config->save();
 }
 
 /**
@@ -91,7 +30,7 @@ function ptc_class_series_entity_extra_field_info()
 {
   $extra['node']['ptc_class_series']['display']['ptc_workshop_description'] = [
     'label' => t('Workshop Description'),
-    'description' => t('The description for the class\'s workshop, from the Smartsheet API settings page.'),
+    'description' => t('The description for the class\'s workshop, from the PTC Class Series settings page.'),
     'weight' => 50,
     'visible' => TRUE,
   ];

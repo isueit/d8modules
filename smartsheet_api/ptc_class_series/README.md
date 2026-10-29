@@ -3,8 +3,10 @@
 Submodule of Smartsheet API. Creates the PTC Class Series content type and keeps it in
 sync with the "PTC Caregiver Class Series (2021-present)" Smartsheet.
 
-The sheet ID and minimum row count are in the PTC Class Series section of
-`/admin/config/smartsheet_api_settings`.
+Settings (workshop descriptions, sheet ID, minimum row count) are at
+`/admin/config/services/ptc_class_series_settings`, and need the "Administer PTC Class
+Series" permission. The token, sync frequency and Sync now are on the Smartsheet API
+settings page.
 
 Each class series is matched to its Smartsheet row by row ID, which is stored in
 `field_ptc_row_id`. Rows are created, updated only when their values change, and
@@ -19,9 +21,9 @@ A row is published when:
 Each class is one of three workshops (`field_ptc_workshop`): Caregivers of Adults,
 Caregivers of Children, or Managing Stress Workshop. It comes from the Length column,
 or from Audience when Length is blank, since a Managing Stress Workshop can list either
-audience. Each workshop's description is edited on the settings page and shown on every
-class page for that workshop. The sheet's per-class "Class Description" column goes in
-the Other Information field.
+audience. Each workshop's description is edited on the PTC Class Series settings page
+and shown on every class page for that workshop. The sheet's per-class "Class
+Description" column goes in the Other Information field.
 
 The "Past or Current Class Series" column isn't used. It's a `TODAY()` formula
 that Smartsheet only recalculates when someone opens the sheet.
