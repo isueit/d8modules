@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - smartsheet_api
+name: 'PTC State or Province'
+vid: ptc_location
+description: 'Class states and provinces, populated from Smartsheet'
+weight: 0

@@ -1,0 +1,6 @@
+smartsheet_api.settings_form:
+  title: 'Smartsheet API Settings'
+  route_name: smartsheet_api.settings_form
+  description: 'Change settings for syncing content from Smartsheet'
+  parent: system.admin_config_services
+  weight: 100

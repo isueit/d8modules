@@ -1,0 +1,13 @@
+smartsheet_api.settings:
+  type: config_object
+  label: 'Smartsheet API settings'
+  mapping:
+    sync_interval:
+      type: integer
+      label: 'Seconds between syncs during cron'
+    ptc_sheet_id:
+      type: string
+      label: 'PTC Class Series Smartsheet sheet ID'
+    ptc_minimum_rows:
+      type: integer
+      label: 'Minimum number of rows expected from the PTC Class Series Smartsheet'

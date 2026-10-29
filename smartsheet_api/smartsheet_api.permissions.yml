@@ -1,0 +1,4 @@
+administer smartsheet api:
+  title: 'Administer Smartsheet API'
+  description: 'Change Smartsheet sync settings and run syncs manually.'
+  restrict access: true

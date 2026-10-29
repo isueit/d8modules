@@ -1,0 +1,9 @@
+smartsheet_api.settings_form:
+  path: 'admin/config/smartsheet_api_settings'
+  defaults:
+    _form: '\Drupal\smartsheet_api\Form\SettingsForm'
+    _title: 'Smartsheet API Settings'
+  requirements:
+    _permission: 'administer smartsheet api'
+  options:
+    _admin-route: TRUE

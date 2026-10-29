@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ptc_platform
+    - node.type.ptc_class_series
+  enforced:
+    module:
+      - smartsheet_api
+id: node.ptc_class_series.field_ptc_platform
+field_name: field_ptc_platform
+entity_type: node
+bundle: ptc_class_series
+label: 'Virtual Platform'
+description: 'Synced from Smartsheet.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
