@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Config in config/install is enforced by this module, so Drupal removes it after this runs.
+ * Removing the content type doesn't remove its nodes though, so delete them here, while the
+ * content type still exists. They can be recreated from Smartsheet.
+ */
+function ptc_class_series_uninstall($is_syncing)
+{
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $nids = $storage->getQuery()->accessCheck(false)->condition('type', 'ptc_class_series')->execute();
+  foreach (array_chunk($nids, 50) as $chunk) {
+    $storage->delete($storage->loadMultiple($chunk));
+  }
+}

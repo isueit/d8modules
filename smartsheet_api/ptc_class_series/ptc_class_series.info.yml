@@ -1,0 +1,17 @@
+name: 'PTC Class Series'
+type: module
+core_version_requirement: ^10 || ^11
+description: 'Creates the PTC Class Series content type, and populates it from the PTC Caregiver Class Series Smartsheet'
+version: '8.x-1.0-dev'
+package: 'ISUEO'
+configure: smartsheet_api.settings_form
+dependencies:
+  - d8modules:smartsheet_api
+  - drupal:datetime
+  - drupal:link
+  - drupal:node
+  - drupal:options
+  - drupal:path
+  - drupal:taxonomy
+  - drupal:telephone
+  - pathauto:pathauto

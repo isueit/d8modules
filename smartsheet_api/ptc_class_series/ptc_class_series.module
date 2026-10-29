@@ -1,0 +1,439 @@
+<?php
+
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_smartsheet_api_sync().
+ */
+function ptc_class_series_smartsheet_api_sync(bool $dry_run)
+{
+  return ['PTC Class Series' => ptc_class_series_sync($dry_run)];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Add the PTC Class Series settings to the Smartsheet API settings page
+ */
+function ptc_class_series_form_smartsheet_api_settings_form_alter(&$form, FormStateInterface $form_state)
+{
+  $config = \Drupal::config('ptc_class_series.settings');
+
+  $form['ptc_class_series'] = [
+    '#type' => 'details',
+    '#title' => t('PTC Class Series'),
+    '#open' => TRUE,
+    '#weight' => 50,
+  ];
+  $form['ptc_class_series']['ptc_sheet_id'] = [
+    '#type' => 'textfield',
+    '#title' => t('Smartsheet Sheet ID'),
+    '#description' => t('Found in Smartsheet under File > Properties.'),
+    '#default_value' => $config->get('sheet_id'),
+    '#required' => TRUE,
+  ];
+  $form['ptc_class_series']['ptc_minimum_rows'] = [
+    '#type' => 'number',
+    '#title' => t('Minimum Number of Rows'),
+    '#description' => t('Minimum number of rows we should expect from Smartsheet. If we get less than this, then something\'s wrong, don\'t process the rows.'),
+    '#min' => 0,
+    '#default_value' => $config->get('minimum_rows'),
+    '#required' => TRUE,
+  ];
+  $form['ptc_class_series']['workshop_descriptions'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Workshop Descriptions'),
+    '#description' => t('Shown on every class page for that workshop. Changes show right away, without a sync.'),
+  ];
+  foreach (ptc_class_series_workshops() as $workshop => $label) {
+    $form['ptc_class_series']['workshop_descriptions']['ptc_workshop_' . $workshop] = [
+      '#type' => 'textarea',
+      '#title' => $label,
+      '#rows' => 4,
+      '#default_value' => $config->get('workshop_descriptions.' . $workshop),
+    ];
+  }
+  $form['#submit'][] = 'ptc_class_series_settings_form_submit';
+}
+
+/**
+ * Save the PTC Class Series settings from the Smartsheet API settings page
+ */
+function ptc_class_series_settings_form_submit(array &$form, FormStateInterface $form_state)
+{
+  $config = \Drupal::configFactory()->getEditable('ptc_class_series.settings')
+    ->set('sheet_id', trim($form_state->getValue('ptc_sheet_id')))
+    ->set('minimum_rows', (int) $form_state->getValue('ptc_minimum_rows'));
+  foreach (array_keys(ptc_class_series_workshops()) as $workshop) {
+    $config->set('workshop_descriptions.' . $workshop, trim($form_state->getValue('ptc_workshop_' . $workshop)));
+  }
+  $config->save();
+}
+
+/**
+ * The workshops a class series can be, keyed by their field_ptc_workshop value
+ */
+function ptc_class_series_workshops()
+{
+  return [
+    'adults' => t('Caregivers of Adults'),
+    'children' => t('Caregivers of Children'),
+    'stress' => t('Managing Stress Workshop'),
+  ];
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function ptc_class_series_entity_extra_field_info()
+{
+  $extra['node']['ptc_class_series']['display']['ptc_workshop_description'] = [
+    'label' => t('Workshop Description'),
+    'description' => t('The description for the class\'s workshop, from the Smartsheet API settings page.'),
+    'weight' => 50,
+    'visible' => TRUE,
+  ];
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ *
+ * Show the workshop description, it's kept in config so one edit updates every class
+ */
+function ptc_class_series_node_view(array &$build, $node, $display, $view_mode)
+{
+  if ($node->bundle() != 'ptc_class_series' || !$display->getComponent('ptc_workshop_description')) {
+    return;
+  }
+
+  $config = \Drupal::config('ptc_class_series.settings');
+  $description = $config->get('workshop_descriptions.' . $node->field_ptc_workshop->value);
+  $build['ptc_workshop_description'] = [
+    '#type' => 'processed_text',
+    '#text' => (string) $description,
+    '#format' => 'plain_text',
+    '#cache' => ['tags' => $config->getCacheTags()],
+  ];
+}
+
+/**
+ * Sync PTC Class Series nodes from the PTC Caregiver Class Series Smartsheet
+ *
+ * Rows marked "No, thanks" for the website, and classes that have already ended, are left
+ * unpublished. Cancelled and postponed classes stay published (with their status) until
+ * their original start date passes.
+ *
+ * @param bool $dry_run
+ *   Count what would change, without saving anything
+ *
+ * @return array|null
+ *   Counts of created, updated, unchanged, and unpublished nodes, or null if the sync couldn't run
+ */
+function ptc_class_series_sync(bool $dry_run = false)
+{
+  $lock = \Drupal::lock();
+  if (!$lock->acquire('ptc_class_series_sync', 600)) {
+    \Drupal::logger('ptc_class_series')->notice('Sync is already running, skipping');
+    return null;
+  }
+
+  $config = \Drupal::config('ptc_class_series.settings');
+  $rows = smartsheet_api_get_rows($config->get('sheet_id'), ptc_class_series_required_columns());
+  if ($rows === null) {
+    $lock->release('ptc_class_series_sync');
+    return null;
+  }
+
+  // If we got fewer rows than expected, something could be wrong with the sheet, so don't
+  // risk unpublishing everything
+  $minimum_rows = $config->get('minimum_rows');
+  if (count($rows) < $minimum_rows) {
+    \Drupal::logger('ptc_class_series')->warning('Expected at least ' . $minimum_rows . ' rows from Smartsheet, received ' . count($rows) . ' - Something could be wrong, so exiting sync');
+    $lock->release('ptc_class_series_sync');
+    return null;
+  }
+
+  // Get current nodes, keyed by Smartsheet row ID
+  $nodes = [];
+  foreach (\Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'ptc_class_series']) as $node) {
+    if (!empty($node->field_ptc_row_id->value)) {
+      $nodes[$node->field_ptc_row_id->value] = $node;
+    }
+  }
+
+  $summary = ['created' => 0, 'updated' => 0, 'unchanged' => 0, 'unpublished' => 0];
+  $today = (new DrupalDateTime('now'))->format('Y-m-d');
+  $published_row_ids = [];
+  $term_fields = ptc_class_series_term_fields();
+
+  foreach ($rows as $row_id => $row) {
+    if (!ptc_class_series_should_publish($row, $today)) {
+      continue;
+    }
+    $published_row_ids[$row_id] = true;
+
+    $values = ptc_class_series_map_row($row);
+    $values['title'] = ptc_class_series_build_title($values);
+    $hash = md5(serialize($values));
+
+    // Find the existing node, otherwise create one
+    if (array_key_exists($row_id, $nodes)) {
+      $node = $nodes[$row_id];
+      if ($node->field_ptc_sync_hash->value === $hash && $node->isPublished()) {
+        $summary['unchanged']++;
+        continue;
+      }
+      $summary['updated']++;
+    } else {
+      $node = Node::create(['type' => 'ptc_class_series']);
+      $node->set('field_ptc_row_id', $row_id);
+      $summary['created']++;
+    }
+
+    if ($dry_run) {
+      continue;
+    }
+
+    try {
+      foreach ($values as $field => $value) {
+        if (array_key_exists($field, $term_fields)) {
+          $value = smartsheet_api_term_id($term_fields[$field], $value);
+        }
+        $node->set($field, $value);
+      }
+      $node->set('field_ptc_sync_hash', $hash);
+      $node->setPublished();
+      $node->setNewRevision();
+      $node->setRevisionLogMessage('Synced from Smartsheet');
+      $node->save();
+    } catch (\Exception $e) {
+      \Drupal::logger('ptc_class_series')->error('Could not save Smartsheet row ' . $row_id . ': ' . $e->getMessage());
+    }
+  }
+
+  // Unpublish nodes whose rows were removed, or no longer belong on the website
+  foreach ($nodes as $row_id => $node) {
+    if (!array_key_exists($row_id, $published_row_ids) && $node->isPublished()) {
+      $summary['unpublished']++;
+      if (!$dry_run) {
+        $node->setUnpublished();
+        $node->setNewRevision();
+        $node->setRevisionLogMessage('Unpublished by Smartsheet sync');
+        $node->save();
+      }
+    }
+  }
+
+  $lock->release('ptc_class_series_sync');
+  return $summary;
+}
+
+/**
+ * Columns the sync reads. If any of these are renamed in Smartsheet, the sync stops.
+ */
+function ptc_class_series_required_columns()
+{
+  return [
+    'Add to PTC Website',
+    'Start Date',
+    'End Date',
+    'Class Series Time',
+    'Time Zone',
+    'Class Format',
+    'Which platform will the virtual class series use?',
+    'Is this event open to the general public?',
+    'City',
+    'State or Province',
+    'State write-in option',
+    'Country',
+    'Is there a fee for class participants?',
+    'Fee',
+    'Caregiver Class/Workshop Audience',
+    'Length',
+    'Registration Email',
+    'Registration Name',
+    'Registration Phone Number',
+    'Class Website Link',
+    'Class Description',
+    'Language',
+    'Status of Class Series (CS) Registration',
+  ];
+}
+
+/**
+ * Fields that reference taxonomy terms, and their vocabularies
+ */
+function ptc_class_series_term_fields()
+{
+  return [
+    'field_ptc_format' => 'ptc_format',
+    'field_ptc_state' => 'ptc_location',
+    'field_ptc_audience' => 'ptc_audience',
+    'field_ptc_language' => 'ptc_language',
+  ];
+}
+
+/**
+ * Decide whether a row should be published on the website
+ *
+ * We don't use the sheet's "Past or Current Class Series" column, it's a TODAY() formula
+ * that Smartsheet only recalculates when someone opens the sheet.
+ */
+function ptc_class_series_should_publish(array $row, string $today)
+{
+  // Only exclude rows that have explicitly said no
+  if (str_starts_with(strtolower($row['Add to PTC Website'] ?? ''), 'no')) {
+    return false;
+  }
+
+  $start_date = smartsheet_api_date($row['Start Date'] ?? '');
+  $end_date = smartsheet_api_date($row['End Date'] ?? '');
+
+  // Cancelled and postponed classes stay up until their original start date
+  $status = ptc_class_series_status($row['Status of Class Series (CS) Registration'] ?? '');
+  if (in_array($status, ['cancelled', 'postponed'])) {
+    $last_date = $start_date;
+  } else {
+    $last_date = !empty($end_date) ? $end_date : $start_date;
+  }
+
+  return !empty($last_date) && $last_date >= $today;
+}
+
+/**
+ * Turn a Smartsheet row into node field values
+ *
+ * Term fields hold the term name here, they're turned into term IDs when the node is saved.
+ */
+function ptc_class_series_map_row(array $row)
+{
+  $state = $row['State or Province'] ?? '';
+  if ($state == 'Write-in option') {
+    $state = $row['State write-in option'] ?? '';
+  }
+
+  $fee = '';
+  if (($row['Is there a fee for class participants?'] ?? '') == 'Yes') {
+    $fee = (string) ($row['Fee'] ?? '');
+    if (is_numeric($fee)) {
+      $fee = '$' . $fee;
+    }
+  } elseif (($row['Is there a fee for class participants?'] ?? '') == 'No') {
+    $fee = 'None';
+  }
+
+  // Registration Email sometimes holds a registration form URL instead of an email
+  $registration = (string) ($row['Registration Email'] ?? '');
+  $registration_email = filter_var($registration, FILTER_VALIDATE_EMAIL) ? $registration : '';
+
+  return [
+    'field_ptc_status' => ptc_class_series_status($row['Status of Class Series (CS) Registration'] ?? ''),
+    'field_ptc_workshop' => ptc_class_series_workshop((string) ($row['Length'] ?? ''), (string) ($row['Caregiver Class/Workshop Audience'] ?? '')),
+    'field_ptc_start_date' => smartsheet_api_date($row['Start Date'] ?? ''),
+    'field_ptc_end_date' => smartsheet_api_date($row['End Date'] ?? ''),
+    'field_ptc_class_time' => (string) ($row['Class Series Time'] ?? ''),
+    'field_ptc_time_zone' => (string) ($row['Time Zone'] ?? ''),
+    'field_ptc_format' => (string) ($row['Class Format'] ?? ''),
+    'field_ptc_platform' => (string) ($row['Which platform will the virtual class series use?'] ?? ''),
+    'field_ptc_city' => (string) ($row['City'] ?? ''),
+    'field_ptc_state' => (string) $state,
+    'field_ptc_country' => (string) ($row['Country'] ?? ''),
+    'field_ptc_audience' => (string) ($row['Caregiver Class/Workshop Audience'] ?? ''),
+    'field_ptc_length' => (string) ($row['Length'] ?? ''),
+    'field_ptc_language' => (string) ($row['Language'] ?? ''),
+    'field_ptc_fee' => $fee,
+    'field_ptc_open_to_public' => ($row['Is this event open to the general public?'] ?? '') == 'Yes',
+    'field_ptc_reg_name' => (string) ($row['Registration Name'] ?? ''),
+    'field_ptc_reg_email' => $registration_email,
+    'field_ptc_reg_phone' => (string) ($row['Registration Phone Number'] ?? ''),
+    'field_ptc_reg_link' => empty($registration_email) ? smartsheet_api_url($registration) : '',
+    'field_ptc_class_link' => smartsheet_api_url((string) ($row['Class Website Link'] ?? '')),
+    'field_ptc_description' => (string) ($row['Class Description'] ?? ''),
+  ];
+}
+
+/**
+ * Build the node title
+ *
+ * ex: Powerful Tools for Caregivers – In Person, St. Cloud, Minnesota (January 19, 2027) [Caregivers of Adults]
+ * ex: Powerful Tools for Caregivers – Managing Stress Workshop – Virtual (November 4, 2026)
+ */
+function ptc_class_series_build_title(array $values)
+{
+  $title = 'Powerful Tools for Caregivers';
+  if ($values['field_ptc_workshop'] == 'stress') {
+    $title .= ' – Managing Stress Workshop';
+  }
+  if (!empty($values['field_ptc_format'])) {
+    $title .= ' – ' . $values['field_ptc_format'];
+  }
+  $place = implode(', ', array_filter([$values['field_ptc_city'], $values['field_ptc_state']]));
+  if ($values['field_ptc_format'] != 'Virtual' && !empty($place)) {
+    $title .= ', ' . $place;
+  }
+  if (!empty($values['field_ptc_start_date'])) {
+    $title .= ' (' . date('F j, Y', strtotime($values['field_ptc_start_date'])) . ')';
+  }
+  // Managing Stress Workshops are for both audiences
+  if (!empty($values['field_ptc_audience']) && $values['field_ptc_workshop'] != 'stress') {
+    $title .= ' [' . $values['field_ptc_audience'] . ']';
+  }
+
+  return mb_substr($title, 0, 255);
+}
+
+/**
+ * Work out which workshop a row is, see ptc_class_series_workshops()
+ *
+ * Length is what identifies the workshop. Audience isn't reliable, a Managing Stress Workshop
+ * can list either audience. It's only used when Length is blank.
+ */
+function ptc_class_series_workshop(string $length, string $audience)
+{
+  $length = strtolower($length);
+  if (str_starts_with($length, 'managing stress')) {
+    return 'stress';
+  }
+  if (str_contains($length, 'children') || str_starts_with($length, '2 hour')) {
+    return 'children';
+  }
+  if (str_starts_with($length, '90 minutes')) {
+    return 'adults';
+  }
+
+  $audience = strtolower($audience);
+  if (str_starts_with($audience, 'general')) {
+    return 'stress';
+  }
+  if (str_contains($audience, 'children')) {
+    return 'children';
+  }
+  if (str_contains($audience, 'adults')) {
+    return 'adults';
+  }
+  return null;
+}
+
+/**
+ * Map the Smartsheet registration status to the field_ptc_status key
+ */
+function ptc_class_series_status(string $value)
+{
+  $value = strtolower($value);
+  if (str_starts_with($value, 'postponed') || $value == 'cancelled/postponed') {
+    return 'postponed';
+  }
+  if (str_starts_with($value, 'cancel')) {
+    return 'cancelled';
+  }
+  if (str_starts_with($value, 'at capacity')) {
+    return 'at_capacity';
+  }
+  if (str_starts_with($value, 'space available')) {
+    return 'space_available';
+  }
+  return null;
+}

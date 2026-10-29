@@ -1,16 +1,9 @@
 name: 'Smartsheet API'
 type: module
 core_version_requirement: ^10 || ^11
-description: 'Reads from Smartsheet, and populates content from it. Currently syncs the PTC Class Series content type.'
+description: 'Reads from Smartsheet. Enable a submodule, like PTC Class Series, to populate content from a sheet.'
 version: '8.x-1.0-dev'
 package: 'ISUEO'
 configure: smartsheet_api.settings_form
 dependencies:
-  - drupal:datetime
-  - drupal:link
-  - drupal:node
-  - drupal:options
-  - drupal:path
   - drupal:taxonomy
-  - drupal:telephone
-  - pathauto:pathauto

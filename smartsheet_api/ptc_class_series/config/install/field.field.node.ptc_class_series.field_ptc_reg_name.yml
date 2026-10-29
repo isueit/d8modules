@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ptc_reg_name
+    - node.type.ptc_class_series
+  enforced:
+    module:
+      - ptc_class_series
+id: node.ptc_class_series.field_ptc_reg_name
+field_name: field_ptc_reg_name
+entity_type: node
+bundle: ptc_class_series
+label: 'Organizer Name'
+description: 'Synced from Smartsheet.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

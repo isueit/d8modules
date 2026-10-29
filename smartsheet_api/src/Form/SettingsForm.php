@@ -8,6 +8,8 @@ use Drupal\Core\Site\Settings;
 
 /*
  * Class SettingsForm
+ *
+ * Submodules add their own settings to this form with hook_form_smartsheet_api_settings_form_alter()
  */
 class SettingsForm extends ConfigFormBase {
   /**
@@ -51,35 +53,24 @@ class SettingsForm extends ConfigFormBase {
       ],
       '#default_value' => $config->get('sync_interval'),
     ];
-
-    $form['ptc'] = [
-      '#type' => 'details',
-      '#title' => $this->t('PTC Class Series'),
-      '#open' => TRUE,
-    ];
-    $form['ptc']['ptc_sheet_id'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Smartsheet Sheet ID'),
-      '#description' => $this->t('Found in Smartsheet under File > Properties.'),
-      '#default_value' => $config->get('ptc_sheet_id'),
-      '#required' => TRUE,
-    ];
-    $form['ptc']['ptc_minimum_rows'] = [
-      '#type' => 'number',
-      '#title' => $this->t('Minimum Number of Rows'),
-      '#description' => $this->t('Minimum number of rows we should expect from Smartsheet. If we get less than this, then something\'s wrong, don\'t process the rows.'),
-      '#min' => 0,
-      '#default_value' => $config->get('ptc_minimum_rows'),
-      '#required' => TRUE,
-    ];
-
     $form['sync_now'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Sync now'),
-      '#description' => $this->t('Run the sync when this form is saved.'),
+      '#description' => $this->t('Run every enabled sync when this form is saved.'),
+      '#weight' => 90,
     ];
+    // Runs after the form alters, so syncNow comes after any submodule's submit handler
+    $form['#after_build'][] = [static::class, 'addSyncNowSubmit'];
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * #after_build callback, adds syncNow as the last submit handler
+   */
+  public static function addSyncNowSubmit(array $form, FormStateInterface $form_state) {
+    $form['#submit'][] = [static::class, 'syncNow'];
+    return $form;
   }
 
   /**
@@ -88,23 +79,27 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('smartsheet_api.settings')
       ->set('sync_interval', (int) $form_state->getValue('sync_interval'))
-      ->set('ptc_sheet_id', trim($form_state->getValue('ptc_sheet_id')))
-      ->set('ptc_minimum_rows', (int) $form_state->getValue('ptc_minimum_rows'))
       ->save();
     parent::submitForm($form, $form_state);
+  }
 
-    //If checked, run sync
-    if ($form_state->getValue('sync_now')) {
-      $summary = smartsheet_api_ptc_sync();
+  /**
+   * Run the syncs after every submit handler, including submodules', has saved its settings
+   */
+  public static function syncNow(array &$form, FormStateInterface $form_state) {
+    if (!$form_state->getValue('sync_now')) {
+      return;
+    }
+
+    $results = smartsheet_api_sync();
+    if (empty($results)) {
+      \Drupal::messenger()->addWarning(t('No Smartsheet syncs are enabled. Enable a submodule, like PTC Class Series.'));
+    }
+    foreach ($results as $label => $summary) {
       if ($summary === NULL) {
-        $this->messenger()->addError($this->t('PTC Class Series sync did not run, check the Recent log messages for smartsheet_api.'));
+        \Drupal::messenger()->addError(t('@label sync did not run, check the Recent log messages.', ['@label' => $label]));
       } else {
-        $this->messenger()->addStatus($this->t('PTC Class Series sync finished: @created created, @updated updated, @unchanged unchanged, @unpublished unpublished.', [
-          '@created' => $summary['created'],
-          '@updated' => $summary['updated'],
-          '@unchanged' => $summary['unchanged'],
-          '@unpublished' => $summary['unpublished'],
-        ]));
+        \Drupal::messenger()->addStatus(t('@label sync finished: @summary.', ['@label' => $label, '@summary' => smartsheet_api_summary_text($summary)]));
       }
     }
   }

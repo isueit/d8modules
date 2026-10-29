@@ -1,0 +1,23 @@
+ptc_class_series.settings:
+  type: config_object
+  label: 'PTC Class Series settings'
+  mapping:
+    sheet_id:
+      type: string
+      label: 'Smartsheet sheet ID'
+    minimum_rows:
+      type: integer
+      label: 'Minimum number of rows expected from Smartsheet'
+    workshop_descriptions:
+      type: mapping
+      label: 'Workshop descriptions'
+      mapping:
+        adults:
+          type: text
+          label: 'Caregivers of Adults'
+        children:
+          type: text
+          label: 'Caregivers of Children'
+        stress:
+          type: text
+          label: 'Managing Stress Workshop'

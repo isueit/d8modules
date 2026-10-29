@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ptc_workshop
+    - node.type.ptc_class_series
+  module:
+    - options
+  enforced:
+    module:
+      - ptc_class_series
+id: node.ptc_class_series.field_ptc_workshop
+field_name: field_ptc_workshop
+entity_type: node
+bundle: ptc_class_series
+label: 'Workshop'
+description: 'Synced from Smartsheet. The workshop description for each is set on the Smartsheet API settings page.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ptc_class_series
+name: 'PTC Class Format'
+vid: ptc_format
+description: 'Virtual or in person, populated from Smartsheet'
+weight: 0

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ptc_class_series
+name: 'PTC Language'
+vid: ptc_language
+description: 'Class languages, populated from Smartsheet'
+weight: 0

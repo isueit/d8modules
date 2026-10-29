@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_ptc_open_to_public
+    - node.type.ptc_class_series
+  enforced:
+    module:
+      - ptc_class_series
+id: node.ptc_class_series.field_ptc_open_to_public
+field_name: field_ptc_open_to_public
+entity_type: node
+bundle: ptc_class_series
+label: 'Open to the General Public'
+description: 'Synced from Smartsheet.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

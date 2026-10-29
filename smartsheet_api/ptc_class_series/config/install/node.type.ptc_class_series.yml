@@ -1,0 +1,13 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - ptc_class_series
+name: 'PTC Class Series'
+type: ptc_class_series
+description: 'Powerful Tools for Caregivers class series, synced from Smartsheet.'
+help: '<strong>Important:</strong> Class series are created and updated from the PTC Caregiver Class Series Smartsheet. Changes made here will be overwritten on the next sync.'
+new_revision: true
+preview_mode: 0
+display_submitted: false

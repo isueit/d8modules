@@ -9,7 +9,7 @@ use Drush\Commands\DrushCommands;
 class SmartsheetApiCommands extends DrushCommands {
 
   /**
-   * Sync content from Smartsheet
+   * Run every enabled Smartsheet sync
    * @command smartsheet_api:sync
    *
    * @aliases smartsheet-sync
@@ -18,18 +18,24 @@ class SmartsheetApiCommands extends DrushCommands {
    *  Show what would change, without saving anything
    *
    * @usage smartsheet_api:sync
-   *  Create, update, and unpublish PTC Class Series from Smartsheet
+   *  Create, update, and unpublish content from Smartsheet
    * @usage smartsheet-sync --dry-run
-   *  Show what the sync would do
+   *  Show what the syncs would do
    */
   public function sync($options = ['dry-run' => FALSE]) {
-    $summary = smartsheet_api_ptc_sync((bool) $options['dry-run']);
-    if ($summary === NULL) {
-      $this->logger()->error('PTC Class Series sync did not run, check the Recent log messages for smartsheet_api');
+    $results = smartsheet_api_sync((bool) $options['dry-run']);
+    if (empty($results)) {
+      $this->output()->writeln('No Smartsheet syncs are enabled. Enable a submodule, like PTC Class Series.');
       return;
     }
 
     $prefix = $options['dry-run'] ? 'Dry run, would have: ' : '';
-    $this->output()->writeln('PTC Class Series: ' . $prefix . $summary['created'] . ' created, ' . $summary['updated'] . ' updated, ' . $summary['unchanged'] . ' unchanged, ' . $summary['unpublished'] . ' unpublished');
+    foreach ($results as $label => $summary) {
+      if ($summary === NULL) {
+        $this->logger()->error($label . ' sync did not run, check the Recent log messages');
+      } else {
+        $this->output()->writeln($label . ': ' . $prefix . smartsheet_api_summary_text($summary));
+      }
+    }
   }
 }
