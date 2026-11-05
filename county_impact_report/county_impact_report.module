@@ -175,11 +175,11 @@ function county_impact_report_preprocess_page__type__county_impact_report__canon
  */
 function county_impact_report_preprocess_county_impact_report_print(&$variables) {
   $node = $variables['node'];
-  
+
   if (!$node) {
     return;
   }
-  
+
   // Process top data points (for stats bar)
   if ($node->hasField('field_top_data_points') && !$node->get('field_top_data_points')->isEmpty()) {
     $top_data_points = $node->get('field_top_data_points')[0]->entity;
@@ -190,7 +190,7 @@ function county_impact_report_preprocess_county_impact_report_print(&$variables)
     // Get the impact data
     $impactData = county_impact_report_find_county_impacts();
     $top_impacts = [];
-    
+
     if ($data_point_1 != '') {
       $top_impacts[0]['label'] = $impactData[0][$data_point_1];
       $top_impacts[0]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_1]);
@@ -208,7 +208,7 @@ function county_impact_report_preprocess_county_impact_report_print(&$variables)
     }
     $variables['top_impact_data'] = $top_impacts;
   }
-  
+
   // Process bottom data points (for footer stats)
   if ($node->hasField('field_bottom_data_points') && !$node->get('field_bottom_data_points')->isEmpty()) {
     $bottom_data_points = $node->get('field_bottom_data_points')[0]->entity;
@@ -219,7 +219,7 @@ function county_impact_report_preprocess_county_impact_report_print(&$variables)
     // Get the impact data
     $impactData = county_impact_report_find_county_impacts();
     $bottom_impacts = [];
-    
+
     if ($data_point_1 != '') {
       $bottom_impacts[0]['label'] = $impactData[0][$data_point_1];
       $bottom_impacts[0]['icon'] = county_impact_report_find_icon($impactData[0][$data_point_1]);
@@ -361,7 +361,7 @@ function county_impact_report_field_widget_single_element_form_alter(array &$ele
 {
   if (isset($element['#paragraph_type']) && $element['#paragraph_type'] === 'data_points_selector') {
     $impactData = county_impact_report_find_county_impacts();
-    for ($i = 1; $i < 11; $i = $i + 1) {
+    for ($i = 1; $i < 20; $i = $i + 1) {
       if (array_key_exists($i, $impactData[0])) {
         $element['subform']['field_data_point_1']['widget']['#options'][$i] = str_replace('<br>', ' ', $impactData[0][$i]) . ' (' . county_impact_report_format_value($impactData[1][$i], $impactData[0][$i]) . ')';
         $element['subform']['field_data_point_2']['widget']['#options'][$i] = str_replace('<br>', ' ', $impactData[0][$i]) . ' (' . county_impact_report_format_value($impactData[1][$i], $impactData[0][$i]) . ')';
