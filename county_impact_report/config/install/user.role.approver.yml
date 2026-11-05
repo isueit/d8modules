@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.impact_report
+    - node.type.county_impact_report
+    - workflows.workflow.county_impact_report_workflow
+  module:
+    - content_moderation
+    - filter
+    - node
+    - override_node_options
+    - system
+    - toolbar
+    - view_unpublished
+id: approver
+label: Approver
+weight: 3
+is_admin: null
+permissions:
+  - 'access administration pages'
+  - 'access content overview'
+  - 'access toolbar'
+  - 'edit any county_impact_report content'
+  - 'override county_impact_report published option'
+  - 'use county_impact_report_workflow transition needs_reviewed'
+  - 'use county_impact_report_workflow transition save_published'
+  - 'use county_impact_report_workflow transition save_review'
+  - 'use county_impact_report_workflow transition send_back_for_revisions'
+  - 'use text format impact_report'
+  - 'view any unpublished county_impact_report content'
+  - 'view county_impact_report revisions'

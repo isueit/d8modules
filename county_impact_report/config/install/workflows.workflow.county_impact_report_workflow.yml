@@ -57,6 +57,12 @@ type_settings:
         - published
       to: published
       weight: 2
+    save_review:
+      label: 'Save Review'
+      from:
+        - needs_reviewed
+      to: needs_reviewed
+      weight: 3
     send_back_for_revisions:
       label: 'Send Back for Revisions'
       from:
