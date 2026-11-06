@@ -266,15 +266,25 @@ function county_impact_report_find_county_impacts()
   $countyName = str_replace(' County', '', \Drupal::config('system.site')->get('name'));
 
   $handle = fopen($filename, 'r');
+
   if ($handle) {
-    while (($row = fgetcsv($handle)) !== FALSE) {
+    // Skip the UTF-8 BOM if there is one
+    if (fread($handle, 3) !== "\xEF\xBB\xBF") {
+      rewind($handle);
+    }
+
+    while (($row = fgetcsv($handle, null, ',', '"', '\\')) !== FALSE) {
+      // Trim every field, since the file has spaces after commas
+      $row = array_map(fn($value) => trim((string) $value), $row);
+
       // Get the header row, should start with 'County'
-      if ($row[0] == 'County') {
+      if ($row[0] === 'County') {
         $impacts[0] = $row;
+        continue;
       }
 
       // Get the county data
-      if ($row[0] == $countyName) {
+      if ($row[0] === $countyName) {
         $impacts[1] = $row;
         break;
       }
