@@ -174,17 +174,33 @@ class ProgramOfferingBlocks extends BlockBase
 
       $tmpstr = $event['Additional_Counties__c'];
       if (!empty($config['county'])) {
-        $search_county = strtolower($config['county']) . ' county';
-        if ($search_county == 'pottawattamie - west county') {
-          $search_county = 'west pottawattamie county';
+        $found = false;
+        foreach ($config['county'] as $county_name) {
+          $search_county = strtolower($county_name) . ' county';
+          if ($search_county == 'pottawattamie - west county') {
+            $search_county = 'west pottawattamie county';
+          }
+          if ($search_county == 'pottawattamie - east county') {
+            $search_county = 'east pottawattamie county';
+          }
+          /*
+          if (
+            !(strpos(strtolower($event['Account__c.Name']), $search_county) !== FALSE)
+            && !(!empty($tmpstr) && strpos(strtolower($tmpstr), $search_county) !== FALSE)
+          ) {
+            $display_event = FALSE;
+          }
+            */
+          if ( strpos(strtolower($event['Account__c.Name']), $search_county) !== false ) {
+            if ($search_county == 'clay') {
+            }
+            $found = true;
+          }
+          if (!empty($tmpstr) && strpos(strtolower($tmpstr), $search_county) !== false) {
+            $found = true;
+          }
         }
-        if ($search_county == 'pottawattamie - east county') {
-          $search_county = 'east pottawattamie county';
-        }
-        if (
-          !(strpos(strtolower($event['Account__c.Name']), $search_county) !== FALSE)
-          && !(!empty($tmpstr) && strpos(strtolower($tmpstr), $search_county) !== FALSE)
-        ) {
+        if (!$found) {
           $display_event = FALSE;
         }
       }
@@ -444,6 +460,7 @@ class ProgramOfferingBlocks extends BlockBase
         '#options' => $counties,
         '#title' => t('Limit By county'),
         '#description' => t('If something is selected, then only show events for that county'),
+        '#multiple' => true,
         '#default_value' => $config['county'],
       );
     }
