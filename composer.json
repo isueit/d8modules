@@ -7,7 +7,7 @@
     "drupal/allowed_formats": "^1.2 || ^3.0",
     "drupal/bpmn_io": "^2.0",
     "drupal/ckeditor_html_embed": "^2.0",
-    "drupal/diff": "^1.9",
+    "drupal/diff": "^2.1",
     "drupal/ds": "^3.9",
     "drupal/eca": "^2.1",
     "drupal/field_delimiter": "^1.0 || ^2.0",
