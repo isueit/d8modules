@@ -175,7 +175,11 @@ class ProgramOfferingBlocks extends BlockBase
       $tmpstr = $event['Additional_Counties__c'];
       if (!empty($config['county'])) {
         $found = false;
-        foreach ($config['county'] as $county_name) {
+
+        // $config_counties should be an array of county names
+        $config_counties = is_array($config['county']) ? $config['county'] : explode('***', $config['county']);
+
+        foreach ($config_counties as $county_name) {
           $search_county = strtolower($county_name) . ' county';
           if ($search_county == 'pottawattamie - west county') {
             $search_county = 'west pottawattamie county';
