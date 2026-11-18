@@ -209,8 +209,8 @@ abstract class BaseLayoutBase extends MultiWidthLayoutBase {
         '#default_value' => (!empty($this->configuration['background_image'])) ? [$this->configuration['background_image']] : '',
         '#description' => $this->t('Choose a background image for this layout. This feature is using inline CSS.'),
         '#upload_validators' => [
-          'file_validate_is_image' => [],
-          'file_validate_extensions' => ['gif png jpg jpeg'],
+          'FileIsImage' => [],
+          'FileExtension' => ['gif png jpg jpeg'],
         ],
         '#upload_location' => 'public://layout_background/',
       ];
