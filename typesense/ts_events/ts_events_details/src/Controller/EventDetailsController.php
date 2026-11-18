@@ -61,8 +61,9 @@ class EventDetailsController extends ControllerBase
     // If we get here, it means the event wasn't in the events collection
     try {
       $past_event = $client->collections['events_programs']->documents[$eventID]->retrieve();
-      $raw = ISUEOHelpers\Typesense::searchCollection('plp_programs', $past_event['Planned_Program__c'], 'field_plp_program_event_pgm_ids');
+      $raw = ISUEOHelpers\Typesense::searchCollection('plp_programs', $past_event['Planned_Program__c'], 'event_program_ids');
       $program = $raw['hits'][0]['document'];
+
       return new RoutingTrustedRedirectResponse('https://www.extension.iastate.edu' . $program['url']);
     } catch (Exception $ex) {
       return new RoutingTrustedRedirectResponse('https://www.extension.iastate.edu/calendar');
