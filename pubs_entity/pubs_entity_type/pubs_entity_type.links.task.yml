@@ -1,5 +1,0 @@
-entity.pubs_entity_type.collection:
-  title: 'Resources from Store'
-  route_name: entity.pubs_entity.collection
-  base_route: system.admin_content
-  weight: 12
