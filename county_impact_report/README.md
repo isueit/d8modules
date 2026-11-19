@@ -24,3 +24,7 @@ No configuration is required.
 ## Maintainers
 
 - Iowa State University Extension and Outreach Web Development Team
+
+## Yearly Maintainance
+ - Update the yearly data file
+ - Check the ECA config files for recipients of emails

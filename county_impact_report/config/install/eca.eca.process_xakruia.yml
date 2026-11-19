@@ -63,13 +63,13 @@ actions:
     label: 'Send email for review'
     configuration:
       replace_tokens: false
-      recipient: 'jolene@iastate.edu, cgannon@iastate.edu, kkaufman@iastate.edu'
+      recipient: 'jolene@iastate.edu, kkaufman@iastate.edu'
       subject: '[site:name] Impact Report is ready for review.'
       message: |-
-        [site:name] has indicated that their county impact report is ready for your review. 
+        [site:name] has indicated that their county impact report is ready for your review.
         [node:url]
 
-        Please login to view the page: [site:base-url]/login. 
+        Please login to view the page: [site:base-url]/login.
 
         Update the status to "Send Back for Revisions" or "Publish" if the impact report is approved.
     successors: {  }
@@ -87,12 +87,12 @@ actions:
     label: 'Send Oops email'
     configuration:
       replace_tokens: false
-      recipient: 'jolene@iastate.edu, cgannon@iastate.edu, kkaufman@iastate.edu'
+      recipient: 'jolene@iastate.edu, kkaufman@iastate.edu'
       subject: 'Oops [site:name] Impact Report!'
       message: |-
-        OOPS! 
+        OOPS!
 
-        The status of the Impact Report for [site:name] was just changed back to "In Progress". 
+        The status of the Impact Report for [site:name] was just changed back to "In Progress".
 
         If you recently received a "Needs Reviewed" notification, please disregard to allow [site:name] to continue editing.
     successors: {  }
