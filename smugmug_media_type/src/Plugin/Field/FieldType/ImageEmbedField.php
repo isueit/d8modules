@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\TraversableTypedDataInterface;
  *   id = "smugmug_media_type",
  *   label = @Translation("Smugmug Embed"),
  *   description = @Translation("Stores a smugmug image and then outputs some embed code."),
- *   category = @Translation("Media"),
+ *   category = "general",
  *   default_widget = "smugmug_media_type_textfield",
  *   default_formatter = "smugmug_media_type_image",
  *   constraints = {"SmugmugEmbedValidation" = {}}

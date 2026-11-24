@@ -17,7 +17,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   label = @Translation("News Embed"),
  *   module = "news_embed_field",
  *   description = @Translation("Stores a URL to a news article and then outputs the body of the article."),
- *   category = @Translation("ISUEO"),
+ *   category = "general",
  *   default_widget = "news_embed_field_default",
  *   default_formatter = "news_embed_field_default",
  * )
